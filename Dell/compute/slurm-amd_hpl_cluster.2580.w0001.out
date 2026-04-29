@@ -1,0 +1,52 @@
++ CONTAINER=/home/knevins/aicr-benchmarks/amd-zen-hpl.sif
++ APP_DIR=/opt/amd-hpl
++ HPL_DAT=/home/knevins/aicr-benchmarks/compute/config/HPL_cluster.dat
+++ lscpu
+++ awk '/^Core\(s\) per socket:/{print $NF}'
++ NT=128
+++ lscpu
+++ awk '/^Socket\(s\):/{print $NF}'
++ NR=1
++ TOTAL_RANKS=27
++ APPTAINER_OPTS=(--no-mount /etc/localtime)
++ [[ -d /usr/lib64/libibverbs ]]
++ APPTAINER_OPTS+=(--bind /usr/lib64/libibverbs:/usr/lib64/libibverbs)
++ [[ -d /etc/libibverbs.d ]]
++ APPTAINER_OPTS+=(--bind /etc/libibverbs.d:/etc/libibverbs.d)
++ unset OMPI_MCA_osc
++ export OMP_NUM_THREADS=128
++ OMP_NUM_THREADS=128
++ srun --ntasks=27 --ntasks-per-node=1 --cpus-per-task=128 --cpu-bind=cores apptainer exec --no-mount /etc/localtime --bind /usr/lib64/libibverbs:/usr/lib64/libibverbs --bind /etc/libibverbs.d:/etc/libibverbs.d --bind /home/knevins/aicr-benchmarks/compute/config/HPL_cluster.dat:/opt/amd-hpl/HPL.dat --pwd /opt/amd-hpl /home/knevins/aicr-benchmarks/amd-zen-hpl.sif /opt/amd-hpl/xhpl
+HPL ERROR from process # 0, on line 542 of function HPL_pdinfo:
+>>> Need at least 28 processes for these tests <<<
+
+HPL ERROR from process # 0, on line 689 of function HPL_pdinfo:
+>>> Illegal input in file -251055167. Exiting ... <<<
+
+srun: error: w0011: task 10: Exited with exit code 1
+srun: error: w0007: task 6: Exited with exit code 1
+srun: error: w0003: task 2: Exited with exit code 1
+srun: error: w0015: task 14: Exited with exit code 1
+srun: error: w0019: task 18: Exited with exit code 1
+srun: error: w0022: task 21: Exited with exit code 1
+srun: error: w0006: task 5: Exited with exit code 1
+srun: error: w0005: task 4: Exited with exit code 1
+srun: error: w0021: task 20: Exited with exit code 1
+srun: error: x0001: task 22: Exited with exit code 1
+srun: error: w0009: task 8: Exited with exit code 1
+srun: error: y0002: task 26: Exited with exit code 1
+srun: error: w0013: task 12: Exited with exit code 1
+srun: error: w0014: task 13: Exited with exit code 1
+srun: error: w0002: task 1: Exited with exit code 1
+srun: error: w0018: task 17: Exited with exit code 1
+srun: error: y0001: task 25: Exited with exit code 1
+srun: error: w0010: task 9: Exited with exit code 1
+srun: error: x0002: task 23: Exited with exit code 1
+srun: error: w0008: task 7: Exited with exit code 1
+srun: error: w0020: task 19: Exited with exit code 1
+srun: error: w0012: task 11: Exited with exit code 1
+srun: error: w0004: task 3: Exited with exit code 1
+srun: error: x0003: task 24: Exited with exit code 1
+srun: error: w0017: task 16: Exited with exit code 1
+srun: error: w0016: task 15: Exited with exit code 1
+srun: error: w0001: task 0: Exited with exit code 1

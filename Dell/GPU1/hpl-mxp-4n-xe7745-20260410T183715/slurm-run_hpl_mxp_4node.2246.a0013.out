@@ -1,0 +1,185 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T14:30:34
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T14:30:34
++++ scontrol show hostname
+++ echo a0013 a0014 a0015 a0017
++ echo 'Running on hosts: a0013 a0014 a0015 a0017'
+Running on hosts: a0013 a0014 a0015 a0017
++ echo 2026-04-08T14:30:34
+2026-04-08T14:30:34
++ N_SIZE=860080
++ srun -N 4 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 860080 --nb 1024 --nporder row --nprow 4 --npcol 8
+
+================================================================================
+HPL-MxP-NVIDIA 26.2.0  -- NVIDIA accelerated HPL-MxP benchmark benchmark -- NVIDIA
+================================================================================
+
+ ****** HPL MxP Settings ****** 
+
+   --nprow =  4 
+   --npcol =  8 
+   --order = row 
+   --n     = 860080 
+   --nb    = 1024 
+   --tolerance                        = 1.000000e-12 
+   --test-loop                        = 1 
+   --preset-gemm-kernel               = 120 
+   --u-panel-chunk-nbs                = 8 
+   --call-dgemv-with-multiple-threads = 0 
+   --prioritize-trsm                  = 0 
+   --prioritize-factorization         = 0 
+   --use-separate-stream-for-gemm     = 1 
+   --use-mpi-panel-broadcast          = 50 
+   --mpi-use-host-threads             = 1 
+   --sloppy-type                      = FP16 
+   --Anq-device                       = 0 
+   --cuda-host-register-step          = 2048 
+   --mpi-use-mpi                      = 0 
+   --use-host-mpi                     = 0 
+   --fill-device                      = 0 
+   --fill-device-buffer-size          = 3048 
+   --fp4-scaling-factor-a             = 1.000000e-05 
+   --skip-tests                       = 0 
+   --gemm-iterations                  = 100 
+
+
+
+ ****** Monitor GPU Settings ****** 
+
+   --monitor-gpu                      = 0 
+
+
+
+ ****** test 1 of 1 starts ****** 
+
+   n      = 860080
+   nb     = 1024
+   nprow  = 4
+   npcol  = 8
+
+Device info:
+	Peak clock frequency 2430 MHz
+	SM 120
+	Number of SMs 188
+	Total memory available 94.97 GB
+
+---------------------------------------------------------------------------------------------
+[34m Per process host memory consumption MAX = 172.273 GB, available MIN = 277.297 GB[0m
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+[34m Per process device memory consumption MAX = 91.684 GB, available MIN = 94.193 GB[0m
+---------------------------------------------------------------------------------------------
+
+Constructor seconds: AVG = 0.07, MAX = 0.09 (0->a0013), MIN = 0.05 (9->a0014)
+
+
+ ****** Testing HPL MxP components ****** 
+
+GEMM seconds: AVG = 9.15, MAX = 9.37 (31->a0017), MIN = 8.87 (11->a0014)
+
+GEMM GFLOPS: AVG = 258622.78, MAX = 266793.36 (11->a0014), MIN = 252515.27 (31->a0017)
+
+MPI U broadcast seconds: AVG = 0.29, MAX = 0.29 (6->a0013), MIN = 0.28 (20->a0015)
+
+MPI U broadcast GFLOPS: AVG = 5.87, MAX = 6.05 (20->a0015), MIN = 5.77 (6->a0013)
+
+MPI U broadcast seconds: AVG = 0.35, MAX = 0.36 (4->a0013), MIN = 0.34 (0->a0013)
+
+MPI U broadcast GFLOPS: AVG = 4.81, MAX = 4.93 (0->a0013), MIN = 4.68 (4->a0013)
+
+NCCL U broadcast seconds: AVG = 0.13, MAX = 0.14 (1->a0013), MIN = 0.11 (13->a0014)
+
+NCCL U broadcast GFLOPS: AVG = 13.17, MAX = 14.83 (13->a0014), MIN = 11.80 (1->a0013)
+
+MPI U Sendrecv seconds: AVG = 0.34, MAX = 0.35 (4->a0013), MIN = 0.33 (30->a0017)
+
+MPI U Sendrecv GFLOPS: AVG = 4.92, MAX = 5.05 (30->a0017), MIN = 4.81 (4->a0013)
+
+MPI L2 broadcast seconds: AVG = 14.37, MAX = 14.39 (7->a0013), MIN = 14.35 (29->a0017)
+
+MPI L2 broadcast GFLOPS: AVG = 6.13, MAX = 6.14 (29->a0017), MIN = 6.12 (7->a0013)
+
+NCCL L2 broadcast seconds: AVG = 1.70, MAX = 1.71 (7->a0013), MIN = 1.69 (10->a0014)
+
+NCCL L2 broadcast GFLOPS: AVG = 25.96, MAX = 26.13 (10->a0014), MIN = 25.74 (7->a0013)
+
+MPI L2 Sendrecv seconds: AVG = 14.21, MAX = 14.25 (7->a0013), MIN = 14.17 (29->a0017)
+
+MPI L2 Sendrecv GFLOPS: AVG = 6.20, MAX = 6.21 (29->a0017), MIN = 6.18 (7->a0013)
+
+pdgemv seconds: AVG = 2.02, MAX = 2.26 (16->a0015), MIN = 1.79 (30->a0017)
+
+pdgemv GFLOPS: AVG = 23.04, MAX = 25.79 (30->a0017), MIN = 20.48 (23->a0015)
+
+
+ ****** Matrix Generation ****** 
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 277.052 GB, device = 2.146 GB[0m
+---------------------------------------------------------------------------------------------
+
+RNG seconds: AVG = 85.21, MAX = 89.23 (22->a0015), MIN = 81.90 (11->a0014)
+
+Set Diagonal seconds: AVG = 0.00, MAX = 0.01 (18->a0015), MIN = 0.00 (7->a0013)
+
+Get Anorm seconds: AVG = 0.05, MAX = 0.06 (13->a0014), MIN = 0.04 (14->a0014)
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 105.009 GB, device = 2.146 GB[0m
+---------------------------------------------------------------------------------------------
+
+Sp seconds: AVG = 16.47, MAX = 16.47 (20->a0015), MIN = 16.46 (14->a0014)
+
+matgen seconds: AVG = 105.84, MAX = 105.84 (14->a0014), MIN = 105.84 (17->a0015)
+
+
+ ****** test loop 1 of 1 starts ****** 
+
+2026-04-08 14:33:21.046
+[0;31m Prog=   2.13% N_left=   853936 Time=     1.34 Time_left=      61.68 iTF=    6730.69 TF=  6730.69 iTF_per=   210.33 TF_per=   210.33[0m
+[0;31m Prog=   3.53% N_left=   849840 Time=     1.99 Time_left=      54.30 iTF=    9209.80 TF=  7536.32 iTF_per=   287.81 TF_per=   235.51[0m
+[0;31m Prog=   4.92% N_left=   845744 Time=     2.60 Time_left=      50.25 iTF=    9610.46 TF=  8025.24 iTF_per=   300.33 TF_per=   250.79[0m
+[0;31m Prog=   6.29% N_left=   841648 Time=     3.21 Time_left=      47.83 iTF=    9517.13 TF=  8309.85 iTF_per=   297.41 TF_per=   259.68[0m
+[0;31m Prog=   7.99% N_left=   836528 Time=     3.97 Time_left=      45.70 iTF=    9511.33 TF=  8539.27 iTF_per=   297.23 TF_per=   266.85[0m
+[0;31m Prog=   9.34% N_left=   832432 Time=     4.58 Time_left=      44.48 iTF=    9330.82 TF=  8644.90 iTF_per=   291.59 TF_per=   270.15[0m
+[0;31m Prog=  10.67% N_left=   828336 Time=     5.21 Time_left=      43.58 iTF=    9051.11 TF=  8693.60 iTF_per=   282.85 TF_per=   271.68[0m
+[0;31m Prog=  11.99% N_left=   824240 Time=     5.80 Time_left=      42.56 iTF=    9445.59 TF=  8770.41 iTF_per=   295.17 TF_per=   274.08[0m
+[0;31m Prog=  13.29% N_left=   820144 Time=     6.38 Time_left=      41.65 iTF=    9429.05 TF=  8831.00 iTF_per=   294.66 TF_per=   275.97[0m
+[0;31m Prog=  14.91% N_left=   815024 Time=     7.11 Time_left=      40.59 iTF=    9424.51 TF=  8891.62 iTF_per=   294.52 TF_per=   277.86[0m
+[0;31m Prog=  16.18% N_left=   810928 Time=     7.70 Time_left=      39.86 iTF=    9260.41 TF=  8919.64 iTF_per=   289.39 TF_per=   278.74[0m
+[0;31m Prog=  17.45% N_left=   806832 Time=     8.26 Time_left=      39.10 iTF=    9437.94 TF=  8955.26 iTF_per=   294.94 TF_per=   279.85[0m
+[0;31m Prog=  18.70% N_left=   802736 Time=     8.82 Time_left=      38.36 iTF=    9501.30 TF=  8989.82 iTF_per=   296.92 TF_per=   280.93[0m
+[0;31m Prog=  19.94% N_left=   798640 Time=     9.38 Time_left=      37.66 iTF=    9473.97 TF=  9018.44 iTF_per=   296.06 TF_per=   281.83[0m
+[0;31m Prog=  21.47% N_left=   793520 Time=    10.08 Time_left=      36.89 iTF=    9180.39 TF=  9029.80 iTF_per=   286.89 TF_per=   282.18[0m
+[0;31m Prog=  22.68% N_left=   789424 Time=    10.66 Time_left=      36.35 iTF=    8910.79 TF=  9023.37 iTF_per=   278.46 TF_per=   281.98[0m
+[0;31m Prog=  23.87% N_left=   785328 Time=    11.19 Time_left=      35.70 iTF=    9487.82 TF=  9045.58 iTF_per=   296.49 TF_per=   282.67[0m
+[0;31m Prog=  25.06% N_left=   781232 Time=    11.75 Time_left=      35.15 iTF=    9022.47 TF=  9044.48 iTF_per=   281.95 TF_per=   282.64[0m
+[0;31m Prog=  26.23% N_left=   777136 Time=    12.27 Time_left=      34.50 iTF=    9635.76 TF=  9069.36 iTF_per=   301.12 TF_per=   283.42[0m
+[0;31m Prog=  27.68% N_left=   772016 Time=    12.95 Time_left=      33.85 iTF=    8953.92 TF=  9063.24 iTF_per=   279.81 TF_per=   283.23[0m
+[0;31m Prog=  28.82% N_left=   767920 Time=    13.49 Time_left=      33.30 iTF=    9107.90 TF=  9065.01 iTF_per=   284.62 TF_per=   283.28[0m
+[0;31m Prog=  29.96% N_left=   763824 Time=    14.01 Time_left=      32.76 iTF=    9127.53 TF=  9067.36 iTF_per=   285.24 TF_per=   283.35[0m
+[0;31m Prog=  31.08% N_left=   759728 Time=    14.54 Time_left=      32.24 iTF=    9049.34 TF=  9066.71 iTF_per=   282.79 TF_per=   283.33[0m
+[a0015:08923] *** An error occurred in MPI_Wait
+[a0015:08923] *** reported by process [1575818523,18]
+[a0015:08923] *** on communicator MPI COMMUNICATOR 5 SPLIT FROM 3
+[a0015:08923] *** MPI_ERR_INTERN: internal error
+[a0015:08923] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0015:08923] ***    and potentially your MPI job)
+[2026-04-08T14:33:45.107] error: *** STEP 2246.0 ON a0013 CANCELLED AT 2026-04-08T14:33:45 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[0;31m Prog=  32.19% N_left=   755632 Time=    15.05 Time_left=      31.70 iTF=    9238.79 TF= [2026-04-08T14:33:48.866] error:  mpi/pmix_v3: _errhandler: a0015 [2]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2246.0:16]
+[2026-04-08T14:33:48.887] error:  mpi/pmix_v3: _errhandler: a0013 [0]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2246.0:5]
+[2026-04-08T14:33:48.894] error:  mpi/pmix_v3: _errhandler: a0017 [3]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2246.0:24]
+[2026-04-08T14:33:49.769] error:  mpi/pmix_v3: _errhandler: a0014 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2246.0:12]
+srun: error: a0015: tasks 16-23: Killed
+srun: error: a0013: tasks 0-7: Killed
+srun: error: a0017: tasks 24-31: Killed
+[2026-04-08T14:33:52.937] error:  mpi/pmix_v3: _errhandler: a0014 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2246.0:15]
+srun: error: a0014: tasks 8-15: Killed
++ echo Done
+Done
++ echo 2026-04-08T14:30:34
+2026-04-08T14:30:34

@@ -1,0 +1,32 @@
+Job started at: 2026-04-01T17:59:34
+Running on hosts: b0011
+Command line: /workspace/stream-gpu-linux-x86_64/stream_test -d 0 -n 1000000000 -t CSAT
+
+======================================================================================
+NVIDIA-STREAM 25.9.0  -- NVIDIA accelerated STREAM benchmark -- NVIDIA
+======================================================================================
+There are 8 devices supporting CUDA
+Device 0: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 1: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 2: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 3: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 4: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 5: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 6: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+Device 7: "NVIDIA B200" 	 148 SMs(10.0)	Memory: 3996MHz x 7680-bit = 7672.3 GB/s PEAK	 ECC is ON
+
+Device Selected 0: "NVIDIA B200"
+ STREAM Benchmark implementation in CUDA
+ Array size (double)=1000000000*8*8 (61035 MB)
+
+STREAM tests: COPY SCALE ADD TRIAD
+
+Optimizing...
+
+
+Function      Rate (MB/s)   Avg time     Min time     Max time
+Copy:      7101364.8904       0.0023       0.0023       0.0023
+Scale:     7097232.0327       0.0023       0.0023       0.0023
+Add:       7251070.8774       0.0033       0.0033       0.0033
+Triad:     7264133.4582       0.0033       0.0033       0.0033
+Job finished at: 2026-04-01T17:59:51

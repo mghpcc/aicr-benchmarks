@@ -1,0 +1,763 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T01:14:29
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
++ NCCL_BIN=/workspace/microbenchmarks/nccl_tests
++++ scontrol show hostname
+++ echo a0017
++ echo 'Running on hosts: a0017'
+Running on hosts: a0017
++ echo 2026-04-01T01:14:29
+2026-04-01T01:14:29
++ export NCCL_DEBUG=INFO
++ NCCL_DEBUG=INFO
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif nvidia-smi
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+Wed Apr  1 01:14:29 2026       
++-----------------------------------------------------------------------------------------+
+| NVIDIA-SMI 580.105.08             Driver Version: 580.105.08     CUDA Version: 13.0     |
++-----------------------------------------+------------------------+----------------------+
+| GPU  Name                 Persistence-M | Bus-Id          Disp.A | Volatile Uncorr. ECC |
+| Fan  Temp   Perf          Pwr:Usage/Cap |           Memory-Usage | GPU-Util  Compute M. |
+|                                         |                        |               MIG M. |
+|=========================================+========================+======================|
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   0  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:03:00.0 Off |                    0 |
+| N/A   34C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   1  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:42:00.0 Off |                    0 |
+| N/A   30C    P8             29W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   2  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:8C:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   3  NVIDIA RTX PRO 6000 Blac...    On  |   00000000:C7:00.0 Off |                    0 |
+| N/A   32C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   4  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:04:00.0 Off |                    0 |
+| N/A   31C    P8             35W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   5  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:44:00.0 Off |                    0 |
+| N/A   31C    P8             32W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   6  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:8E:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+|   7  NVIDIA RTX PRO 6000 Blac...    On  |   00000001:C8:00.0 Off |                    0 |
+| N/A   30C    P8             30W /  600W |       0MiB /  97887MiB |      0%      Default |
+|                                         |                        |             Disabled |
++-----------------------------------------+------------------------+----------------------+
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+
++-----------------------------------------------------------------------------------------+
+| Processes:                                                                              |
+|  GPU   GI   CI              PID   Type   Process name                        GPU Memory |
+|        ID   ID                                                               Usage      |
+|=========================================================================================|
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
+|  No running processes found                                                             |
++-----------------------------------------------------------------------------------------+
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/microbenchmarks/nccl_tests/all_reduce_perf -b 8 -e 8G -f 2 -g 1 -n 20 -w 5
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 184481 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184481:184481 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184468 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184468:184468 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184478 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184478:184478 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184482 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184482:184482 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184466 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184466:184466 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184464 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184464:184464 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184467 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184467:184467 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 184465 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:184465:184465 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+a0017:184481:184481 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184478:184478 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184468:184468 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184464:184464 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184467:184467 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184482:184482 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184466:184466 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184465:184465 [0] NCCL INFO cudaDriverVersion 13000
+a0017:184481:184481 [0] NCCL INFO NCCL version 2.27.7+cuda13.0
+
+[2026-04-01 01:14:37] a0017:184465:184465 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:780 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184465: Test failure common.cu:1197
+ .. a0017 pid 184465: Test failure common.cu:1050
+a0017:184478:184478 [0] NCCL INFO NCCL version 2.27.7+cuda13.0
+
+[2026-04-01 01:14:37] a0017:184464:184464 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184464: Test failure common.cu:1197
+ .. a0017 pid 184464: Test failure common.cu:1050
+
+[2026-04-01 01:14:37] a0017:184468:184468 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184468: Test failure common.cu:1197
+ .. a0017 pid 184468: Test failure common.cu:1050
+
+[2026-04-01 01:14:37] a0017:184467:184467 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184467: Test failure common.cu:1197
+ .. a0017 pid 184467: Test failure common.cu:1050
+
+[2026-04-01 01:14:37] a0017:184482:184482 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184482: Test failure common.cu:1197
+ .. a0017 pid 184482: Test failure common.cu:1050
+
+[2026-04-01 01:14:37] a0017:184466:184466 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 184466: Test failure common.cu:1197
+ .. a0017 pid 184466: Test failure common.cu:1050
+srun: error: a0017: task 1: Exited with exit code 3
+srun: error: a0017: tasks 3,7: Exited with exit code 3
+srun: error: a0017: tasks 0,5: Exited with exit code 3
+a0017:184481:184913 [0] NCCL INFO NET/Plugin: Plugin name set by env to libnccl-net.so
+a0017:184481:184913 [0] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v10 (v10)
+a0017:184481:184913 [0] NCCL INFO NET/Plugin: Loaded collnet plugin NCCL RDMA Plugin v10 (v10)
+a0017:184481:184913 [0] NCCL INFO Successfully loaded external plugin libnccl-net.so
+a0017:184481:184913 [0] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0017:184481:184913 [0] NCCL INFO P2P plugin v10 IBext_v10
+a0017:184478:184914 [0] NCCL INFO NET/Plugin: Plugin name set by env to libnccl-net.so
+a0017:184478:184914 [0] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v10 (v10)
+a0017:184478:184914 [0] NCCL INFO NET/Plugin: Loaded collnet plugin NCCL RDMA Plugin v10 (v10)
+a0017:184478:184914 [0] NCCL INFO Successfully loaded external plugin libnccl-net.so
+a0017:184478:184914 [0] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0017:184478:184914 [0] NCCL INFO P2P plugin v10 IBext_v10
+srun: error: a0017: task 6: Exited with exit code 3
+a0017:184481:184913 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.17<0>
+a0017:184481:184913 [0] NCCL INFO Initialized NET plugin IBext_v10
+a0017:184481:184913 [0] NCCL INFO Assigned NET plugin IBext_v10 to comm
+a0017:184481:184913 [0] NCCL INFO Using network IBext_v10
+a0017:184478:184914 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.17<0>
+a0017:184478:184914 [0] NCCL INFO Initialized NET plugin IBext_v10
+a0017:184478:184914 [0] NCCL INFO Assigned NET plugin IBext_v10 to comm
+a0017:184478:184914 [0] NCCL INFO Using network IBext_v10
+a0017:184481:184913 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0017:184481:184913 [0] NCCL INFO ncclCommInitRankConfig comm 0x558533a646c0 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x8ee53858ac70b9cc - Init START
+a0017:184481:184913 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0017:184481:184913 [0] NCCL INFO Bootstrap timings total 0.000716 (create 0.000023, send 0.000079, recv 0.000055, ring 0.000001, delay 0.000000)
+a0017:184478:184914 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0017:184478:184914 [0] NCCL INFO ncclCommInitRankConfig comm 0x56002c399750 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x67d8a34656dca125 - Init START
+a0017:184478:184914 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0017:184478:184914 [0] NCCL INFO Bootstrap timings total 0.000731 (create 0.000018, send 0.000053, recv 0.000050, ring 0.000001, delay 0.000000)
+a0017:184481:184913 [0] NCCL INFO comm 0x558533a646c0 rank 0 nRanks 1 nNodes 1 localRanks 1 localRank 0 MNNVL 0
+a0017:184481:184913 [0] NCCL INFO Channel 00/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 01/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 02/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 03/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 04/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 05/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 06/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 07/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 08/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 09/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 10/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 11/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 12/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 13/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 14/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 15/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 16/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 17/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 18/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 19/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 20/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 21/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 22/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 23/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 24/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 25/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 26/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 27/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 28/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 29/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 30/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 31/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 32/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 33/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 34/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 35/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 36/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 37/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 38/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 39/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 40/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 41/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 42/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 43/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 44/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 45/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 46/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 47/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 48/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 49/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 50/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 51/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 52/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 53/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 54/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 55/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 56/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 57/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 58/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 59/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 60/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 61/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 62/64 : 0
+a0017:184481:184913 [0] NCCL INFO Channel 63/64 : 0
+a0017:184481:184913 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1 [32] -1/-1/-1->0->-1 [33] -1/-1/-1->0->-1 [34] -1/-1/-1->0->-1 [35] -1/-1/-1->0->-1 [36] -1/-1/-1->0->-1 [37] -1/-1/-1->0->-1 [38] -1/-1/-1->0->-1 [39] -1/-1/-1->0->-1 [40] -1/-1/-1->0->-1 [41] -1/-1/-1->0->-1 [42] -1/-1/-1->0->-1 [43] -1/-1/-1->0->-1 [44] -1/-1/-1->0->-1 [45] -1/-1/-1->0->-1 [46] -1/-1/-1->0->-1 [47] -
+a0017:184481:184913 [0] NCCL INFO P2P Chunksize set to 524288
+a0017:184481:184913 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+a0017:184481:184913 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+a0017:184481:184930 [0] NCCL INFO [Proxy Service] Device 0 CPU core 40
+a0017:184481:184931 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 33
+a0017:184478:184914 [0] NCCL INFO Setting affinity for GPU 0 to 16-31
+a0017:184478:184914 [0] NCCL INFO comm 0x56002c399750 rank 0 nRanks 1 nNodes 1 localRanks 1 localRank 0 MNNVL 0
+a0017:184478:184914 [0] NCCL INFO Channel 00/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 01/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 02/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 03/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 04/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 05/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 06/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 07/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 08/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 09/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 10/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 11/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 12/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 13/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 14/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 15/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 16/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 17/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 18/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 19/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 20/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 21/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 22/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 23/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 24/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 25/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 26/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 27/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 28/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 29/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 30/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 31/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 32/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 33/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 34/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 35/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 36/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 37/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 38/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 39/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 40/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 41/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 42/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 43/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 44/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 45/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 46/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 47/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 48/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 49/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 50/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 51/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 52/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 53/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 54/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 55/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 56/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 57/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 58/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 59/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 60/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 61/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 62/64 : 0
+a0017:184478:184914 [0] NCCL INFO Channel 63/64 : 0
+a0017:184478:184914 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1 [32] -1/-1/-1->0->-1 [33] -1/-1/-1->0->-1 [34] -1/-1/-1->0->-1 [35] -1/-1/-1->0->-1 [36] -1/-1/-1->0->-1 [37] -1/-1/-1->0->-1 [38] -1/-1/-1->0->-1 [39] -1/-1/-1->0->-1 [40] -1/-1/-1->0->-1 [41] -1/-1/-1->0->-1 [42] -1/-1/-1->0->-1 [43] -1/-1/-1->0->-1 [44] -1/-1/-1->0->-1 [45] -1/-1/-1->0->-1 [46] -1/-1/-1->0->-1 [47] -
+a0017:184478:184914 [0] NCCL INFO P2P Chunksize set to 524288
+a0017:184478:184914 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+a0017:184478:184914 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+a0017:184478:184932 [0] NCCL INFO [Proxy Service] Device 0 CPU core 16
+a0017:184478:184933 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 25
+a0017:184481:184913 [0] NCCL INFO 64 coll channels, 64 collnet channels, 0 nvls channels, 64 p2p channels, 64 p2p channels per peer
+a0017:184481:184913 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0017:184481:184913 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+a0017:184481:184913 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+a0017:184481:184913 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v3 symbol.
+a0017:184481:184913 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v2 symbol, using internal tuner instead.
+a0017:184481:184913 [0] NCCL INFO ncclCommInitRankConfig comm 0x558533a646c0 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x8ee53858ac70b9cc - Init COMPLETE
+a0017:184481:184913 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 1 total 0.91 (kernels 0.74, alloc 0.13, bootstrap 0.00, allgathers 0.00, topo 0.00, graphs 0.00, connections 0.03, rest 0.00)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+a0017:184478:184914 [0] NCCL INFO 64 coll channels, 64 collnet channels, 0 nvls channels, 64 p2p channels, 64 p2p channels per peer
+a0017:184478:184914 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0017:184478:184914 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+a0017:184478:184914 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+a0017:184478:184914 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v3 symbol.
+a0017:184478:184914 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v2 symbol, using internal tuner instead.
+a0017:184478:184914 [0] NCCL INFO ncclCommInitRankConfig comm 0x56002c399750 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x67d8a34656dca125 - Init COMPLETE
+a0017:184478:184914 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 1 total 0.90 (kernels 0.74, alloc 0.13, bootstrap 0.00, allgathers 0.00, topo 0.00, graphs 0.00, connections 0.03, rest 0.00)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+           8             2     float     sum      -1    118.4    0.00    0.00      0     0.08    0.10    0.00      0
+          16             4     float     sum      -1    118.6    0.00    0.00      0     0.08    0.20    0.00      0
+          32             8     float     sum      -1     2.79    0.01    0.00      0     0.09    0.37    0.00      0
+          64            16     float     sum      -1     2.78    0.02    0.00      0     0.08    0.79    0.00      0
+         128            32     float     sum      -1     2.70    0.05    0.00      0     0.09    1.50    0.00      0
+         256            64     float     sum      -1     2.86    0.09    0.00      0     0.08    3.04    0.00      0
+         512           128     float     sum      -1     2.96    0.17    0.00      0     0.08    6.24    0.00      0
+        1024           256     float     sum      -1     2.79    0.37    0.00      0     0.08   12.47    0.00      0
+        2048           512     float     sum      -1     2.74    0.75    0.00      0     0.08   25.10    0.00      0
+        4096          1024     float     sum      -1     2.74    1.50    0.00      0     0.08   50.20    0.00      0
+        8192          2048     float     sum      -1     2.65    3.09    0.00      0     0.09   95.15    0.00      0
+       16384          4096     float     sum      -1     2.66    6.15    0.00      0     0.08  193.66    0.00      0
+           8             2     float     sum      -1    54.28    0.00    0.00      0     0.06    0.14    0.00      0
+       32768          8192     float     sum      -1     9.50    3.45    0.00      0     0.06  578.94    0.00      0
+          16             4     float     sum      -1    99.29    0.00    0.00      0     0.08    0.20    0.00      0
+       65536         16384     float     sum      -1     9.56    6.86    0.00      0     0.06  1147.74    0.00      0
+          32             8     float     sum      -1    189.0    0.00    0.00      0     0.09    0.36    0.00      0
+      131072         32768     float     sum      -1     9.16   14.32    0.00      0     0.09  1400.34    0.00      0
+          64            16     float     sum      -1     9.72    0.01    0.00      0     0.08    0.79    0.00      0
+      262144         65536     float     sum      -1     9.38   27.94    0.00      0     0.09  2861.83    0.00      0
+         128            32     float     sum      -1     9.46    0.01    0.00      0     0.08    1.51    0.00      0
+      524288        131072     float     sum      -1    32.76   16.00    0.00      0     0.08  6425.10    0.00      0
+         256            64     float     sum      -1     9.46    0.03    0.00      0     0.08    3.04    0.00      0
+         512           128     float     sum      -1    12.36    0.04    0.00      0     0.11    4.87    0.00      0
+     1048576        262144     float     sum      -1    10.17  103.10    0.00      0     0.09  11256.85    0.00      0
+        1024           256     float     sum      -1    10.20    0.10    0.00      0     0.09   12.03    0.00      0
+     2097152        524288     float     sum      -1    11.45  183.23    0.00      0     0.09  23134.61    0.00      0
+        2048           512     float     sum      -1    728.2    0.00    0.00      0     0.09   23.65    0.00      0
+     4194304       1048576     float     sum      -1    36.04  116.38    0.00      0     0.09  49257.83    0.00      0
+        4096          1024     float     sum      -1    10.35    0.40    0.00      0     0.08   48.42    0.00      0
+     8388608       2097152     float     sum      -1    20.66  406.11    0.00      0     0.09  91081.52    0.00      0
+        8192          2048     float     sum      -1    560.8    0.01    0.00      0     0.10   78.28    0.00      0
+       16384          4096     float     sum      -1    12.50    1.31    0.00      0     0.14  118.13    0.00      0
+    16777216       4194304     float     sum      -1    29.54  567.88    0.00      0     0.12  139056.91    0.00      0
+       32768          8192     float     sum      -1    18.41    1.78    0.00      0     0.06  584.62    0.00      0
+    33554432       8388608     float     sum      -1    50.39  665.93    0.00      0     0.09  391762.19    0.00      0
+       65536         16384     float     sum      -1    14.34    4.57    0.00      0     0.06  1157.88    0.00      0
+    67108864      16777216     float     sum      -1    275.3  243.78    0.00      0     0.06  1038836.90    0.00      0
+      131072         32768     float     sum      -1    13.39    9.79    0.00      0     0.06  2275.56    0.00      0
+      262144         65536     float     sum      -1    118.9    2.21    0.00      0     0.12  2276.54    0.00      0
+   134217728      33554432     float     sum      -1    204.9  655.00    0.00      0     0.06  2371337.95    0.00      0
+      524288        131072     float     sum      -1    87.66    5.98    0.00      0     0.10  5132.53    0.00      0
+   268435456      67108864     float     sum      -1   1121.8  239.29    0.00      0     0.06  4701146.34    0.00      0
+     1048576        262144     float     sum      -1    146.6    7.15    0.00      0     0.10  10793.37    0.00      0
+     2097152        524288     float     sum      -1    122.3   17.14    0.00      0     0.08  25373.89    0.00      0
+   536870912     134217728     float     sum      -1   2266.8  236.84    0.00      0     0.10  5334037.87    0.00      0
+     4194304       1048576     float     sum      -1    97.63   42.96    0.00      0     0.15  27730.94    0.00      0
+     8388608       2097152     float     sum      -1    129.8   64.63    0.00      0     0.09  93051.67    0.00      0
+    16777216       4194304     float     sum      -1    139.8  120.01    0.00      0     0.08  204350.99    0.00      0
+  1073741824     268435456     float     sum      -1   3123.4  343.78    0.00      0     0.10  11109589.49    0.00      0
+    33554432       8388608     float     sum      -1    113.9  294.59    0.00      0     0.09  385240.32    0.00      0
+    67108864      16777216     float     sum      -1    207.6  323.26    0.00      0     0.08  827482.91    0.00      0
+   134217728      33554432     float     sum      -1    421.7  318.30    0.00      0     0.06  2394607.10    0.00      0
+   268435456      67108864     float     sum      -1    750.0  357.91    0.00      0     0.06  4705266.54    0.00      0
+  2147483648     536870912     float     sum      -1   6668.9  322.02    0.00      0     0.12  18331059.74    0.00      0
+   536870912     134217728     float     sum      -1   1919.1  279.75    0.00      0     0.09  5766604.85    0.00      0
+  1073741824     268435456     float     sum      -1   3290.3  326.34    0.00      0     0.16  6874147.40    0.00      0
+  4294967296    1073741824     float     sum      -1    13107  327.70    0.00      0     0.15  29478155.77    0.00      0
+  2147483648     536870912     float     sum      -1   6417.8  334.61    0.00      0     0.11  19407895.60    0.00      0
+  4294967296    1073741824     float     sum      -1    12724  337.55    0.00      0     0.12  35881096.88    0.00      0
+  8589934592    2147483648     float     sum      -1    25862  332.14    0.00      0     0.13  64008454.49    0.00      0
+  8589934592    2147483648     float     sum      -1    20907  410.86    0.00      0     0.10  89805902.69    0.00      0
+a0017:184481:184934 [0] NCCL INFO comm 0x558533a646c0 rank 0 nranks 1 cudaDev 0 busId 3000 - Destroy COMPLETE
+a0017:184478:184935 [0] NCCL INFO comm 0x56002c399750 rank 0 nranks 1 cudaDev 0 busId 3000 - Destroy COMPLETE
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0 
+#
+# Collective test concluded: all_reduce_perf
+
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0 
+#
+# Collective test concluded: all_reduce_perf
+
++ echo Done
+Done
++ echo 2026-04-01T01:14:29
+2026-04-01T01:14:29

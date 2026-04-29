@@ -1,0 +1,289 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T01:37:35
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T01:37:35
++++ scontrol show hostname
+++ echo a0001 a0002 a0003 a0004
++ echo 'Running on hosts: a0001 a0002 a0003 a0004'
+Running on hosts: a0001 a0002 a0003 a0004
++ echo 2026-04-08T01:37:35
+2026-04-08T01:37:35
++ N_SIZE=860080
++ srun -N 4 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 860080 --nb 1024 --nporder row --nprow 4 --npcol 8
+
+================================================================================
+HPL-MxP-NVIDIA 26.2.0  -- NVIDIA accelerated HPL-MxP benchmark benchmark -- NVIDIA
+================================================================================
+
+ ****** HPL MxP Settings ****** 
+
+   --nprow =  4 
+   --npcol =  8 
+   --order = row 
+   --n     = 860080 
+   --nb    = 1024 
+   --tolerance                        = 1.000000e-12 
+   --test-loop                        = 1 
+   --preset-gemm-kernel               = 120 
+   --u-panel-chunk-nbs                = 8 
+   --call-dgemv-with-multiple-threads = 0 
+   --prioritize-trsm                  = 0 
+   --prioritize-factorization         = 0 
+   --use-separate-stream-for-gemm     = 1 
+   --use-mpi-panel-broadcast          = 50 
+   --mpi-use-host-threads             = 1 
+   --sloppy-type                      = FP16 
+   --Anq-device                       = 0 
+   --cuda-host-register-step          = 2048 
+   --mpi-use-mpi                      = 0 
+   --use-host-mpi                     = 0 
+   --fill-device                      = 0 
+   --fill-device-buffer-size          = 3048 
+   --fp4-scaling-factor-a             = 1.000000e-05 
+   --skip-tests                       = 0 
+   --gemm-iterations                  = 100 
+
+
+
+ ****** Monitor GPU Settings ****** 
+
+   --monitor-gpu                      = 0 
+
+
+
+ ****** test 1 of 1 starts ****** 
+
+   n      = 860080
+   nb     = 1024
+   nprow  = 4
+   npcol  = 8
+
+Device info:
+	Peak clock frequency 2430 MHz
+	SM 120
+	Number of SMs 188
+	Total memory available 94.97 GB
+
+---------------------------------------------------------------------------------------------
+[34m Per process host memory consumption MAX = 172.273 GB, available MIN = 277.609 GB[0m
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+[34m Per process device memory consumption MAX = 91.684 GB, available MIN = 94.193 GB[0m
+---------------------------------------------------------------------------------------------
+
+Constructor seconds: AVG = 0.06, MAX = 0.07 (29->a0004), MIN = 0.05 (1->a0001)
+
+
+ ****** Testing HPL MxP components ****** 
+
+GEMM seconds: AVG = 9.14, MAX = 9.40 (24->a0004), MIN = 8.82 (6->a0001)
+
+GEMM GFLOPS: AVG = 259173.24, MAX = 268474.49 (6->a0001), MIN = 251842.72 (24->a0004)
+
+MPI U broadcast seconds: AVG = 0.27, MAX = 0.27 (27->a0004), MIN = 0.26 (24->a0004)
+
+MPI U broadcast GFLOPS: AVG = 6.32, MAX = 6.46 (24->a0004), MIN = 6.16 (27->a0004)
+
+MPI U broadcast seconds: AVG = 0.34, MAX = 0.34 (1->a0001), MIN = 0.33 (6->a0001)
+
+MPI U broadcast GFLOPS: AVG = 4.97, MAX = 5.06 (6->a0001), MIN = 4.92 (1->a0001)
+
+NCCL U broadcast seconds: AVG = 0.17, MAX = 0.17 (3->a0001), MIN = 0.17 (12->a0002)
+
+NCCL U broadcast GFLOPS: AVG = 9.94, MAX = 10.15 (12->a0002), MIN = 9.78 (3->a0001)
+
+MPI U Sendrecv seconds: AVG = 0.34, MAX = 0.34 (2->a0001), MIN = 0.34 (5->a0001)
+
+MPI U Sendrecv GFLOPS: AVG = 4.96, MAX = 4.99 (5->a0001), MIN = 4.91 (2->a0001)
+
+MPI L2 broadcast seconds: AVG = 14.03, MAX = 14.12 (7->a0001), MIN = 13.99 (13->a0002)
+
+MPI L2 broadcast GFLOPS: AVG = 6.28, MAX = 6.30 (13->a0002), MIN = 6.24 (7->a0001)
+
+NCCL L2 broadcast seconds: AVG = 1.70, MAX = 1.71 (27->a0004), MIN = 1.70 (2->a0001)
+
+NCCL L2 broadcast GFLOPS: AVG = 25.89, MAX = 25.96 (2->a0001), MIN = 25.70 (27->a0004)
+
+MPI L2 Sendrecv seconds: AVG = 14.03, MAX = 14.12 (7->a0001), MIN = 13.97 (13->a0002)
+
+MPI L2 Sendrecv GFLOPS: AVG = 6.28, MAX = 6.31 (13->a0002), MIN = 6.24 (7->a0001)
+
+pdgemv seconds: AVG = 2.04, MAX = 2.14 (16->a0003), MIN = 1.79 (30->a0004)
+
+pdgemv GFLOPS: AVG = 22.82, MAX = 25.84 (30->a0004), MIN = 21.57 (23->a0003)
+
+
+ ****** Matrix Generation ****** 
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 276.951 GB, device = 2.146 GB[0m
+---------------------------------------------------------------------------------------------
+
+RNG seconds: AVG = 84.63, MAX = 88.04 (3->a0001), MIN = 81.29 (25->a0004)
+
+Set Diagonal seconds: AVG = 0.00, MAX = 0.01 (18->a0003), MIN = 0.00 (11->a0002)
+
+Get Anorm seconds: AVG = 0.04, MAX = 0.05 (10->a0002), MIN = 0.03 (20->a0003)
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 104.708 GB, device = 2.146 GB[0m
+---------------------------------------------------------------------------------------------
+
+Sp seconds: AVG = 16.29, MAX = 16.29 (30->a0004), MIN = 16.28 (31->a0004)
+
+matgen seconds: AVG = 104.44, MAX = 104.44 (6->a0001), MIN = 104.44 (31->a0004)
+
+
+ ****** test loop 1 of 1 starts ****** 
+
+2026-04-08 01:40:19.013
+[0;31m Prog=   2.13% N_left=   853936 Time=     1.26 Time_left=      57.79 iTF=    7183.69 TF=  7183.69 iTF_per=   224.49 TF_per=   224.49[0m
+[0;31m Prog=   3.53% N_left=   849840 Time=     1.88 Time_left=      51.47 iTF=    9487.41 TF=  7950.34 iTF_per=   296.48 TF_per=   248.45[0m
+[0;31m Prog=   4.92% N_left=   845744 Time=     2.51 Time_left=      48.48 iTF=    9432.35 TF=  8319.33 iTF_per=   294.76 TF_per=   259.98[0m
+[0;31m Prog=   6.29% N_left=   841648 Time=     3.13 Time_left=      46.61 iTF=    9364.40 TF=  8527.25 iTF_per=   292.64 TF_per=   266.48[0m
+[0;31m Prog=   7.99% N_left=   836528 Time=     3.89 Time_left=      44.73 iTF=    9546.55 TF=  8725.39 iTF_per=   298.33 TF_per=   272.67[0m
+[0;31m Prog=   9.34% N_left=   832432 Time=     4.52 Time_left=      43.86 iTF=    9033.82 TF=  8768.51 iTF_per=   282.31 TF_per=   274.02[0m
+[0;31m Prog=  10.67% N_left=   828336 Time=     5.10 Time_left=      42.68 iTF=    9720.21 TF=  8877.00 iTF_per=   303.76 TF_per=   277.41[0m
+[0;31m Prog=  11.99% N_left=   824240 Time=     5.71 Time_left=      41.90 iTF=    9186.36 TF=  8910.01 iTF_per=   287.07 TF_per=   278.44[0m
+[0;31m Prog=  13.29% N_left=   820144 Time=     6.28 Time_left=      40.99 iTF=    9598.33 TF=  8973.21 iTF_per=   299.95 TF_per=   280.41[0m
+[0;31m Prog=  14.91% N_left=   815024 Time=     7.03 Time_left=      40.13 iTF=    9166.56 TF=  8993.75 iTF_per=   286.45 TF_per=   281.05[0m
+[0;31m Prog=  16.18% N_left=   810928 Time=     7.60 Time_left=      39.36 iTF=    9519.39 TF=  9033.09 iTF_per=   297.48 TF_per=   282.28[0m
+[0;31m Prog=  17.45% N_left=   806832 Time=     8.16 Time_left=      38.62 iTF=    9508.80 TF=  9065.94 iTF_per=   297.15 TF_per=   283.31[0m
+[0;31m Prog=  18.70% N_left=   802736 Time=     8.72 Time_left=      37.91 iTF=    9545.49 TF=  9096.51 iTF_per=   298.30 TF_per=   284.27[0m
+[0;31m Prog=  19.94% N_left=   798640 Time=     9.30 Time_left=      37.36 iTF=    8983.92 TF=  9089.44 iTF_per=   280.75 TF_per=   284.04[0m
+[0;31m Prog=  21.47% N_left=   793520 Time=     9.98 Time_left=      36.50 iTF=    9621.70 TF=  9125.42 iTF_per=   300.68 TF_per=   285.17[0m
+[0;31m Prog=  22.68% N_left=   789424 Time=    10.53 Time_left=      35.91 iTF=    9294.60 TF=  9134.29 iTF_per=   290.46 TF_per=   285.45[0m
+[0;31m Prog=  23.87% N_left=   785328 Time=    11.12 Time_left=      35.45 iTF=    8649.58 TF=  9108.69 iTF_per=   270.30 TF_per=   284.65[0m
+[0;31m Prog=  25.06% N_left=   781232 Time=    11.62 Time_left=      34.76 iTF=    9943.73 TF=  9145.00 iTF_per=   310.74 TF_per=   285.78[0m
+[0;31m Prog=  26.23% N_left=   777136 Time=    12.15 Time_left=      34.16 iTF=    9503.80 TF=  9160.46 iTF_per=   296.99 TF_per=   286.26[0m
+[0;31m Prog=  27.68% N_left=   772016 Time=    12.80 Time_left=      33.45 iTF=    9381.57 TF=  9171.77 iTF_per=   293.17 TF_per=   286.62[0m
+[0;31m Prog=  28.82% N_left=   767920 Time=    13.32 Time_left=      32.88 iTF=    9439.41 TF=  9182.12 iTF_per=   294.98 TF_per=   286.94[0m
+[0;31m Prog=  29.96% N_left=   763824 Time=    13.83 Time_left=      32.32 iTF=    9416.03 TF=  9190.75 iTF_per=   294.25 TF_per=   287.21[0m
+[0;31m Prog=  31.08% N_left=   759728 Time=    14.33 Time_left=      31.78 iTF=    9379.94 TF=  9197.44 iTF_per=   293.12 TF_per=   287.42[0m
+[0;31m Prog=  32.19% N_left=   755632 Time=    14.83 Time_left=      31.25 iTF=    9374.98 TF=  9203.44 iTF_per=   292.97 TF_per=   287.61[0m
+[0;31m Prog=  33.56% N_left=   750512 Time=    15.45 Time_left=      30.60 iTF=    9395.31 TF=  9211.12 iTF_per=   293.60 TF_per=   287.85[0m
+[0;31m Prog=  34.64% N_left=   746416 Time=    15.95 Time_left=      30.09 iTF=    9285.66 TF=  9213.43 iTF_per=   290.18 TF_per=   287.92[0m
+[0;31m Prog=  35.71% N_left=   742320 Time=    16.43 Time_left=      29.58 iTF=    9421.81 TF=  9219.54 iTF_per=   294.43 TF_per=   288.11[0m
+[0;31m Prog=  36.77% N_left=   738224 Time=    16.91 Time_left=      29.08 iTF=    9329.53 TF=  9222.67 iTF_per=   291.55 TF_per=   288.21[0m
+[0;31m Prog=  37.81% N_left=   734128 Time=    17.38 Time_left=      28.58 iTF=    9405.57 TF=  9227.64 iTF_per=   293.92 TF_per=   288.36[0m
+[0;31m Prog=  39.11% N_left=   729008 Time=    17.97 Time_left=      27.98 iTF=    9307.71 TF=  9230.26 iTF_per=   290.87 TF_per=   288.45[0m
+[0;31m Prog=  40.13% N_left=   724912 Time=    18.43 Time_left=      27.50 iTF=    9470.73 TF=  9236.23 iTF_per=   295.96 TF_per=   288.63[0m
+[0;31m Prog=  41.14% N_left=   720816 Time=    18.89 Time_left=      27.03 iTF=    9312.00 TF=  9238.07 iTF_per=   291.00 TF_per=   288.69[0m
+[0;31m Prog=  42.13% N_left=   716720 Time=    19.33 Time_left=      26.55 iTF=    9452.51 TF=  9243.04 iTF_per=   295.39 TF_per=   288.84[0m
+[0;31m Prog=  43.12% N_left=   712624 Time=    19.78 Time_left=      26.09 iTF=    9373.21 TF=  9245.97 iTF_per=   292.91 TF_per=   288.94[0m
+[0;31m Prog=  44.34% N_left=   707504 Time=    20.33 Time_left=      25.53 iTF=    9325.52 TF=  9248.14 iTF_per=   291.42 TF_per=   289.00[0m
+[0;31m Prog=  45.30% N_left=   703408 Time=    20.77 Time_left=      25.08 iTF=    9417.03 TF=  9251.66 iTF_per=   294.28 TF_per=   289.11[0m
+[0;31m Prog=  46.25% N_left=   699312 Time=    21.20 Time_left=      24.64 iTF=    9262.12 TF=  9251.87 iTF_per=   289.44 TF_per=   289.12[0m
+[0;31m Prog=  47.19% N_left=   695216 Time=    21.63 Time_left=      24.21 iTF=    9371.31 TF=  9254.22 iTF_per=   292.85 TF_per=   289.19[0m
+[0;31m Prog=  48.11% N_left=   691120 Time=    22.05 Time_left=      23.78 iTF=    9303.39 TF=  9255.17 iTF_per=   290.73 TF_per=   289.22[0m
+[0;31m Prog=  49.26% N_left=   686000 Time=    22.57 Time_left=      23.25 iTF=    9352.97 TF=  9257.41 iTF_per=   292.28 TF_per=   289.29[0m
+[0;31m Prog=  50.16% N_left=   681904 Time=    22.99 Time_left=      22.84 iTF=    9197.00 TF=  9256.32 iTF_per=   287.41 TF_per=   289.26[0m
+[0;31m Prog=  51.06% N_left=   677808 Time=    23.39 Time_left=      22.43 iTF=    9320.89 TF=  9257.44 iTF_per=   291.28 TF_per=   289.30[0m
+[0;31m Prog=  51.94% N_left=   673712 Time=    23.80 Time_left=      22.02 iTF=    9235.17 TF=  9257.06 iTF_per=   288.60 TF_per=   289.28[0m
+[0;31m Prog=  52.81% N_left=   669616 Time=    24.19 Time_left=      21.62 iTF=    9391.07 TF=  9259.24 iTF_per=   293.47 TF_per=   289.35[0m
+[0;31m Prog=  53.88% N_left=   664496 Time=    24.69 Time_left=      21.13 iTF=    9156.65 TF=  9257.17 iTF_per=   286.15 TF_per=   289.29[0m
+[0;31m Prog=  54.73% N_left=   660400 Time=    25.07 Time_left=      20.74 iTF=    9385.58 TF=  9259.14 iTF_per=   293.30 TF_per=   289.35[0m
+[0;31m Prog=  55.57% N_left=   656304 Time=    25.46 Time_left=      20.35 iTF=    9234.27 TF=  9258.76 iTF_per=   288.57 TF_per=   289.34[0m
+[0;31m Prog=  56.39% N_left=   652208 Time=    25.83 Time_left=      19.97 iTF=    9409.99 TF=  9260.94 iTF_per=   294.06 TF_per=   289.40[0m
+[0;31m Prog=  57.21% N_left=   648112 Time=    26.21 Time_left=      19.60 iTF=    9164.53 TF=  9259.55 iTF_per=   286.39 TF_per=   289.36[0m
+[0;31m Prog=  58.22% N_left=   642992 Time=    26.66 Time_left=      19.14 iTF=    9367.36 TF=  9261.39 iTF_per=   292.73 TF_per=   289.42[0m
+[0;31m Prog=  59.01% N_left=   638896 Time=    27.03 Time_left=      18.77 iTF=    9208.49 TF=  9260.68 iTF_per=   287.77 TF_per=   289.40[0m
+[0;31m Prog=  59.79% N_left=   634800 Time=    27.38 Time_left=      18.41 iTF=    9368.59 TF=  9262.08 iTF_per=   292.77 TF_per=   289.44[0m
+[0;31m Prog=  60.57% N_left=   630704 Time=    27.74 Time_left=      18.06 iTF=    9178.13 TF=  9261.00 iTF_per=   286.82 TF_per=   289.41[0m
+[0;31m Prog=  61.33% N_left=   626608 Time=    28.09 Time_left=      17.71 iTF=    9341.82 TF=  9261.99 iTF_per=   291.93 TF_per=   289.44[0m
+[0;31m Prog=  62.27% N_left=   621488 Time=    28.51 Time_left=      17.28 iTF=    9320.57 TF=  9262.87 iTF_per=   291.27 TF_per=   289.46[0m
+[0;31m Prog=  63.01% N_left=   617392 Time=    28.86 Time_left=      16.94 iTF=    9113.40 TF=  9261.08 iTF_per=   284.79 TF_per=   289.41[0m
+[0;31m Prog=  63.74% N_left=   613296 Time=    29.20 Time_left=      16.61 iTF=    9199.08 TF=  9260.37 iTF_per=   287.47 TF_per=   289.39[0m
+[0;31m Prog=  64.46% N_left=   609200 Time=    29.53 Time_left=      16.28 iTF=    9155.92 TF=  9259.19 iTF_per=   286.12 TF_per=   289.35[0m
+[0;31m Prog=  65.18% N_left=   605104 Time=    29.85 Time_left=      15.95 iTF=    9323.05 TF=  9259.88 iTF_per=   291.35 TF_per=   289.37[0m
+[0;31m Prog=  66.05% N_left=   599984 Time=    30.26 Time_left=      15.55 iTF=    9080.54 TF=  9257.45 iTF_per=   283.77 TF_per=   289.30[0m
+[0;31m Prog=  66.74% N_left=   595888 Time=    30.59 Time_left=      15.24 iTF=    9101.82 TF=  9255.82 iTF_per=   284.43 TF_per=   289.24[0m
+[0;31m Prog=  67.42% N_left=   591792 Time=    30.91 Time_left=      14.93 iTF=    8969.96 TF=  9252.84 iTF_per=   280.31 TF_per=   289.15[0m
+[0;31m Prog=  68.10% N_left=   587696 Time=    31.23 Time_left=      14.63 iTF=    8899.71 TF=  9249.22 iTF_per=   278.12 TF_per=   289.04[0m
+[0;31m Prog=  68.76% N_left=   583600 Time=    31.55 Time_left=      14.33 iTF=    8759.46 TF=  9244.24 iTF_per=   273.73 TF_per=   288.88[0m
+[0;31m Prog=  69.57% N_left=   578480 Time=    31.95 Time_left=      13.97 iTF=    8696.52 TF=  9237.42 iTF_per=   271.77 TF_per=   288.67[0m
+[0;31m Prog=  70.22% N_left=   574384 Time=    32.26 Time_left=      13.68 iTF=    8776.31 TF=  9232.99 iTF_per=   274.26 TF_per=   288.53[0m
+[0;31m Prog=  70.85% N_left=   570288 Time=    32.57 Time_left=      13.40 iTF=    8478.82 TF=  9225.66 iTF_per=   264.96 TF_per=   288.30[0m
+[0;31m Prog=  71.47% N_left=   566192 Time=    32.88 Time_left=      13.12 iTF=    8669.42 TF=  9220.50 iTF_per=   270.92 TF_per=   288.14[0m
+[0;31m Prog=  72.09% N_left=   562096 Time=    33.19 Time_left=      12.85 iTF=    8324.18 TF=  9212.04 iTF_per=   260.13 TF_per=   287.88[0m
+[0;31m Prog=  72.84% N_left=   556976 Time=    33.57 Time_left=      12.51 iTF=    8540.41 TF=  9204.53 iTF_per=   266.89 TF_per=   287.64[0m
+[0;31m Prog=  73.44% N_left=   552880 Time=    33.88 Time_left=      12.25 iTF=    8161.73 TF=  9195.01 iTF_per=   255.05 TF_per=   287.34[0m
+[0;31m Prog=  74.02% N_left=   548784 Time=    34.18 Time_left=      11.99 iTF=    8278.01 TF=  9186.96 iTF_per=   258.69 TF_per=   287.09[0m
+[0;31m Prog=  74.60% N_left=   544688 Time=    34.48 Time_left=      11.74 iTF=    8081.90 TF=  9177.25 iTF_per=   252.56 TF_per=   286.79[0m
+[0;31m Prog=  75.17% N_left=   540592 Time=    34.78 Time_left=      11.49 iTF=    8066.89 TF=  9167.70 iTF_per=   252.09 TF_per=   286.49[0m
+[0;31m Prog=  75.87% N_left=   535472 Time=    35.15 Time_left=      11.18 iTF=    8023.18 TF=  9155.67 iTF_per=   250.72 TF_per=   286.11[0m
+[0;31m Prog=  76.42% N_left=   531376 Time=    35.44 Time_left=      10.94 iTF=    8067.42 TF=  9146.80 iTF_per=   252.11 TF_per=   285.84[0m
+[0;31m Prog=  76.96% N_left=   527280 Time=    35.73 Time_left=      10.70 iTF=    7720.36 TF=  9134.93 iTF_per=   241.26 TF_per=   285.47[0m
+[0;31m Prog=  77.49% N_left=   523184 Time=    36.02 Time_left=      10.46 iTF=    7820.87 TF=  9124.39 iTF_per=   244.40 TF_per=   285.14[0m
+[0;31m Prog=  78.02% N_left=   519088 Time=    36.31 Time_left=      10.23 iTF=    7698.32 TF=  9113.04 iTF_per=   240.57 TF_per=   284.78[0m
+[0;31m Prog=  78.66% N_left=   513968 Time=    36.67 Time_left=       9.95 iTF=    7581.95 TF=  9097.99 iTF_per=   236.94 TF_per=   284.31[0m
+[0;31m Prog=  79.17% N_left=   509872 Time=    36.95 Time_left=       9.73 iTF=    7588.89 TF=  9086.44 iTF_per=   237.15 TF_per=   283.95[0m
+[0;31m Prog=  79.66% N_left=   505776 Time=    37.24 Time_left=       9.51 iTF=    7506.71 TF=  9074.50 iTF_per=   234.58 TF_per=   283.58[0m
+[0;31m Prog=  80.15% N_left=   501680 Time=    37.51 Time_left=       9.29 iTF=    7472.87 TF=  9062.62 iTF_per=   233.53 TF_per=   283.21[0m
+[0;31m Prog=  80.64% N_left=   497584 Time=    37.79 Time_left=       9.08 iTF=    7316.18 TF=  9049.71 iTF_per=   228.63 TF_per=   282.80[0m
+[0;31m Prog=  81.23% N_left=   492464 Time=    38.14 Time_left=       8.81 iTF=    7318.51 TF=  9034.14 iTF_per=   228.70 TF_per=   282.32[0m
+[0;31m Prog=  81.69% N_left=   488368 Time=    38.41 Time_left=       8.61 iTF=    7147.28 TF=  9020.60 iTF_per=   223.35 TF_per=   281.89[0m
+[0;31m Prog=  82.15% N_left=   484272 Time=    38.68 Time_left=       8.41 iTF=    7220.65 TF=  9008.12 iTF_per=   225.65 TF_per=   281.50[0m
+[0;31m Prog=  82.60% N_left=   480176 Time=    38.95 Time_left=       8.21 iTF=    7005.11 TF=  8994.13 iTF_per=   218.91 TF_per=   281.07[0m
+[0;31m Prog=  83.04% N_left=   476080 Time=    39.22 Time_left=       8.01 iTF=    7113.64 TF=  8981.51 iTF_per=   222.30 TF_per=   280.67[0m
+[0;31m Prog=  83.58% N_left=   470960 Time=    39.54 Time_left=       7.77 iTF=    7020.07 TF=  8965.29 iTF_per=   219.38 TF_per=   280.17[0m
+[0;31m Prog=  84.01% N_left=   466864 Time=    39.80 Time_left=       7.58 iTF=    6883.44 TF=  8951.60 iTF_per=   215.11 TF_per=   279.74[0m
+[0;31m Prog=  84.42% N_left=   462768 Time=    40.07 Time_left=       7.39 iTF=    6750.79 TF=  8937.20 iTF_per=   210.96 TF_per=   279.29[0m
+[0;31m Prog=  84.83% N_left=   458672 Time=    40.32 Time_left=       7.21 iTF=    6751.04 TF=  8923.23 iTF_per=   210.97 TF_per=   278.85[0m
+[0;31m Prog=  85.24% N_left=   454576 Time=    40.58 Time_left=       7.03 iTF=    6612.10 TF=  8908.52 iTF_per=   206.63 TF_per=   278.39[0m
+[0;31m Prog=  85.73% N_left=   449456 Time=    40.90 Time_left=       6.81 iTF=    6633.35 TF=  8890.98 iTF_per=   207.29 TF_per=   277.84[0m
+[0;31m Prog=  86.12% N_left=   445360 Time=    41.15 Time_left=       6.63 iTF=    6502.63 TF=  8876.34 iTF_per=   203.21 TF_per=   277.39[0m
+[0;31m Prog=  86.50% N_left=   441264 Time=    41.40 Time_left=       6.46 iTF=    6453.46 TF=  8861.74 iTF_per=   201.67 TF_per=   276.93[0m
+[0;31m Prog=  86.87% N_left=   437168 Time=    41.65 Time_left=       6.30 iTF=    6376.46 TF=  8846.95 iTF_per=   199.26 TF_per=   276.47[0m
+[0;31m Prog=  87.23% N_left=   433072 Time=    41.89 Time_left=       6.13 iTF=    6378.74 TF=  8832.62 iTF_per=   199.34 TF_per=   276.02[0m
+[0;31m Prog=  88.71% N_left=   415664 Time=    42.60 Time_left=       5.42 iTF=    8789.09 TF=  8831.90 iTF_per=   274.66 TF_per=   276.00[0m
+[0;31m Prog=  90.07% N_left=   398256 Time=    43.23 Time_left=       4.76 iTF=    9231.77 TF=  8837.67 iTF_per=   288.49 TF_per=   276.18[0m
+[0;31m Prog=  91.32% N_left=   380848 Time=    43.81 Time_left=       4.17 iTF=    9028.74 TF=  8840.23 iTF_per=   282.15 TF_per=   276.26[0m
+[0;31m Prog=  92.45% N_left=   363440 Time=    44.35 Time_left=       3.62 iTF=    8933.93 TF=  8841.37 iTF_per=   279.19 TF_per=   276.29[0m
+[0;31m Prog=  93.43% N_left=   347056 Time=    44.82 Time_left=       3.15 iTF=    8872.58 TF=  8841.69 iTF_per=   277.27 TF_per=   276.30[0m
+[0;31m Prog=  94.37% N_left=   329648 Time=    45.27 Time_left=       2.70 iTF=    8917.05 TF=  8842.44 iTF_per=   278.66 TF_per=   276.33[0m
+[0;31m Prog=  95.22% N_left=   312240 Time=    45.67 Time_left=       2.29 iTF=    8909.47 TF=  8843.03 iTF_per=   278.42 TF_per=   276.34[0m
+[0;31m Prog=  95.97% N_left=   294832 Time=    46.04 Time_left=       1.93 iTF=    8786.70 TF=  8842.58 iTF_per=   274.58 TF_per=   276.33[0m
+[0;31m Prog=  96.64% N_left=   277424 Time=    46.36 Time_left=       1.61 iTF=    8734.73 TF=  8841.82 iTF_per=   272.96 TF_per=   276.31[0m
+[0;31m Prog=  97.20% N_left=   261040 Time=    46.63 Time_left=       1.34 iTF=    8694.19 TF=  8840.96 iTF_per=   271.69 TF_per=   276.28[0m
+[0;31m Prog=  99.16% N_left=   175024 Time=    47.75 Time_left=       0.41 iTF=    7431.18 TF=  8808.04 iTF_per=   232.22 TF_per=   275.25[0m
+[0;31m Prog=  99.89% N_left=    89008 Time=    48.48 Time_left=       0.05 iTF=    4257.31 TF=  8739.59 iTF_per=   133.04 TF_per=   273.11[0m
+[0;31m Prog= 100.00% N_left=     2992 Time=    48.81 Time_left=       0.00 iTF=    1422.66 TF=  8690.06 iTF_per=    44.46 TF_per=   271.56[0m
+2026-04-08 01:41:08.353
+LU seconds: AVG = 49.34, MAX = 49.34 (2->a0001), MIN = 49.34 (24->a0004)
+
+Solver iteration  0, L-infinite residual = 4.86336282e-04
+Solver iteration  1, L-infinite residual = 1.14286812e-09
+Solver iteration  2, L-infinite residual = 9.02611319e-14
+Iterative Solver seconds: AVG = 18.77, MAX = 18.77 (7->a0001), MIN = 18.77 (25->a0004)
+
+2026-04-08 01:41:27.127
+
+ ****** HPL MxP Result    ****** 
+
+    EPS           . . . . . . . . . . . . . . . . .          =    2.000000E-16
+    Threshold     . . . . . . . . . . . . . . . . .          =    1.600000E+01
+  ||Ax-b||_oo     . . . . . . . . . . . . . . . . .          =    9.026113E-14
+  ||A   ||_oo     . . . . . . . . . . . . . . . . .          =    8.626811E+05
+  ||x   ||_oo     . . . . . . . . . . . . . . . . .          =    2.331385E-06
+  ||b   ||_oo     . . . . . . . . . . . . . . . . .          =    9.999991E-01
+  ||Ax-b||_oo / (EPS * (||A||_oo * ||x||_oo + ||b||_oo) * N) =    1.742555E-04 ...... PASSED
+
+    N = 860080, NB = 1024, NPROW = 4, NPCOL = 8, SLOPPY-TYPE = FP16
+[0;31m       GFLOPS = 6.2272e+06, per GPU =  194600.64[0m[0;34m ------ The HPL-MxP performance to report[0m
+    LU GFLOPS = 8.5966e+06, per GPU =  268642.62[0;34m ------ The performance excluding the iterative solver part[0m
+
+ ****** HPL MxP Result    ****** 
+
+
+ ****** test loop 1 of 1 done   ****** 
+
+
+ ****** test 1 of 1 done   ****** 
+
++ echo Done
+Done
++ echo 2026-04-08T01:37:35
+2026-04-08T01:37:35

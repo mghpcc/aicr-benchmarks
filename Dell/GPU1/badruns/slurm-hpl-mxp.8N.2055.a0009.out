@@ -1,0 +1,503 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T19:28:17
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0009 a0010 a0011 a0012 a0013 a0014 a0015 a0017 '
+Running on hosts: a0009 a0010 a0011 a0012 a0013 a0014 a0015 a0017 
++ echo 2026-04-01T19:28:17
+2026-04-01T19:28:17
++ export UCX_NET_DEVICES=mlx5_0:1
++ UCX_NET_DEVICES=mlx5_0:1
++ GPU_AFFINITY=0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ for i in {1..7}
++ GPU_AFFINITY=0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7
++ N_SIZE=1140736
++ srun -N 8 --ntasks-per-node=8 --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7:0:1:2:3:4:5:6:7 --n 1140736 --nb 2048 --nprow 8 --npcol 8 --nporder row
+[a0010:54692:0:54861] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54692:0:54861] ib_mlx5_log.c:179  DCI QP 0x33b wqe[0]: RDMA_READ s-- [rqpn 0x173e rlid 6] [rva 0x7f3684000000 rkey 0x20616d] [va 0x7ef12c000000 len 2097152 lkey 0x207182] 
+[a0010:54605:0:54869] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54605:0:54869] ib_mlx5_log.c:179  DCI QP 0x33a wqe[0]: RDMA_READ s-- [rqpn 0x1747 rlid 6] [rva 0x7eadc6000000 rkey 0x20606c] [va 0x7f74b6000000 len 2097152 lkey 0x207081] 
+[a0010:54694:0:54867] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54694:0:54867] ib_mlx5_log.c:179  DCI QP 0x33f wqe[0]: RDMA_READ s-- [rqpn 0x1733 rlid 6] [rva 0x7ef714000000 rkey 0x20636f] [va 0x7f0098000000 len 2097152 lkey 0x207384] 
+==== backtrace (tid:  54861) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f5402a2b774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f5402a28732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f5402a2d56a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f5402a2d8f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f540011b550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f540014fe82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f540011c74d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f5400152097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f5402abf0ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f54417203b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f5441726bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f544d93203b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f544d95ee9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f541488aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f5414917c3c]
+=================================
+[a0010:54692] *** Process received signal ***
+[a0010:54692] Signal: Aborted (6)
+[a0010:54692] Signal code:  (-6)
+==== backtrace (tid:  54869) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7fd62b3c1774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7fd62b3be732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7fd62b3c356a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7fd62b3c38f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7fd628ad7550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7fd628b0be82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7fd628ad874d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7fd628b0e097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7fd6300810ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7fd6716623b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7fd671668bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7fd67a5be03b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7fd67a5eae9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7fd64108aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7fd641117c3c]
+=================================
+[a0010:54692] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f5414833330]
+[a0010:54692] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f541488cb2c]
+[a0010:54692] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f541483327e]
+[a0010:54692] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f54148168ff]
+[a0010:54692] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f5402a28737]
+[a0010:54692] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f5402a2d56a]
+[a0010:54706:0:54865] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54706:0:54865] ib_mlx5_log.c:179  DCI QP 0x33e wqe[0]: RDMA_READ s-- [rqpn 0x1729 rlid 6] [rva 0x7ec6f2000000 rkey 0x20626e] [va 0x7ee95a000000 len 2097152 lkey 0x207283] 
+[a0010:54605] *** Process received signal ***
+[a0010:54605] Signal: Aborted (6)
+[a0010:54605] Signal code:  (-6)
+[a0010:54692] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f5402a2d8f4]
+[a0010:54692] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f540011b550]
+[a0010:54692] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f540014fe82]
+[a0010:54692] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f540011c74d]
+[a0010:54692] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f5400152097]
+[a0010:54692] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f5402abf0ea]
+[a0010:54605] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7fd641033330]
+[a0010:54692] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f54417203b4]
+[a0010:54692] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f5441726bb5]
+[a0010:54692] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f544d93203b]
+[a0010:54605] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7fd64108cb2c]
+[a0010:54605] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7fd64103327e]
+[a0010:54605] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7fd6410168ff]
+[a0010:54692] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f544d95ee9e]
+[a0010:54605] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7fd62b3be737]
+[a0010:54605] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7fd62b3c356a]
+[a0010:54605] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7fd62b3c38f4]
+[a0010:54605] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7fd628ad7550]
+[a0010:54605] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7fd628b0be82]
+[a0010:54692] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54605] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7fd628ad874d]
+[a0010:54605] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7fd628b0e097]
+[a0010:54605] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7fd6300810ea]
+[a0010:54605] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7fd6716623b4]
+[a0010:54692] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54692] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54692] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54605] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7fd671668bb5]
+[a0010:54692] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54692] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54692] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54605] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7fd67a5be03b]
+[a0010:54605] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7fd67a5eae9e]
+[a0010:54605] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54605] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54692] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54605] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54605] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54692] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f541488aaa4]
+[a0010:54605] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54605] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54692] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f5414917c3c]
+[a0010:54692] *** End of error message ***
+[a0010:54605] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54605] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54605] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7fd64108aaa4]
+[a0010:54605] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7fd641117c3c]
+[a0010:54605] *** End of error message ***
+==== backtrace (tid:  54867) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f636e07d774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f636e07a732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f636e07f56a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f636e07f8f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f636c988550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f636c9bce82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f636c98974d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f636c9bf097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f636e1110ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f63acd203b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f63acd26bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f63b8f3203b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f63b8f5ee9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f637fe8aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f637ff17c3c]
+=================================
+[a0010:54694] *** Process received signal ***
+[a0010:54694] Signal: Aborted (6)
+[a0010:54694] Signal code:  (-6)
+[a0010:54694] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f637fe33330]
+[a0010:54694] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f637fe8cb2c]
+[a0010:54694] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f637fe3327e]
+[a0010:54694] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f637fe168ff]
+[a0010:54694] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f636e07a737]
+[a0010:54694] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f636e07f56a]
+[a0010:54694] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f636e07f8f4]
+[a0010:54694] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f636c988550]
+[a0010:54694] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f636c9bce82]
+[a0010:54694] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f636c98974d]
+[a0010:54694] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f636c9bf097]
+[a0010:54694] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f636e1110ea]
+[a0010:54694] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f63acd203b4]
+[a0010:54694] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f63acd26bb5]
+[a0010:54694] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f63b8f3203b]
+[a0010:54694] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f63b8f5ee9e]
+[a0010:54694] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54694] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54694] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54694] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54694] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54694] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54694] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54694] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54694] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f637fe8aaa4]
+[a0010:54694] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f637ff17c3c]
+[a0010:54694] *** End of error message ***
+==== backtrace (tid:  54865) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f4ad13b3774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f4ad13b0732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f4ad13b556a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f4ad13b58f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f48bea64550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f48bea98e82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f48bea6574d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f48bea9b097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f4ad14470ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f4b136623b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f4b13668bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f4b1c57f03b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f4b1c5abe9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f4ae308aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f4ae3117c3c]
+=================================
+[a0010:54706] *** Process received signal ***
+[a0010:54706] Signal: Aborted (6)
+[a0010:54706] Signal code:  (-6)
+[a0010:54706] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f4ae3033330]
+[a0010:54706] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f4ae308cb2c]
+[a0010:54706] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f4ae303327e]
+[a0010:54706] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f4ae30168ff]
+[a0010:54706] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f4ad13b0737]
+[a0010:54706] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f4ad13b556a]
+[a0010:54706] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f4ad13b58f4]
+[a0010:54706] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f48bea64550]
+[a0010:54706] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f48bea98e82]
+[a0010:54706] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f48bea6574d]
+[a0010:54706] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f48bea9b097]
+[a0010:54706] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f4ad14470ea]
+[a0010:54706] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f4b136623b4]
+[a0010:54706] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f4b13668bb5]
+[a0010:54706] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f4b1c57f03b]
+[a0010:54706] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f4b1c5abe9e]
+[a0010:54706] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54706] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54706] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54706] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54706] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54706] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54706] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54706] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54706] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f4ae308aaa4]
+[a0010:54706] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f4ae3117c3c]
+[a0010:54706] *** End of error message ***
+[a0010:54683:0:54841] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54683:0:54841] ib_mlx5_log.c:179  DCI QP 0x345 wqe[0]: RDMA_READ s-- [rqpn 0x175a rlid 6] [rva 0x7f93d4000000 rkey 0x206772] [va 0x7eecc0000000 len 2097152 lkey 0x207b88] 
+[a0010:54693:0:54863] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54693:0:54863] ib_mlx5_log.c:179  DCI QP 0x343 wqe[0]: RDMA_READ s-- [rqpn 0x1714 rlid 6] [rva 0x7eb90a000000 rkey 0x206671] [va 0x7f3032000000 len 2097152 lkey 0x207786] 
+[a0010:54707:0:54859] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54707:0:54859] ib_mlx5_log.c:179  DCI QP 0x342 wqe[0]: RDMA_READ s-- [rqpn 0x171f rlid 6] [rva 0x7f3148000000 rkey 0x206470] [va 0x7f22d0000000 len 2097152 lkey 0x207685] 
+[a0010:54546:0:54851] ib_mlx5_log.c:179  Remote operation error on mlx5_0:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0010:54546:0:54851] ib_mlx5_log.c:179  DCI QP 0x344 wqe[0]: RDMA_READ s-- [rqpn 0x1752 rlid 6] [rva 0x7f385c000000 rkey 0x206873] [va 0x7f22ac000000 len 2097152 lkey 0x207887] 
+==== backtrace (tid:  54841) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f4f95785774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f4f95782732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f4f9578756a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f4f957878f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f4f94093550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f4f940c7e82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f4f9409474d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f4f940ca097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f4f958190ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f4fd7a623b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f4fd7a68bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f4fe094a03b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f4fe0976e9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f4fa748aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f4fa7517c3c]
+=================================
+[a0010:54683] *** Process received signal ***
+[a0010:54683] Signal: Aborted (6)
+[a0010:54683] Signal code:  (-6)
+[a0010:54683] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f4fa7433330]
+==== backtrace (tid:  54863) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f91a70b1774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f91a70ae732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f91a70b356a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f91a70b38f4]
+[a0010:54683] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f4fa748cb2c]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f91a47a1550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f91a47d5e82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f91a47a274d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f91a47d8097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f91a71450ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f91e9d203b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f91e9d26bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f91f5f3203b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f91f5f5ee9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f91bce8aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f91bcf17c3c]
+=================================
+[a0010:54683] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f4fa743327e]
+[a0010:54683] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f4fa74168ff]
+[a0010:54683] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f4f95782737]
+[a0010:54683] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f4f9578756a]
+[a0010:54683] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f4f957878f4]
+[a0010:54683] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f4f94093550]
+[a0010:54683] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f4f940c7e82]
+[a0010:54693] *** Process received signal ***
+[a0010:54693] Signal: Aborted (6)
+[a0010:54693] Signal code:  (-6)
+[a0010:54683] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f4f9409474d]
+[a0010:54683] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f4f940ca097]
+[a0010:54683] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f4f958190ea]
+[a0010:54683] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f4fd7a623b4]
+[a0010:54683] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f4fd7a68bb5]
+[a0010:54693] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f91bce33330]
+[a0010:54683] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f4fe094a03b]
+[a0010:54693] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f91bce8cb2c]
+[a0010:54683] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f4fe0976e9e]
+[a0010:54693] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f91bce3327e]
+[a0010:54693] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f91bce168ff]
+[a0010:54693] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f91a70ae737]
+[a0010:54693] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f91a70b356a]
+[a0010:54683] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54693] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f91a70b38f4]
+[a0010:54693] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f91a47a1550]
+[a0010:54693] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f91a47d5e82]
+[a0010:54683] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54683] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54693] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f91a47a274d]
+[a0010:54693] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f91a47d8097]
+[a0010:54693] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f91a71450ea]
+[a0010:54683] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54693] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f91e9d203b4]
+[a0010:54683] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54683] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54693] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f91e9d26bb5]
+[a0010:54683] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54693] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f91f5f3203b]
+[a0010:54693] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f91f5f5ee9e]
+[a0010:54683] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54693] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54683] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f4fa748aaa4]
+[a0010:54693] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+==== backtrace (tid:  54851) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f8582f0b774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f8582f08732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f8582f0d56a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f8582f0d8f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f85805fc550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f8580630e82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f85805fd74d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f8580633097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f8582f9f0ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f85c1b203b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f85c1b26bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f85cdd3203b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f85cdd5ee9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+[a0010:54693] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54693] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54693] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f8594c8aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f8594d17c3c]
+=================================
+[a0010:54683] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f4fa7517c3c]
+[a0010:54683] *** End of error message ***
+[a0010:54693] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54693] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54546] *** Process received signal ***
+[a0010:54546] Signal: Aborted (6)
+[a0010:54546] Signal code:  (-6)
+[a0010:54693] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54546] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f8594c33330]
+[a0010:54693] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f91bce8aaa4]
+[a0010:54546] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f8594c8cb2c]
+[a0010:54693] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f91bcf17c3c]
+[a0010:54693] *** End of error message ***
+[a0010:54546] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f8594c3327e]
+[a0010:54546] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f8594c168ff]
+[a0010:54546] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f8582f08737]
+[a0010:54546] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f8582f0d56a]
+[a0010:54546] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f8582f0d8f4]
+[a0010:54546] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f85805fc550]
+[a0010:54546] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f8580630e82]
+[a0010:54546] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f85805fd74d]
+[a0010:54546] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f8580633097]
+[a0010:54546] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f8582f9f0ea]
+[a0010:54546] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f85c1b203b4]
+[a0010:54546] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f85c1b26bb5]
+[a0010:54546] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f85cdd3203b]
+[a0010:54546] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f85cdd5ee9e]
+[a0010:54546] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54546] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54546] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54546] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54546] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54546] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54546] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54546] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54546] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f8594c8aaa4]
+[a0010:54546] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f8594d17c3c]
+[a0010:54546] *** End of error message ***
+==== backtrace (tid:  54859) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f85adabf774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f85adabc732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f85adac156a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f85adac18f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f85ac3cb550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2) [0x7f85ac3ffe82]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f85ac3cc74d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097) [0x7f85ac402097]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f85adb530ea]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f85ec7203b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f85ec726bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f85f893203b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f85f895ee9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50e9d3]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dc7d3]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df810]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df793]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df703]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6bc]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4df6a0]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5bd493]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f85bf88aaa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c) [0x7f85bf917c3c]
+=================================
+[a0010:54707] *** Process received signal ***
+[a0010:54707] Signal: Aborted (6)
+[a0010:54707] Signal code:  (-6)
+[a0010:54707] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f85bf833330]
+[a0010:54707] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f85bf88cb2c]
+[a0010:54707] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f85bf83327e]
+[a0010:54707] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f85bf8168ff]
+[a0010:54707] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f85adabc737]
+[a0010:54707] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f85adac156a]
+[a0010:54707] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f85adac18f4]
+[a0010:54707] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f85ac3cb550]
+[a0010:54707] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_dc_mlx5_ep_handle_failure+0xb2)[0x7f85ac3ffe82]
+[a0010:54707] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f85ac3cc74d]
+[a0010:54707] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x4b097)[0x7f85ac402097]
+[a0010:54707] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f85adb530ea]
+[a0010:54707] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f85ec7203b4]
+[a0010:54707] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f85ec726bb5]
+[a0010:54707] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f85f893203b]
+[a0010:54707] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f85f895ee9e]
+[a0010:54707] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50e9d3]
+[a0010:54707] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dc7d3]
+[a0010:54707] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df810]
+[a0010:54707] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df793]
+[a0010:54707] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df703]
+[a0010:54707] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6bc]
+[a0010:54707] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4df6a0]
+[a0010:54707] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5bd493]
+[a0010:54707] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f85bf88aaa4]
+[a0010:54707] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c3c)[0x7f85bf917c3c]
+[a0010:54707] *** End of error message ***
+/workspace/hpl-mxp.sh: line 261: 54707 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPL} ${HPL_MXP_PARAMS}
+srun: error: a0010: task 8: Exited with exit code 134
+[2026-04-01T19:31:24.704] error:  mpi/pmix_v3: _errhandler: a0010 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2055.0:8]
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-01T19:31:24.707] error: *** STEP 2055.0 ON a0009 CANCELLED AT 2026-04-01T19:31:24 DUE to SIGNAL Killed ***
+srun: error: a0014: tasks 40-47: Killed
+srun: error: a0012: tasks 24-31: Killed
+srun: error: a0013: tasks 32-39: Killed
+srun: error: a0009: tasks 0-7: Killed
+srun: error: a0011: tasks 16-23: Killed
+srun: error: a0015: tasks 48-55: Killed
+srun: error: a0017: tasks 56-63: Killed
+[2026-04-01T19:31:25.957] error:  mpi/pmix_v3: _errhandler: a0010 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2055.0:10]
+srun: error: a0010: tasks 9-15: Killed
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-04-01T19:31:27
+2026-04-01T19:31:27

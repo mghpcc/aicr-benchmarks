@@ -1,0 +1,54 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T00:24:59
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
++ NCCL_BIN=/workspace/microbenchmarks/nccl_tests.sh
++++ scontrol show hostname
+++ echo a0001 a0002 a0003 a0004
++ echo 'Running on hosts: a0001 a0002 a0003 a0004'
+Running on hosts: a0001 a0002 a0003 a0004
++ echo 2026-04-01T00:24:59
+2026-04-01T00:24:59
++ srun -N4 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/microbenchmarks/nccl_tests.sh --op allreduce --test-params '-b 8 -e 128M -f 2 -g 1'
+# Collective test starting: all_reduce_perf_mpi
+# nThread 1 nGpus 1 minBytes 8 maxBytes 134217728 step: 2(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  92986 on      a0001 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid  93072 on      a0001 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid  93069 on      a0001 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid  93070 on      a0001 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  4 Group  0 Pid  92952 on      a0001 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  5 Group  0 Pid  92914 on      a0001 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  6 Group  0 Pid  92998 on      a0001 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  7 Group  0 Pid  92927 on      a0001 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  8 Group  0 Pid  75764 on      a0002 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  9 Group  0 Pid  75712 on      a0002 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 10 Group  0 Pid  75714 on      a0002 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 11 Group  0 Pid  75808 on      a0002 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 12 Group  0 Pid  75809 on      a0002 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 13 Group  0 Pid  75752 on      a0002 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 14 Group  0 Pid  75678 on      a0002 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 15 Group  0 Pid  75713 on      a0002 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 16 Group  0 Pid  75900 on      a0003 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 17 Group  0 Pid  75950 on      a0003 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 18 Group  0 Pid  75905 on      a0003 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 19 Group  0 Pid  75969 on      a0003 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 20 Group  0 Pid  75811 on      a0003 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 21 Group  0 Pid  75859 on      a0003 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 22 Group  0 Pid  75834 on      a0003 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 23 Group  0 Pid  75974 on      a0003 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 24 Group  0 Pid  74926 on      a0004 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 25 Group  0 Pid  74927 on      a0004 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 26 Group  0 Pid  74872 on      a0004 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 27 Group  0 Pid  74801 on      a0004 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 28 Group  0 Pid  74802 on      a0004 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 29 Group  0 Pid  74873 on      a0004 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 30 Group  0 Pid  74828 on      a0004 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank 31 Group  0 Pid  74764 on      a0004 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-01T00:48:26.536] error: *** STEP 934.0 ON a0001 CANCELLED AT 2026-04-01T00:48:26 DUE to SIGNAL Terminated ***
+[2026-04-01T00:48:26.537] error: *** JOB 934 ON a0001 CANCELLED AT 2026-04-01T00:48:26 DUE to SIGNAL Terminated ***

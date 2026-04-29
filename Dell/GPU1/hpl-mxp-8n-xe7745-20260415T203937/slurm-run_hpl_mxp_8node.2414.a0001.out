@@ -1,0 +1,264 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-16T18:19:37
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-16T18:19:37
++++ scontrol show hostname
+++ echo a0001 a0002 a0003 a0004 a0005 a0011 a0018 a0019
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 a0005 a0011 a0018 a0019'
+Running on hosts: a0001 a0002 a0003 a0004 a0005 a0011 a0018 a0019
++ echo 2026-04-16T18:19:37
+2026-04-16T18:19:37
++ export UCX_IB_TX_QUEUE_LEN=1024
++ UCX_IB_TX_QUEUE_LEN=1024
++ export APPTAINERENV_UCX_IB_TX_QUEUE_LEN=1024
++ APPTAINERENV_UCX_IB_TX_QUEUE_LEN=1024
++ export UCX_RC_FC_WND_SIZE=128
++ UCX_RC_FC_WND_SIZE=128
++ export APPTAINERENV_UCX_RC_FC_WND_SIZE=128
++ APPTAINERENV_UCX_RC_FC_WND_SIZE=128
++ export UCX_NET_DEVICES=mlx5_3:1
++ UCX_NET_DEVICES=mlx5_3:1
++ export APPTAINERENV_UCX_NET_DEVICES=mlx5_3:1
++ APPTAINERENV_UCX_NET_DEVICES=mlx5_3:1
++ export UCX_TLS=self,shm,rc,cuda_copy,cuda_ipc
++ UCX_TLS=self,shm,rc,cuda_copy,cuda_ipc
++ export APPTAINERENV_UCX_TLS=self,shm,rc,cuda_copy,cuda_ipc
++ APPTAINERENV_UCX_TLS=self,shm,rc,cuda_copy,cuda_ipc
++ N_SIZE=1140736
++ srun -N 8 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_26.02.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 2048 --nporder row --nprow 8 --npcol 8
+
+================================================================================
+HPL-MxP-NVIDIA 26.2.0  -- NVIDIA accelerated HPL-MxP benchmark benchmark -- NVIDIA
+================================================================================
+
+ ****** HPL MxP Settings ****** 
+
+   --nprow =  8 
+   --npcol =  8 
+   --order = row 
+   --n     = 1140736 
+   --nb    = 2048 
+   --tolerance                        = 1.000000e-12 
+   --test-loop                        = 1 
+   --preset-gemm-kernel               = 120 
+   --u-panel-chunk-nbs                = 8 
+   --call-dgemv-with-multiple-threads = 0 
+   --prioritize-trsm                  = 0 
+   --prioritize-factorization         = 0 
+   --use-separate-stream-for-gemm     = 1 
+   --use-mpi-panel-broadcast          = 50 
+   --mpi-use-host-threads             = 1 
+   --sloppy-type                      = FP16 
+   --Anq-device                       = 0 
+   --cuda-host-register-step          = 2048 
+   --mpi-use-mpi                      = 0 
+   --use-host-mpi                     = 0 
+   --fill-device                      = 0 
+   --fill-device-buffer-size          = 3048 
+   --fp4-scaling-factor-a             = 1.000000e-05 
+   --skip-tests                       = 0 
+   --gemm-iterations                  = 100 
+
+
+
+ ****** Monitor GPU Settings ****** 
+
+   --monitor-gpu                      = 0 
+
+
+
+ ****** test 1 of 1 starts ****** 
+
+   n      = 1140736
+   nb     = 2048
+   nprow  = 8
+   npcol  = 8
+
+Device info:
+	Peak clock frequency 2430 MHz
+	SM 120
+	Number of SMs 188
+	Total memory available 94.97 GB
+
+---------------------------------------------------------------------------------------------
+[34m Per process host memory consumption MAX = 153.131 GB, available MIN = 276.715 GB[0m
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+[34m Per process device memory consumption MAX = 82.627 GB, available MIN = 94.193 GB[0m
+---------------------------------------------------------------------------------------------
+
+Constructor seconds: AVG = 0.44, MAX = 1.10 (44->a0011), MIN = 0.04 (21->a0003)
+
+
+ ****** Testing HPL MxP components ****** 
+
+GEMM seconds: AVG = 11.93, MAX = 12.24 (8->a0002), MIN = 11.63 (46->a0011)
+
+GEMM GFLOPS: AVG = 349032.41, MAX = 354660.17 (40->a0011), MIN = 344009.87 (8->a0002)
+
+MPI U broadcast seconds: AVG = 2.09, MAX = 2.19 (4->a0001), MIN = 1.72 (24->a0004)
+
+MPI U broadcast GFLOPS: AVG = 3.23, MAX = 3.89 (24->a0004), MIN = 3.06 (4->a0001)
+
+MPI U broadcast seconds: AVG = 2.69, MAX = 2.70 (4->a0001), MIN = 2.67 (29->a0004)
+
+MPI U broadcast GFLOPS: AVG = 2.50, MAX = 2.52 (29->a0004), MIN = 2.48 (4->a0001)
+
+NCCL U broadcast seconds: AVG = 0.68, MAX = 0.69 (0->a0001), MIN = 0.66 (4->a0001)
+
+NCCL U broadcast GFLOPS: AVG = 9.91, MAX = 10.10 (4->a0001), MIN = 9.73 (0->a0001)
+
+MPI U Sendrecv seconds: AVG = 2.68, MAX = 2.70 (4->a0001), MIN = 2.66 (53->a0018)
+
+MPI U Sendrecv GFLOPS: AVG = 2.50, MAX = 2.52 (53->a0018), MIN = 2.49 (4->a0001)
+
+MPI L2 broadcast seconds: AVG = 36.35, MAX = 36.61 (15->a0002), MIN = 35.94 (61->a0019)
+
+MPI L2 broadcast GFLOPS: AVG = 3.21, MAX = 3.22 (61->a0019), MIN = 3.20 (47->a0011)
+
+NCCL L2 broadcast seconds: AVG = 2.25, MAX = 2.27 (36->a0005), MIN = 2.22 (52->a0018)
+
+NCCL L2 broadcast GFLOPS: AVG = 25.92, MAX = 26.04 (52->a0018), MIN = 25.82 (36->a0005)
+
+MPI L2 Sendrecv seconds: AVG = 36.34, MAX = 36.63 (15->a0002), MIN = 35.95 (53->a0018)
+
+MPI L2 Sendrecv GFLOPS: AVG = 3.21, MAX = 3.22 (53->a0018), MIN = 3.21 (15->a0002)
+
+pdgemv seconds: AVG = 1.99, MAX = 2.20 (36->a0005), MIN = 1.71 (52->a0018)
+
+pdgemv GFLOPS: AVG = 20.67, MAX = 23.71 (52->a0018), MIN = 18.42 (39->a0005)
+
+
+ ****** Matrix Generation ****** 
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 276.149 GB, device = 11.215 GB[0m
+---------------------------------------------------------------------------------------------
+
+RNG seconds: AVG = 82.28, MAX = 87.31 (10->a0002), MIN = 76.64 (53->a0018)
+
+Set Diagonal seconds: AVG = 0.00, MAX = 0.01 (0->a0001), MIN = 0.00 (43->a0011)
+
+Get Anorm seconds: AVG = 0.05, MAX = 0.06 (5->a0001), MIN = 0.03 (56->a0019)
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 125.610 GB, device = 11.215 GB[0m
+---------------------------------------------------------------------------------------------
+
+Sp seconds: AVG = 15.21, MAX = 15.21 (23->a0003), MIN = 15.19 (36->a0005)
+
+matgen seconds: AVG = 102.65, MAX = 102.65 (62->a0019), MIN = 102.65 (0->a0001)
+
+
+ ****** test loop 1 of 1 starts ****** 
+
+2026-04-16 18:23:19.459
+[0;31m Prog=   2.14% N_left=  1132544 Time=     2.09 Time_left=      95.73 iTF=   10115.94 TF= 10115.94 iTF_per=   158.06 TF_per=   158.06[0m
+[0;31m Prog=   3.72% N_left=  1126400 Time=     3.39 Time_left=      87.71 iTF=   12066.84 TF= 10863.21 iTF_per=   188.54 TF_per=   169.74[0m
+[0;31m Prog=   5.29% N_left=  1120256 Time=     4.59 Time_left=      82.27 iTF=   12886.75 TF= 11393.11 iTF_per=   201.36 TF_per=   178.02[0m
+[0;31m Prog=   6.84% N_left=  1114112 Time=     5.83 Time_left=      79.42 iTF=   12405.06 TF= 11607.67 iTF_per=   193.83 TF_per=   181.37[0m
+[0;31m Prog=   7.86% N_left=  1110016 Time=     6.64 Time_left=      77.76 iTF=   12574.32 TF= 11725.01 iTF_per=   196.47 TF_per=   183.20[0m
+[0;31m Prog=   9.38% N_left=  1103872 Time=     7.82 Time_left=      75.52 iTF=   12714.82 TF= 11874.88 iTF_per=   198.67 TF_per=   185.55[0m
+[0;31m Prog=  10.89% N_left=  1097728 Time=     9.04 Time_left=      73.97 iTF=   12218.62 TF= 11921.22 iTF_per=   190.92 TF_per=   186.27[0m
+[0;31m Prog=  12.38% N_left=  1091584 Time=    10.21 Time_left=      72.31 iTF=   12528.05 TF= 11991.04 iTF_per=   195.75 TF_per=   187.36[0m
+[0;31m Prog=  13.85% N_left=  1085440 Time=    11.38 Time_left=      70.80 iTF=   12492.62 TF= 12042.41 iTF_per=   195.20 TF_per=   188.16[0m
+[0;31m Prog=  14.82% N_left=  1081344 Time=    12.19 Time_left=      70.09 iTF=   11806.94 TF= 12026.68 iTF_per=   184.48 TF_per=   187.92[0m
+[0;31m Prog=  16.26% N_left=  1075200 Time=    13.35 Time_left=      68.74 iTF=   12358.20 TF= 12055.39 iTF_per=   193.10 TF_per=   188.37[0m
+[0;31m Prog=  17.69% N_left=  1069056 Time=    14.50 Time_left=      67.48 iTF=   12248.36 TF= 12070.73 iTF_per=   191.38 TF_per=   188.61[0m
+[0;31m Prog=  19.10% N_left=  1062912 Time=    15.68 Time_left=      66.39 iTF=   11904.03 TF= 12058.26 iTF_per=   186.00 TF_per=   188.41[0m
+[0;31m Prog=  20.03% N_left=  1058816 Time=    16.36 Time_left=      65.30 iTF=   13494.48 TF= 12118.24 iTF_per=   210.85 TF_per=   189.35[0m
+[0;31m Prog=  21.42% N_left=  1052672 Time=    17.54 Time_left=      64.36 iTF=   11599.03 TF= 12083.28 iTF_per=   181.23 TF_per=   188.80[0m
+[0;31m Prog=  22.79% N_left=  1046528 Time=    18.73 Time_left=      63.46 iTF=   11417.93 TF= 12041.16 iTF_per=   178.41 TF_per=   188.14[0m
+[0;31m Prog=  24.14% N_left=  1040384 Time=    19.86 Time_left=      62.42 iTF=   11795.55 TF= 12027.13 iTF_per=   184.31 TF_per=   187.92[0m
+[0;31m Prog=  25.47% N_left=  1034240 Time=    20.98 Time_left=      61.39 iTF=   11786.33 TF= 12014.26 iTF_per=   184.16 TF_per=   187.72[0m
+[0;31m Prog=  26.36% N_left=  1030144 Time=    21.74 Time_left=      60.76 iTF=   11478.00 TF= 11995.50 iTF_per=   179.34 TF_per=   187.43[0m
+[0;31m Prog=  27.67% N_left=  1024000 Time=    22.85 Time_left=      59.75 iTF=   11700.36 TF= 11981.20 iTF_per=   182.82 TF_per=   187.21[0m
+[0;31m Prog=  28.96% N_left=  1017856 Time=    23.96 Time_left=      58.77 iTF=   11580.72 TF= 11962.71 iTF_per=   180.95 TF_per=   186.92[0m
+[0;31m Prog=  30.24% N_left=  1011712 Time=    25.07 Time_left=      57.85 iTF=   11319.64 TF= 11934.04 iTF_per=   176.87 TF_per=   186.47[0m
+[0;31m Prog=  31.50% N_left=  1005568 Time=    26.15 Time_left=      56.87 iTF=   11598.17 TF= 11920.20 iTF_per=   181.22 TF_per=   186.25[0m
+[a0019:142871:0:143130] ib_mlx5_log.c:179  Remote operation error on mlx5_3:1/IB (synd 0x14 vend 0x89 hw_synd 0/0)
+[a0019:142871:0:143130] ib_mlx5_log.c:179  RC QP 0x37d wqe[32136]: RDMA_READ s-- [rva 0x7eae31800000 rkey 0x200f00] [va 0x7f2401800000 len 2097152 lkey 0x204e00] [rqpn 0x36a dlid=24 sl=0 port=1 src_path_bits=0]
+==== backtrace (tid: 143130) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f85679417b4]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f856793e772]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x395aa) [0x7f85679435aa]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f8567943934]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f856505f670]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x134) [0x7f8565075974]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f856506073d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x2ce77) [0x7f8565076e77]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f85679d780a]
+ 9  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7f85738623b4]
+10  /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115) [0x7f8573868bb5]
+11  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b) [0x7f857e7e703b]
+12  /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e) [0x7f857e813e9e]
+13  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x50f39e]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dcce1]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dfd1e]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dfca1]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dfc11]
+18  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dfbca]
+19  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4dfbae]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x5beeb3]
+21  /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4) [0x7f857e1a1aa4]
+22  /lib/x86_64-linux-gnu/libc.so.6(+0x129c6c) [0x7f857e22ec6c]
+=================================
+[a0019:142871] *** Process received signal ***
+[a0019:142871] Signal: Aborted (6)
+[a0019:142871] Signal code:  (-6)
+[a0019:142871] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f857e14a330]
+[a0019:142871] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f857e1a3b2c]
+[a0019:142871] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f857e14a27e]
+[a0019:142871] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f857e12d8ff]
+[a0019:142871] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34777)[0x7f856793e777]
+[a0019:142871] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x395aa)[0x7f85679435aa]
+[a0019:142871] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f8567943934]
+[a0019:142871] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f856505f670]
+[a0019:142871] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x134)[0x7f8565075974]
+[a0019:142871] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f856506073d]
+[a0019:142871] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x2ce77)[0x7f8565076e77]
+[a0019:142871] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f85679d780a]
+[a0019:142871] [12] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7f85738623b4]
+[a0019:142871] [13] /opt/hpcx/ompi/lib/./libopen-pal.so.40(ompi_sync_wait_mt+0x115)[0x7f8573868bb5]
+[a0019:142871] [14] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_wait+0x24b)[0x7f857e7e703b]
+[a0019:142871] [15] /opt/hpcx/ompi/lib/libmpi.so.40(PMPI_Wait+0x1e)[0x7f857e813e9e]
+[a0019:142871] [16] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x50f39e]
+[a0019:142871] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dcce1]
+[a0019:142871] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dfd1e]
+[a0019:142871] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dfca1]
+[a0019:142871] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dfc11]
+[a0019:142871] [21] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dfbca]
+[a0019:142871] [22] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4dfbae]
+[a0019:142871] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x5beeb3]
+[a0019:142871] [24] /lib/x86_64-linux-gnu/libc.so.6(+0x9caa4)[0x7f857e1a1aa4]
+[a0019:142871] [25] /lib/x86_64-linux-gnu/libc.so.6(+0x129c6c)[0x7f857e22ec6c]
+[a0019:142871] *** End of error message ***
+/workspace/hpl-mxp.sh: line 261: 142871 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPL} ${HPL_MXP_PARAMS}
+srun: error: a0019: task 60: Exited with exit code 134
+[2026-04-16T18:24:06.956] error:  mpi/pmix_v3: _errhandler: a0019 [7]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:60]
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-16T18:24:06.958] error: *** STEP 2414.0 ON a0001 CANCELLED AT 2026-04-16T18:24:06 DUE to SIGNAL Killed ***
+[0;31m Prog=  32.34% N_left=  1001472 Time=    26.89 Time_left=      56.26 iTF=   1125[2026-04-16T18:24:10.382] error:  mpi/pmix_v3: _errhandler: a0019 [7]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:62]
+[2026-04-16T18:24:10.416] error:  mpi/pmix_v3: _errhandler: a0011 [5]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:46]
+[2026-04-16T18:24:10.440] error:  mpi/pmix_v3: _errhandler: a0004 [3]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:31]
+[2026-04-16T18:24:10.440] error:  mpi/pmix_v3: _errhandler: a0001 [0]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:0]
+[2026-04-16T18:24:10.442] error:  mpi/pmix_v3: _errhandler: a0002 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:14]
+[2026-04-16T18:24:10.562] error:  mpi/pmix_v3: _errhandler: a0005 [4]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:39]
+[2026-04-16T18:24:10.598] error:  mpi/pmix_v3: _errhandler: a0003 [2]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:22]
+[2026-04-16T18:24:11.574] error:  mpi/pmix_v3: _errhandler: a0018 [6]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:54]
+srun: error: a0011: tasks 40-47: Killed
+srun: error: a0019: tasks 56-59,61-63: Killed
+srun: error: a0002: tasks 8-15: Killed
+srun: error: a0005: tasks 32-39: Killed
+srun: error: a0004: tasks 24-31: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0001: tasks 0-7: Killed
+[2026-04-16T18:24:14.772] error:  mpi/pmix_v3: _errhandler: a0018 [6]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:48]
+[2026-04-16T18:24:17.747] error:  mpi/pmix_v3: _errhandler: a0018 [6]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2414.0:49]
+srun: error: Timed out waiting for job step to complete
++ echo Done
+Done
++ echo 2026-04-16T18:19:37
+2026-04-16T18:19:37

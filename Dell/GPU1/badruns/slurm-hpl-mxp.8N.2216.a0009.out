@@ -1,0 +1,114 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T01:16:57
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0009 a0010 a0011 a0012 a0013 a0014 a0015 a0017 '
+Running on hosts: a0009 a0010 a0011 a0012 a0013 a0014 a0015 a0017 
++ echo 2026-04-08T01:16:57
+2026-04-08T01:16:57
++ GPU_AFFINITY=0:1:2:3:4:5:6:7
++ N_SIZE=1140736
++ srun -N 8 --ntasks-per-node=8 --cpu-bind=none --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 4096 --nprow 8 --npcol 8 --nporder row
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0015 [6]: pmixp_coll_ring.c:736: 0x14f64000c4f0: collective timeout seq=0
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_log: a0015 [6]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:754: 0x14f64000c4f0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:757: my peerid: 6:a0015
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:764: neighbor id: next 7:a0017, prev 5:a0014
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:773: Context ptr=0x14f64000c568, #0, in-use=0
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:773: Context ptr=0x14f64000c5a0, #1, in-use=0
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:773: Context ptr=0x14f64000c5d8, #2, in-use=1
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=6/fwd=1
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:819: 		 done contrib: a[0009-0014]
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:821: 		 wait contrib: a0017
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.042] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0015 [6]: pmixp_coll_ring.c:826: 	 buf (offset/size): 33434/49152
+[2026-04-08T01:22:02.051] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0012 [3]: pmixp_coll_ring.c:736: 0x14a9b400c4b0: collective timeout seq=0
+[2026-04-08T01:22:02.051] error:  mpi/pmix_v3: pmixp_coll_log: a0012 [3]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.051] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:754: 0x14a9b400c4b0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.051] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:757: my peerid: 3:a0012
+[2026-04-08T01:22:02.051] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:764: neighbor id: next 4:a0013, prev 2:a0011
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:773: Context ptr=0x14a9b400c528, #0, in-use=0
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:773: Context ptr=0x14a9b400c560, #1, in-use=0
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:773: Context ptr=0x14a9b400c598, #2, in-use=1
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=3/fwd=4
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:819: 		 done contrib: a[0009-0011]
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:821: 		 wait contrib: a[0013-0015,0017]
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.052] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0012 [3]: pmixp_coll_ring.c:826: 	 buf (offset/size): 19157/32768
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0009 [0]: pmixp_coll_ring.c:736: 0x14e06402c590: collective timeout seq=0
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_log: a0009 [0]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:754: 0x14e06402c590: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:757: my peerid: 0:a0009
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:764: neighbor id: next 1:a0010, prev 7:a0017
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:773: Context ptr=0x14e06402c608, #0, in-use=0
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:773: Context ptr=0x14e06402c640, #1, in-use=0
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:773: Context ptr=0x14e06402c678, #2, in-use=1
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=0/fwd=1
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:819: 		 done contrib: -
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:821: 		 wait contrib: a[0010-0015,0017]
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.067] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0009 [0]: pmixp_coll_ring.c:826: 	 buf (offset/size): 4880/16384
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0013 [4]: pmixp_coll_ring.c:736: 0x14984400c4f0: collective timeout seq=0
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_log: a0013 [4]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:754: 0x14984400c4f0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:757: my peerid: 4:a0013
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:764: neighbor id: next 5:a0014, prev 3:a0012
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:773: Context ptr=0x14984400c568, #0, in-use=0
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:773: Context ptr=0x14984400c5a0, #1, in-use=0
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:773: Context ptr=0x14984400c5d8, #2, in-use=1
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=4/fwd=5
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:819: 		 done contrib: a[0009-0012]
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:821: 		 wait contrib: a[0014-0015,0017]
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.090] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0013 [4]: pmixp_coll_ring.c:826: 	 buf (offset/size): 23916/32768
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0010 [1]: pmixp_coll_ring.c:736: 0x14a72800c4f0: collective timeout seq=0
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_log: a0010 [1]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:754: 0x14a72800c4f0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:757: my peerid: 1:a0010
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:764: neighbor id: next 2:a0011, prev 0:a0009
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:773: Context ptr=0x14a72800c568, #0, in-use=0
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:773: Context ptr=0x14a72800c5a0, #1, in-use=0
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:773: Context ptr=0x14a72800c5d8, #2, in-use=1
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=1/fwd=2
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:819: 		 done contrib: a0009
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:821: 		 wait contrib: a[0011-0015,0017]
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.103] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0010 [1]: pmixp_coll_ring.c:826: 	 buf (offset/size): 9639/16384
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0014 [5]: pmixp_coll_ring.c:736: 0x14fe6400c4f0: collective timeout seq=0
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_log: a0014 [5]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:754: 0x14fe6400c4f0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:757: my peerid: 5:a0014
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:764: neighbor id: next 6:a0015, prev 4:a0013
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:773: Context ptr=0x14fe6400c568, #0, in-use=0
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:773: Context ptr=0x14fe6400c5a0, #1, in-use=0
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:773: Context ptr=0x14fe6400c5d8, #2, in-use=1
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=5/fwd=6
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:819: 		 done contrib: a[0009-0013]
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:821: 		 wait contrib: a[0015,0017]
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.096] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0014 [5]: pmixp_coll_ring.c:826: 	 buf (offset/size): 28675/32768
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_reset_if_to: a0011 [2]: pmixp_coll_ring.c:736: 0x1475f000c4f0: collective timeout seq=0
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_log: a0011 [2]: pmixp_coll.c:286: Dumping collective state
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:754: 0x1475f000c4f0: COLL_FENCE_RING state seq=0
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:757: my peerid: 2:a0011
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:764: neighbor id: next 3:a0012, prev 1:a0010
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:773: Context ptr=0x1475f000c568, #0, in-use=0
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:773: Context ptr=0x1475f000c5a0, #1, in-use=0
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:773: Context ptr=0x1475f000c5d8, #2, in-use=1
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:782: 	 seq=0 contribs: loc=1/prev=2/fwd=3
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:786: 	 neighbor contribs [8]:
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:819: 		 done contrib: a[0009-0010]
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:821: 		 wait contrib: a[0012-0015,0017]
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:823: 	 status=PMIXP_COLL_RING_PROGRESS
+[2026-04-08T01:22:02.136] error:  mpi/pmix_v3: pmixp_coll_ring_log: a0011 [2]: pmixp_coll_ring.c:826: 	 buf (offset/size): 14398/16384
+srun: StepId=2216.0 aborted before step completely launched.
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-08T01:22:59.453] error: *** STEP 2216.0 ON a0009 CANCELLED AT 2026-04-08T01:22:59 DUE to SIGNAL Terminated ***
+[2026-04-08T01:22:59.453] error: *** JOB 2216 ON a0009 CANCELLED AT 2026-04-08T01:22:59 DUE to SIGNAL Terminated ***

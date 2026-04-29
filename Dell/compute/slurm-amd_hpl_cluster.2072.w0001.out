@@ -1,0 +1,70 @@
++ CONTAINER=/home/knevins/aicr-benchmarks/amd-zen-hpl.sif
++ APP_DIR=/opt/amd-hpl
++ HPL_DAT=/home/knevins/aicr-benchmarks/compute/config/HPL_cluster.dat
+++ lscpu
+++ awk '/^Core\(s\) per socket:/{print $NF}'
++ NT=128
+++ lscpu
+++ awk '/^Socket\(s\):/{print $NF}'
++ NR=1
++ TOTAL_RANKS=28
++ APPTAINER_OPTS=(--no-mount /etc/localtime)
++ [[ -d /usr/lib64/libibverbs ]]
++ APPTAINER_OPTS+=(--bind /usr/lib64/libibverbs:/usr/lib64/libibverbs)
++ [[ -d /etc/libibverbs.d ]]
++ APPTAINER_OPTS+=(--bind /etc/libibverbs.d:/etc/libibverbs.d)
++ unset OMPI_MCA_osc
++ export OMP_NUM_THREADS=128
++ OMP_NUM_THREADS=128
++ srun --ntasks=28 --ntasks-per-node=1 --cpus-per-task=128 --cpu-bind=cores apptainer exec --no-mount /etc/localtime --bind /usr/lib64/libibverbs:/usr/lib64/libibverbs --bind /etc/libibverbs.d:/etc/libibverbs.d --bind /home/knevins/aicr-benchmarks/compute/config/HPL_cluster.dat:/opt/amd-hpl/HPL.dat --pwd /opt/amd-hpl /home/knevins/aicr-benchmarks/amd-zen-hpl.sif /opt/amd-hpl/xhpl
+================================================================================
+AMD Zen HPL 2024_10_08
+Using AOCL BLIS
+================================================================================
+Derived from:
+HPLinpack 2.3  --  High-Performance Linpack benchmark  --   December 2, 2018
+Written by A. Petitet and R. Clint Whaley,  Innovative Computing Laboratory, UTK
+Modified by Piotr Luszczek, Innovative Computing Laboratory, UTK
+Modified by Julien Langou, University of Colorado Denver
+================================================================================
+
+An explanation of the input/output parameters follows:
+T/V    : Wall time / encoded variant.
+N      : The order of the coefficient matrix A.
+NB     : The partitioning blocking factor.
+P      : The number of process rows.
+Q      : The number of process columns.
+Time   : Time in seconds to solve the linear system.
+Gflops : Rate of execution for solving the linear system.
+
+The following parameter values will be used:
+
+N      : 1808603 
+NB     :     384 
+PMAP   : Row-major process mapping
+P      :       4 
+Q      :       7 
+PFACT  :   Right 
+NBMIN  :       4 
+NDIV   :       2 
+RFACT  :   Crout 
+BCAST  :  1ringM 
+DEPTH  :       1 
+SWAP   : (002) Mix (@ 64)
+L1     : transposed form
+A      : no-transposed form (ColMajor)
+EQUIL  : yes
+ALIGN  : 8 double precision words
+MXSWP  : (O/o) Orig 
+
+--------------------------------------------------------------------------------
+
+- The matrix A is randomly generated for each test.
+- The following scaled residual check will be computed:
+      ||Ax-b||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+- The relative machine precision (eps) is taken to be               1.110223e-16
+- Computational tests pass if scaled residuals are less than                16.0
+
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-06T19:31:10.057] error: *** STEP 2072.0 ON w0001 CANCELLED AT 2026-04-06T19:31:10 DUE TO TIME LIMIT ***
+[2026-04-06T19:31:10.078] error: *** JOB 2072 ON w0001 CANCELLED AT 2026-04-06T19:31:10 DUE TO TIME LIMIT ***

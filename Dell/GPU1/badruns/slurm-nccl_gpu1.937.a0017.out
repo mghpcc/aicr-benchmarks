@@ -1,0 +1,247 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T01:06:27
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
++ NCCL_BIN=/workspace/microbenchmarks/nccl_tests
++++ scontrol show hostname
+++ echo a0017
++ echo 'Running on hosts: a0017'
+Running on hosts: a0017
++ echo 2026-04-01T01:06:27
+2026-04-01T01:06:27
++ export NCCL_DEBUG=INFO
++ NCCL_DEBUG=INFO
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/microbenchmarks/nccl_tests/all_reduce_perf -b 8 -e 8G -f 2 -g 1 -n 20 -w 5
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 182814 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182814:182814 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182815 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182815:182815 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182788 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182788:182788 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182801 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182801:182801 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182787 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182787:182787 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182802 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182802:182802 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182813 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182813:182813 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 182816 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:182816:182816 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+a0017:182814:182814 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182815:182815 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182788:182788 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182813:182813 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182787:182787 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182802:182802 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182816:182816 [0] NCCL INFO cudaDriverVersion 13000
+a0017:182801:182801 [0] NCCL INFO cudaDriverVersion 13000
+
+[2026-04-01 01:06:31] a0017:182788:182788 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:782 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182788: Test failure common.cu:1197
+ .. a0017 pid 182788: Test failure common.cu:1050
+
+[2026-04-01 01:06:31] a0017:182815:182815 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:782 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182815: Test failure common.cu:1197
+ .. a0017 pid 182815: Test failure common.cu:1050
+
+[2026-04-01 01:06:31] a0017:182801:182801 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:780 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182801: Test failure common.cu:1197
+ .. a0017 pid 182801: Test failure common.cu:1050
+
+[2026-04-01 01:06:31] a0017:182813:182813 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182813: Test failure common.cu:1197
+ .. a0017 pid 182813: Test failure common.cu:1050
+a0017:182814:182814 [0] NCCL INFO NCCL version 2.27.7+cuda13.0
+
+[2026-04-01 01:06:31] a0017:182787:182787 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182787: Test failure common.cu:1197
+ .. a0017 pid 182787: Test failure common.cu:1050
+
+[2026-04-01 01:06:31] a0017:182816:182816 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182816: Test failure common.cu:1197
+ .. a0017 pid 182816: Test failure common.cu:1050
+
+[2026-04-01 01:06:31] a0017:182802:182802 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 182802: Test failure common.cu:1197
+ .. a0017 pid 182802: Test failure common.cu:1050
+srun: error: a0017: tasks 1-2: Exited with exit code 3
+srun: error: a0017: task 5: Exited with exit code 3
+srun: error: a0017: tasks 3,6: Exited with exit code 3
+srun: error: a0017: tasks 0,4: Exited with exit code 3
+a0017:182814:183245 [0] NCCL INFO NET/Plugin: Plugin name set by env to libnccl-net.so
+a0017:182814:183245 [0] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v10 (v10)
+a0017:182814:183245 [0] NCCL INFO NET/Plugin: Loaded collnet plugin NCCL RDMA Plugin v10 (v10)
+a0017:182814:183245 [0] NCCL INFO Successfully loaded external plugin libnccl-net.so
+a0017:182814:183245 [0] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0017:182814:183245 [0] NCCL INFO P2P plugin v10 IBext_v10
+a0017:182814:183245 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.17<0>
+a0017:182814:183245 [0] NCCL INFO Initialized NET plugin IBext_v10
+a0017:182814:183245 [0] NCCL INFO Assigned NET plugin IBext_v10 to comm
+a0017:182814:183245 [0] NCCL INFO Using network IBext_v10
+a0017:182814:183245 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0017:182814:183245 [0] NCCL INFO ncclCommInitRankConfig comm 0x559bc235d750 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x1ab61648aa1d068d - Init START
+a0017:182814:183245 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0017:182814:183245 [0] NCCL INFO Bootstrap timings total 0.000765 (create 0.000028, send 0.000096, recv 0.000052, ring 0.000001, delay 0.000000)
+a0017:182814:183245 [0] NCCL INFO comm 0x559bc235d750 rank 0 nRanks 1 nNodes 1 localRanks 1 localRank 0 MNNVL 0
+a0017:182814:183245 [0] NCCL INFO Channel 00/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 01/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 02/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 03/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 04/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 05/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 06/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 07/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 08/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 09/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 10/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 11/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 12/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 13/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 14/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 15/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 16/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 17/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 18/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 19/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 20/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 21/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 22/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 23/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 24/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 25/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 26/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 27/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 28/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 29/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 30/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 31/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 32/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 33/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 34/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 35/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 36/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 37/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 38/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 39/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 40/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 41/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 42/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 43/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 44/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 45/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 46/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 47/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 48/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 49/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 50/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 51/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 52/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 53/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 54/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 55/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 56/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 57/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 58/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 59/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 60/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 61/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 62/64 : 0
+a0017:182814:183245 [0] NCCL INFO Channel 63/64 : 0
+a0017:182814:183245 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1 [32] -1/-1/-1->0->-1 [33] -1/-1/-1->0->-1 [34] -1/-1/-1->0->-1 [35] -1/-1/-1->0->-1 [36] -1/-1/-1->0->-1 [37] -1/-1/-1->0->-1 [38] -1/-1/-1->0->-1 [39] -1/-1/-1->0->-1 [40] -1/-1/-1->0->-1 [41] -1/-1/-1->0->-1 [42] -1/-1/-1->0->-1 [43] -1/-1/-1->0->-1 [44] -1/-1/-1->0->-1 [45] -1/-1/-1->0->-1 [46] -1/-1/-1->0->-1 [47] -
+a0017:182814:183245 [0] NCCL INFO P2P Chunksize set to 524288
+a0017:182814:183245 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+a0017:182814:183245 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+a0017:182814:183257 [0] NCCL INFO [Proxy Service] Device 0 CPU core 115
+a0017:182814:183258 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 122
+a0017:182814:183245 [0] NCCL INFO 64 coll channels, 64 collnet channels, 0 nvls channels, 64 p2p channels, 64 p2p channels per peer
+a0017:182814:183245 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0017:182814:183245 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+a0017:182814:183245 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+a0017:182814:183245 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v3 symbol.
+a0017:182814:183245 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v2 symbol, using internal tuner instead.
+a0017:182814:183245 [0] NCCL INFO ncclCommInitRankConfig comm 0x559bc235d750 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0x1ab61648aa1d068d - Init COMPLETE
+a0017:182814:183245 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 1 total 0.92 (kernels 0.77, alloc 0.13, bootstrap 0.00, allgathers 0.00, topo 0.00, graphs 0.00, connections 0.01, rest 0.00)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+           8             2     float     sum      -1     3.41    0.00    0.00      0     0.06    0.14    0.00      0
+          16             4     float     sum      -1     3.29    0.00    0.00      0     0.09    0.18    0.00      0
+          32             8     float     sum      -1     3.27    0.01    0.00      0     0.08    0.40    0.00      0
+          64            16     float     sum      -1     3.39    0.02    0.00      0     0.08    0.80    0.00      0
+         128            32     float     sum      -1     3.31    0.04    0.00      0     0.08    1.54    0.00      0
+         256            64     float     sum      -1     3.29    0.08    0.00      0     0.08    3.06    0.00      0
+         512           128     float     sum      -1     3.25    0.16    0.00      0     0.09    6.01    0.00      0
+        1024           256     float     sum      -1     3.26    0.31    0.00      0     0.08   12.70    0.00      0
+        2048           512     float     sum      -1     3.35    0.61    0.00      0     0.08   25.57    0.00      0
+        4096          1024     float     sum      -1     3.36    1.22    0.00      0     0.20   20.81    0.00      0
+        8192          2048     float     sum      -1     3.26    2.51    0.00      0     0.08   99.78    0.00      0
+       16384          4096     float     sum      -1     3.40    4.82    0.00      0     0.09  174.02    0.00      0
+       32768          8192     float     sum      -1     3.34    9.83    0.00      0     0.05  600.15    0.00      0
+       65536         16384     float     sum      -1     3.25   20.19    0.00      0     0.05  1212.51    0.00      0
+      131072         32768     float     sum      -1     3.15   41.63    0.00      0     0.06  2378.80    0.00      0
+      262144         65536     float     sum      -1     3.46   75.82    0.00      0     0.12  2266.70    0.00      0
+      524288        131072     float     sum      -1     3.73  140.71    0.00      0     0.08  6309.12    0.00      0
+     1048576        262144     float     sum      -1     3.86  271.74    0.00      0     0.08  12460.80    0.00      0
+     2097152        524288     float     sum      -1     4.58  458.16    0.00      0     0.08  26165.34    0.00      0
+     4194304       1048576     float     sum      -1     6.18  678.80    0.00      0     0.08  51685.82    0.00      0
+     8388608       2097152     float     sum      -1    13.58  617.69    0.00      0     0.10  85467.22    0.00      0
+    16777216       4194304     float     sum      -1    22.43  747.89    0.00      0     0.10  168361.42    0.00      0
+    33554432       8388608     float     sum      -1    43.43  772.66    0.00      0     0.10  328481.96    0.00      0
+    67108864      16777216     float     sum      -1    88.66  756.92    0.00      0     0.12  570411.08    0.00      0
+   134217728      33554432     float     sum      -1    183.2  732.55    0.00      0     0.05  2460453.31    0.00      0
+   268435456      67108864     float     sum      -1    366.6  732.15    0.00      0     0.05  4961838.37    0.00      0
+   536870912     134217728     float     sum      -1    736.5  728.96    0.00      0     0.12  4662361.37    0.00      0
+  1073741824     268435456     float     sum      -1   1469.8  730.54    0.00      0     0.09  11652108.78    0.00      0
+  2147483648     536870912     float     sum      -1   2938.2  730.89    0.00      0     0.08  25672249.23    0.00      0
+  4294967296    1073741824     float     sum      -1   5875.7  730.97    0.00      0     0.11  38641181.25    0.00      0
+  8589934592    2147483648     float     sum      -1    11752  730.93    0.00      0     0.10  83681778.78    0.00      0
+a0017:182814:183260 [0] NCCL INFO comm 0x559bc235d750 rank 0 nranks 1 cudaDev 0 busId 3000 - Destroy COMPLETE
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0 
+#
+# Collective test concluded: all_reduce_perf
+
++ echo Done
+Done
++ echo 2026-04-01T01:06:27
+2026-04-01T01:06:27

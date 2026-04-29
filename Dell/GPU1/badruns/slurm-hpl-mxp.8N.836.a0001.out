@@ -1,0 +1,212 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-03-31T18:48:25
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 a0005 a0006 a0007 a0008 '
+Running on hosts: a0001 a0002 a0003 a0004 a0005 a0006 a0007 a0008 
++ echo 2026-03-31T18:48:25
+2026-03-31T18:48:25
++ export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ export UCX_TLS=tcp,shm,cuda_copy
++ UCX_TLS=tcp,shm,cuda_copy
++ export UCX_POSIX_USE_PROC_LINK=n
++ UCX_POSIX_USE_PROC_LINK=n
++ export PMIX_MCA_gds=hash
++ PMIX_MCA_gds=hash
++ export NCCL_BUFFSIZE=4194304
++ NCCL_BUFFSIZE=4194304
++ export UCX_IB_GPU_DIRECT_RDMA=no
++ UCX_IB_GPU_DIRECT_RDMA=no
++ export NCCL_P2P_DISABLE=1
++ NCCL_P2P_DISABLE=1
++ export CUDA_P2P_LEVEL=0
++ CUDA_P2P_LEVEL=0
++ export OMPI_MCA_coll_ucc_enable=0
++ OMPI_MCA_coll_ucc_enable=0
++ N_SIZE=1140736
++ srun -N8 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 2048 --nprow 8 --npcol 8 --nporder row --sloppy-type 2 --prioritize-factorization 1
+[1774982909.233388] [a0007:62649:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.233393] [a0007:62603:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62649] pml_ucx.c:424  Error: ucp_ep_create(proc=56) failed: Destination is unreachable
+[a0007:62649] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 56
+[1774982909.233437] [a0007:62604:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62604] pml_ucx.c:424  Error: ucp_ep_create(proc=57) failed: Destination is unreachable
+[a0007:62604] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 57
+[a0007:62603] pml_ucx.c:424  Error: ucp_ep_create(proc=58) failed: Destination is unreachable
+[a0007:62603] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 58
+[1774982909.233429] [a0007:62654:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62654] pml_ucx.c:424  Error: ucp_ep_create(proc=59) failed: Destination is unreachable
+[a0007:62654] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 59
+[1774982909.233424] [a0007:62491:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62491] pml_ucx.c:424  Error: ucp_ep_create(proc=60) failed: Destination is unreachable
+[a0007:62491] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 60
+[1774982909.233399] [a0007:62638:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62638] pml_ucx.c:424  Error: ucp_ep_create(proc=62) failed: Destination is unreachable
+[a0007:62638] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 62
+[1774982909.233453] [a0007:62640:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.233464] [a0007:62655:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0007:62655] pml_ucx.c:424  Error: ucp_ep_create(proc=61) failed: Destination is unreachable
+[a0007:62655] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 61
+[a0007:62640] pml_ucx.c:424  Error: ucp_ep_create(proc=63) failed: Destination is unreachable
+[a0007:62640] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 63
+[a0007:62491] *** An error occurred in MPI_Comm_split
+[a0007:62491] *** reported by process [154414612,52]
+[a0007:62491] *** on communicator MPI_COMM_WORLD
+[a0007:62491] *** MPI_ERR_OTHER: known error not in list
+[a0007:62491] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62491] ***    and potentially your MPI job)
+[a0007:62604] *** An error occurred in MPI_Comm_split
+[a0007:62604] *** reported by process [154414612,49]
+[a0007:62604] *** on communicator MPI_COMM_WORLD
+[a0007:62604] *** MPI_ERR_OTHER: known error not in list
+[a0007:62604] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62604] ***    and potentially your MPI job)
+[a0007:62603] *** An error occurred in MPI_Comm_split
+[a0007:62603] *** reported by process [154414612,50]
+[a0007:62603] *** on communicator MPI_COMM_WORLD
+[a0007:62603] *** MPI_ERR_OTHER: known error not in list
+[a0007:62603] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62603] ***    and potentially your MPI job)
+[a0007:62654] *** An error occurred in MPI_Comm_split
+[a0007:62654] *** reported by process [154414612,51]
+[a0007:62654] *** on communicator MPI_COMM_WORLD
+[a0007:62654] *** MPI_ERR_OTHER: known error not in list
+[a0007:62654] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62654] ***    and potentially your MPI job)
+[a0007:62655] *** An error occurred in MPI_Comm_split
+[a0007:62655] *** reported by process [154414612,53]
+[a0007:62655] *** on communicator MPI_COMM_WORLD
+[a0007:62655] *** MPI_ERR_OTHER: known error not in list
+[a0007:62655] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62655] ***    and potentially your MPI job)
+[a0007:62638] *** An error occurred in MPI_Comm_split
+[a0007:62638] *** reported by process [154414612,54]
+[a0007:62638] *** on communicator MPI_COMM_WORLD
+[a0007:62638] *** MPI_ERR_OTHER: known error not in list
+[a0007:62638] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62638] ***    and potentially your MPI job)
+[a0007:62640] *** An error occurred in MPI_Comm_split
+[a0007:62640] *** reported by process [154414612,55]
+[a0007:62640] *** on communicator MPI_COMM_WORLD
+[a0007:62640] *** MPI_ERR_OTHER: known error not in list
+[a0007:62640] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62640] ***    and potentially your MPI job)
+[a0007:62649] *** An error occurred in MPI_Comm_split
+[a0007:62649] *** reported by process [154414612,48]
+[a0007:62649] *** on communicator MPI_COMM_WORLD
+[a0007:62649] *** MPI_ERR_OTHER: known error not in list
+[a0007:62649] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0007:62649] ***    and potentially your MPI job)
+[1774982909.233544] [a0004:62206:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.233554] [a0004:62369:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62206] pml_ucx.c:424  Error: ucp_ep_create(proc=16) failed: Destination is unreachable
+[a0004:62206] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 16
+[1774982909.233602] [a0004:62350:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62350] pml_ucx.c:424  Error: ucp_ep_create(proc=17) failed: Destination is unreachable
+[a0004:62350] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 17
+[a0004:62369] pml_ucx.c:424  Error: ucp_ep_create(proc=18) failed: Destination is unreachable
+[a0004:62369] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 18
+[1774982909.233573] [a0004:62245:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62245] pml_ucx.c:424  Error: ucp_ep_create(proc=19) failed: Destination is unreachable
+[a0004:62245] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 19
+[1774982909.233566] [a0004:62251:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62251] pml_ucx.c:424  Error: ucp_ep_create(proc=20) failed: Destination is unreachable
+[a0004:62251] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 20
+[1774982909.233599] [a0004:62335:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62335] pml_ucx.c:424  Error: ucp_ep_create(proc=21) failed: Destination is unreachable
+[a0004:62335] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 21
+[1774982909.233562] [a0004:62368:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62368] pml_ucx.c:424  Error: ucp_ep_create(proc=22) failed: Destination is unreachable
+[a0004:62368] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 22
+[1774982909.233595] [a0004:62370:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0004:62370] pml_ucx.c:424  Error: ucp_ep_create(proc=23) failed: Destination is unreachable
+[a0004:62370] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 23
+[1774982909.235978] [a0005:62303:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.235986] [a0005:62373:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.235983] [a0005:62462:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[1774982909.236012] [a0005:62461:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0005:62461] pml_ucx.c:424  Error: ucp_ep_create(proc=40) failed: Destination is unreachable
+[a0005:62461] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 40
+[1774982909.236012] [a0005:62464:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0005:62464] pml_ucx.c:424  Error: ucp_ep_create(proc=41) failed: Destination is unreachable
+[a0005:62464] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 41
+[1774982909.236026] [a0005:62463:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0005:62463] pml_ucx.c:424  Error: ucp_ep_create(proc=42) failed: Destination is unreachable
+[a0005:62463] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 42
+[1774982909.236027] [a0005:62438:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0005:62438] pml_ucx.c:424  Error: ucp_ep_create(proc=43) failed: Destination is unreachable
+[a0005:62438] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 43
+[a0005:62303] pml_ucx.c:424  Error: ucp_ep_create(proc=44) failed: Destination is unreachable
+[a0005:62303] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 44
+[a0005:62373] pml_ucx.c:424  Error: ucp_ep_create(proc=45) failed: Destination is unreachable
+[a0005:62373] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 45
+[a0005:62462] pml_ucx.c:424  Error: ucp_ep_create(proc=46) failed: Destination is unreachable
+[a0005:62462] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 46
+[1774982909.236035] [a0005:62454:0]          select.c:650  UCX  ERROR   no active messages transport to <no debug data>: Unsupported operation
+[a0005:62454] pml_ucx.c:424  Error: ucp_ep_create(proc=47) failed: Destination is unreachable
+[a0005:62454] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 47
+[a0004:62206] *** An error occurred in MPI_Comm_split
+[a0004:62206] *** reported by process [154414612,24]
+[a0004:62206] *** on communicator MPI_COMM_WORLD
+[a0004:62206] *** MPI_ERR_OTHER: known error not in list
+[a0004:62206] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62206] ***    and potentially your MPI job)
+[a0004:62251] *** An error occurred in MPI_Comm_split
+[a0004:62251] *** reported by process [154414612,28]
+[a0004:62251] *** on communicator MPI_COMM_WORLD
+[a0004:62251] *** MPI_ERR_OTHER: known error not in list
+[a0004:62251] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62251] ***    and potentially your MPI job)
+[a0004:62350] *** An error occurred in MPI_Comm_split
+[a0004:62350] *** reported by process [154414612,25]
+[a0004:62350] *** on communicator MPI_COMM_WORLD
+[a0004:62350] *** MPI_ERR_OTHER: known error not in list
+[a0004:62350] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62350] ***    and potentially your MPI job)
+[a0004:62369] *** An error occurred in MPI_Comm_split
+[a0004:62369] *** reported by process [154414612,26]
+[a0004:62369] *** on communicator MPI_COMM_WORLD
+[a0004:62369] *** MPI_ERR_OTHER: known error not in list
+[a0004:62369] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62369] ***    and potentially your MPI job)
+[a0004:62245] *** An error occurred in MPI_Comm_split
+[a0004:62245] *** reported by process [154414612,27]
+[a0004:62245] *** on communicator MPI_COMM_WORLD
+[a0004:62245] *** MPI_ERR_OTHER: known error not in list
+[a0004:62245] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62245] ***    and potentially your MPI job)
+[a0004:62368] *** An error occurred in MPI_Comm_split
+[a0004:62368] *** reported by process [154414612,30]
+[a0004:62368] *** on communicator MPI_COMM_WORLD
+[a0004:62368] *** MPI_ERR_OTHER: known error not in list
+[a0004:62368] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62368] ***    and potentially your MPI job)
+[a0004:62370] *** An error occurred in MPI_Comm_split
+[a0004:62370] *** reported by process [154414612,31]
+[a0004:62370] *** on communicator MPI_COMM_WORLD
+[a0004:62370] *** MPI_ERR_OTHER: known error not in list
+[a0004:62370] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62370] ***    and potentially your MPI job)
+[a0004:62335] *** An error occurred in MPI_Comm_split
+[a0004:62335] *** reported by process [154414612,29]
+[a0004:62335] *** on communicator MPI_COMM_WORLD
+[a0004:62335] *** MPI_ERR_OTHER: known error not in list
+[a0004:62335] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0004:62335] ***    and potentially your MPI job)
+[2026-03-31T18:48:29.241] error: *** STEP 836.0 ON a0001 CANCELLED AT 2026-03-31T18:48:29 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: error: a0001: tasks 0-7: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0006: tasks 40-47: Killed
+srun: error: a0005: tasks 32-39: Killed
+srun: error: a0002: tasks 8-15: Killed
+srun: error: a0007: tasks 48-55: Killed
+srun: error: a0004: tasks 24-31: Killed
+srun: error: a0008: tasks 56-63: Killed
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-03-31T18:48:30
+2026-03-31T18:48:30

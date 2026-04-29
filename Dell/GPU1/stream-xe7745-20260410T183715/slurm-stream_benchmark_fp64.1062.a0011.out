@@ -1,0 +1,32 @@
+Job started at: 2026-04-01T18:00:32
+Running on hosts: a0011
+Command line: /workspace/stream-gpu-linux-x86_64/stream_test -d 0 -n 1000000000 -t CSAT
+
+======================================================================================
+NVIDIA-STREAM 25.9.0  -- NVIDIA accelerated STREAM benchmark -- NVIDIA
+======================================================================================
+There are 8 devices supporting CUDA
+Device 0: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 12481MHz x 512-bit = 1597.6 GB/s PEAK	 ECC is ON
+Device 1: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 2: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 3: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 4: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 5: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 6: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 7: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+
+Device Selected 0: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+ STREAM Benchmark implementation in CUDA
+ Array size (double)=1000000000*8*8 (61035 MB)
+
+STREAM tests: COPY SCALE ADD TRIAD
+
+Optimizing...
+
+
+Function      Rate (MB/s)   Avg time     Min time     Max time
+Copy:      1468873.1086       0.0109       0.0109       0.0109
+Scale:     1467342.7942       0.0109       0.0109       0.0109
+Add:       1489354.0564       0.0161       0.0161       0.0161
+Triad:     1488511.7156       0.0161       0.0161       0.0161
+Job finished at: 2026-04-01T18:01:17

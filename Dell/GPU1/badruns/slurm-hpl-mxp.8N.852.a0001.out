@@ -1,0 +1,53 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-03-31T19:01:43
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 a0005 a0006 a0007 a0008 '
+Running on hosts: a0001 a0002 a0003 a0004 a0005 a0006 a0007 a0008 
++ echo 2026-03-31T19:01:43
+2026-03-31T19:01:43
++ export UCX_NET_DEVICES=all
++ UCX_NET_DEVICES=all
++ export UCX_TLS=tcp,shm,cuda_copy
++ UCX_TLS=tcp,shm,cuda_copy
++ export UCX_POSIX_USE_PROC_LINK=n
++ UCX_POSIX_USE_PROC_LINK=n
++ export PMIX_MCA_gds=hash
++ PMIX_MCA_gds=hash
++ export NCCL_BUFFSIZE=4194304
++ NCCL_BUFFSIZE=4194304
++ export UCX_IB_GPU_DIRECT_RDMA=no
++ UCX_IB_GPU_DIRECT_RDMA=no
++ export NCCL_P2P_DISABLE=1
++ NCCL_P2P_DISABLE=1
++ export CUDA_P2P_LEVEL=0
++ CUDA_P2P_LEVEL=0
++ export OMPI_MCA_coll_ucc_enable=0
++ OMPI_MCA_coll_ucc_enable=0
++ N_SIZE=1140736
++ srun -N8 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 2048 --nprow 8 --npcol 8 --nporder row --sloppy-type 2 --prioritize-factorization 1 --preset-gemm-kernel 0 --u-panel-chunk-nbs 16 --use-mpi-panel-broadcast 50 --call-dgemv-with-multiple-threads 0 --Anq-device 0 --mpi-use-mpi 1 --prioritize-trsm 0
+[1774983837.386707] [a0005:64638:0]            sock.c:348  UCX  ERROR   connect(fd=127, dest_addr=172.21.101.6:50851) failed: Connection timed out
+[a0005:64638] pml_ucx.c:424  Error: ucp_ep_create(proc=40) failed: Destination is unreachable
+[a0005:64638] pml_ucx.c:477  Error: Failed to resolve UCX endpoint for rank 40
+[a0005:64638] *** An error occurred in MPI_Bcast
+[a0005:64638] *** reported by process [851383436,39]
+[a0005:64638] *** on communicator MPI COMMUNICATOR 3 SPLIT FROM 0
+[a0005:64638] *** MPI_ERR_OTHER: known error not in list
+[a0005:64638] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[a0005:64638] ***    and potentially your MPI job)
+[2026-03-31T19:03:57.396] error: *** STEP 852.0 ON a0001 CANCELLED AT 2026-03-31T19:03:57 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: error: a0005: tasks 32-39: Killed
+srun: error: a0002: tasks 8-15: Killed
+srun: error: a0007: tasks 48-55: Killed
+srun: error: a0008: tasks 56-63: Killed
+srun: error: a0006: tasks 40-47: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0001: tasks 0-7: Killed
+srun: error: a0004: tasks 24-31: Killed
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-03-31T19:03:58
+2026-03-31T19:03:58

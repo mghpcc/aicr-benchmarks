@@ -1,0 +1,312 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T01:16:54
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
++ NCCL_BIN=/workspace/microbenchmarks/nccl_tests
++++ scontrol show hostname
+++ echo a0017
++ echo 'Running on hosts: a0017'
+Running on hosts: a0017
++ echo 2026-04-01T01:16:54
+2026-04-01T01:16:54
++ export NCCL_DEBUG=INFO
++ NCCL_DEBUG=INFO
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif nvidia-smi -L
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
+GPU 0: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-5da43c80-1a70-745e-36b9-d18d2ad4bd9d)
+GPU 1: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-b6d181ec-92c1-1dd2-ad60-61b351b91f15)
+GPU 2: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-57a2ccc8-7d4a-f603-430c-458f5e2f0d3f)
+GPU 3: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-e70fba70-46cf-d043-606c-3866bbd70f73)
+GPU 4: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-50574610-0a1a-841d-fdd1-cbc976c95052)
+GPU 5: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-9f19826d-0ef0-454b-8e18-7229406928af)
+GPU 6: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-c05a0353-3bcc-f975-f437-7ccd42bf98d8)
+GPU 7: NVIDIA RTX PRO 6000 Blackwell Server Edition (UUID: GPU-8fcd8792-f9ec-b535-811c-79729097321a)
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/microbenchmarks/nccl_tests/all_reduce_perf -b 8 -e 8G -f 2 -g 1 -n 20 -w 5
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 1 minBytes 8 maxBytes 8589934592 step: 2(factor) warmup iters: 5 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 185855 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185855:185855 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185853 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185853:185853 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185901 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185901:185901 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185854 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  0 Group  0 Pid 185899 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185854:185854 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+a0017:185899:185899 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185900 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185900:185900 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185898 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185898:185898 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+#  Rank  0 Group  0 Pid 185897 on      a0017 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0017:185897:185897 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.17<0>
+a0017:185855:185855 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185854:185854 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185899:185899 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185853:185853 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185901:185901 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185900:185900 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185898:185898 [0] NCCL INFO cudaDriverVersion 13000
+a0017:185855:185855 [0] NCCL INFO NCCL version 2.27.7+cuda13.0
+a0017:185897:185897 [0] NCCL INFO cudaDriverVersion 13000
+
+[2026-04-01 01:16:59] a0017:185897:185897 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:780 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185897: Test failure common.cu:1197
+ .. a0017 pid 185897: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185901:185901 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185901: Test failure common.cu:1197
+ .. a0017 pid 185901: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185854:185854 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:782 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185854: Test failure common.cu:1197
+ .. a0017 pid 185854: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185853:185853 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185853: Test failure common.cu:1197
+ .. a0017 pid 185853: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185898:185898 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185898: Test failure common.cu:1197
+ .. a0017 pid 185898: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185899:185899 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:782 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185899: Test failure common.cu:1197
+ .. a0017 pid 185899: Test failure common.cu:1050
+
+[2026-04-01 01:16:59] a0017:185900:185900 [0] allocator.cc:62 NCCL WARN Cuda failure 2 'out of memory'
+a0017: Test NCCL failure common.cu:781 'unhandled cuda error (run with NCCL_DEBUG=INFO for details) / '
+ .. a0017 pid 185900: Test failure common.cu:1197
+ .. a0017 pid 185900: Test failure common.cu:1050
+srun: error: a0017: task 5: Exited with exit code 3
+srun: error: a0017: tasks 1-2: Exited with exit code 3
+srun: error: a0017: tasks 0,4: Exited with exit code 3
+srun: error: a0017: tasks 3,7: Exited with exit code 3
+a0017:185855:186298 [0] NCCL INFO NET/Plugin: Plugin name set by env to libnccl-net.so
+a0017:185855:186298 [0] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v10 (v10)
+a0017:185855:186298 [0] NCCL INFO NET/Plugin: Loaded collnet plugin NCCL RDMA Plugin v10 (v10)
+a0017:185855:186298 [0] NCCL INFO Successfully loaded external plugin libnccl-net.so
+a0017:185855:186298 [0] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0017:185855:186298 [0] NCCL INFO P2P plugin v10 IBext_v10
+a0017:185855:186298 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.17<0>
+a0017:185855:186298 [0] NCCL INFO Initialized NET plugin IBext_v10
+a0017:185855:186298 [0] NCCL INFO Assigned NET plugin IBext_v10 to comm
+a0017:185855:186298 [0] NCCL INFO Using network IBext_v10
+a0017:185855:186298 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0017:185855:186298 [0] NCCL INFO ncclCommInitRankConfig comm 0x55b0c1018510 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0xee53b1cc7896a1f5 - Init START
+a0017:185855:186298 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0017:185855:186298 [0] NCCL INFO Bootstrap timings total 0.000742 (create 0.000026, send 0.000079, recv 0.000054, ring 0.000001, delay 0.000000)
+a0017:185855:186298 [0] NCCL INFO comm 0x55b0c1018510 rank 0 nRanks 1 nNodes 1 localRanks 1 localRank 0 MNNVL 0
+a0017:185855:186298 [0] NCCL INFO Channel 00/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 01/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 02/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 03/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 04/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 05/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 06/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 07/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 08/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 09/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 10/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 11/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 12/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 13/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 14/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 15/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 16/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 17/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 18/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 19/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 20/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 21/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 22/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 23/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 24/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 25/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 26/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 27/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 28/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 29/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 30/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 31/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 32/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 33/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 34/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 35/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 36/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 37/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 38/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 39/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 40/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 41/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 42/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 43/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 44/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 45/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 46/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 47/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 48/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 49/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 50/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 51/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 52/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 53/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 54/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 55/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 56/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 57/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 58/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 59/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 60/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 61/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 62/64 : 0
+a0017:185855:186298 [0] NCCL INFO Channel 63/64 : 0
+a0017:185855:186298 [0] NCCL INFO Trees [0] -1/-1/-1->0->-1 [1] -1/-1/-1->0->-1 [2] -1/-1/-1->0->-1 [3] -1/-1/-1->0->-1 [4] -1/-1/-1->0->-1 [5] -1/-1/-1->0->-1 [6] -1/-1/-1->0->-1 [7] -1/-1/-1->0->-1 [8] -1/-1/-1->0->-1 [9] -1/-1/-1->0->-1 [10] -1/-1/-1->0->-1 [11] -1/-1/-1->0->-1 [12] -1/-1/-1->0->-1 [13] -1/-1/-1->0->-1 [14] -1/-1/-1->0->-1 [15] -1/-1/-1->0->-1 [16] -1/-1/-1->0->-1 [17] -1/-1/-1->0->-1 [18] -1/-1/-1->0->-1 [19] -1/-1/-1->0->-1 [20] -1/-1/-1->0->-1 [21] -1/-1/-1->0->-1 [22] -1/-1/-1->0->-1 [23] -1/-1/-1->0->-1 [24] -1/-1/-1->0->-1 [25] -1/-1/-1->0->-1 [26] -1/-1/-1->0->-1 [27] -1/-1/-1->0->-1 [28] -1/-1/-1->0->-1 [29] -1/-1/-1->0->-1 [30] -1/-1/-1->0->-1 [31] -1/-1/-1->0->-1 [32] -1/-1/-1->0->-1 [33] -1/-1/-1->0->-1 [34] -1/-1/-1->0->-1 [35] -1/-1/-1->0->-1 [36] -1/-1/-1->0->-1 [37] -1/-1/-1->0->-1 [38] -1/-1/-1->0->-1 [39] -1/-1/-1->0->-1 [40] -1/-1/-1->0->-1 [41] -1/-1/-1->0->-1 [42] -1/-1/-1->0->-1 [43] -1/-1/-1->0->-1 [44] -1/-1/-1->0->-1 [45] -1/-1/-1->0->-1 [46] -1/-1/-1->0->-1 [47] -
+a0017:185855:186298 [0] NCCL INFO P2P Chunksize set to 524288
+a0017:185855:186298 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so. 
+a0017:185855:186298 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0
+a0017:185855:186314 [0] NCCL INFO [Proxy Service] Device 0 CPU core 56
+a0017:185855:186315 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 57
+a0017:185855:186298 [0] NCCL INFO 64 coll channels, 64 collnet channels, 0 nvls channels, 64 p2p channels, 64 p2p channels per peer
+a0017:185855:186298 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0017:185855:186298 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so. Using internal tuner plugin.
+a0017:185855:186298 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v4 symbol.
+a0017:185855:186298 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v3 symbol.
+a0017:185855:186298 [0] NCCL INFO TUNER/Plugin: Failed to find ncclTunerPlugin_v2 symbol, using internal tuner instead.
+a0017:185855:186298 [0] NCCL INFO ncclCommInitRankConfig comm 0x55b0c1018510 rank 0 nranks 1 cudaDev 0 nvmlDev 0 busId 3000 commId 0xee53b1cc7896a1f5 - Init COMPLETE
+a0017:185855:186298 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 1 total 0.99 (kernels 0.84, alloc 0.13, bootstrap 0.00, allgathers 0.00, topo 0.00, graphs 0.00, connections 0.01, rest 0.00)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+           8             2     float     sum      -1     2.74    0.00    0.00      0     0.08    0.10    0.00      0
+          16             4     float     sum      -1     2.62    0.01    0.00      0     0.10    0.16    0.00      0
+          32             8     float     sum      -1     2.67    0.01    0.00      0     0.09    0.37    0.00      0
+          64            16     float     sum      -1     2.66    0.02    0.00      0     0.08    0.80    0.00      0
+         128            32     float     sum      -1     2.72    0.05    0.00      0     0.08    1.53    0.00      0
+         256            64     float     sum      -1     2.71    0.09    0.00      0     0.11    2.39    0.00      0
+         512           128     float     sum      -1     2.70    0.19    0.00      0     0.08    6.35    0.00      0
+        1024           256     float     sum      -1     2.68    0.38    0.00      0     0.08   12.70    0.00      0
+        2048           512     float     sum      -1     2.79    0.73    0.00      0     0.08   24.50    0.00      0
+        4096          1024     float     sum      -1     2.69    1.52    0.00      0     0.08   50.17    0.00      0
+        8192          2048     float     sum      -1     2.75    2.98    0.00      0     0.09   88.95    0.00      0
+       16384          4096     float     sum      -1     2.78    5.89    0.00      0     0.06  292.31    0.00      0
+       32768          8192     float     sum      -1     2.62   12.53    0.00      0     0.06  584.10    0.00      0
+       65536         16384     float     sum      -1     2.70   24.26    0.00      0     0.11  611.63    0.00      0
+      131072         32768     float     sum      -1     3.02   43.34    0.00      0     0.08  1586.83    0.00      0
+      262144         65536     float     sum      -1     3.56   73.72    0.00      0     0.08  3152.66    0.00      0
+      524288        131072     float     sum      -1     3.47  151.30    0.00      0     0.08  6385.97    0.00      0
+     1048576        262144     float     sum      -1     3.54  295.84    0.00      0     0.09  11970.05    0.00      0
+     2097152        524288     float     sum      -1     4.25  493.70    0.00      0     0.09  24628.91    0.00      0
+     4194304       1048576     float     sum      -1     6.37  658.73    0.00      0     0.09  47608.44    0.00      0
+     8388608       2097152     float     sum      -1    13.57  618.17    0.00      0     0.08  99156.12    0.00      0
+    16777216       4194304     float     sum      -1    22.78  736.35    0.00      0     0.08  205603.14    0.00      0
+    33554432       8388608     float     sum      -1    43.04  779.58    0.00      0     0.06  598118.22    0.00      0
+    67108864      16777216     float     sum      -1    88.79  755.78    0.00      0     0.06  1186717.31    0.00      0
+   134217728      33554432     float     sum      -1    183.4  731.85    0.00      0     0.06  2332193.36    0.00      0
+   268435456      67108864     float     sum      -1    366.7  731.99    0.00      0     0.11  2516975.68    0.00      0
+   536870912     134217728     float     sum      -1    736.8  728.60    0.00      0     0.08  6421900.86    0.00      0
+  1073741824     268435456     float     sum      -1   1470.4  730.24    0.00      0     0.10  10563126.65    0.00      0
+  2147483648     536870912     float     sum      -1   2940.2  730.39    0.00      0     0.09  23954084.19    0.00      0
+  4294967296    1073741824     float     sum      -1   5881.8  730.21    0.00      0     0.09  49854524.62    0.00      0
+  8589934592    2147483648     float     sum      -1    11761  730.38    0.00      0     0.11  75916346.37    0.00      0
+a0017:185855:186316 [0] NCCL INFO comm 0x55b0c1018510 rank 0 nranks 1 cudaDev 0 busId 3000 - Destroy COMPLETE
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0 
+#
+# Collective test concluded: all_reduce_perf
+
++ echo Done
+Done
++ echo 2026-04-01T01:16:54
+2026-04-01T01:16:54

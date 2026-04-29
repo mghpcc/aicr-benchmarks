@@ -1,0 +1,84 @@
+Running on hosts: b0013 b0014 b0015 b0016 b0017 b0018 b0019 b0020
+[1775659355.937361] [b0020:12445:f]        vfs_sock.c:63   UCX  DIAG  failed to create directory '/run/user/10009/ucx': No such file or directory
+[1775659355.937370] [b0020:12445:f]        vfs_fuse.c:440  UCX  DIAG  failed to watch on '/run/user/10009/ucx/vfs.sock': Input/output error, VFS will be disabled
+[1775659355.938521] [b0020:12445:0]     ucp_context.c:2358 UCX  INFO  Version 1.20.0 (loaded from /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0)
+[1775659365.187963] [b0020:12445:0]          parser.c:2368 UCX  INFO  UCX_* env variables: UCX_TLS=rc,cuda_copy,cuda_ipc UCX_WARN_UNUSED_ENV_VARS=n UCX_LOG_LEVEL=info
+[1775659365.524995] [b0020:12445:0]     ucp_context.c:2358 UCX  INFO  Version 1.20.0 (loaded from /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0)
+[1775659365.858100] [b0020:12445:0]      ucp_worker.c:1903 UCX  INFO    ucp_context_0 self cfg#1 tag(rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3:1 rc_mlx5/mlx5_4:1 rc_mlx5/mlx5_5:1 rc_mlx5/mlx5_6:1 rc_mlx5/mlx5_11:1 rc_mlx5/mlx5_12:1 rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3:1 rc_
+[1775659365.911139] [b0020:12445:0]      ucp_worker.c:1903 UCX  INFO    ucp_context_0 intra-node cfg#2 tag(rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3:1 rc_mlx5/mlx5_4:1 rc_mlx5/mlx5_5:1 rc_mlx5/mlx5_6:1 rc_mlx5/mlx5_11:1 rc_mlx5/mlx5_12:1 rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3
+[1775659365.921420] [b0020:12445:0]      ucp_worker.c:1903 UCX  INFO    ucp_context_0 intra-node cfg#3 tag(rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3:1 rc_mlx5/mlx5_4:1 rc_mlx5/mlx5_5:1 rc_mlx5/mlx5_6:1 rc_mlx5/mlx5_11:1 rc_mlx5/mlx5_12:1 rc_mlx5/mlx5_0:1 rc_mlx5/mlx5_1:1 rc_mlx5/mlx5_2:1 rc_mlx5/mlx5_3
+[1775659366.059341] [b0020:12445:0]     ucp_context.c:2358 UCX  INFO  Version 1.20.0 (loaded from /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0)
+[1775659384.459439] [b0020:12445:0]          ucp_ep.c:1517 UCX  DIAG  ep 0x7fc6badb50c0: error 'Endpoint timeout' on rc_mlx5/mlx5_12:1 will not be handled since no error callback is installed
+[b0020:12445:0:12445]       ud_ep.c:296  Fatal: UD endpoint 0x4eb78e0 to <no debug data>: unhandled timeout error
+==== backtrace (tid:  12445) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7fc8dcfe6774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7fc8dcfe3732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_format+0x111) [0x7fc8dcfe3851]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib.so.0(+0x2ba70) [0x7fc8dc22ea70]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x28d87) [0x7fc8dcfd7d87]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7fc8dd07a0ea]
+ 6  /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34) [0x7fc8df30e3b4]
+ 7  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_test_all+0x1fb) [0x7fc914331bdb]
+ 8  /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(+0x39ac) [0x7fc6c199e9ac]
+ 9  /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_core_addr_exchange+0x3c) [0x7fc6c196abcc]
+10  /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_context_create_proc_info+0x801) [0x7fc6c196b7e1]
+11  /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(+0x3cb1) [0x7fc6c199ecb1]
+12  /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(mca_coll_ucc_comm_query+0x6f) [0x7fc6c19a083f]
+13  /opt/hpcx/ompi/lib/libmpi.so.40(+0x85e8c) [0x7fc914363e8c]
+14  /opt/hpcx/ompi/lib/libmpi.so.40(mca_coll_base_comm_select+0x76) [0x7fc914364486]
+15  /opt/hpcx/ompi/lib/libmpi.so.40(ompi_mpi_init+0xee3) [0x7fc9143b16a3]
+16  /opt/hpcx/ompi/lib/libmpi.so.40(MPI_Init+0x71) [0x7fc914354c31]
+17  /workspace/hpl-linux-x86_64/xhpl() [0x45bd59]
+18  /lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7fc8df4181ca]
+19  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7fc8df41828b]
+20  /workspace/hpl-linux-x86_64/xhpl() [0x45dafe]
+=================================
+[b0020:12445] *** Process received signal ***
+[b0020:12445] Signal: Aborted (6)
+[b0020:12445] Signal code:  (-6)
+[b0020:12445] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7fc8df433330]
+[b0020:12445] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7fc8df48cb2c]
+[b0020:12445] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7fc8df43327e]
+[b0020:12445] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7fc8df4168ff]
+[b0020:12445] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7fc8dcfe3737]
+[b0020:12445] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_format+0x111)[0x7fc8dcfe3851]
+[b0020:12445] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib.so.0(+0x2ba70)[0x7fc8dc22ea70]
+[b0020:12445] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x28d87)[0x7fc8dcfd7d87]
+[b0020:12445] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7fc8dd07a0ea]
+[b0020:12445] [ 9] /opt/hpcx/ompi/lib/./libopen-pal.so.40(opal_progress+0x34)[0x7fc8df30e3b4]
+[b0020:12445] [10] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_request_default_test_all+0x1fb)[0x7fc914331bdb]
+[b0020:12445] [11] /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(+0x39ac)[0x7fc6c199e9ac]
+[b0020:12445] [12] /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_core_addr_exchange+0x3c)[0x7fc6c196abcc]
+[b0020:12445] [13] /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_context_create_proc_info+0x801)[0x7fc6c196b7e1]
+[b0020:12445] [14] /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(+0x3cb1)[0x7fc6c199ecb1]
+[b0020:12445] [15] /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(mca_coll_ucc_comm_query+0x6f)[0x7fc6c19a083f]
+[b0020:12445] [16] /opt/hpcx/ompi/lib/libmpi.so.40(+0x85e8c)[0x7fc914363e8c]
+[b0020:12445] [17] /opt/hpcx/ompi/lib/libmpi.so.40(mca_coll_base_comm_select+0x76)[0x7fc914364486]
+[b0020:12445] [18] /opt/hpcx/ompi/lib/libmpi.so.40(ompi_mpi_init+0xee3)[0x7fc9143b16a3]
+[b0020:12445] [19] /opt/hpcx/ompi/lib/libmpi.so.40(MPI_Init+0x71)[0x7fc914354c31]
+[b0020:12445] [20] /workspace/hpl-linux-x86_64/xhpl[0x45bd59]
+[b0020:12445] [21] /lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x7fc8df4181ca]
+[b0020:12445] [22] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x7fc8df41828b]
+[b0020:12445] [23] /workspace/hpl-linux-x86_64/xhpl[0x45dafe]
+[b0020:12445] *** End of error message ***
+/workspace/hpl.sh: line 263: 12445 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPL} ${DAT}
+srun: error: b0020: task 58: Exited with exit code 134
+[2026-04-08T14:43:06.766] error:  mpi/pmix_v3: _errhandler: b0020 [7]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:58]
+[2026-04-08T14:43:06.765] error: *** STEP 2248.1 ON b0013 CANCELLED AT 2026-04-08T14:43:06 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-08T14:43:07.782] error:  mpi/pmix_v3: _errhandler: b0020 [7]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:62]
+[2026-04-08T14:43:07.783] error:  mpi/pmix_v3: _errhandler: b0014 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:14]
+[2026-04-08T14:43:07.781] error:  mpi/pmix_v3: _errhandler: b0018 [5]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:47]
+[2026-04-08T14:43:07.781] error:  mpi/pmix_v3: _errhandler: b0019 [6]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:50]
+[2026-04-08T14:43:07.782] error:  mpi/pmix_v3: _errhandler: b0017 [4]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:39]
+[2026-04-08T14:43:07.781] error:  mpi/pmix_v3: _errhandler: b0015 [2]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:18]
+[2026-04-08T14:43:07.785] error:  mpi/pmix_v3: _errhandler: b0016 [3]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:27]
+[2026-04-08T14:43:07.781] error:  mpi/pmix_v3: _errhandler: b0013 [0]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2248.1:5]
+srun: error: b0020: tasks 56-57,59-63: Killed
+srun: error: b0014: tasks 8-15: Killed
+srun: error: b0013: tasks 0-7: Killed
+srun: error: b0015: tasks 16-23: Killed
+srun: error: b0017: tasks 32-39: Killed
+srun: error: b0018: tasks 40-47: Killed
+srun: error: b0019: tasks 48-55: Killed
+srun: error: b0016: tasks 24-31: Killed
