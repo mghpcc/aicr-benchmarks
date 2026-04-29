@@ -1,0 +1,60 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-07T14:14:44
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 a0005 '
+Running on hosts: a0001 a0002 a0003 a0004 a0005 
++ echo 2026-04-07T14:14:44
+2026-04-07T14:14:44
++ export UCX_TLS=rc,cuda_copy,cuda_ipc
++ UCX_TLS=rc,cuda_copy,cuda_ipc
++ GPU_AFFINITY=0:1:2:3:4:5:6:7
++ N_SIZE=1140736
++ srun --cpu-bind=none --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 4096 --nprow 5 --npcol 8 --nporder row
+ CUDART (35->a0005): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+ CUDART (3->a0001): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+ CUDART (37->a0005): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 3 in communicator MPI_COMM_WORLD
+with errorcode 102.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+ CUDART (1->a0001): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 1 in communicator MPI_COMM_WORLD
+with errorcode 102.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+ CUDART (2->a0001): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+ CUDART (19->a0003): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+ CUDART (17->a0003): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+ CUDART (5->a0001): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 2 in communicator MPI_COMM_WORLD
+with errorcode 102.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+ CUDART (18->a0003): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-07T14:14:50.553] error: *** STEP 2113.0 ON a0001 CANCELLED AT 2026-04-07T14:14:50 DUE to SIGNAL Killed ***
+ CUDART (0->a0001): cudaMalloc(&_mat_sp_dev, mat_sp_bytes) = 2 (out of memory) at (src/matrix.cpp:298), process will now exit
+srun: error: a0002: tasks 8-15: Killed
+srun: error: a0004: tasks 24-31: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0001: tasks 0-7: Killed
+srun: error: a0005: tasks 32-39: Killed
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-04-07T14:14:51
+2026-04-07T14:14:51

@@ -1,0 +1,102 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-16T19:59:57
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-16T19:59:57
++++ scontrol show hostname
+++ echo a0007
++ echo 'Running on hosts: a0007'
+Running on hosts: a0007
++ echo 2026-04-16T19:59:57
+2026-04-16T19:59:57
++ export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ export NCCL_BUFFSIZE=4194304
++ NCCL_BUFFSIZE=4194304
++ export NCCL_P2P_DISABLE=1
++ NCCL_P2P_DISABLE=1
++ export CUDA_P2P_LEVEL=0
++ CUDA_P2P_LEVEL=0
++ export UCX_TLS=self,shm,cuda_copy
++ UCX_TLS=self,shm,cuda_copy
++ N_SIZE=430080
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 430080 --nb 2048 --nporder row --nprow 4 --npcol 2
+ CUDART (0->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (1->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (2->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (3->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (4->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (5->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (6->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+ CUDART (7->a0007): cudaGetDeviceProperties(&prop, 0) = 999 (unknown error) at (src/driver.cpp:385), process will now exit
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 4 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 5 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 0 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 1 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 3 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 6 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 7 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 2 in communicator MPI_COMM_WORLD
+with errorcode 1099.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+[2026-04-16T19:59:58.712] error: *** STEP 2475.0 ON a0007 CANCELLED AT 2026-04-16T19:59:58 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: error: a0007: tasks 0-7: Killed
++ echo Done
+Done
++ echo 2026-04-16T19:59:57
+2026-04-16T19:59:57

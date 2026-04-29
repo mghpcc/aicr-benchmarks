@@ -1,0 +1,104 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-07T14:17:46
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 a0005 '
+Running on hosts: a0001 a0002 a0003 a0004 a0005 
++ echo 2026-04-07T14:17:46
+2026-04-07T14:17:46
++ export UCX_TLS=rc,cuda_copy,cuda_ipc
++ UCX_TLS=rc,cuda_copy,cuda_ipc
++ GPU_AFFINITY=0:1:2:3:4:5:6:7
++ N_SIZE=680,736
++ srun --cpu-bind=none --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 680,736 --nb 1024 --nprow 5 --npcol 8 --nporder row
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+--n: Value 680,736 not in range [2.22507e-308 - 1.79769e+308]
+Run with --help for more information.
+srun: error: a0003: tasks 16-23: Exited with exit code 105
+srun: error: a0001: tasks 0-7: Exited with exit code 105
+srun: error: a0004: tasks 24-31: Exited with exit code 105
+srun: error: a0002: tasks 8-15: Exited with exit code 105
+srun: error: a0005: tasks 32-39: Exited with exit code 105
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-04-07T14:17:47
+2026-04-07T14:17:47

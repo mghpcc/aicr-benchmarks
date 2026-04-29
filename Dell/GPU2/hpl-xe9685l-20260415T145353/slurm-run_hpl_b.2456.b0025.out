@@ -1,0 +1,214 @@
+Running on host b0025
+
+================================================================================
+HPL-NVIDIA 25.9.0  -- NVIDIA accelerated HPL benchmark -- NVIDIA
+================================================================================
+HPLinpack 2.1  --  High-Performance Linpack benchmark  --   October 26, 2012
+Written by A. Petitet and R. Clint Whaley,  Innovative Computing Laboratory, UTK
+Modified by Piotr Luszczek, Innovative Computing Laboratory, UTK
+Modified by Julien Langou, University of Colorado Denver
+================================================================================
+
+An explanation of the input/output parameters follows:
+T/V    : Wall time / encoded variant.
+N      : The order of the coefficient matrix A.
+NB     : The partitioning blocking factor.
+P      : The number of process rows.
+Q      : The number of process columns.
+Time   : Time in seconds to solve the linear system.
+Gflops : Rate of execution for solving the linear system.
+
+The following parameter values will be used:
+
+N      :  401408 
+NB     :    2048 
+PMAP   : Column-major process mapping
+P      :       4 
+Q      :       2 
+PFACT  :    Left 
+NBMIN  :       2 
+NDIV   :       2 
+RFACT  :    Left 
+BCAST  :  2ringM 
+DEPTH  :       1 
+SWAP   : Spread-roll (long)
+L1     : no-transposed form
+U      : transposed form
+EQUIL  : no
+ALIGN  : 8 double precision words
+
+--------------------------------------------------------------------------------
+
+- The matrix A is randomly generated for each test.
+- The following scaled residual check will be computed:
+      ||Ax-b||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+- The relative machine precision (eps) is taken to be               1.110223e-16
+- Computational tests pass if scaled residuals are less than                16.0
+
+
+HPL-NVIDIA ignores the following parameters from input file:
+	* Broadcast parameters
+	* Panel factorization parameters
+	* Look-ahead value
+	* L1 layout
+	* U layout
+	* Equilibration parameter
+	* Memory alignment parameter
+
+HPL-NVIDIA settings from environment variables:
+	HPL_USE_NVSHMEM from environment 0 
+	HPL_CUSOLVER_MP_TESTS from environment 0 
+[WARNING]: HPL_USE_NVSHMEM is disabled, HPL_FCT_COMM_POLICY=1 will be used
+--- DEVICE INFO ---
+  Peak clock frequency: 1965 MHz
+  SM version          : 100
+  Number of SMs       : 148
+-------------------
+[HPL TRACE] cuda_nvshmem_init: max=0.0000 (0) min=0.0000 (4)
+[HPL TRACE] ncclCommInitRank: max=5.7808 (0) min=5.7527 (2)
+[HPL TRACE] cugetrfs_mp_init: max=5.7896 (0) min=5.7893 (5)
+--- MEMORY INFO ---
+DEVICE
+  System           =      5.12358 GiB (MIN)      5.59233 GiB (MAX)      5.49858 GiB (AVG)
+  HPL buffers      =    159.76379 GiB (MIN)    159.76379 GiB (MAX)    159.76379 GiB (AVG)
+  Used             =    164.88737 GiB (MIN)    165.35612 GiB (MAX)    165.26237 GiB (AVG)
+  Total            =    179.06152 GiB (MIN)    179.06152 GiB (MAX)    179.06152 GiB (AVG)
+HOST
+  HPL buffers      =      0.00090 GiB (MIN)      0.00090 GiB (MAX)      0.00090 GiB (AVG)
+-------------------
+[HPL TRACE] HPL_pdmatgen_gpu: max=0.0308 (3) min=0.0308 (6)
+[0;31m Prog= 1.52%	N_left=   399360	Time=   2.48	Time_left= 160.29	iGF= 264903.85	GF= 264903.85	iGF_per= 33112.98 	GF_per= 33112.98[0m
+[0;31m Prog= 3.03%	N_left=   397312	Time=   4.77	Time_left= 152.64	iGF= 283690.71	GF= 273927.49	iGF_per= 35461.34 	GF_per= 34240.94[0m
+[0;31m Prog= 4.52%	N_left=   395264	Time=   7.05	Time_left= 148.91	iGF= 281789.24	GF= 276472.21	iGF_per= 35223.66 	GF_per= 34559.03[0m
+[0;31m Prog= 6.00%	N_left=   393216	Time=   9.30	Time_left= 145.79	iGF= 282836.98	GF= 278012.12	iGF_per= 35354.62 	GF_per= 34751.51[0m
+[0;31m Prog= 7.46%	N_left=   391168	Time=  11.50	Time_left= 142.68	iGF= 286697.89	GF= 279671.76	iGF_per= 35837.24 	GF_per= 34958.97[0m
+[0;31m Prog= 8.91%	N_left=   389120	Time=  13.70	Time_left= 140.15	iGF= 283411.60	GF= 280272.25	iGF_per= 35426.45 	GF_per= 35034.03[0m
+[0;31m Prog= 10.34%	N_left=   387072	Time=  15.90	Time_left= 137.90	iGF= 280991.82	GF= 280371.64	iGF_per= 35123.98 	GF_per= 35046.45[0m
+[0;31m Prog= 11.75%	N_left=   385024	Time=  18.06	Time_left= 135.59	iGF= 282620.95	GF= 280640.71	iGF_per= 35327.62 	GF_per= 35080.09[0m
+[0;31m Prog= 13.15%	N_left=   382976	Time=  20.17	Time_left= 133.16	iGF= 286138.16	GF= 281216.11	iGF_per= 35767.27 	GF_per= 35152.01[0m
+[0;31m Prog= 14.54%	N_left=   380928	Time=  22.28	Time_left= 130.95	iGF= 283195.57	GF= 281403.60	iGF_per= 35399.45 	GF_per= 35175.45[0m
+[0;31m Prog= 15.91%	N_left=   378880	Time=  24.38	Time_left= 128.88	iGF= 280649.70	GF= 281338.47	iGF_per= 35081.21 	GF_per= 35167.31[0m
+[0;31m Prog= 17.27%	N_left=   376832	Time=  26.46	Time_left= 126.77	iGF= 282222.72	GF= 281407.73	iGF_per= 35277.84 	GF_per= 35175.97[0m
+[0;31m Prog= 18.61%	N_left=   374784	Time=  28.48	Time_left= 124.57	iGF= 285913.53	GF= 281727.85	iGF_per= 35739.19 	GF_per= 35215.98[0m
+[0;31m Prog= 19.93%	N_left=   372736	Time=  30.50	Time_left= 122.50	iGF= 283029.57	GF= 281814.13	iGF_per= 35378.70 	GF_per= 35226.77[0m
+[0;31m Prog= 21.25%	N_left=   370688	Time=  32.52	Time_left= 120.54	iGF= 280271.59	GF= 281718.35	iGF_per= 35033.95 	GF_per= 35214.79[0m
+[0;31m Prog= 22.55%	N_left=   368640	Time=  34.50	Time_left= 118.54	iGF= 282196.29	GF= 281745.82	iGF_per= 35274.54 	GF_per= 35218.23[0m
+[0;31m Prog= 23.83%	N_left=   366592	Time=  36.44	Time_left= 116.49	iGF= 285586.94	GF= 281950.13	iGF_per= 35698.37 	GF_per= 35243.77[0m
+[0;31m Prog= 25.10%	N_left=   364544	Time=  38.38	Time_left= 114.53	iGF= 282992.09	GF= 282002.65	iGF_per= 35374.01 	GF_per= 35250.33[0m
+[0;31m Prog= 26.35%	N_left=   362496	Time=  40.31	Time_left= 112.65	iGF= 279873.16	GF= 281900.48	iGF_per= 34984.14 	GF_per= 35237.56[0m
+[0;31m Prog= 27.59%	N_left=   360448	Time=  42.21	Time_left= 110.75	iGF= 281788.87	GF= 281895.45	iGF_per= 35223.61 	GF_per= 35236.93[0m
+[0;31m Prog= 28.82%	N_left=   358400	Time=  44.06	Time_left= 108.82	iGF= 285266.96	GF= 282037.38	iGF_per= 35658.37 	GF_per= 35254.67[0m
+[0;31m Prog= 30.04%	N_left=   356352	Time=  45.91	Time_left= 106.95	iGF= 282715.36	GF= 282064.70	iGF_per= 35339.42 	GF_per= 35258.09[0m
+[0;31m Prog= 31.23%	N_left=   354304	Time=  47.77	Time_left= 105.16	iGF= 279421.24	GF= 281962.27	iGF_per= 34927.66 	GF_per= 35245.28[0m
+[0;31m Prog= 32.42%	N_left=   352256	Time=  49.58	Time_left= 103.35	iGF= 281453.61	GF= 281943.64	iGF_per= 35181.70 	GF_per= 35242.96[0m
+[0;31m Prog= 33.59%	N_left=   350208	Time=  51.35	Time_left= 101.52	iGF= 285066.29	GF= 282051.42	iGF_per= 35633.29 	GF_per= 35256.43[0m
+[0;31m Prog= 34.75%	N_left=   348160	Time=  53.12	Time_left=  99.74	iGF= 282577.33	GF= 282068.92	iGF_per= 35322.17 	GF_per= 35258.62[0m
+[0;31m Prog= 35.90%	N_left=   346112	Time=  54.89	Time_left=  98.03	iGF= 279087.32	GF= 281972.85	iGF_per= 34885.91 	GF_per= 35246.61[0m
+[0;31m Prog= 37.03%	N_left=   344064	Time=  56.62	Time_left=  96.31	iGF= 281167.72	GF= 281948.19	iGF_per= 35145.97 	GF_per= 35243.52[0m
+[0;31m Prog= 38.14%	N_left=   342016	Time=  58.32	Time_left=  94.57	iGF= 284957.94	GF= 282035.49	iGF_per= 35619.74 	GF_per= 35254.44[0m
+[0;31m Prog= 39.25%	N_left=   339968	Time=  60.00	Time_left=  92.88	iGF= 282295.78	GF= 282042.81	iGF_per= 35286.97 	GF_per= 35255.35[0m
+[0;31m Prog= 40.34%	N_left=   337920	Time=  61.69	Time_left=  91.24	iGF= 278860.15	GF= 281955.75	iGF_per= 34857.52 	GF_per= 35244.47[0m
+[0;31m Prog= 41.42%	N_left=   335872	Time=  63.35	Time_left=  89.60	iGF= 280969.75	GF= 281929.99	iGF_per= 35121.22 	GF_per= 35241.25[0m
+[0;31m Prog= 42.48%	N_left=   333824	Time=  64.96	Time_left=  87.94	iGF= 284808.40	GF= 282001.45	iGF_per= 35601.05 	GF_per= 35250.18[0m
+[0;31m Prog= 43.54%	N_left=   331776	Time=  66.57	Time_left=  86.34	iGF= 282140.30	GF= 282004.80	iGF_per= 35267.54 	GF_per= 35250.60[0m
+[0;31m Prog= 44.57%	N_left=   329728	Time=  68.18	Time_left=  84.77	iGF= 278448.50	GF= 281920.86	iGF_per= 34806.06 	GF_per= 35240.11[0m
+[0;31m Prog= 45.60%	N_left=   327680	Time=  69.75	Time_left=  83.21	iGF= 280625.24	GF= 281891.56	iGF_per= 35078.15 	GF_per= 35236.45[0m
+[0;31m Prog= 46.61%	N_left=   325632	Time=  71.29	Time_left=  81.64	iGF= 284577.16	GF= 281949.42	iGF_per= 35572.14 	GF_per= 35243.68[0m
+[0;31m Prog= 47.62%	N_left=   323584	Time=  72.82	Time_left=  80.11	iGF= 281864.49	GF= 281947.64	iGF_per= 35233.06 	GF_per= 35243.45[0m
+[0;31m Prog= 48.60%	N_left=   321536	Time=  74.35	Time_left=  78.62	iGF= 278253.77	GF= 281871.54	iGF_per= 34781.72 	GF_per= 35233.94[0m
+[0;31m Prog= 49.58%	N_left=   319488	Time=  75.85	Time_left=  77.14	iGF= 280125.71	GF= 281836.97	iGF_per= 35015.71 	GF_per= 35229.62[0m
+[0;31m Prog= 50.54%	N_left=   317440	Time=  77.31	Time_left=  75.65	iGF= 284491.22	GF= 281887.10	iGF_per= 35561.40 	GF_per= 35235.89[0m
+[0;31m Prog= 51.49%	N_left=   315392	Time=  78.77	Time_left=  74.20	iGF= 281435.71	GF= 281878.75	iGF_per= 35179.46 	GF_per= 35234.84[0m
+[0;31m Prog= 52.43%	N_left=   313344	Time=  80.23	Time_left=  72.78	iGF= 277968.27	GF= 281807.77	iGF_per= 34746.03 	GF_per= 35225.97[0m
+[0;31m Prog= 53.36%	N_left=   311296	Time=  81.66	Time_left=  71.37	iGF= 279591.60	GF= 281768.99	iGF_per= 34948.95 	GF_per= 35221.12[0m
+[0;31m Prog= 54.27%	N_left=   309248	Time=  83.04	Time_left=  69.96	iGF= 284034.88	GF= 281806.87	iGF_per= 35504.36 	GF_per= 35225.86[0m
+[0;31m Prog= 55.18%	N_left=   307200	Time=  84.42	Time_left=  68.58	iGF= 281812.17	GF= 281806.95	iGF_per= 35226.52 	GF_per= 35225.87[0m
+[0;31m Prog= 56.07%	N_left=   305152	Time=  85.81	Time_left=  67.24	iGF= 277345.23	GF= 281734.97	iGF_per= 34668.15 	GF_per= 35216.87[0m
+[0;31m Prog= 56.95%	N_left=   303104	Time=  87.16	Time_left=  65.90	iGF= 279456.88	GF= 281699.53	iGF_per= 34932.11 	GF_per= 35212.44[0m
+[0;31m Prog= 57.81%	N_left=   301056	Time=  88.48	Time_left=  64.57	iGF= 283539.08	GF= 281726.94	iGF_per= 35442.38 	GF_per= 35215.87[0m
+[0;31m Prog= 58.67%	N_left=   299008	Time=  89.79	Time_left=  63.26	iGF= 281348.26	GF= 281721.41	iGF_per= 35168.53 	GF_per= 35215.18[0m
+[0;31m Prog= 59.51%	N_left=   296960	Time=  91.11	Time_left=  61.99	iGF= 276893.21	GF= 281651.80	iGF_per= 34611.65 	GF_per= 35206.48[0m
+[0;31m Prog= 60.34%	N_left=   294912	Time=  92.39	Time_left=  60.72	iGF= 278775.88	GF= 281611.75	iGF_per= 34846.98 	GF_per= 35201.47[0m
+[0;31m Prog= 61.16%	N_left=   292864	Time=  93.64	Time_left=  59.46	iGF= 283126.82	GF= 281631.97	iGF_per= 35390.85 	GF_per= 35204.00[0m
+[0;31m Prog= 61.97%	N_left=   290816	Time=  94.89	Time_left=  58.22	iGF= 280891.09	GF= 281622.27	iGF_per= 35111.39 	GF_per= 35202.78[0m
+[0;31m Prog= 62.77%	N_left=   288768	Time=  96.13	Time_left=  57.02	iGF= 276267.48	GF= 281552.91	iGF_per= 34533.43 	GF_per= 35194.11[0m
+[0;31m Prog= 63.56%	N_left=   286720	Time=  97.35	Time_left=  55.82	iGF= 278640.81	GF= 281516.50	iGF_per= 34830.10 	GF_per= 35189.56[0m
+[0;31m Prog= 64.33%	N_left=   284672	Time=  98.53	Time_left=  54.63	iGF= 282787.89	GF= 281531.76	iGF_per= 35348.49 	GF_per= 35191.47[0m
+[0;31m Prog= 65.10%	N_left=   282624	Time=  99.70	Time_left=  53.46	iGF= 280645.34	GF= 281521.32	iGF_per= 35080.67 	GF_per= 35190.16[0m
+[0;31m Prog= 65.85%	N_left=   280576	Time= 100.88	Time_left=  52.32	iGF= 275620.79	GF= 281452.39	iGF_per= 34452.60 	GF_per= 35181.55[0m
+[0;31m Prog= 66.59%	N_left=   278528	Time= 102.03	Time_left=  51.19	iGF= 277942.78	GF= 281412.78	iGF_per= 34742.85 	GF_per= 35176.60[0m
+[0;31m Prog= 67.32%	N_left=   276480	Time= 103.15	Time_left=  50.07	iGF= 282426.18	GF= 281423.75	iGF_per= 35303.27 	GF_per= 35177.97[0m
+[0;31m Prog= 68.04%	N_left=   274432	Time= 104.26	Time_left=  48.96	iGF= 280416.90	GF= 281413.05	iGF_per= 35052.11 	GF_per= 35176.63[0m
+[0;31m Prog= 68.75%	N_left=   272384	Time= 105.37	Time_left=  47.89	iGF= 275143.57	GF= 281346.84	iGF_per= 34392.95 	GF_per= 35168.35[0m
+[0;31m Prog= 69.45%	N_left=   270336	Time= 106.46	Time_left=  46.82	iGF= 277624.82	GF= 281308.85	iGF_per= 34703.10 	GF_per= 35163.61[0m
+[0;31m Prog= 70.14%	N_left=   268288	Time= 107.51	Time_left=  45.76	iGF= 282070.77	GF= 281316.32	iGF_per= 35258.85 	GF_per= 35164.54[0m
+[0;31m Prog= 70.82%	N_left=   266240	Time= 108.56	Time_left=  44.73	iGF= 280082.41	GF= 281304.44	iGF_per= 35010.30 	GF_per= 35163.06[0m
+[0;31m Prog= 71.49%	N_left=   264192	Time= 109.61	Time_left=  43.71	iGF= 274533.45	GF= 281239.61	iGF_per= 34316.68 	GF_per= 35154.95[0m
+[0;31m Prog= 72.15%	N_left=   262144	Time= 110.63	Time_left=  42.71	iGF= 276933.79	GF= 281199.74	iGF_per= 34616.72 	GF_per= 35149.97[0m
+[0;31m Prog= 72.80%	N_left=   260096	Time= 111.62	Time_left=  41.71	iGF= 281689.24	GF= 281204.09	iGF_per= 35211.16 	GF_per= 35150.51[0m
+[0;31m Prog= 73.43%	N_left=   258048	Time= 112.60	Time_left=  40.74	iGF= 279679.09	GF= 281190.78	iGF_per= 34959.89 	GF_per= 35148.85[0m
+[0;31m Prog= 74.06%	N_left=   256000	Time= 113.59	Time_left=  39.78	iGF= 274912.09	GF= 281136.37	iGF_per= 34364.01 	GF_per= 35142.05[0m
+[0;31m Prog= 74.68%	N_left=   253952	Time= 114.55	Time_left=  38.84	iGF= 276092.84	GF= 281093.91	iGF_per= 34511.60 	GF_per= 35136.74[0m
+[0;31m Prog= 75.29%	N_left=   251904	Time= 115.48	Time_left=  37.91	iGF= 281422.67	GF= 281096.56	iGF_per= 35177.83 	GF_per= 35137.07[0m
+[0;31m Prog= 75.88%	N_left=   249856	Time= 116.41	Time_left=  37.00	iGF= 279202.95	GF= 281081.54	iGF_per= 34900.37 	GF_per= 35135.19[0m
+[0;31m Prog= 76.47%	N_left=   247808	Time= 117.34	Time_left=  36.10	iGF= 273579.87	GF= 281022.27	iGF_per= 34197.48 	GF_per= 35127.78[0m
+[0;31m Prog= 77.05%	N_left=   245760	Time= 118.24	Time_left=  35.22	iGF= 276151.34	GF= 280985.06	iGF_per= 34518.92 	GF_per= 35123.13[0m
+[0;31m Prog= 77.62%	N_left=   243712	Time= 119.11	Time_left=  34.35	iGF= 280209.38	GF= 280979.35	iGF_per= 35026.17 	GF_per= 35122.42[0m
+[0;31m Prog= 78.18%	N_left=   241664	Time= 119.98	Time_left=  33.49	iGF= 278992.23	GF= 280965.03	iGF_per= 34874.03 	GF_per= 35120.63[0m
+[0;31m Prog= 78.73%	N_left=   239616	Time= 120.85	Time_left=  32.65	iGF= 272996.15	GF= 280907.74	iGF_per= 34124.52 	GF_per= 35113.47[0m
+[0;31m Prog= 79.27%	N_left=   237568	Time= 121.70	Time_left=  31.83	iGF= 275067.06	GF= 280867.06	iGF_per= 34383.38 	GF_per= 35108.38[0m
+[0;31m Prog= 79.80%	N_left=   235520	Time= 122.52	Time_left=  31.01	iGF= 279518.09	GF= 280858.03	iGF_per= 34939.76 	GF_per= 35107.25[0m
+[0;31m Prog= 80.32%	N_left=   233472	Time= 123.32	Time_left=  30.21	iGF= 278367.14	GF= 280841.69	iGF_per= 34795.89 	GF_per= 35105.21[0m
+[0;31m Prog= 80.84%	N_left=   231424	Time= 124.14	Time_left=  29.43	iGF= 272149.16	GF= 280784.74	iGF_per= 34018.65 	GF_per= 35098.09[0m
+[0;31m Prog= 81.34%	N_left=   229376	Time= 124.93	Time_left=  28.66	iGF= 274354.04	GF= 280743.95	iGF_per= 34294.26 	GF_per= 35092.99[0m
+[0;31m Prog= 81.84%	N_left=   227328	Time= 125.70	Time_left=  27.90	iGF= 278881.07	GF= 280732.60	iGF_per= 34860.13 	GF_per= 35091.57[0m
+[0;31m Prog= 82.32%	N_left=   225280	Time= 126.45	Time_left=  27.15	iGF= 277860.87	GF= 280715.45	iGF_per= 34732.61 	GF_per= 35089.43[0m
+[0;31m Prog= 82.80%	N_left=   223232	Time= 127.21	Time_left=  26.42	iGF= 271023.07	GF= 280657.54	iGF_per= 33877.88 	GF_per= 35082.19[0m
+[0;31m Prog= 83.27%	N_left=   221184	Time= 127.95	Time_left=  25.71	iGF= 273526.42	GF= 280616.33	iGF_per= 34190.80 	GF_per= 35077.04[0m
+[0;31m Prog= 83.73%	N_left=   219136	Time= 128.66	Time_left=  25.00	iGF= 278144.21	GF= 280602.62	iGF_per= 34768.03 	GF_per= 35075.33[0m
+[0;31m Prog= 84.18%	N_left=   217088	Time= 129.37	Time_left=  24.31	iGF= 277497.77	GF= 280585.76	iGF_per= 34687.22 	GF_per= 35073.22[0m
+[0;31m Prog= 84.63%	N_left=   215040	Time= 130.07	Time_left=  23.63	iGF= 270141.07	GF= 280528.92	iGF_per= 33767.63 	GF_per= 35066.12[0m
+[0;31m Prog= 85.06%	N_left=   212992	Time= 130.76	Time_left=  22.97	iGF= 272735.26	GF= 280487.93	iGF_per= 34091.91 	GF_per= 35060.99[0m
+[0;31m Prog= 85.49%	N_left=   210944	Time= 131.43	Time_left=  22.31	iGF= 277010.20	GF= 280470.35	iGF_per= 34626.27 	GF_per= 35058.79[0m
+[0;31m Prog= 85.91%	N_left=   208896	Time= 132.08	Time_left=  21.67	iGF= 276982.58	GF= 280453.14	iGF_per= 34622.82 	GF_per= 35056.64[0m
+[0;31m Prog= 86.32%	N_left=   206848	Time= 132.74	Time_left=  21.04	iGF= 268915.68	GF= 280395.93	iGF_per= 33614.46 	GF_per= 35049.49[0m
+[0;31m Prog= 86.72%	N_left=   204800	Time= 133.37	Time_left=  20.43	iGF= 272031.99	GF= 280355.93	iGF_per= 34004.00 	GF_per= 35044.49[0m
+[0;31m Prog= 87.11%	N_left=   202752	Time= 133.99	Time_left=  19.82	iGF= 276703.90	GF= 280339.17	iGF_per= 34587.99 	GF_per= 35042.40[0m
+[0;31m Prog= 87.50%	N_left=   200704	Time= 134.59	Time_left=  19.23	iGF= 276118.24	GF= 280320.24	iGF_per= 34514.78 	GF_per= 35040.03[0m
+[0;31m Prog= 87.88%	N_left=   198656	Time= 135.20	Time_left=  18.65	iGF= 269570.43	GF= 280272.07	iGF_per= 33696.30 	GF_per= 35034.01[0m
+[0;31m Prog= 88.61%	N_left=   194560	Time= 136.36	Time_left=  17.52	iGF= 273242.35	GF= 280212.32	iGF_per= 34155.29 	GF_per= 35026.54[0m
+[0;31m Prog= 89.99%	N_left=   186368	Time= 138.54	Time_left=  15.41	iGF= 271884.80	GF= 280080.90	iGF_per= 33985.60 	GF_per= 35010.11[0m
+[0;31m Prog= 91.25%	N_left=   178176	Time= 140.56	Time_left=  13.47	iGF= 270040.54	GF= 279936.89	iGF_per= 33755.07 	GF_per= 34992.11[0m
+[0;31m Prog= 92.41%	N_left=   169984	Time= 142.41	Time_left=  11.70	iGF= 268753.81	GF= 279791.79	iGF_per= 33594.23 	GF_per= 34973.97[0m
+[0;31m Prog= 93.45%	N_left=   161792	Time= 144.10	Time_left=  10.10	iGF= 267104.54	GF= 279643.14	iGF_per= 33388.07 	GF_per= 34955.39[0m
+[0;31m Prog= 94.40%	N_left=   153600	Time= 145.62	Time_left=   8.64	iGF= 266781.38	GF= 279508.22	iGF_per= 33347.67 	GF_per= 34938.53[0m
+[0;31m Prog= 95.25%	N_left=   145408	Time= 147.00	Time_left=   7.34	iGF= 265661.73	GF= 279378.35	iGF_per= 33207.72 	GF_per= 34922.29[0m
+[0;31m Prog= 96.01%	N_left=   137216	Time= 148.25	Time_left=   6.17	iGF= 261880.79	GF= 279230.85	iGF_per= 32735.10 	GF_per= 34903.86[0m
+[0;31m Prog= 96.68%	N_left=   129024	Time= 149.37	Time_left=   5.13	iGF= 258707.42	GF= 279076.61	iGF_per= 32338.43 	GF_per= 34884.58[0m
+[0;31m Prog= 97.27%	N_left=   120832	Time= 150.37	Time_left=   4.22	iGF= 257251.88	GF= 278932.29	iGF_per= 32156.48 	GF_per= 34866.54[0m
+[0;31m Prog= 99.15%	N_left=    81920	Time= 153.83	Time_left=   1.32	iGF= 233785.35	GF= 277915.93	iGF_per= 29223.17 	GF_per= 34739.49[0m
+[0;31m Prog= 99.89%	N_left=    40960	Time= 156.09	Time_left=   0.17	iGF= 142287.20	GF= 275957.49	iGF_per= 17785.90 	GF_per= 34494.69[0m
+================================================================================
+T/V                N    NB     P     Q         Time          Gflops (   per GPU)
+--------------------------------------------------------------------------------
+WC0           401408  2048     4     2       158.53       2.720e+05 ( 3.400e+04)
+
+HPL_pdgesv() start time Thu Apr 16 19:28:02 2026
+HPL_pdgesv() end time   Thu Apr 16 19:30:41 2026
+
+--------------------------------------------------------------------------------
+||Ax-b||_oo/(eps*(||A||_oo*||x||_oo+||b||_oo)*N)=   0.000128229415 ...... PASSED
+||Ax-b||_oo  . . . . . . . . . . . . . . . . . = 0.0000000041471200
+||A||_oo . . . . . . . . . . . . . . . . . . . = 100797.8029466618609149
+||x||_oo . . . . . . . . . . . . . . . . . . . = 7.1996489641769239
+||b||_oo . . . . . . . . . . . . . . . . . . . = 0.4999995100721720
+================================================================================
+
+Finished      1 tests with the following results:
+              1 tests completed and passed residual checks,
+              0 tests completed and failed residual checks,
+              0 tests skipped because of illegal input values.
+--------------------------------------------------------------------------------
+
+End of Tests.
+================================================================================

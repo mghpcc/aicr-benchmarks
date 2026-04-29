@@ -1,0 +1,210 @@
+Running on hosts: b0004 b0005 b0006 b0007 b0008 b0009 b0010 b0011
+
+================================================================================
+HPL-NVIDIA 25.9.0  -- NVIDIA accelerated HPL benchmark -- NVIDIA
+================================================================================
+HPLinpack 2.1  --  High-Performance Linpack benchmark  --   October 26, 2012
+Written by A. Petitet and R. Clint Whaley,  Innovative Computing Laboratory, UTK
+Modified by Piotr Luszczek, Innovative Computing Laboratory, UTK
+Modified by Julien Langou, University of Colorado Denver
+================================================================================
+
+An explanation of the input/output parameters follows:
+T/V    : Wall time / encoded variant.
+N      : The order of the coefficient matrix A.
+NB     : The partitioning blocking factor.
+P      : The number of process rows.
+Q      : The number of process columns.
+Time   : Time in seconds to solve the linear system.
+Gflops : Rate of execution for solving the linear system.
+
+The following parameter values will be used:
+
+N      : 1089904 
+NB     :    2048 
+PMAP   : Column-major process mapping
+P      :       8 
+Q      :       8 
+PFACT  :    Left 
+NBMIN  :       2 
+NDIV   :       2 
+RFACT  :    Left 
+BCAST  :  2ringM 
+DEPTH  :       1 
+SWAP   : Spread-roll (long)
+L1     : no-transposed form
+U      : transposed form
+EQUIL  : no
+ALIGN  : 8 double precision words
+
+--------------------------------------------------------------------------------
+
+- The matrix A is randomly generated for each test.
+- The following scaled residual check will be computed:
+      ||Ax-b||_oo / ( eps * ( || x ||_oo * || A ||_oo + || b ||_oo ) * N )
+- The relative machine precision (eps) is taken to be               1.110223e-16
+- Computational tests pass if scaled residuals are less than                16.0
+
+
+HPL-NVIDIA ignores the following parameters from input file:
+	* Broadcast parameters
+	* Panel factorization parameters
+	* Look-ahead value
+	* L1 layout
+	* U layout
+	* Equilibration parameter
+	* Memory alignment parameter
+
+HPL-NVIDIA settings from environment variables:
+--- DEVICE INFO ---
+  Peak clock frequency: 1965 MHz
+  SM version          : 100
+  Number of SMs       : 148
+-------------------
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1093: non-zero status: 12 ibv_poll_cq failed, status: 12
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/modules/transport/ibrc/ibrc.cpp:1121: non-zero status: 7 progress_send failed, 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1071: non-zero status: 7 transport 1 progress failed 
+
+/dvs/p4/build/sw/rel/gpgpu/toolkit/r13.0/main_nvshmem/src/host/proxy/proxy.cpp:1074: non-zero status: 7: Success, exiting... error in progress_transport 
+
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-01T19:38:18.311] error: *** STEP 2057.1 ON b0004 CANCELLED AT 2026-04-01T19:38:18 DUE to SIGNAL Terminated ***
+[2026-04-01T19:38:18.312] error: *** JOB 2057 ON b0004 CANCELLED AT 2026-04-01T19:38:18 DUE to SIGNAL Terminated ***

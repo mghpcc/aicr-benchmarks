@@ -1,0 +1,153 @@
+Bootstrap: docker
+From: rockylinux:9
+
+%labels
+    Author          RedLine Performance Solutions
+    Version         1.0
+    UCX_VERSION     1.17.0
+    OMPI_VERSION    5.0.6
+
+%arguments
+    UCX_VERSION=1.17.0
+    OMPI_VERSION=5.0.6
+    INSTALL_PREFIX=/opt/hpc
+    AMD_HPL_VERSION=2024_10_08
+
+
+%environment
+    export INSTALL_PREFIX=/opt/hpc
+    export UCX_HOME=${INSTALL_PREFIX}/ucx
+    export OMPI_HOME=${INSTALL_PREFIX}/openmpi
+
+    export PATH=/opt/amd-zen-hpl-${AMD_HPL_VERSION}:/opt/amd-zen-hpl-${AMD_HPL_VERSION}/bin:$PATH
+    export LD_LIBRARY_PATH=/opt/amd-zen-hpl-${AMD_HPL_VERSION}:$LD_LIBRARY_PATH
+
+    export PATH=${OMPI_HOME}/bin:${UCX_HOME}/bin:${PATH}
+    export LD_LIBRARY_PATH=${OMPI_HOME}/lib:${UCX_HOME}/lib:${LD_LIBRARY_PATH}
+    export MANPATH=${OMPI_HOME}/share/man:${MANPATH}
+
+    export UCX_WARN_UNUSED_ENV_VARS=n
+
+%files
+    /etc/yum.repos.d/*.repo /etc/yum.repos.d/
+    amd-zen-hpl-*.tar.gz /opt/
+
+%post
+    set -euo pipefail
+
+    INSTALL_PREFIX=/opt/hpc
+    UCX_VERSION={{ UCX_VERSION }}
+    OMPI_VERSION={{ OMPI_VERSION }}
+    AMD_HPL_VERSION={{ AMD_HPL_VERSION }}
+    NCPU=$(nproc)
+
+    # ── 0. Repo configuration — remove base-image defaults, use host repos ────
+    rm -f /etc/yum.repos.d/Rocky-*.repo
+    dnf clean all
+
+    # ── 1. System packages ────────────────────────────────────────────────────
+    dnf install -y dnf-plugins-core
+
+    dnf install -y \
+        gcc gcc-c++ gcc-gfortran make automake autoconf libtool pkgconfig \
+        wget tar bzip2 gzip \
+        git ca-certificates \
+        libibverbs libibverbs-devel \
+        librdmacm librdmacm-devel \
+        rdma-core rdma-core-devel \
+        infiniband-diags \
+        libnl3 libnl3-devel \
+        numactl numactl-devel \
+        hwloc hwloc-devel \
+        libevent libevent-devel \
+        zlib-devel \
+        openssh-clients \
+        libgomp numactl-libs \
+        pmix pmix-devel            2>/dev/null || \
+    dnf install -y \
+        gcc gcc-c++ gcc-gfortran make automake autoconf libtool pkgconfig \
+        wget curl tar bzip2 gzip \
+        git ca-certificates \
+        libibverbs libibverbs-devel \
+        librdmacm librdmacm-devel \
+        rdma-core rdma-core-devel \
+        infiniband-diags \
+        libnl3 libnl3-devel \
+        numactl numactl-devel \
+        hwloc hwloc-devel \
+        libevent libevent-devel \
+        zlib-devel \
+        libgomp numactl-libs \
+        openssh-clients
+    # pmix-devel may not be in EPEL on all minor releases — tolerate absence
+
+    # ── 2. Build UCX (IB verbs only, no CUDA) ────────────────────────────────
+    mkdir -p ${INSTALL_PREFIX}/src && cd ${INSTALL_PREFIX}/src
+    wget -q https://github.com/openucx/ucx/releases/download/v${UCX_VERSION}/ucx-${UCX_VERSION}.tar.gz
+    tar xf ucx-${UCX_VERSION}.tar.gz
+    cd ucx-${UCX_VERSION}
+
+    ./configure \
+        --prefix=${INSTALL_PREFIX}/ucx \
+        --with-verbs \
+        --with-rdmacm \
+        --without-cuda \
+        --enable-mt \
+        --enable-optimizations \
+        --disable-logging \
+        --disable-debug \
+        --disable-assertions \
+        --disable-params-check \
+        CC=gcc CXX=g++
+
+    make -j${NCPU}
+    make install
+
+    export PATH=${INSTALL_PREFIX}/ucx/bin:${PATH}
+    export LD_LIBRARY_PATH=${INSTALL_PREFIX}/ucx/lib:${LD_LIBRARY_PATH}
+
+    # ── 3. Build OpenMPI (with UCX + PMIx, no CUDA) ──────────────────────────
+    # Same PMIx version check as GPU container — Rocky 9 system PMIx may be
+    # too old for OpenMPI 5.x (requires >= 4.2.0); fall back to internal.
+    cd ${INSTALL_PREFIX}/src
+    wget -q https://download.open-mpi.org/release/open-mpi/v5.0/openmpi-${OMPI_VERSION}.tar.bz2
+    tar xf openmpi-${OMPI_VERSION}.tar.bz2
+    cd openmpi-${OMPI_VERSION}
+
+    if pkg-config --exists pmix 2>/dev/null && \
+       pkg-config --atleast-version=4.2.0 pmix 2>/dev/null; then
+        PMIX_FLAG="--with-pmix=$(pkg-config --variable=prefix pmix)"
+    else
+        PMIX_FLAG="--with-pmix=internal"
+    fi
+
+    ./configure \
+        --prefix=${INSTALL_PREFIX}/openmpi \
+        --with-ucx=${INSTALL_PREFIX}/ucx \
+        --without-cuda \
+        ${PMIX_FLAG} \
+        --with-hwloc \
+        --with-libevent \
+        --without-verbs \
+        --enable-shared \
+        CC=gcc CXX=g++ FC=gfortran
+
+    make -j${NCPU}
+    make install
+
+    export PATH=${INSTALL_PREFIX}/openmpi/bin:${PATH}
+    export LD_LIBRARY_PATH=${INSTALL_PREFIX}/openmpi/lib:${LD_LIBRARY_PATH}
+
+    # ── 4. Build AMD ZEN HPL ${AMD_HPL_VERSION} ────────────────────
+    tar -xzf /opt/amd-zen-hpl-${AMD_HPL_VERSION}.tar.gz -C /opt/
+    rm -f /opt/amd-zen-hpl-${AMD_HPL_VERSION}.tar.gz
+
+    ln -sf /opt/amd-zen-hpl-${AMD_HPL_VERSION}/libnuma.so.1 /opt/amd-zen-hpl-${AMD_HPL_VERSION}/libnuma.so
+
+    ln -sf /opt/amd-zen-hpl-${AMD_HPL_VERSION} /opt/amd-hpl
+
+    # ── 5. Cleanup build artifacts (reduce image size) ────────────────────────
+    rm -rf ${INSTALL_PREFIX}/src
+
+%runscript
+    exec "$@"

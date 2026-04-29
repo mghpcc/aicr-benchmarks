@@ -1,0 +1,37 @@
+Running on hosts: b0004 b0005 b0006 b0007 b0008 b0009 b0010 b0011
+[1775514475.644952] [b0009:44608:0]     ucp_context.c:2358 UCX  INFO  Version 1.20.0 (loaded from /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0)
+[1775514475.668979] [b0009:44608:f]        vfs_sock.c:63   UCX  DIAG  failed to create directory '/run/user/10009/ucx': No such file or directory
+[1775514475.668983] [b0009:44608:f]        vfs_fuse.c:440  UCX  DIAG  failed to watch on '/run/user/10009/ucx/vfs.sock': Input/output error, VFS will be disabled
+[1775514483.023004] [b0009:44608:0]         ib_mlx5.c:1100 UCX  ERROR AR=n was requested for SL=auto, but could not select SL without AR on mlx5_0:1, SLs with AR support = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 }, SLs without AR support = { <none> }
+[1775514483.023687] [b0009:44608:0]      ucp_worker.c:1412 UCX  ERROR uct_iface_open(rc_mlx5/mlx5_0:1) failed: Unsupported operation
+[b0009:44608] pml_ucx.c:309  Error: Failed to create UCP worker
+--------------------------------------------------------------------------
+No components were able to be opened in the pml framework.
+
+This typically means that either no components of this type were
+installed, or none of the installed components can be loaded.
+Sometimes this means that shared libraries required by these
+components are unable to be found/loaded.
+
+  Host:      b0009
+  Framework: pml
+--------------------------------------------------------------------------
+[b0009:44608] PML ucx cannot be selected
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-06T22:28:03.029] error: *** STEP 2078.1 ON b0004 CANCELLED AT 2026-04-06T22:28:03 DUE to SIGNAL Killed ***
+[2026-04-06T22:28:04.270] error:  mpi/pmix_v3: _errhandler: b0010 [6]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:51]
+[2026-04-06T22:28:04.273] error:  mpi/pmix_v3: _errhandler: b0007 [3]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:29]
+[2026-04-06T22:28:04.281] error:  mpi/pmix_v3: _errhandler: b0009 [5]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:42]
+[2026-04-06T22:28:04.356] error:  mpi/pmix_v3: _errhandler: b0008 [4]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:36]
+[2026-04-06T22:28:04.361] error:  mpi/pmix_v3: _errhandler: b0004 [0]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:0]
+[2026-04-06T22:28:04.375] error:  mpi/pmix_v3: _errhandler: b0005 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:9]
+[2026-04-06T22:28:04.384] error:  mpi/pmix_v3: _errhandler: b0011 [7]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:60]
+[2026-04-06T22:28:04.512] error:  mpi/pmix_v3: _errhandler: b0006 [2]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2078.1:22]
+srun: error: b0010: tasks 48-55: Killed
+srun: error: b0008: tasks 32-39: Killed
+srun: error: b0009: tasks 40-47: Killed
+srun: error: b0005: tasks 8-15: Killed
+srun: error: b0007: tasks 24-31: Killed
+srun: error: b0011: tasks 56-63: Killed
+srun: error: b0004: tasks 0-7: Killed
+srun: error: b0006: tasks 16-23: Killed

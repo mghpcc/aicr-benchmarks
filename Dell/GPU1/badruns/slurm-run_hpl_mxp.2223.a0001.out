@@ -1,0 +1,80 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T01:33:12
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-08T01:33:12
++++ scontrol show hostname
+++ echo a0001 a0002 a0003 a0004
++ echo 'Running on hosts: a0001 a0002 a0003 a0004'
+Running on hosts: a0001 a0002 a0003 a0004
++ echo 2026-04-08T01:33:12
+2026-04-08T01:33:12
++ N_SIZE=860080
++ srun -N 4 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 860080 --nb 1024 --nporder row --nprow 4 --npcol 8
+[a0002:10840:0:10840] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_0:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[a0002:10840:0:10840] ib_mlx5_log.c:179  RC QP 0x3b0 wqe[403]: SEND --e [inl len 19] [rqpn 0x24f dlid=34 sl=0 port=1 src_path_bits=0]
+==== backtrace (tid:  10840) ====
+ 0  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_handle_error+0x2e4) [0x7f118b485774]
+ 1  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_fatal_error_message+0xc2) [0x7f118b482732]
+ 2  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a) [0x7f118b48756a]
+ 3  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4) [0x7f118b4878f4]
+ 4  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550) [0x7f1188b76550]
+ 5  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x134) [0x7f1188b8c5e4]
+ 6  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d) [0x7f1188b7774d]
+ 7  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x2bae7) [0x7f1188b8dae7]
+ 8  /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a) [0x7f118b5190ea]
+ 9  /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/ucc/libucc_tl_ucp.so(ucc_tl_ucp_allgather_knomial_progress+0x253) [0x7f0f65e439f3]
+10  /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(+0x148dc) [0x7f0f77fd68dc]
+11  /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_context_progress+0x7d) [0x7f0f77fcf61d]
+12  /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(mca_coll_ucc_bcast+0x153) [0x7f118800cd93]
+13  /opt/hpcx/ompi/lib/libmpi.so.40(MPI_Bcast+0x41) [0x7f11da349221]
+14  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x507259]
+15  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x509324]
+16  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x46eab0]
+17  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x473c1c]
+18  /lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca) [0x7f11a12181ca]
+19  /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b) [0x7f11a121828b]
+20  /workspace/hpl-mxp-linux-x86_64/xhpl_mxp() [0x4669fe]
+=================================
+[a0002:10840] *** Process received signal ***
+[a0002:10840] Signal: Aborted (6)
+[a0002:10840] Signal code:  (-6)
+[a0002:10840] [ 0] /lib/x86_64-linux-gnu/libc.so.6(+0x45330)[0x7f11a1233330]
+[a0002:10840] [ 1] /lib/x86_64-linux-gnu/libc.so.6(pthread_kill+0x11c)[0x7f11a128cb2c]
+[a0002:10840] [ 2] /lib/x86_64-linux-gnu/libc.so.6(gsignal+0x1e)[0x7f11a123327e]
+[a0002:10840] [ 3] /lib/x86_64-linux-gnu/libc.so.6(abort+0xdf)[0x7f11a12168ff]
+[a0002:10840] [ 4] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x34737)[0x7f118b482737]
+[a0002:10840] [ 5] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(+0x3956a)[0x7f118b48756a]
+[a0002:10840] [ 6] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucs.so.0(ucs_log_dispatch+0xe4)[0x7f118b4878f4]
+[a0002:10840] [ 7] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x550)[0x7f1188b76550]
+[a0002:10840] [ 8] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x134)[0x7f1188b8c5e4]
+[a0002:10840] [ 9] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x3d)[0x7f1188b7774d]
+[a0002:10840] [10] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/ucx/libuct_ib_mlx5.so.0(+0x2bae7)[0x7f1188b8dae7]
+[a0002:10840] [11] /opt/hpcx/ompi/lib/openmpi/../../../ucx/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f118b5190ea]
+[a0002:10840] [12] /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/ucc/libucc_tl_ucp.so(ucc_tl_ucp_allgather_knomial_progress+0x253)[0x7f0f65e439f3]
+[a0002:10840] [13] /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(+0x148dc)[0x7f0f77fd68dc]
+[a0002:10840] [14] /opt/hpcx/ompi/lib/openmpi/../../../ucc/lib/libucc.so.1(ucc_context_progress+0x7d)[0x7f0f77fcf61d]
+[a0002:10840] [15] /opt/hpcx/ompi/lib/openmpi/mca_coll_ucc.so(mca_coll_ucc_bcast+0x153)[0x7f118800cd93]
+[a0002:10840] [16] /opt/hpcx/ompi/lib/libmpi.so.40(MPI_Bcast+0x41)[0x7f11da349221]
+[a0002:10840] [17] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x507259]
+[a0002:10840] [18] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x509324]
+[a0002:10840] [19] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x46eab0]
+[a0002:10840] [20] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x473c1c]
+[a0002:10840] [21] /lib/x86_64-linux-gnu/libc.so.6(+0x2a1ca)[0x7f11a12181ca]
+[a0002:10840] [22] /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x8b)[0x7f11a121828b]
+[a0002:10840] [23] /workspace/hpl-mxp-linux-x86_64/xhpl_mxp[0x4669fe]
+[a0002:10840] *** End of error message ***
+[2026-04-08T01:35:08.534] error:  mpi/pmix_v3: _errhandler: a0002 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2223.0:12]
+/workspace/hpl-mxp.sh: line 261: 10840 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPL} ${HPL_MXP_PARAMS}
+[2026-04-08T01:35:09.321] error: *** STEP 2223.0 ON a0001 CANCELLED AT 2026-04-08T01:35:09 DUE to SIGNAL Killed ***
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+srun: error: a0002: tasks 8-11,13-15: Killed
+srun: error: a0001: tasks 0-7: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0004: tasks 24-31: Killed
+[2026-04-08T01:35:11.054] error:  mpi/pmix_v3: _errhandler: a0002 [1]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.2223.0:8]
+srun: error: a0002: task 12: Killed
++ echo Done
+Done
++ echo 2026-04-08T01:33:12
+2026-04-08T01:33:12

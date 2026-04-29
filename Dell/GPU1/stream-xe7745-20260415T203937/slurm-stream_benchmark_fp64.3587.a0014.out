@@ -1,0 +1,32 @@
+Job started at: 2026-04-18T00:28:34
+Running on hosts: a0014
+Command line: /workspace/stream-gpu-linux-x86_64/stream_test -d 0 -n 1000000000 -t CSAT
+
+======================================================================================
+NVIDIA-STREAM 25.9.0  -- NVIDIA accelerated STREAM benchmark -- NVIDIA
+======================================================================================
+There are 8 devices supporting CUDA
+Device 0: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 1: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 2: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 3: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 4: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 5: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 6: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+Device 7: "NVIDIA RTX PRO 6000 Blackwell Server Edition" 	 188 SMs(12.0)	Memory: 405MHz x 512-bit = 51.8 GB/s PEAK	 ECC is ON
+
+Device Selected 0: "NVIDIA RTX PRO 6000 Blackwell Server Edition"
+ STREAM Benchmark implementation in CUDA
+ Array size (double)=1000000000*8*8 (61035 MB)
+
+STREAM tests: COPY SCALE ADD TRIAD
+
+Optimizing...
+
+
+Function      Rate (MB/s)   Avg time     Min time     Max time
+Copy:      1472315.9978       0.0109       0.0109       0.0109
+Scale:     1471752.6175       0.0109       0.0109       0.0109
+Add:       1482673.5254       0.0162       0.0162       0.0162
+Triad:     1481914.6382       0.0162       0.0162       0.0162
+Job finished at: 2026-04-18T00:29:18

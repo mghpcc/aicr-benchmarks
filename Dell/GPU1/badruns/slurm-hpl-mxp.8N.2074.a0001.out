@@ -1,0 +1,103 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-06T22:16:50
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ scontrol show hostname
+++ tr '\n' ' '
++ echo 'Running on hosts: a0001 a0002 a0003 a0004 '
+Running on hosts: a0001 a0002 a0003 a0004 
++ echo 2026-04-06T22:16:50
+2026-04-06T22:16:50
++ GPU_AFFINITY=0:1:2:3:4:5:6:7
++ N_SIZE=1140736
++ srun --cpu-bind=none --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 1140736 --nb 2048 --nprow 8 --npcol 8 --nporder row
+ ERROR 2 (22->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+ ERROR 2 (17->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+ ERROR 2 (19->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 19 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 22 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 17 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+ ERROR 2 (23->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+ ERROR 2 (20->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 23 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 20 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+ ERROR 2 (21->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+ ERROR 2 (16->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+ ERROR 2 (18->a0003): Number of processes (32) != nprow (8) * npcol (8)
+ at (src/grid.hpp:29)
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 21 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 16 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+MPI_ABORT was invoked on rank 18 in communicator MPI_COMM_WORLD
+with errorcode 2.
+
+NOTE: invoking MPI_ABORT causes Open MPI to kill all MPI processes.
+You may or may not see output from other processes, depending on
+exactly when Open MPI kills them.
+--------------------------------------------------------------------------
+srun: Job step aborted: Waiting up to 32 seconds for job step to finish.
+[2026-04-06T22:16:54.248] error: *** STEP 2074.0 ON a0001 CANCELLED AT 2026-04-06T22:16:54 DUE to SIGNAL Killed ***
+srun: error: a0004: tasks 24-31: Killed
+srun: error: a0003: tasks 16-23: Killed
+srun: error: a0001: tasks 0-7: Killed
+srun: error: a0002: tasks 8-15: Killed
++ echo Done
+Done
+++ date +%Y-%m-%dT%H:%M:%S
++ echo 2026-04-06T22:16:55
+2026-04-06T22:16:55

@@ -1,0 +1,61 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-04-01T20:09:52
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
++ NCCL_BIN=/workspace/microbenchmarks/nccl_tests
++++ scontrol show hostname
+++ echo a0018
++ echo 'Running on hosts: a0018'
+Running on hosts: a0018
++ echo 2026-04-01T20:09:52
+2026-04-01T20:09:52
++ srun apptainer exec --nv --no-mount /etc/localtime /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/microbenchmarks/nccl_tests/all_reduce_perf -b 8 -e 128M -f 2 -g 8
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 8 minBytes 8 maxBytes 134217728 step: 2(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  65431 on      a0018 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid  65431 on      a0018 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid  65431 on      a0018 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid  65431 on      a0018 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  4 Group  0 Pid  65431 on      a0018 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  5 Group  0 Pid  65431 on      a0018 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  6 Group  0 Pid  65431 on      a0018 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  7 Group  0 Pid  65431 on      a0018 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw #wrong     time   algbw   busbw #wrong
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)            (us)  (GB/s)  (GB/s)       
+           8             2     float     sum      -1    26.14    0.00    0.00      0    25.51    0.00    0.00      0
+          16             4     float     sum      -1    25.51    0.00    0.00      0    25.80    0.00    0.00      0
+          32             8     float     sum      -1    25.88    0.00    0.00      0    25.76    0.00    0.00      0
+          64            16     float     sum      -1    26.22    0.00    0.00      0    26.21    0.00    0.00      0
+         128            32     float     sum      -1    28.39    0.00    0.01      0    28.04    0.00    0.01      0
+         256            64     float     sum      -1    28.89    0.01    0.02      0    28.46    0.01    0.02      0
+         512           128     float     sum      -1    29.67    0.02    0.03      0    28.66    0.02    0.03      0
+        1024           256     float     sum      -1    29.69    0.03    0.06      0    29.05    0.04    0.06      0
+        2048           512     float     sum      -1    30.27    0.07    0.12      0    29.36    0.07    0.12      0
+        4096          1024     float     sum      -1    69.70    0.06    0.10      0    69.90    0.06    0.10      0
+        8192          2048     float     sum      -1    71.08    0.12    0.20      0    70.66    0.12    0.20      0
+       16384          4096     float     sum      -1    71.93    0.23    0.40      0    71.23    0.23    0.40      0
+       32768          8192     float     sum      -1    73.52    0.45    0.78      0    74.03    0.44    0.77      0
+       65536         16384     float     sum      -1    81.43    0.80    1.41      0    80.61    0.81    1.42      0
+      131072         32768     float     sum      -1    81.14    1.62    2.83      0    81.28    1.61    2.82      0
+      262144         65536     float     sum      -1    84.07    3.12    5.46      0    83.47    3.14    5.50      0
+      524288        131072     float     sum      -1    115.8    4.53    7.92      0    114.4    4.58    8.02      0
+     1048576        262144     float     sum      -1    182.9    5.73   10.03      0    180.6    5.81   10.16      0
+     2097152        524288     float     sum      -1    243.8    8.60   15.06      0    241.8    8.67   15.18      0
+     4194304       1048576     float     sum      -1    405.8   10.34   18.09      0    404.5   10.37   18.14      0
+     8388608       2097152     float     sum      -1    698.2   12.02   21.03      0    697.0   12.04   21.06      0
+    16777216       4194304     float     sum      -1   1310.5   12.80   22.40      0   1303.0   12.88   22.53      0
+    33554432       8388608     float     sum      -1   2481.6   13.52   23.66      0   2476.4   13.55   23.71      0
+    67108864      16777216     float     sum      -1   4929.0   13.62   23.83      0   4908.3   13.67   23.93      0
+   134217728      33554432     float     sum      -1   9830.5   13.65   23.89      0   9780.7   13.72   24.01      0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 7.11103 
+#
+# Collective test concluded: all_reduce_perf
+
++ echo Done
+Done
++ echo 2026-04-01T20:09:52
+2026-04-01T20:09:52
