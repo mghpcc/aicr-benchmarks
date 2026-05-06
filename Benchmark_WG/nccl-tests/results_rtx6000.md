@@ -11,32 +11,34 @@
 
 Converged values taken at 16 GB message size, best of out-of-place / in-place.
 
+> **Note: compare `busbw` (not `algbw`) to the hardware max.** `algbw` = bytes/time as seen by the user. `busbw` applies a per-collective multiplier that converts user-visible throughput into bytes-on-the-wire per GPU per direction — e.g., AllReduce traverses each byte ~2× (ReduceScatter + AllGather), so its algbw is roughly half its busbw. Only `busbw` is directly comparable to the per-GPU link ceiling, and that's why the percentage columns reference busbw.
+
 ---
 
 ## Table 1: 1-Node RTX6000, 2 GPUs on Same Socket (a0001) — SendRecv Only
 
-| Benchmark | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max |
-|---|---|---|---|
-| sendrecv | 37.4 | 63 | 59% |
+| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max | Limited by |
+|---|---|---|---|---|---|
+| sendrecv | 37.4 | 37.4 | 63 | 59% | PCIe DMA bidir budget |
 
 ---
 
 ## Table 2: 1-Node RTX6000, 4 GPUs on Same Socket (a0008) — All Benchmarks
 
-PCIe Gen5 x16 theoretical max per GPU per direction = **63 GB/s**.
+PCIe Gen5 x16 theoretical max per GPU per direction = **63 GB/s**. Note: the actual binding constraint for symmetric collectives is the CPU memory fabric, not the PCIe link itself — see Analysis below.
 
-| Benchmark | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max |
-|---|---|---|---|
-| sendrecv | 13.0 | 63 | **21%** |
-| reduce | 13.2 | 63 | 21% |
-| broadcast | 17.6 | 63 | 28% |
-| gather | 39.2 | 63 | 62% |
-| scatter | 50.6 | 63 | 80% |
-| reduce_scatter | 13.0 | 63 | 21% |
-| all_gather | 13.3 | 63 | 21% |
-| all_reduce | 13.1 | 63 | 21% |
-| alltoall | 13.4 | 63 | 21% |
-| hypercube | **FAILED** | — | — |
+| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max | Limited by |
+|---|---|---|---|---|---|
+| sendrecv | 13.0 | 13.0 | 63 | **21%** | Cross-NUMA CPU mem fabric |
+| reduce | 13.2 | 13.2 | 63 | 21% | Cross-NUMA CPU mem fabric |
+| broadcast | 17.6 | 17.6 | 63 | 28% | Cross-NUMA CPU mem fabric (tree partial) |
+| gather | 52.3 | 39.2 | 63 | 62% | Root-anchored fan-in (no cross-NUMA) |
+| scatter | 67.4 | 50.6 | 63 | 80% | Root-anchored fan-out (no cross-NUMA) |
+| reduce_scatter | 17.3 | 13.0 | 63 | 21% | Cross-NUMA CPU mem fabric |
+| all_gather | 17.8 | 13.3 | 63 | 21% | Cross-NUMA CPU mem fabric |
+| all_reduce | 8.76 | 13.1 | 63 | 21% | Cross-NUMA CPU mem fabric |
+| alltoall | 17.8 | 13.4 | 63 | 21% | Cross-NUMA CPU mem fabric |
+| hypercube | **FAILED** | **FAILED** | — | — | nccl-tests 2.18.3 validation bug |
 
 ---
 
@@ -44,9 +46,9 @@ PCIe Gen5 x16 theoretical max per GPU per direction = **63 GB/s**.
 
 Combined PCIe + NDR max: PCIe per direction = 63 GB/s, NDR NIC per direction = 50 GB/s. NDR is the bottleneck: combined theoretical max = **50 GB/s** per direction. For sendrecv (bidirectional), the effective ceiling is the GDRDMA bidir DMA budget (~24.7 GB/s per direction, measured).
 
-| Benchmark | busbw (GB/s) | PCIe+NDR Max (GB/s) | % of Max |
-|---|---|---|---|
-| sendrecv | 24.7 | 50 | **49%** |
+| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe+NDR Max (GB/s) | % of Max | Limited by |
+|---|---|---|---|---|---|
+| sendrecv | 24.7 | 24.7 | 50 | **49%** | HW-saturated (GDRDMA bidir per-pair) |
 
 ---
 
