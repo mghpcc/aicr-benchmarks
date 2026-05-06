@@ -1,6 +1,6 @@
 # gpu-fryer SLURM Benchmarks
 
-Runs [gpu-fryer](https://github.com/PieselBois/gpu-fryer) across a SLURM cluster to measure per-GPU TFLOPS (FP32, BF16, FP8), thermals, and power draw. Each job fires three back-to-back precision runs and writes a self-contained `.out` file.
+Runs [gpu-fryer](https://github.com/huggingface/gpu-fryer) across a SLURM cluster to measure per-GPU TFLOPS (FP32, BF16, FP8), thermals, and power draw. Each job fires three back-to-back precision runs and writes a self-contained `.out` file.
 
 ## Prerequisites
 
