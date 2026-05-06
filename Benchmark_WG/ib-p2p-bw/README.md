@@ -3,7 +3,22 @@
 Tools for measuring point-to-point GPU↔GPU bandwidth between B200 nodes over a
 rail-optimized NDR InfiniBand fabric, via CUDA-aware `perftest`.
 
-## What this does (v1)
+## What this does
+
+The toolkit covers three tasks:
+
+1. Run **one** point-to-point bandwidth test between a chosen GPU pair on
+   two named nodes ([`bin/submit_p2p_pair.sh`](bin/submit_p2p_pair.sh) +
+   [`bin/p2p_pair.sbatch`](bin/p2p_pair.sbatch)).
+2. **Randomly sample** N pairings across the cluster and submit them as
+   N independent jobs
+   ([`bin/submit_random_pairs.sh`](bin/submit_random_pairs.sh)).
+3. **Migrate** an existing flat-layout `results/` tree to the current
+   nested layout ([`bin/migrate_results.sh`](bin/migrate_results.sh)).
+
+The single-pair driver is the core; the rest are thin layers on top.
+
+### Single pair
 
 One SLURM job tests **one direction** between **one pair of GPUs**:
 
@@ -26,6 +41,8 @@ The IB switch path between the two HCAs is recorded best-effort via
 ```
 bin/
   submit_p2p_pair.sh      wrapper: sets account/partition/nodelist, calls sbatch
+  submit_random_pairs.sh  random-sampler driver: submits N independent jobs
+  migrate_results.sh      one-shot flat-to-nested results migrator
   p2p_pair.sbatch         the SLURM driver (the main deliverable)
   select_nic_for_gpu.sh   parse `nvidia-smi topo -m`, pick rail-correct mlx5 + NUMA
   run_perftest.sh         NUMA-pinned wrapper around ib_read_bw / ib_write_bw
@@ -40,7 +57,9 @@ results/
       p2p-<jobid>.out
 ```
 
-## Usage
+See [`bin/README.md`](bin/README.md) for the per-script signature map.
+
+## Usage: single pair
 
 ```bash
 # Defaults: --account=test --partition=GPU2 (override via env)
@@ -66,6 +85,76 @@ Direct `sbatch` invocations: pass
 `--chdir=$PWD --export=ALL,P2P_SCRIPT_DIR=/abs/path/to/bin` so the script can
 locate its helpers and write outputs into your submit directory rather than
 the slurmd spool directory.
+
+## Usage: random sampling
+
+[`bin/submit_random_pairs.sh`](bin/submit_random_pairs.sh) enumerates the
+full population of ordered `(nodeA, nodeB, gpuA, gpuB)` tuples, samples
+without replacement via Fisher-Yates, and submits each sample as its own
+`submit_p2p_pair.sh` job.
+
+Modes (population sizes for the default 31-node, 8-GPU cluster):
+
+| mode        | constraint            | population        |
+| ----------- | --------------------- | ----------------- |
+| `rail`      | `gpuA == gpuB`        | 31 × 30 × 8 = 7440  |
+| `arbitrary` | `gpuA`, `gpuB` independent | 31 × 30 × 8 × 8 = 59520 |
+
+In both modes `nodeA != nodeB`, and `(A,B,...)` and `(B,A,...)` are
+distinct samples (each tests one direction).
+
+Reproducibility: if `P2P_SEED` is set in the environment it's used as the
+PRNG seed; otherwise a fresh seed is generated per invocation. The seed
+actually used is **always echoed**, with a one-line "re-run with this
+P2P_SEED= ..." hint so any sample can be reproduced exactly.
+
+`--exclude-nodes` accepts comma-separated names, a Slurm bracketed
+hostlist, or a mix; expansion uses `scontrol show hostnames`.
+
+```bash
+bin/submit_random_pairs.sh 5
+
+P2P_SEED=12345 bin/submit_random_pairs.sh 5 rail
+
+bin/submit_random_pairs.sh --exclude-nodes 'b[0005,0017-0019]' 20 arbitrary
+```
+
+`SBATCH_ACCOUNT` / `SBATCH_PARTITION` env overrides are forwarded to the
+per-pair wrapper, so the same overrides work here.
+
+## Migrating an old results tree
+
+If you have an existing `results/` tree from before the nested layout
+landed (top-level dirs named `<nodeA>-gpu<a>__<nodeB>-gpu<b>`),
+[`bin/migrate_results.sh`](bin/migrate_results.sh) relocates them
+in place:
+
+```
+old:  results/<nodeA>-gpu<a>__<nodeB>-gpu<b>/<ts>/...
+new:  results/<nodeA>-gpu<a>/<nodeB>/<nodeA>-gpu<a>__<nodeB>-gpu<b>/<ts>/...
+```
+
+```bash
+bin/migrate_results.sh -n        # dry run — print MOVE / SKIP lines, do nothing
+bin/migrate_results.sh           # actually move the directories
+bin/migrate_results.sh --results-dir /path/to/results  # non-default location
+```
+
+Idempotent: re-runs only move what's still in the old layout; already-
+nested dirs and `.slurm/` are left alone. Collisions on the destination
+side are reported with `SKIP` and never overwrite.
+
+## SLURM stdout layout
+
+The wrapper writes per-job sbatch stdout under
+`results/.slurm/<lo>-<hi>/p2p-<jobid>.out`, where `<lo>-<hi>` is the
+2000-id bucket containing the predicted next jobid (read from
+`scontrol show config | NextJobId`). This keeps the `.slurm/` listing
+browsable across thousands of submissions. If the actual jobid lands
+across the next 2000-boundary the file is at most one bucket off; the
+filename always encodes the real jobid. If `scontrol` is unavailable or
+doesn't report `NextJobId`, the wrapper falls back to a flat
+`results/.slurm/p2p-<jobid>.out`.
 
 ## Output files (per run)
 
@@ -100,10 +189,30 @@ the slurmd spool directory.
   cluster you still hit ~387 / 400 Gb/s line rate, so it's not worth chasing
   unless you're investigating a slower-than-expected pair.
 
-## Not included in v1 (deliberately)
+## Not included (deliberately)
 
-- No outer driver enumerating all pairs across the cluster (next step).
-- No bidirectional / reverse-direction automation in a single job.
-- No CSV/JSON aggregation across runs (`summary.txt` is grep-friendly).
+- No bidirectional / reverse-direction automation in a single job. To
+  cover both directions, submit a second job with the node arguments
+  swapped (or rely on the random sampler — `(A,B,…)` and `(B,A,…)` are
+  distinct samples there).
+- No CSV/JSON aggregation across runs (`summary.txt` is grep-friendly
+  and self-describing — see [`provenance/03_decisions.md`](provenance/03_decisions.md)
+  decision 8).
 - No retries on perftest failure.
 - No same-node (NVLink) tests — out of scope for IB P2P.
+
+## See also
+
+- [`bin/README.md`](bin/README.md) — per-script purpose + arg signatures.
+- [`provenance/`](provenance/README.md) — design decisions, behavioral
+  rules, and pitfalls; read top-to-bottom before changing anything in
+  [`bin/`](bin/).
+- [`provenance/agent_guidance/`](provenance/agent_guidance/) — pinned
+  copies of the external behavioral-rule files this repo was built
+  under.
+- [`AGENT_PROMPT.md`](AGENT_PROMPT.md) — the as-given task description
+  and meta-rules.
+- Building-block command examples used during the original design:
+  [`read_command_example.md`](read_command_example.md),
+  [`write_command_example.md`](write_command_example.md),
+  [`salloc_example.md`](salloc_example.md).

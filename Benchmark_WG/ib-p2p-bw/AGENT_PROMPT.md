@@ -40,6 +40,19 @@ The script will run on a shared HPC cluster with regular account privileges. If 
 don't do stupid tests like "can yum install work" or "does su work". That will just waste everyones time with irritating security alerts and
 is rude - be polite and act like a respectful human would, not like a blundering fool.
 
+**Documentation discipline.** After any change that adds, removes, or
+alters a user-visible feature (a new script, a new flag, a renamed
+argument, a changed default, a moved output path), update the markdown
+docs in the same change: top-level `README.md`, `bin/README.md`, and any
+affected file under `provenance/`. If a `provenance/` file disagrees
+with the code afterwards, the code is right and the provenance file is
+stale -- fix it now, not later. Do not "improve" the example files
+(`read_command_example.md`, `write_command_example.md`,
+`salloc_example.md`) in passing; only edit them when explicitly asked.
+The pinned external rule snapshots under `provenance/agent_guidance/`
+are read-only references -- if a rule needs to change, update upstream
+and re-import.
+
 Follow the meta behavior instructions in /Users/cnh/projects/agent_general_rules/karpathy_keep_it_simple.md
 
 
