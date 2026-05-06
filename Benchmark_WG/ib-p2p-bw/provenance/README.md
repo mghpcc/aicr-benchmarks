@@ -15,6 +15,13 @@ codebase. Read top-to-bottom in roughly ten minutes before making changes.
 4. [`04_pitfalls.md`](04_pitfalls.md) — wrong turns, debugging lessons, and
    anti-patterns. The highest-value file if you're picking up the project.
 
+Optional reference (not narrative; consult as needed):
+[`agent_guidance/`](agent_guidance/README.md) — pinned snapshots of the
+external behavioral-rule files this codebase was written under
+(Karpathy's "keep it simple" rules, mermaid rendering rules, mdr
+markdown rules), with the upstream URL for the Karpathy file recorded
+for re-sync.
+
 ## Top-level entry points
 
 - [`AGENT_PROMPT.md`](../AGENT_PROMPT.md) — the as-given task description and
