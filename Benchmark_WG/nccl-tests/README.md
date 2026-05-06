@@ -12,12 +12,6 @@ cd nccl-tests
 git checkout v2.18.3
 ```
 
-The `scripts/` directory in this repo lives inside the cloned tree. If you cloned fresh, copy or symlink the scripts in:
-
-```bash
-cp -r /path/to/these/scripts nccl-tests/scripts
-```
-
 ## Install
 
 Build from the repo root using NVHPC 26.3 + HPC-X MPI:
@@ -31,7 +25,7 @@ Output lands in `../build-nvhpc-26.3/`.
 
 ## Run
 
-Submit jobs from the `scripts/` directory with `sbatch`.
+Submit jobs with `sbatch`.
 
 ### Single-node benchmarks
 
