@@ -1,6 +1,6 @@
 # bin/
 
-The seven scripts that make up this toolkit. Read the top-level
+Scripts that make up this toolkit. Read the top-level
 [`README.md`](../README.md) first for end-to-end usage; this file is the
 "what does each script do" map.
 
@@ -28,6 +28,27 @@ These are `srun`-launched on compute nodes by [`p2p_pair.sbatch`](p2p_pair.sbatc
 | [`select_nic_for_gpu.sh`](select_nic_for_gpu.sh) | Pick the rail-correct `mlx5_*` device for a GPU (parses `nvidia-smi topo -m` for PCIe-distance ranking) and read its NUMA node from sysfs. Prints `<mlx5_dev> <numa_node>`. | `<gpu_index>` |
 | [`run_perftest.sh`](run_perftest.sh) | Run one `ib_read_bw` / `ib_write_bw` invocation, NUMA-pinned via `numactl --cpunodebind=$numa --membind=$numa` when available. Used as both server (no `<server_host>`) and client. | `<tool> <nic> <gpu> <numa> [server_host]` |
 | [`record_switch_path.sh`](record_switch_path.sh) | Best-effort: read each side's LID via `ibstat`, then run `ibtracert <lidA> <lidB>` to dump the switch hop list. Always exits 0; failure is logged into `switch_path.txt` but never fails the bandwidth test. | `<nodeA> <nicA> <nodeB> <nicB>` |
+
+## Concurrent multi-pair tools
+
+A separate, layered toolkit for running **multiple pairs simultaneously
+inside a single SLURM allocation** lives under
+[`concurrent/`](concurrent/). The scripts above are not modified or
+imported -- the concurrent driver inlines its own `ib_write_bw`
+invocation and only borrows the read-only helpers
+[`select_nic_for_gpu.sh`](select_nic_for_gpu.sh) and
+[`record_switch_path.sh`](record_switch_path.sh).
+
+| script | purpose |
+| ------ | ------- |
+| [`concurrent/submit_concurrent.sh`](concurrent/submit_concurrent.sh) | Read/validate a TSV pair-list (file or stdin), assign a unique TCP port per pair, submit one sbatch that runs every pair concurrently. |
+| [`concurrent/gen_all_on_pair.sh`](concurrent/gen_all_on_pair.sh) | Use case 1: rail-aligned GPU pairs between two named nodes. |
+| [`concurrent/gen_spray_from_node.sh`](concurrent/gen_spray_from_node.sh) | Use case 2: each GPU on a single source node sprays at a random `(remote_node, remote_gpu)`. |
+| [`concurrent/gen_random_pair_sets.sh`](concurrent/gen_random_pair_sets.sh) | Use case 3: K disjoint node pairs x M GPU-GPU pairings (rail or arbitrary). |
+| [`concurrent/p2p_concurrent.sbatch`](concurrent/p2p_concurrent.sbatch) | The SLURM driver: K servers + K clients in parallel, per-pair logs and an aggregate `summary.txt`. |
+
+See [`concurrent/README.md`](concurrent/README.md) for full CLI and
+output-layout details.
 
 ## When you change anything here
 

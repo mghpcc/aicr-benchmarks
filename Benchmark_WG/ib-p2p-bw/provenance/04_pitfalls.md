@@ -252,3 +252,186 @@ fiddly and unnecessary.
 **General lesson.** Don't reimplement Slurm's hostlist syntax.
 If a user environment lacks `scontrol`, you're not running on a
 Slurm cluster anyway.
+
+## 9. Concurrent perftest pairs collide on the default port (preemptive)
+
+**Symptom (would-be).** Two or more `ib_write_bw` processes start on
+the same node with no `-p` flag. perftest defaults to TCP `18515` for
+its handshake; only the first listener binds, the rest fail with
+`bind() failed` / `Address already in use`, or worse, the clients
+non-deterministically pair up with the wrong server.
+
+**Cause.** The single-pair tools never had to think about this --
+each `bin/p2p_pair.sbatch` job owns its allocation and runs exactly
+one server and one client. The concurrent driver runs `K` of each on
+(potentially) the same two nodes, e.g. use case 1 with eight pairs
+between `b0025` and `b0026`.
+
+**Fix.** Pre-assign a unique port per pair in the submitter:
+`port_i = 18515 + i`, recorded as column 2 of the materialized
+`pairs.tsv` (`idx port nodeA nodeB gpuA gpuB`). Both server and
+client invocations in
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch)
+pass `-p $port`. There is no port reuse across concurrent pairs in a
+single allocation.
+
+**Where.** Port assignment in the materialization block of
+[`bin/concurrent/submit_concurrent.sh`](../bin/concurrent/submit_concurrent.sh);
+inline `ib_write_bw -p $port` at `[4/6]` and `[5/6]` of
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch).
+
+**General lesson.** When fan-out goes from 1 to K on the same node,
+default ports are no longer adequate. Centralize the port assignment
+in the driver/submitter rather than letting each pair pick.
+
+## 10. Per-pair bandwidth below line rate in concurrent runs is the test, not a bug
+
+**Symptom.** `summary.txt` for a use-case-1 run between two nodes
+shows each of 8 pairs at ~50 Gb/s instead of the ~387 Gb/s a
+single-pair run posts. Looks like every pair got slow.
+
+**Cause.** It is **not slow.** Eight rails each pushing ~50 Gb/s into
+the same pair of nodes lands the *aggregate* at ~387 Gb/s -- which is
+the per-NIC line rate. A single pair has the whole NIC's egress to
+itself; eight pairs share it (and possibly share leaf-switch ports).
+The aggregate sum at the bottom of `summary.txt` is the real
+headline.
+
+**Fix.** None. Read `summary.txt` for the aggregate; per-pair rows
+are diagnostic, showing how the load distributes.
+
+**Where.** Aggregate computation at the end of
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch).
+The
+[`bin/concurrent/README.md`](../bin/concurrent/README.md) calls this
+out explicitly under "Per-pair bandwidth below line rate is expected."
+
+**General lesson.** When the test is "what does the fabric do under
+load," per-stream BW dropping is the signal, not noise. Don't try to
+explain it away.
+
+## 11. srun-step audit volume scales with K in concurrent runs
+
+**Symptom (preemptive).** A single concurrent submission with `K=8`
+generates ~25 srun steps in one allocation:
+
+- 1 NIC pick per unique `(node, gpu)` (cached; usually `~2K` calls
+  worst case, less if pairs share endpoints),
+- 1 `nvidia-smi topo -m` per unique node (~`2K` calls worst case),
+- 1 `record_switch_path.sh` per pair (`K` calls -- internally each
+  one issues 2 `ibstat` srun calls + 1 `ibtracert` locally),
+- 1 server srun per pair (`K`),
+- 1 client srun per pair (`K`).
+
+Each srun step generates the standard `slurmd -> su -l user -> exec
+slurmstepd` audit signature on its node (see pitfall 5).
+
+**Cause.** Same as pitfall 5 -- this is how SLURM works on this
+cluster, not something the code is doing.
+
+**Fix.** None warranted by default. The srun-step count is bounded
+and proportional to `K`; the audit events are expected. If a future
+operator complains about absolute volume, the
+`record_switch_path.sh` per-pair calls are the obvious place to
+batch (one ibstat call per unique `(node, nic)` instead of two per
+pair) -- but **discuss before changing**, because that's a structural
+refactor and switch-path recording is best-effort/secondary anyway.
+
+**Where.** N/A -- structural property of the driver. See pitfall 5
+and [`02_behavioral_rules.md`](02_behavioral_rules.md) section B for
+the principle.
+
+## 12. Concurrent driver: numactl check must run on the compute node
+
+**Symptom.** First real-cluster run of the concurrent driver
+produced "(no data row found)" for every pair. Each per-pair log
+contained:
+
+```
+srun: error: bN: task 0: Exited with exit code 127
+/usr/bin/bash: line 1: numactl: command not found
+```
+
+**Cause.** The first cut of
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch)
+unconditionally embedded `numactl --cpunodebind=$numa ...` in the
+bash command sent to the compute node:
+
+```bash
+cmd="numactl --cpunodebind=$numa --membind=$numa ib_write_bw ..."
+srun -N1 -w "${A[i]}" --ntasks=1 bash -c "$cmd" > "$log" 2>&1 &
+```
+
+On clusters where `numactl` isn't on the default PATH for srun-spawned
+shells (it is for interactive logins; not always for srun), every
+perftest invocation died at `numactl` lookup with exit 127. The
+single-pair driver doesn't have this bug because it goes through
+[`bin/run_perftest.sh`](../bin/run_perftest.sh), which runs `command -v
+numactl` *on the compute node* (inside the `bash run_perftest.sh ...`
+that srun executes there) and falls back gracefully.
+
+**Fix.** Move the `command -v numactl` check into the bash -c string
+so it runs on the compute node, with the same falls-back-cleanly
+semantics as `run_perftest.sh`:
+
+```bash
+perftest="ib_write_bw -d $nic --use_cuda=$gpu -q 8 -a --report_gbits -p $port"
+if [[ -n "$numa" && "$numa" != "N/A" ]]; then
+  cmd="if command -v numactl >/dev/null 2>&1; then exec numactl --cpunodebind=$numa --membind=$numa $perftest; else exec $perftest; fi"
+else
+  cmd="exec $perftest"
+fi
+```
+
+**Where.** Phases [4/6] and [5/6] of
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch).
+
+**General lesson.** When deciding "is tool X available?", run the
+check **where the tool will actually be invoked** -- not on the
+submit/head node, which has different PATH and different mounts.
+[`bin/run_perftest.sh`](../bin/run_perftest.sh) gets this right by
+construction; inline-perftest paths must replicate it.
+
+## 13. Concurrent driver: --ntasks-per-node must equal max pairs per node
+
+**Symptom (preemptive; uncovered the same run as pitfall 12).** After
+fixing the numactl path, the next failure mode is more subtle: with
+the wrong `--ntasks-per-node`, the K parallel server (and client)
+sruns silently serialize. The first server srun on `nodeA` takes the
+single task slot; the others queue waiting for it; the first one's
+`ib_write_bw` blocks waiting for a client that hasn't started yet
+(because the client sruns are also queued); after walltime, the
+driver wakes up and reports nothing measured.
+
+**Cause.** A bare `#SBATCH --ntasks-per-node=1` (or the sbatch
+default) gives the job exactly one task slot per node. SLURM
+serializes step requests beyond that. The single-pair driver works
+fine at `1` because it uses one srun per node at a time; the
+concurrent driver runs `K` per node simultaneously.
+
+**Fix.** [`bin/concurrent/submit_concurrent.sh`](../bin/concurrent/submit_concurrent.sh)
+counts how often each node appears across both the `nodeA` and
+`nodeB` columns of the materialized TSV, takes the max, and passes
+that as `--ntasks-per-node` on the `sbatch` command line. For
+example:
+
+- Use case 1, 8 pairs between two nodes -> 8.
+- Use case 2, spray of count 8 from one source -> 8 (source carries 8
+  steps; each random target carries at most a handful).
+- Use case 3, K disjoint pairs with M GPU pairings each -> M.
+
+The driver's `srun` calls also pass `--overlap` as defense-in-depth
+so a future operator who tweaks `--ntasks-per-node` doesn't accidentally
+trigger this exact failure again.
+
+**Where.** `max_per_node` computation in
+[`bin/concurrent/submit_concurrent.sh`](../bin/concurrent/submit_concurrent.sh)
+(after the unique-nodes block); the `--ntasks-per-node="$max_per_node"`
+flag in the same file's `exec sbatch ...` block; the `srun --overlap`
+calls in phases [4/6] and [5/6] of
+[`bin/concurrent/p2p_concurrent.sbatch`](../bin/concurrent/p2p_concurrent.sbatch).
+
+**General lesson.** When a driver fans out K parallel `srun` steps
+onto the same node, the job's task-slot allocation has to fan out
+too. SLURM doesn't warn; it just queues. Compute the requirement
+from the workload and pass it explicitly at submit time.
