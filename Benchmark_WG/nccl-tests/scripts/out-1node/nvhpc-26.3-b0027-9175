@@ -1,0 +1,348 @@
+
+Lmod is automatically replacing "nvhpc/26.3" with "gcc/12.5.0".
+
+b0027
+b0027
+b0027
+b0027
+b0027
+b0027
+b0027
+b0027
+/apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/mpi/bin/mpirun
+/apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/compilers/bin/nvcc
+Bin dir = ../build-nvhpc-26.3
+num_cpu = num_mpi_tasks = 8
+num_gpu_per_task = 8
+%%%%%%%%% sendrecv_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: sendrecv_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  97504 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  97504 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  97504 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  97504 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  97504 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  97504 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  97504 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  97504 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1    29.79   35.20   35.20       0    29.76   35.23   35.23    N/A
+     4194304       1048576     float     sum      -1    65.68   63.86   63.86       0    67.39   62.24   62.24    N/A
+    16777216       4194304     float     sum      -1   215.72   77.77   77.77       0   215.58   77.82   77.82    N/A
+    67108864      16777216     float     sum      -1   792.92   84.63   84.63       0   790.41   84.90   84.90    N/A
+   268435456      67108864     float     sum      -1   808.15  332.16  332.16       0   804.33  333.74  333.74    N/A
+  1073741824     268435456     float     sum      -1  1665.50  644.70  644.70       0  1668.88  643.39  643.39    N/A
+  4294967296    1073741824     float     sum      -1  6494.22  661.35  661.35       0  6637.77  647.05  647.05    N/A
+ 17179869184    4294967296     float     sum      -1  25803.6  665.79  665.79       0  26554.6  646.96  646.96    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 318.551 
+#
+# Collective test concluded: sendrecv_perf
+#
+
+%%%%%%%%% reduce_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: reduce_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  97607 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  97607 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  97607 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  97607 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  97607 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  97607 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  97607 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  97607 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum       0    33.28   31.51   31.51       0    32.72   32.05   32.05       0
+     4194304       1048576     float     sum       0    36.21  115.82  115.82       0    36.00  116.51  116.51       0
+    16777216       4194304     float     sum       0    52.58  319.06  319.06       0    52.55  319.28  319.28       0
+    67108864      16777216     float     sum       0   129.70  517.42  517.42       0   129.72  517.34  517.34       0
+   268435456      67108864     float     sum       0   418.57  641.32  641.32       0   419.50  639.89  639.89       0
+  1073741824     268435456     float     sum       0  1567.56  684.97  684.97       0  1569.41  684.17  684.17       0
+  4294967296    1073741824     float     sum       0  6157.20  697.55  697.55       0  6161.60  697.05  697.05       0
+ 17179869184    4294967296     float     sum       0  24500.4  701.21  701.21       0  24502.6  701.14  701.14       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 463.519 
+#
+# Collective test concluded: reduce_perf
+#
+
+%%%%%%%%% broadcast_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: broadcast_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  97716 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  97716 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  97716 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  97716 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  97716 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  97716 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  97716 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  97716 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float    none       0    33.22   31.56   31.56       0    33.10   31.68   31.68       0
+     4194304       1048576     float    none       0    36.90  113.66  113.66       0    36.68  114.36  114.36       0
+    16777216       4194304     float    none       0    53.69  312.46  312.46       0    53.49  313.67  313.67       0
+    67108864      16777216     float    none       0   132.03  508.28  508.28       0   133.50  502.68  502.68       0
+   268435456      67108864     float    none       0   429.85  624.48  624.48       0   430.21  623.97  623.97       0
+  1073741824     268435456     float    none       0  1608.93  667.36  667.36       0  1608.15  667.69  667.69       0
+  4294967296    1073741824     float    none       0  6295.12  682.27  682.27       0  6289.48  682.88  682.88       0
+ 17179869184    4294967296     float    none       0  24853.1  691.26  691.26       0  24861.7  691.02  691.02       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 453.704 
+#
+# Collective test concluded: broadcast_perf
+#
+
+%%%%%%%%% gather_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  97819 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  97819 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  97819 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  97819 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  97819 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  97819 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  97819 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  97819 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float    none       0    28.97   36.19   31.67       0    28.76   36.46   31.91       0
+     4194304        131072     float    none       0    29.60  141.69  123.98       0    29.32  143.03  125.15       0
+    16777216        524288     float    none       0    31.02  540.84  473.23       0    30.38  552.24  483.21       0
+    67108864       2097152     float    none       0    95.36  703.76  615.79       0    95.73  701.03  613.40       0
+   268435456       8388608     float    none       0   337.84  794.57  695.25       0   339.53  790.60  691.78       0
+  1073741824      33554432     float    none       0  1338.77  802.04  701.78       0  1338.96  801.92  701.68       0
+  4294967296     134217728     float    none       0  5254.93  817.32  715.16       0  5246.33  818.66  716.33       0
+ 17179869184     536870912     float    none       0  20959.7  819.66  717.20       0  20957.6  819.74  717.28       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 509.674 
+#
+# Collective test concluded: gather_perf
+#
+
+%%%%%%%%% scatter_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  97924 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  97924 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  97924 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  97924 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  97924 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  97924 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  97924 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  97924 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float    none       0    29.29   35.80   31.33       0    29.07   36.07   31.56       0
+     4194304        131072     float    none       0    29.95  140.06  122.55       0    29.79  140.80  123.20       0
+    16777216        524288     float    none       0    34.73  483.09  422.70       0    34.91  480.58  420.51       0
+    67108864       2097152     float    none       0    97.79  686.27  600.49       0    98.27  682.94  597.57       0
+   268435456       8388608     float    none       0   348.11  771.12  674.73       0   348.36  770.57  674.25       0
+  1073741824      33554432     float    none       0  1303.64  823.65  720.69       0  1304.70  822.98  720.11       0
+  4294967296     134217728     float    none       0  5069.54  847.21  741.31       0  5077.98  845.80  740.08       0
+ 17179869184     536870912     float    none       0  20141.6  852.95  746.33       0  20187.6  851.01  744.63       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 507.003 
+#
+# Collective test concluded: scatter_perf
+#
+
+%%%%%%%%% reduce_scatter_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: reduce_scatter_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  98028 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  98028 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  98028 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  98028 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  98028 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  98028 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  98028 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  98028 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float     sum      -1    37.40   28.04   24.53       0    36.72   28.56   24.99       0
+     4194304        131072     float     sum      -1    36.85  113.83   99.60       0    36.64  114.48  100.17       0
+    16777216        524288     float     sum      -1    99.76  168.18  147.15       0    99.68  168.31  147.27       0
+    67108864       2097152     float     sum      -1   140.45  477.83  418.10       0   140.14  478.87  419.01       0
+   268435456       8388608     float     sum      -1   392.20  684.44  598.88       0   389.61  688.99  602.87       0
+  1073741824      33554432     float     sum      -1  1455.96  737.48  645.29       0  1454.13  738.41  646.11       0
+  4294967296     134217728     float     sum      -1  5554.08  773.30  676.64       0  5547.43  774.23  677.45       0
+ 17179869184     536870912     float     sum      -1  21646.3  793.66  694.46       0  21633.8  794.12  694.86       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 413.586 
+#
+# Collective test concluded: reduce_scatter_perf
+#
+
+%%%%%%%%% all_gather_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: all_gather_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  98135 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  98135 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  98135 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  98135 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  98135 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  98135 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  98135 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  98135 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float    none      -1    40.14   26.12   22.86       0    39.52   26.53   23.21       0
+     4194304        131072     float    none      -1    38.36  109.33   95.66       0    38.33  109.44   95.76       0
+    16777216        524288     float    none      -1   103.66  161.85  141.62       0   102.84  163.14  142.75       0
+    67108864       2097152     float    none      -1   141.01  475.92  416.43       0   140.34  478.19  418.42       0
+   268435456       8388608     float    none      -1   396.78  676.53  591.97       0   394.21  680.94  595.82       0
+  1073741824      33554432     float    none      -1  1495.54  717.96  628.22       0  1481.68  724.68  634.09       0
+  4294967296     134217728     float    none      -1  5727.37  749.90  656.16       0  5643.23  761.08  665.95       0
+ 17179869184     536870912     float    none      -1  22384.6  767.49  671.55       0  21987.0  781.36  683.69       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 405.26 
+#
+# Collective test concluded: all_gather_perf
+#
+
+%%%%%%%%% all_reduce_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  98237 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  98237 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  98237 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  98237 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  98237 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  98237 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  98237 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  98237 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1    38.98   26.90   47.07       0    37.50   27.96   48.94       0
+     4194304       1048576     float     sum      -1    58.00   72.31  126.54       0    58.52   71.68  125.43       0
+    16777216       4194304     float     sum      -1   109.69  152.95  267.66       0   107.28  156.39  273.68       0
+    67108864      16777216     float     sum      -1   280.90  238.91  418.09       0   280.39  239.35  418.85       0
+   268435456      67108864     float     sum      -1   719.70  372.98  652.72       0   720.28  372.68  652.19       0
+  1073741824     268435456     float     sum      -1  2580.17  416.15  728.26       0  2586.13  415.19  726.59       0
+  4294967296    1073741824     float     sum      -1  9074.88  473.28  828.24       0  9073.65  473.35  828.35       0
+ 17179869184    4294967296     float     sum      -1  35746.8  480.60  841.05       0  35750.4  480.55  840.96       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 489.04 
+#
+# Collective test concluded: all_reduce_perf
+#
+
+%%%%%%%%% alltoall_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  98347 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  98347 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  98347 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  98347 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  98347 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  98347 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  98347 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  98347 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float    none      -1    41.87   25.05   21.92       0    41.79   25.09   21.95    N/A
+     4194304        131072     float    none      -1    45.68   91.82   80.35       0    45.54   92.11   80.60    N/A
+    16777216        524288     float    none      -1    52.55  319.25  279.34       0    52.80  317.74  278.02    N/A
+    67108864       2097152     float    none      -1   139.52  481.01  420.88       0   135.45  495.44  433.51    N/A
+   268435456       8388608     float    none      -1   440.89  608.85  532.74       0   435.78  615.99  538.99    N/A
+  1073741824      33554432     float    none      -1  1552.52  691.61  605.16       0  1571.03  683.47  598.03    N/A
+  4294967296     134217728     float    none      -1  5708.94  752.32  658.28       0  5654.36  759.58  664.64    N/A
+ 17179869184     536870912     float    none      -1  22351.1  768.64  672.56       0  22259.0  771.82  675.34    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 410.144 
+#
+# Collective test concluded: alltoall_perf
+#
+
+%%%%%%%%% hypercube_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: hypercube_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid  98460 on      b0027 device  0 [0000:03:00] NVIDIA B200
+#  Rank  1 Group  0 Pid  98460 on      b0027 device  1 [0000:2b:00] NVIDIA B200
+#  Rank  2 Group  0 Pid  98460 on      b0027 device  2 [0000:5d:00] NVIDIA B200
+#  Rank  3 Group  0 Pid  98460 on      b0027 device  3 [0000:72:00] NVIDIA B200
+#  Rank  4 Group  0 Pid  98460 on      b0027 device  4 [0000:84:00] NVIDIA B200
+#  Rank  5 Group  0 Pid  98460 on      b0027 device  5 [0000:a3:00] NVIDIA B200
+#  Rank  6 Group  0 Pid  98460 on      b0027 device  6 [0000:cd:00] NVIDIA B200
+#  Rank  7 Group  0 Pid  98460 on      b0027 device  7 [0000:f2:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float              -1    59.49   15.42   15.42  1.02963e+06    38.41   23.89   23.89  1.03731e+06
+     4194304        131072     float              -1    61.41   59.76   59.76  4.01392e+06    46.08   79.64   79.64  4.05776e+06
+    16777216        524288     float              -1   114.78  127.89  127.89  1.23902e+07   110.04  133.41  133.41  1.22958e+07
+    67108864       2097152     float              -1   407.98  143.93  143.93  2.37164e+07   401.76  146.16  146.16  2.37532e+07
+   268435456       8388608     float              -1  1209.74  194.16  194.16  1.10216e+08  1193.76  196.76  196.76  1.10341e+08
+  1073741824      33554432     float              -1  2257.79  416.13  416.13  6.45855e+08  2215.04  424.16  424.16  6.45891e+08
+  4294967296     134217728     float              -1  8071.16  465.62  465.62  8.89886e+08  7910.94  475.05  475.05  9.2665e+08
+ 17179869184     536870912     float              -1  32193.1  466.94  466.94  2.98023e+09  31635.8  475.17  475.17  3.06746e+09
+# Out of bounds values : 16 FAILED
+# Avg bus bandwidth    : 240.255 
+#
+# Collective test concluded: hypercube_perf
+#
+
+ .. b0027 pid 98460: Test failure common.cu:1218
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[13095,1],0]
+  Exit code:    7
+--------------------------------------------------------------------------
