@@ -25,7 +25,7 @@ Output lands in `../build-nvhpc-26.3/`.
 
 ## Run
 
-Submit jobs with `sbatch`.
+Submit jobs with `sbatch`. Override the partition at submission time with `-p GPU1` or `-p GPU2`.
 
 ### Single-node benchmarks
 
@@ -37,10 +37,10 @@ Submit jobs with `sbatch`.
 | `2socket.sh` | GPU1 | 5 (GPUs 0–4) | Cross-socket P2P (4 from socket 0 + 1 from socket 1) |
 
 ```bash
-sbatch 1node.sh
-sbatch 1socket.sh
-sbatch 1socket-4gpu.sh
-sbatch 2socket.sh
+sbatch -p GPU1 1node.sh
+sbatch -p GPU1 1socket.sh
+sbatch -p GPU1 1socket-4gpu.sh
+sbatch -p GPU1 2socket.sh
 ```
 
 ### Multi-node benchmarks
@@ -51,8 +51,8 @@ sbatch 2socket.sh
 | `2nodes-2gpus.sh` | GPU2 | 2 | 1 | Single GPU per node (IB/NDR only) |
 
 ```bash
-sbatch 2nodes-8gpus.sh
-sbatch 2nodes-2gpus.sh
+sbatch -p GPU2 2nodes-8gpus.sh
+sbatch -p GPU2 2nodes-2gpus.sh
 ```
 
 ## Output
