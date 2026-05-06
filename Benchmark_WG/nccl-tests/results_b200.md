@@ -8,22 +8,24 @@
 
 Converged values taken at 16 GB message size (largest), best of out-of-place / in-place.
 
+> **Note: compare `busbw` (not `algbw`) to the hardware max.** `algbw` = bytes/time as seen by the user. `busbw` applies a per-collective multiplier that converts user-visible throughput into bytes-on-the-wire per GPU per direction — e.g., AllReduce traverses each byte ~2× (ReduceScatter + AllGather), so 481 GB/s algbw → 841 GB/s busbw. Only `busbw` is directly comparable to the per-GPU link ceiling, and that's why the percentage columns reference busbw.
+
 ---
 
 ## Table 1: 1-Node B200 (b0027, 8× B200, NVLink 5.0 / NVSwitch)
 
 | Benchmark | algbw (GB/s) | busbw (GB/s) | NVLink Max (GB/s) | % of NVLink Max | Limited by |
 |---|---|---|---|---|---|
-| sendrecv | 666 | 666 | 900 | 74% | NVSwitch P2P |
-| reduce | 701 | 701 | 900 | 78% | Ring overhead |
-| broadcast | 691 | 691 | 900 | 77% | Ring overhead |
-| gather | 820 | 717 | 900 | 80% | Root fan-in |
-| scatter | 853 | 746 | 900 | 83% | Root fan-out |
-| reduce_scatter | 794 | 695 | 900 | 77% | Ring overhead |
-| all_gather | 781 | 684 | 900 | 76% | Ring overhead |
-| all_reduce | 481 | 841 | 900 | **93%** | NVSwitch opt. |
-| alltoall | 772 | 675 | 900 | 75% | Algo overhead |
-| hypercube | **FAILED** | **FAILED** | — | — | Test bug |
+| sendrecv | 666 | 666 | 900 | 74% | NVSwitch P2P arbitration overhead |
+| reduce | 701 | 701 | 900 | 78% | Tree algorithm protocol overhead |
+| broadcast | 691 | 691 | 900 | 77% | Tree algorithm protocol overhead |
+| gather | 820 | 717 | 900 | 80% | Root rank fan-in pipelining |
+| scatter | 853 | 746 | 900 | 83% | Root rank fan-out pipelining |
+| reduce_scatter | 794 | 695 | 900 | 77% | Ring algorithm protocol overhead |
+| all_gather | 781 | 684 | 900 | 76% | Ring algorithm protocol overhead |
+| all_reduce | 481 | 841 | 900 | **93%** | NVSwitch-optimal (NVLS); near saturated |
+| alltoall | 772 | 675 | 900 | 75% | N² P2P algorithm overhead |
+| hypercube | **FAILED** | **FAILED** | — | — | nccl-tests 2.18.3 validation bug |
 
 ---
 
@@ -34,16 +36,16 @@ Aggregate ceiling for collectives: 8 GPU-NIC pairs × 26.7 GB/s = **~214 GB/s pe
 
 | Benchmark | algbw (GB/s) | busbw (GB/s) | GDRDMA Max (GB/s) | % of GDRDMA Max | Limited by |
 |---|---|---|---|---|---|
-| sendrecv | 26.6 | 26.6 | 26.7 (per-pair bidir) | **~100%** | GDRDMA bidir |
-| reduce | 201 | 201 | 214 (aggregate bidir) | 94% | GDRDMA bidir |
-| broadcast | 202 | 202 | 214 | 94% | GDRDMA bidir |
-| gather | 96.5 | 90.5 | 214 | 42% | NCCL fan-in |
-| scatter | 312 | 293 | 214 | **137%*** | Unidir traffic |
-| reduce_scatter | 232 | 218 | 214 | **~100%** | GDRDMA bidir |
-| all_gather | 232 | 218 | 214 | **~100%** | GDRDMA bidir |
-| all_reduce | 90.6 | 170 | 214 | 79% | SHARP off |
-| alltoall | 42.5 | 39.8 | 214 | **19%** | NCCL algo |
-| hypercube | **FAILED** | **FAILED** | — | — | Test bug |
+| sendrecv | 26.6 | 26.6 | 26.7 (per-pair bidir) | **~100%** | HW-saturated (GDRDMA bidir per-pair) |
+| reduce | 201 | 201 | 214 (aggregate bidir) | 94% | HW-saturated (GDRDMA bidir aggregate) |
+| broadcast | 202 | 202 | 214 | 94% | HW-saturated (GDRDMA bidir aggregate) |
+| gather | 96.5 | 90.5 | 214 | 42% | NCCL multi-NIC fan-in not pipelined |
+| scatter | 312 | 293 | 214 | **137%*** | Unidir traffic; bidir ceiling N/A |
+| reduce_scatter | 232 | 218 | 214 | **~100%** | HW-saturated (GDRDMA bidir aggregate) |
+| all_gather | 232 | 218 | 214 | **~100%** | HW-saturated (GDRDMA bidir aggregate) |
+| all_reduce | 90.6 | 170 | 214 | 79% | SHARP off; RS+AG two-pass overhead |
+| alltoall | 42.5 | 39.8 | 214 | **19%** | NCCL N² P2P chunks not pipelined |
+| hypercube | **FAILED** | **FAILED** | — | — | nccl-tests 2.18.3 validation bug |
 
 *Scatter exceeds 100% because traffic is purely unidirectional (root → all); the GPU's DMA engine is not splitting its budget between TX and RX, so the relevant ceiling is the unidir aggregate (8 × 50 = 400 GB/s), against which scatter reaches 73%.
 
@@ -94,7 +96,7 @@ These issues were diagnosed and resolved for this cluster. Performance above ref
 | **Data Parallel (DDP)** | AllReduce | 841 GB/s | 170 GB/s | Intra-node excellent; inter-node limited — **SHARP would ~2× to ~340 GB/s** |
 | **Pipeline Parallel** | SendRecv (P2P) | 666 GB/s | 26.6 GB/s | Inter-node capped at **hard hardware limit** (GDRDMA bidir, PCIe DMA engine) |
 | **Tensor Parallel** | AllReduce, AllGather, ReduceScatter | 684–841 GB/s | 170–218 GB/s | Keep within one node; cross-node TP viable via AllGather+ReduceScatter at 218 GB/s |
-| **MoE Parallel (expert dispatch)** | AllToAll | 675 GB/s | 39.8 GB/s | Inter-node alltoall **severely bottlenecked** (11% NDR); minimize cross-node expert routing |
+| **MoE Parallel (expert dispatch)** | AllToAll | 675 GB/s | 39.8 GB/s | Inter-node alltoall **severely bottlenecked** (19% of GDRDMA bidir aggregate); minimize cross-node expert routing |
 
 **Key implications:**
 
