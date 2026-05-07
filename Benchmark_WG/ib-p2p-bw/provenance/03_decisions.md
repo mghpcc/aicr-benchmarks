@@ -264,3 +264,49 @@ submitter validates; the driver consumes. One contract.
 [`bin/concurrent/README.md`](../bin/concurrent/README.md) and at the
 top of each generator. Validation in
 [`bin/concurrent/submit_concurrent.sh`](../bin/concurrent/submit_concurrent.sh).
+
+## 14. Balanced sampling is the default for `gen_random_pair_sets.sh`
+
+**Decision.** [`bin/concurrent/gen_random_pair_sets.sh`](../bin/concurrent/gen_random_pair_sets.sh)
+defaults to `--balance` -- meaning every `(node, gpu)` tuple appears in
+**at most one row** across the whole emitted TSV. `--no-balance` (with
+`--off-balance` as a synonym) restores the prior arbitrary-mode
+behavior, where the same `gpuA` value can appear in multiple rows of a
+single node pair (one source GPU loaded against several remote GPUs).
+
+In rail mode the flag has no effect: `gpuA == gpuB` and the M GPU
+indices are picked by Fisher-Yates over `{0..7}` truncated to M, so M
+distinct indices are used on each side. Combined with K disjoint node
+pairs, rail mode is structurally always balanced.
+
+The behavioral change is therefore only in arbitrary mode:
+
+- `--balance` arbitrary: per node pair, two independent Fisher-Yates
+  shuffles of `{0..7}` produce `gA` and `gB`; emit `M` rows
+  `(A, B, gA[i], gB[i])`. M cap = 8.
+- `--no-balance` arbitrary: Fisher-Yates over the 64-cell `(gpuA,
+  gpuB)` grid; emit M rows in shuffled order. M cap = 64.
+
+**Rationale.** When the user wants concurrent fabric load (use case
+3), the typical question is "how does the cluster handle K*M
+distinct GPU-to-GPU streams running at once". The unbalanced
+behavior reuses GPUs on one side, which means the *same* HCA pushes
+multiple of those streams -- a different test (HCA-saturation) and
+rarely what the operator actually wanted. Making balance the default
+makes the typical case the natural case; the unbalanced case is
+still one flag away when explicitly desired.
+
+K-disjoint-node-pairs structure is preserved either way -- the flag
+changes only the within-pair gpu-pairing rule, not which nodes
+participate. M cap reduction (64 -> 8) under `--balance` is enforced
+with a clear error pointing at `--no-balance` for the higher cap.
+
+**Where.** Flag parsing, M validation, and the third (balanced)
+branch of the inner awk in
+[`bin/concurrent/gen_random_pair_sets.sh`](../bin/concurrent/gen_random_pair_sets.sh).
+The CLI documentation lives in
+[`bin/concurrent/README.md`](../bin/concurrent/README.md) under the
+generator's section.
+
+The chosen flag value is echoed in the `# generator: ...` header
+comment so any TSV is self-describing about how it was sampled.

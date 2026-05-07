@@ -5,7 +5,9 @@
 # in one SLURM allocation.
 #
 # Usage:
-#   gen_random_pair_sets.sh <K> [M] [rail|arbitrary] [--exclude-nodes HOSTLIST]
+#   gen_random_pair_sets.sh <K> [M] [rail|arbitrary]
+#                           [--balance | --no-balance]
+#                           [--exclude-nodes HOSTLIST]
 #
 #     K              number of disjoint node pairs (uses 2*K distinct nodes)
 #     M              GPU-GPU pairings per node pair
@@ -13,6 +15,20 @@
 #                       default 1 in arbitrary mode
 #     rail           gpuA == gpuB (rail-aligned; default)
 #     arbitrary      gpuA, gpuB independent
+#     --balance      (default) every (node, gpu) appears in at most one
+#                    row across the whole TSV.  Combined with the K
+#                    disjoint node pairs, this means each used GPU has
+#                    exactly one partner, on exactly one other node.
+#                    Caps M at 8 in arbitrary mode (each side has 8 GPUs;
+#                    can't draw more than 8 distinct values).  No effect
+#                    in rail mode -- rail mode is structurally already
+#                    balanced (M distinct GPU indices used the same on
+#                    both sides).
+#     --no-balance   opt out: in arbitrary mode, the same gpuA value may
+#                    appear in multiple rows of one node pair (M up to
+#                    64).  Use when you want to load a given source GPU
+#                    against several remote GPUs.  --off-balance is
+#                    accepted as a synonym.
 #     --exclude-nodes HOSTLIST   drop these nodes from the population
 #                                (comma list, Slurm bracketed hostlist,
 #                                or mix; expansion via 'scontrol show
@@ -27,11 +43,18 @@ set -euo pipefail
 
 usage() {
   cat >&2 <<EOF
-usage: $(basename "$0") <K> [M] [rail|arbitrary] [--exclude-nodes HOSTLIST]
+usage: $(basename "$0") <K> [M] [rail|arbitrary]
+                            [--balance | --no-balance]
+                            [--exclude-nodes HOSTLIST]
   K               number of disjoint node pairs (>=1)
   M               GPU-GPU pairings per node pair
                   (default 8 rail, 1 arbitrary)
   rail|arbitrary  GPU-pairing mode (default rail)
+  --balance       (default) each (node, gpu) appears in at most one row.
+                  Caps M at 8 in arbitrary mode.  No effect in rail mode
+                  (rail is structurally always balanced).
+  --no-balance    opt out: arbitrary mode may reuse a side's GPU across
+                  rows (M up to 64).  --off-balance accepted as synonym.
   --exclude-nodes HOSTLIST  comma list, Slurm bracketed, or mix
 
 env:
@@ -46,10 +69,13 @@ GPU_LO=0
 GPU_HI=7
 
 exclude_input=""
+balance=1
 positional=()
 while [[ $# -gt 0 ]]; do
   case "$1" in
     -h|--help) usage ;;
+    --balance) balance=1; shift ;;
+    --no-balance|--off-balance) balance=0; shift ;;
     --exclude-nodes)
       [[ $# -ge 2 ]] || { echo "ERROR: --exclude-nodes requires an argument" >&2; exit 1; }
       exclude_input="$2"; shift 2 ;;
@@ -101,8 +127,14 @@ if [[ "$mode" == "rail" && "$M" -gt 8 ]]; then
   echo "ERROR: in rail mode M must be in 1..8 (got $M)" >&2
   exit 1
 fi
-if [[ "$mode" == "arbitrary" && "$M" -gt 64 ]]; then
-  echo "ERROR: in arbitrary mode M must be in 1..64 (got $M)" >&2
+if [[ "$mode" == "arbitrary" && "$balance" -eq 1 && "$M" -gt 8 ]]; then
+  echo "ERROR: in arbitrary --balance mode M must be in 1..8 (got $M)" >&2
+  echo "       (each side has 8 GPUs; can't draw more than 8 distinct values)" >&2
+  echo "       pass --no-balance for M up to 64." >&2
+  exit 1
+fi
+if [[ "$mode" == "arbitrary" && "$balance" -eq 0 && "$M" -gt 64 ]]; then
+  echo "ERROR: in arbitrary --no-balance mode M must be in 1..64 (got $M)" >&2
   exit 1
 fi
 
@@ -131,12 +163,13 @@ if [[ $(( 2 * K )) -gt "$avail" ]]; then
   exit 1
 fi
 
-echo "# generator: gen_random_pair_sets.sh ${K} ${M} ${mode}$( [[ -n "$exclude_csv" ]] && echo " --exclude-nodes ${exclude_csv}" )"
+balance_flag="$( [[ "$balance" -eq 1 ]] && echo "--balance" || echo "--no-balance" )"
+echo "# generator: gen_random_pair_sets.sh ${K} ${M} ${mode} ${balance_flag}$( [[ -n "$exclude_csv" ]] && echo " --exclude-nodes ${exclude_csv}" )"
 echo "# seed: ${seed}"
-echo "# pairs: $(( K * M ))  (K=${K} node-pairs x M=${M} gpu-pairings, mode=${mode})"
+echo "# pairs: $(( K * M ))  (K=${K} node-pairs x M=${M} gpu-pairings, mode=${mode}, balance=${balance})"
 [[ ${#excluded[@]} -gt 0 ]] && echo "# excluded: ${excluded[*]}"
 
-awk -v K="$K" -v M="$M" -v mode="$mode" -v seed="$seed" \
+awk -v K="$K" -v M="$M" -v mode="$mode" -v balance="$balance" -v seed="$seed" \
     -v lo="$NODE_LO" -v hi="$NODE_HI" \
     -v glo="$GPU_LO" -v ghi="$GPU_HI" \
     -v exclude_csv="$exclude_csv" '
@@ -163,7 +196,9 @@ awk -v K="$K" -v M="$M" -v mode="$mode" -v seed="$seed" \
       A = nodes[(k-1)*2 + 1]
       B = nodes[(k-1)*2 + 2]
       if (mode == "rail") {
-        # Pick M distinct GPU indices (rail-aligned).
+        # Pick M distinct GPU indices (rail-aligned).  Rail mode is
+        # structurally always balanced, so the --balance / --no-balance
+        # flag does not change this branch.
         ng = ghi - glo + 1
         # Fisher-Yates over GPU indices.
         for (g = 0; g < ng; g++) gpus[g+1] = glo + g
@@ -174,9 +209,32 @@ awk -v K="$K" -v M="$M" -v mode="$mode" -v seed="$seed" \
         for (i = 1; i <= M; i++) {
           printf "%s\t%s\t%d\t%d\n", A, B, gpus[i], gpus[i]
         }
+      } else if (balance == 1) {
+        # arbitrary + --balance:  pick M distinct gpuA values and M
+        # distinct gpuB values via two independent Fisher-Yates shuffles
+        # of {0..7}, then pair them up.  Within each node pair this
+        # gives a uniformly random matching of size M between two
+        # uniformly random size-M subsets of {0..7}.  Combined with the
+        # K-disjoint-node-pairs structure, every (node, gpu) appearing
+        # in the output appears at most once globally.
+        ng = ghi - glo + 1
+        for (g = 0; g < ng; g++) { gA[g+1] = glo + g; gB[g+1] = glo + g }
+        for (i = ng; i >= 2; i--) {
+          j = int(rand() * i) + 1
+          t = gA[i]; gA[i] = gA[j]; gA[j] = t
+        }
+        for (i = ng; i >= 2; i--) {
+          j = int(rand() * i) + 1
+          t = gB[i]; gB[i] = gB[j]; gB[j] = t
+        }
+        for (i = 1; i <= M; i++) {
+          printf "%s\t%s\t%d\t%d\n", A, B, gA[i], gB[i]
+        }
       } else {
-        # arbitrary: M distinct (gpuA, gpuB) pairs from the 64-cell grid.
-        # Use a Fisher-Yates over the flattened grid.
+        # arbitrary + --no-balance: M distinct (gpuA, gpuB) pairs drawn
+        # without replacement from the 64-cell grid.  The same gpuA
+        # value can appear in multiple rows of one node pair (loading
+        # one source GPU against several remote GPUs).
         ngrid = (ghi - glo + 1) * (ghi - glo + 1)
         for (i = 0; i < ngrid; i++) {
           ga = glo + int(i / (ghi - glo + 1))

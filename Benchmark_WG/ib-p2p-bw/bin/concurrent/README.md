@@ -81,21 +81,45 @@ gen_spray_from_node.sh b0025 8 --exclude-nodes b[0010-0012]
 P2P_SEED=12345 gen_spray_from_node.sh b0025
 ```
 
-### `gen_random_pair_sets.sh <K> [M] [rail|arbitrary] [--exclude-nodes HOSTLIST]`
+### `gen_random_pair_sets.sh <K> [M] [rail|arbitrary] [--balance | --no-balance] [--exclude-nodes HOSTLIST]`
 
 Use case 3. `K` disjoint node pairs (`2*K` distinct nodes), each pair
-emitting `M` GPU-GPU pairings.
+emitting `M` GPU-GPU pairings. Honors `P2P_SEED`.
+
+GPU-pairing modes:
 
 - `rail` (default): `gpuA == gpuB`; default `M=8`, max `M=8`.
-- `arbitrary`: `gpuA, gpuB` independent; default `M=1`, max `M=64`.
+- `arbitrary`: `gpuA, gpuB` independent; M cap depends on the
+  balance flag (see below).
 
-Honors `P2P_SEED`.
+Balance:
+
+- `--balance` (default): every `(node, gpu)` appears in **at most one
+  row** across the whole TSV. Combined with the K disjoint node pairs,
+  each used GPU has exactly one partner, on exactly one other node.
+  Caps `M` at `8` in arbitrary mode (each side has 8 GPUs; can't draw
+  more distinct values). No effect in rail mode -- rail is structurally
+  always balanced.
+- `--no-balance` (or `--off-balance`): in arbitrary mode, the same
+  `gpuA` value may appear in multiple rows of one node pair (the same
+  source GPU loaded against several remote GPUs). `M` cap rises to
+  `64` (the size of the 8x8 grid).
 
 ```bash
 gen_random_pair_sets.sh 4
 gen_random_pair_sets.sh 4 8 rail --exclude-nodes b0005,b0017
-gen_random_pair_sets.sh 6 2 arbitrary
+gen_random_pair_sets.sh 6 8 arbitrary
+gen_random_pair_sets.sh 4 16 arbitrary --no-balance
 ```
+
+Algorithm under `--balance` for arbitrary mode: for each node pair
+`(A, B)`, do two independent Fisher-Yates shuffles of `{0..7}` to get
+`gA` and `gB`, then emit `M` rows `(A, B, gA[i], gB[i])` for
+`i = 0..M-1`. This is a uniformly random matching of size `M` between
+two uniformly random size-`M` subsets of `{0..7}` per side. Across
+the K disjoint node pairs the matchings are independent, so
+connections scatter widely while every used `(node, gpu)` appears
+exactly once.
 
 ### `submit_concurrent.sh [--file PATH | -] [options]`
 
