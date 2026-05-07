@@ -6,7 +6,7 @@
 
 **Files:**
 - 1-node / 2 GPUs / same socket: `out-1socket/nvhpc-26.3-a0001-9677` — node a0001 (sendrecv only)
-- 1-node / 4 GPUs / same socket: `out-1socket/nvhpc-26.3-a0008-9679` — node a0008 (all benchmarks)
+- 1-node / 4 GPUs / across 2 sockets (cross-NUMA): `out-1socket/nvhpc-26.3-a0008-9679` — node a0008 (all benchmarks)
 - 2-node / 1 GPU per node: `out-2node/nvhpc-26.3-a0009-9666` — nodes a0009 + a0010 (sendrecv only)
 
 Converged values taken at 16 GB message size, best of out-of-place / in-place.
@@ -23,7 +23,7 @@ Converged values taken at 16 GB message size, best of out-of-place / in-place.
 
 ---
 
-## Table 2: 1-Node RTX6000, 4 GPUs on Same Socket (a0008) — All Benchmarks
+## Table 2: 1-Node RTX6000, 4 GPUs Across 2 Sockets (a0008, cross-NUMA) — All Benchmarks
 
 PCIe Gen5 x16 theoretical max per GPU per direction = **63 GB/s**. Note: the actual binding constraint for symmetric collectives is the CPU memory fabric, not the PCIe link itself — see Analysis below.
 
