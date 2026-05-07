@@ -1,0 +1,3 @@
+[2026-04-17T14:15:07.694] error:  mpi/pmix_v3: _pmix_p2p_send_core: w0016 [0]: pmixp_utils.c:416: failed to send to w0017, errno=110
+[2026-04-17T14:15:10.196] error:  mpi/pmix_v3: _pmix_p2p_send_core: w0016 [0]: pmixp_utils.c:416: failed to send to w0017, errno=110
+[2026-04-17T14:15:09.716] error:  mpi/pmix_v3: _pmix_p2p_send_core: w0017 [1]: pmixp_utils.c:416: failed to send to w0016, errno=110
