@@ -1,4 +1,4 @@
-# GPU Fryer Results — 2026-05-05
+# GPU Fryer Results
 
 **Files:** `b0025-9553.out` (8× NVIDIA B200) | `a0001-9554.out` (8× NVIDIA RTX PRO 6000 Blackwell Server Edition)
 Each file contains three back-to-back runs: **FP32 → BF16 → FP8**.
@@ -7,12 +7,15 @@ Each file contains three back-to-back runs: **FP32 → BF16 → FP8**.
 
 ## Summary Table (per-GPU mean across 8 GPUs, in TFLOPS)
 
-| | **B200** (b0025) | **H200** (ref) | **RTX PRO 6000** (a0001) | **L40S** (ref) | **B200 / H200** | **B200 / RTX PRO 6000** | **RTX PRO 6000 / L40S** |
-|---|---|---|---|---|---|---|---|
-| GPU memory | ~160 GB | — | ~85 GB | 48 GB | — | — | — |
-| **FP32 TFLOPS** | **768** | **368** | **205** | **98** | **209%** | **375%** | **209%** |
-| **BF16 TFLOPS** | **1,493** | **713** | **419** | **198** | **209%** | **356%** | **212%** |
-| **FP8 TFLOPS** | **4,103** | **1,468** | **881** | N/A | **280%** | **466%** | — |
+| GPU / Metric | **GPU memory** | **FP32 TFLOPS** | **BF16 TFLOPS** | **FP8 TFLOPS** |
+|---|---|---|---|---|
+| **B200** (b0025) | ~160 GB | **768** | **1,493** | **4,103** |
+| **H200** (ref) | — | **368** | **713** | **1,468** |
+| **RTX PRO 6000** (a0001) | ~85 GB | **205** | **419** | **881** |
+| **L40S** (ref) | 48 GB | **98** | **198** | not supported |
+| **B200 / H200** | — | **209%** | **209%** | **280%** |
+| **B200 / RTX PRO 6000** | — | **375%** | **356%** | **466%** |
+| **RTX PRO 6000 / L40S** | — | **209%** | **212%** | — |
 
 Precision ratios: B200 → 1 : 1.94 : 5.34 (FP32 : BF16 : FP8); H200 → 1 : 1.94 : 3.99; RTX PRO 6000 → 1 : 2.04 : 4.30; L40S → 1 : 2.02 (FP32 : BF16, no FP8 Tensor Core).
 
