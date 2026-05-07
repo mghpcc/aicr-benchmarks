@@ -7,14 +7,14 @@ Each file contains three back-to-back runs: **FP32 → BF16 → FP8**.
 
 ## Summary Table (per-GPU mean across 8 GPUs, in TFLOPS)
 
-| | **NVIDIA B200** (b0025) | **NVIDIA RTX PRO 6000 Blackwell** (a0001) | **NVIDIA L40S** | **RTX PRO 6000 / L40S** |
-|---|---|---|---|---|
-| GPU memory | 163,800 MB (~160 GB) | 87,018 MB (~85 GB) | ~49,152 MB (48 GB) | — |
-| **FP32 TFLOPS** | **768** | **205** | **98** | **209%** |
-| **BF16 TFLOPS** | **1,493** | **419** | **198** | **212%** |
-| **FP8 TFLOPS** | **4,103** | **881** | N/A | — |
+| | **B200** (b0025) | **H200** (ref) | **RTX PRO 6000** (a0001) | **L40S** (ref) | **B200 / H200** | **B200 / RTX PRO 6000** | **RTX PRO 6000 / L40S** |
+|---|---|---|---|---|---|---|---|
+| GPU memory | ~160 GB | — | ~85 GB | 48 GB | — | — | — |
+| **FP32 TFLOPS** | **768** | **368** | **205** | **98** | **209%** | **375%** | **209%** |
+| **BF16 TFLOPS** | **1,493** | **713** | **419** | **198** | **209%** | **356%** | **212%** |
+| **FP8 TFLOPS** | **4,103** | **1,468** | **881** | N/A | **280%** | **466%** | — |
 
-Precision ratios: B200 → 1 : 1.94 : 5.34 (FP32 : BF16 : FP8); RTX PRO 6000 → 1 : 2.04 : 4.30; L40S → 1 : 2.02 (FP32 : BF16, no FP8 Tensor Core).
+Precision ratios: B200 → 1 : 1.94 : 5.34 (FP32 : BF16 : FP8); H200 → 1 : 1.94 : 3.99; RTX PRO 6000 → 1 : 2.04 : 4.30; L40S → 1 : 2.02 (FP32 : BF16, no FP8 Tensor Core).
 
 ---
 
@@ -72,6 +72,26 @@ Extremely uniform across all 8 GPUs in all three precisions. Spread is <1.5% wit
 The B200 FP8 path achieves 91% of dense peak, which is excellent. FP32/BF16 at 66–68% is normal for cuBLAS GEMM on this matrix size. Numbers are consistent with healthy B200 Tensor Cores.
 
 For the RTX PRO 6000 Blackwell Server Edition, official Tensor Core specs aren't in my reference data — but the FP32:BF16:FP8 ratio (1:2:4) and intra-machine uniformity (<1.5% spread) are textbook healthy.
+
+## B200 vs. H200
+
+| | FP32 | BF16 | FP8 |
+|---|---|---|---|
+| B200 (measured) | 768 TFLOPS | 1,493 TFLOPS | 4,103 TFLOPS |
+| H200 (reference) | 368 TFLOPS | 713 TFLOPS | 1,468 TFLOPS |
+| **B200 / H200** | **209%** | **209%** | **280%** |
+
+The B200 delivers **~2.1× the throughput of an H200** in FP32 and BF16, consistent with Blackwell's generational leap over Hopper. The FP32:BF16 ratio is identical on both (1:1.94), confirming the same Tensor Core data-type scaling law. The gap widens sharply at FP8 — **2.8×** — because Blackwell's 5th-gen Tensor Cores have a substantially higher FP8 peak relative to Hopper's 4th-gen cores (B200 achieves 91% of dense peak vs H200's lower FP8 ceiling). For FP8-quantised inference workloads, the B200 advantage is disproportionately larger than the raw 2× marketing figure suggests.
+
+## B200 vs. RTX PRO 6000 Blackwell
+
+| | FP32 | BF16 | FP8 |
+|---|---|---|---|
+| B200 (measured) | 768 TFLOPS | 1,493 TFLOPS | 4,103 TFLOPS |
+| RTX PRO 6000 (measured) | 205 TFLOPS | 419 TFLOPS | 881 TFLOPS |
+| **B200 / RTX PRO 6000** | **375%** | **356%** | **466%** |
+
+Despite sharing the same Blackwell architecture and generation, the B200 outperforms the RTX PRO 6000 by **3.6–3.7× in FP32/BF16** and **4.7× in FP8**. Both are measured on 8-GPU nodes under identical gpu-fryer workloads, so the gap directly reflects the silicon difference: the B200 is a full datacenter part (GH200/GB200 die with ~208 SMs at full Blackwell density), while the RTX PRO 6000 Blackwell Server Edition is a workstation/professional part with a substantially cut-down die. The FP8 gap (4.7×) is larger than the FP32/BF16 gap (3.6×) because the B200's FP8 utilisation is exceptionally high (91% of dense peak) while the RTX PRO 6000's FP8 path is proportionally more bandwidth-bound on its smaller die. Both GPUs pass all health checks and show consistent intra-node uniformity.
 
 ## RTX PRO 6000 Blackwell vs. L40S
 
