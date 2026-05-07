@@ -33,13 +33,13 @@ Submit jobs with `sbatch`. Override the partition at submission time with `-p GP
 |--------|-----------|------|-------|
 | `1node.sh` | GPU1 | 8 (all) | All-GPU intra-node (NVLink) |
 | `1socket.sh` | GPU1 | 2 (GPUs 0–1) | Same-socket intra-socket P2P |
-| `1node-4gpu.sh` | GPU1 | 4 (GPUs 0–3) | 4 GPUs spanning both sockets (cross-NUMA) |
+| `1socket-4gpu.sh` | GPU1 | 4 (GPUs 0–3) | All 4 GPUs on socket 0 (across 4 sub-NUMA dies, NPS=4) |
 | `2socket.sh` | GPU1 | 5 (GPUs 0–4) | Cross-socket P2P (4 from socket 0 + 1 from socket 1) |
 
 ```bash
 sbatch -p GPU1 1node.sh
 sbatch -p GPU1 1socket.sh
-sbatch -p GPU1 1node-4gpu.sh
+sbatch -p GPU1 1socket-4gpu.sh
 sbatch -p GPU1 2socket.sh
 ```
 
