@@ -2,7 +2,7 @@
 
 **Hardware:** NVIDIA RTX PRO 6000 Blackwell Server Edition, no NVLink — PCIe Gen5 x16 per GPU (~63 GB/s per direction) is the only GPU interconnect.
 
-> **Note:** RTX6000 GPUs on different sockets (different PCIe root complexes / NUMA domains) communicate poorly — cross-socket traffic must traverse the CPU memory fabric instead of direct PCIe P2P.
+> **Note:** GPUs on the same socket share a PCIe switch under one CPU root port, so GPU-to-GPU DMA flows entirely within the PCIe fabric — the CPU is bypassed. GPUs on different sockets sit under separate PCIe root complexes (different NUMA domains); PCIe P2P cannot cross root complex boundaries, so traffic must detour through the CPU interconnect and DDR system memory, which becomes a shared bottleneck.
 
 **Files:**
 - 1-node / 2 GPUs / same socket: `out-1socket/nvhpc-26.3-a0001-9677` — node a0001 (sendrecv only)
