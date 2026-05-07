@@ -70,6 +70,17 @@ Without NVLink, all symmetric collectives with 4 GPUs suffer the same Infinity F
 **Gather (62%) and Scatter (80%) are outliers — root-centric collectives are unidirectional:**
 Gather fans data into root (rank 0). Scatter fans out from the same root. The root's IF carries traffic in only one direction (incoming for gather, outgoing for scatter), avoiding the bidir DMA budget split. The 3 IF segments connecting root's NUMA die to the other 3 dies each carry near-unidir-rate traffic. **Root-based collectives are far less sensitive to fabric saturation because the dominant DMA path doesn't suffer bidir contention.**
 
+**Scaling beyond 4 GPUs — cross-socket cost is modest, 8-GPU breaks outright:**
+
+- **5 GPUs (4 on socket 0 + 1 on socket 1, a0009):** SendRecv 10.6 GB/s, AllReduce 10.6 GB/s — only **~18% slower** than the 4-GPU same-socket result (13.0 GB/s). The inter-socket Infinity Fabric link (xGMI) is a different IF segment than the on-package one, but it is the same kind of interconnect with similar per-link bandwidth. Once you are already paying IF latency/bandwidth costs (which you are the moment you have GPUs in different NUMA dies, *even within one socket*), hopping the socket boundary on top of that adds only marginal extra cost. **The dominant cliff is 2 → 4 GPUs (IF saturation kicking in), not the socket boundary.**
+
+- **8 GPUs (all 4+4, a0001):** SendRecv **0.04 GB/s** — a hard collapse, not gradual degradation. Three signatures point to NCCL falling back to host-staged transport, not just fabric saturation:
+  1. The job was killed by SLURM time limit before completing even sendrecv; no other collective ran.
+  2. Throughput is **flat across message sizes** (1 MB → 1 GB all measure 0.04 GB/s). A fabric-saturated case would show throughput growing with message size as fixed overheads amortize. A flat rate is characteristic of a fixed-rate fallback (e.g., kernel memcpy via host bounce buffer).
+  3. The drop from 5-GPU 10.6 GB/s to 8-GPU 0.04 GB/s is **~250×** for adding 3 GPUs — far beyond what additional IF contention can explain.
+
+  Likely cause: with 8 GPUs there are 28 directed P2P pairs that all need cudaPeerAccess mappings. With `pci=realloc=off` in the kernel cmdline (which is the case on this node), BIOS-assigned PCIe BAR space may be insufficient to peer-map all 7 other GPUs into each GPU's address space (56 mappings total). If even one pair's `cudaDeviceEnablePeerAccess` returns "peer not accessible," NCCL falls back to host-bounce-buffered transfers for that pair, and the ring's slowest edge dominates. NCCL ring construction failure is also possible. Output: `out-1node/nvhpc-26.3-a0001-9678`. Re-run with `NCCL_DEBUG=INFO` to confirm; until diagnosed, **do not target all 8 GPUs of a node for any NCCL collective** — cap at 5 GPUs.
+
 **Hypercube:**
 - 2 GPUs (a0001): **PASSED** (0 wrong values, 36.4 GB/s). With N=2, hypercube is a trivial single exchange — the nccl-tests 2.18.3 validation bug does not trigger.
 - 4 GPUs (a0008): **FAILED** — same nccl-tests 2.18.3 validation bug as B200 (N > 2).
@@ -105,14 +116,16 @@ NVLink is **18–64× faster** than RTX6000's Infinity-Fabric-mediated GPU P2P f
 
 ## Deep Learning Application Performance Prediction
 
-| Parallelism Type | Primary NCCL Op | RTX6000 2-GPU (1 socket, 2 NUMA dies) | RTX6000 4-GPU (1 socket, 4 NUMA dies) | 2-node RTX6000 |
-|---|---|---|---|---|
-| **Data Parallel (DDP)** | AllReduce | 35.6 GB/s | 13.1 GB/s | N/A |
-| **Pipeline Parallel** | SendRecv (P2P) | 37.4 GB/s | 13.0 GB/s | 24.7 GB/s |
-| **Tensor Parallel** | AllReduce, AllGather, RS | 25–36 GB/s | 13 GB/s | N/A |
-| **MoE Parallel** | AllToAll | 38.2 GB/s* | 13.4 GB/s | N/A |
+| Parallelism Type | Primary NCCL Op | 2-GPU (1 socket, 2 dies) | 4-GPU (1 socket, 4 dies) | 5-GPU (4+1 cross-socket) | 8-GPU (1 node) | 2-node |
+|---|---|---|---|---|---|---|
+| **Data Parallel (DDP)** | AllReduce | 35.6 GB/s | 13.1 GB/s | 10.6 GB/s | **broken**† | N/A |
+| **Pipeline Parallel** | SendRecv (P2P) | 37.4 GB/s | 13.0 GB/s | 10.6 GB/s | **broken**† | 24.7 GB/s |
+| **Tensor Parallel** | AllReduce, AllGather, RS | 25–36 GB/s | 13 GB/s | ~10.6 GB/s‡ | **broken**† | N/A |
+| **MoE Parallel** | AllToAll | 38.2 GB/s* | 13.4 GB/s | not measured | **broken**† | N/A |
 
-*in-place
+*in-place &nbsp; ‡estimated from AllReduce; AG/RS not run in 5-GPU job
+
+> **† 8-GPU configuration is broken on this hardware.** A single-node 8-GPU NCCL run on a0001 measured **0.04 GB/s** (constant across message sizes — characteristic of NCCL falling back to host-staged transport because GPU-to-GPU P2P could not be established for at least one of the 28 GPU pairs) and was killed by SLURM time limit before completing even sendrecv. **Do not target all 8 GPUs of a node for any NCCL collective**; cap at 5 GPUs (4 on socket 0 + 1 on socket 1) until the underlying P2P/transport issue is diagnosed (likely PCIe BAR exhaustion under `pci=realloc=off`, NCCL ring construction failure, or both — see `out-1node/nvhpc-26.3-a0001-9678` and run with `NCCL_DEBUG=INFO` to confirm).
 
 **Key implications:**
 
@@ -124,4 +137,6 @@ NVLink is **18–64× faster** than RTX6000's Infinity-Fabric-mediated GPU P2P f
 
 - **MoE Parallel:** Intra-node AllToAll on RTX6000 (13–38 GB/s) is feasible only for the 2-GPU config. 4-GPU alltoall across 4 NUMA dies (13.4 GB/s) is ~50× below B200's intra-node alltoall (675 GB/s).
 
-- **Recommendation:** RTX6000 nodes are suitable for single-GPU or 2-GPU workloads. For any workload requiring efficient multi-GPU communication beyond 2 GPUs (where Infinity Fabric saturation kicks in), B200 nodes with NVLink are vastly superior.
+- **Cross-socket cost is small once IF-saturated.** Going from 4 GPUs same-socket (13 GB/s) to 5 GPUs spanning sockets (10.6 GB/s) is only ~18% slower. The dominant cliff is 2 → 4 GPUs (IF saturation across NUMA dies), not the socket boundary itself.
+
+- **Recommendation:** RTX6000 nodes are suitable for single-GPU or 2-GPU workloads. Beyond 2 GPUs, expect ~13 GB/s collectives regardless of socket layout. Do not attempt 8-GPU jobs (broken, see †). For any workload requiring efficient multi-GPU communication, B200 nodes with NVLink are vastly superior.
