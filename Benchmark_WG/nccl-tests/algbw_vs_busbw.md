@@ -1,4 +1,4 @@
-# algbw vs busbw
+# Algorithm Bandwidth and Bus Bandwidth
 
 Source: [NCCL tests PERFORMANCE.md](https://github.com/NVIDIA/nccl-tests/blob/master/doc/PERFORMANCE.md)
 
