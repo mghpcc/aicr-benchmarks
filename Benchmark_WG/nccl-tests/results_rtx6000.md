@@ -17,38 +17,40 @@ Converged values taken at 16 GB message size, best of out-of-place / in-place.
 
 ## Table 1: 1-Node RTX6000, 2 GPUs on Socket 0 (a0001, 2 NUMA dies) — SendRecv Only
 
-| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max | Limited by |
+`PCIe link spec` = PCIe Gen5 x16 per direction per GPU (63 GB/s). `Effective ceiling` = the actual binding constraint for that row, which on this hardware is typically below the PCIe link rate.
+
+| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe link spec (GB/s) | % of link spec | Effective ceiling |
 |---|---|---|---|---|---|
-| sendrecv | 37.4 | 37.4 | 63 | 59% | PCIe DMA bidir budget |
+| sendrecv | 37.4 | 37.4 | 63 | 59% | ~37 GB/s — GPU PCIe DMA bidir budget |
 
 ---
 
 ## Table 2: 1-Node RTX6000, 4 GPUs on Socket 0 (a0008, 4 NUMA dies) — All Benchmarks
 
-PCIe Gen5 x16 theoretical max per GPU per direction = **63 GB/s**. Note: the actual binding constraint for symmetric collectives is the on-package Infinity Fabric between NUMA dies, not the PCIe link itself — see Analysis below.
+`PCIe link spec` = 63 GB/s (Gen5 x16 per GPU per direction). `Effective ceiling` = the actual binding constraint for that row. On this NPS=4 system the binding constraint is almost always Infinity Fabric between NUMA dies, not the PCIe link itself; bidir collectives saturate IF at ~13 GB/s, while root-anchored unidir collectives can approach the PCIe link rate.
 
-| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe Max (GB/s) | % of PCIe Max | Limited by |
+| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe link spec (GB/s) | % of link spec | Effective ceiling |
 |---|---|---|---|---|---|
-| sendrecv | 13.0 | 13.0 | 63 | **21%** | Infinity Fabric (4-die bidir) |
-| reduce | 13.2 | 13.2 | 63 | 21% | Infinity Fabric (4-die bidir) |
-| broadcast | 17.6 | 17.6 | 63 | 28% | Infinity Fabric (tree partial) |
-| gather | 52.3 | 39.2 | 63 | 62% | Root-anchored fan-in (unidir IF) |
-| scatter | 67.4 | 50.6 | 63 | 80% | Root-anchored fan-out (unidir IF) |
-| reduce_scatter | 17.3 | 13.0 | 63 | 21% | Infinity Fabric (4-die bidir) |
-| all_gather | 17.8 | 13.3 | 63 | 21% | Infinity Fabric (4-die bidir) |
-| all_reduce | 8.76 | 13.1 | 63 | 21% | Infinity Fabric (4-die bidir) |
-| alltoall | 17.8 | 13.4 | 63 | 21% | Infinity Fabric (4-die bidir) |
+| sendrecv | 13.0 | 13.0 | 63 | **21%** | ~13 GB/s — IF 4-die bidir saturation |
+| reduce | 13.2 | 13.2 | 63 | 21% | ~13 GB/s — IF 4-die bidir (tree) |
+| broadcast | 17.6 | 17.6 | 63 | 28% | ~17 GB/s — IF tree (partial unidir) |
+| gather | 52.3 | 39.2 | 63 | 62% | ~50 GB/s — root-anchored unidir IF |
+| scatter | 67.4 | 50.6 | 63 | 80% | ~63 GB/s — root-anchored unidir, near PCIe link rate |
+| reduce_scatter | 17.3 | 13.0 | 63 | 21% | ~13 GB/s — IF 4-die bidir |
+| all_gather | 17.8 | 13.3 | 63 | 21% | ~13 GB/s — IF 4-die bidir |
+| all_reduce | 8.76 | 13.1 | 63 | 21% | ~13 GB/s — IF 4-die bidir (RS+AG) |
+| alltoall | 17.8 | 13.4 | 63 | 21% | ~13 GB/s — IF 4-die bidir |
 | hypercube | **FAILED** | **FAILED** | — | — | nccl-tests 2.18.3 validation bug |
 
 ---
 
 ## Table 3: 2-Node RTX6000, 1 GPU Per Node (a0009+a0010) — SendRecv Only
 
-Combined PCIe + NDR max: PCIe per direction = 63 GB/s, NDR NIC per direction = 50 GB/s. NDR is the bottleneck: combined theoretical max = **50 GB/s** per direction. For sendrecv (bidirectional), the effective ceiling is the GDRDMA bidir DMA budget (~24.7 GB/s per direction, measured).
+`NDR link spec` = 50 GB/s per direction (NDR NIC, the inter-node bottleneck — PCIe Gen5 at 63 GB/s is faster). `Effective ceiling` = GDRDMA bidir DMA budget on the GPU (~25 GB/s per direction, measured), which is below the NIC link rate because TX and RX share HBM DMA bandwidth.
 
-| Benchmark | algbw (GB/s) | busbw (GB/s) | PCIe+NDR Max (GB/s) | % of Max | Limited by |
+| Benchmark | algbw (GB/s) | busbw (GB/s) | NDR link spec (GB/s) | % of link spec | Effective ceiling |
 |---|---|---|---|---|---|
-| sendrecv | 24.7 | 24.7 | 50 | **49%** | HW-saturated (GDRDMA bidir per-pair) |
+| sendrecv | 24.7 | 24.7 | 50 | **49%** | ~25 GB/s — GDRDMA bidir budget |
 
 ---
 
