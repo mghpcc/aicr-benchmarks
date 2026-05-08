@@ -5,7 +5,7 @@ rail-optimized NDR InfiniBand fabric, via CUDA-aware `perftest`.
 
 ## What this does
 
-The toolkit covers three tasks:
+The toolkit covers four tasks:
 
 1. Run **one** point-to-point bandwidth test between a chosen GPU pair on
    two named nodes ([`bin/submit_p2p_pair.sh`](bin/submit_p2p_pair.sh) +
@@ -13,10 +13,15 @@ The toolkit covers three tasks:
 2. **Randomly sample** N pairings across the cluster and submit them as
    N independent jobs
    ([`bin/submit_random_pairs.sh`](bin/submit_random_pairs.sh)).
-3. **Migrate** an existing flat-layout `results/` tree to the current
+3. Run **multiple pairs concurrently inside a single SLURM allocation**
+   so they all contend for the fabric at the same time
+   ([`bin/concurrent/`](bin/concurrent/)). Use cases include "every
+   rail between two nodes", "spray from one node across the cluster",
+   and "K disjoint node pairs in parallel".
+4. **Migrate** an existing flat-layout `results/` tree to the current
    nested layout ([`bin/migrate_results.sh`](bin/migrate_results.sh)).
 
-The single-pair driver is the core; the rest are thin layers on top.
+The single-pair driver is the core; the others are layered on top.
 
 ### Single pair
 
@@ -47,6 +52,7 @@ bin/
   select_nic_for_gpu.sh   parse `nvidia-smi topo -m`, pick rail-correct mlx5 + NUMA
   run_perftest.sh         NUMA-pinned wrapper around ib_read_bw / ib_write_bw
   record_switch_path.sh   best-effort `ibtracert` between two HCAs
+  concurrent/             multi-pair concurrent tests (separate toolkit)
 results/
   <nodeA>-gpu<N>/                                # server endpoint
     <nodeB>/                                     # client node
@@ -156,6 +162,47 @@ filename always encodes the real jobid. If `scontrol` is unavailable or
 doesn't report `NextJobId`, the wrapper falls back to a flat
 `results/.slurm/p2p-<jobid>.out`.
 
+## Concurrent multi-pair tests
+
+Sometimes the question isn't "what bandwidth can one rail sustain" but
+"what happens when many pairs share the fabric at once". The
+[`bin/concurrent/`](bin/concurrent/) tools run **K pairs simultaneously
+inside a single SLURM allocation**, so the fabric is genuinely loaded
+during the measurement. The single-pair tools above are unchanged --
+this is a separate, layered toolkit. See
+[`bin/concurrent/README.md`](bin/concurrent/README.md) for the full
+reference.
+
+The data flow is generator -> TSV pair-list -> submitter ->
+sbatch driver. Each generator emits a TSV; the submitter validates it,
+assigns a unique TCP port per pair (`18515 + i`), and submits one
+sbatch job that runs all pairs in parallel.
+
+```bash
+bin/concurrent/gen_all_on_pair.sh b0025 b0026 \
+  | bin/concurrent/submit_concurrent.sh --name allrails
+
+bin/concurrent/gen_spray_from_node.sh b0025 \
+  | bin/concurrent/submit_concurrent.sh --name spray-b0025
+
+bin/concurrent/gen_random_pair_sets.sh 4 8 rail \
+  | bin/concurrent/submit_concurrent.sh --name 4x8 --time 01:00:00
+```
+
+`P2P_SEED`, `--exclude-nodes`, `SBATCH_ACCOUNT`, and `SBATCH_PARTITION`
+all behave the same as in [`bin/submit_random_pairs.sh`](bin/submit_random_pairs.sh).
+Add `--dry-run` to the submitter to see the parsed pair list and the
+exact `sbatch` invocation without submitting anything.
+
+Output goes to `results_concurrent/<run_id>/`, parallel to (and
+disjoint from) `results/`. Each run produces per-pair logs and an
+aggregate `summary.txt` whose final line is the sum of measured
+`BW_avg` across all concurrent pairs.
+
+When concurrent pairs share an HCA or upstream link, **per-pair BW will
+fall below line rate** -- that's the test, not a bug. The aggregate
+sum is the headline number.
+
 ## Output files (per run)
 
 | file                                  | contents                                                     |
@@ -204,6 +251,8 @@ doesn't report `NextJobId`, the wrapper falls back to a flat
 ## See also
 
 - [`bin/README.md`](bin/README.md) — per-script purpose + arg signatures.
+- [`bin/concurrent/README.md`](bin/concurrent/README.md) — multi-pair
+  concurrent tests (separate from the single-pair toolkit).
 - [`provenance/`](provenance/README.md) — design decisions, behavioral
   rules, and pitfalls; read top-to-bottom before changing anything in
   [`bin/`](bin/).
