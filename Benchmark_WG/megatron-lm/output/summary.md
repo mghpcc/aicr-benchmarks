@@ -213,3 +213,11 @@ The shape effects above apply identically: the model's GEMMs (hidden=2048, FFN=8
    GPU types (B200: 1024 / 1493; RTX 6000: 281 / 419). The gap is normal — memory-bound
    ops (LayerNorm, Adam), gradient all-reduce, and smaller GEMM shapes all consume
    wall-clock time without adding to the FLOP count. It is not a misconfiguration.
+8. **MFU (Model FLOPs Utilization) on B200 is ~46 %** (1024 / 2250 TFLOP/s dense
+   BF16 peak), placing it at the high end of the published range of 30–50 % for
+   transformer pretraining. For RTX PRO 6000 the official dense peak is not in
+   reference data, but the 67 % Megatron/gpu-fryer ratio matches B200's 69 %,
+   implying a similar MFU tier. Both results are consistent with expectations for
+   a 1.3 B model: larger models (7B+) with bigger GEMM shapes report the 45–50 %
+   end of the published range; a 1.3 B run at this hidden size sits slightly
+   below that ceiling, yet still comfortably above the 30 % lower bound.
