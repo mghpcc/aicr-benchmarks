@@ -1,0 +1,1128 @@
+/usr/bin/apptainer
+===== Number of nodes = 2 =====
+===== Number of GPUs per node = 1 =====
+===== Host names: b[0025-0026] ======
+===== GPU TYPE: b200 ======
+===== Global batch size = 256 =====
+b0025
+b0026
+172.21.102.25
+=====================================
+CUDA_VISIBLE_DEVICES (in container, b0025) = 0,1,2,3,4,5,6,7
+CUDA_VISIBLE_DEVICES (in container, b0026) = 0,1,2,3,4,5,6,7
+Model parameters
+--num-layers 36    --hidden-size 4096    --ffn-hidden-size 14336    --num-attention-heads 32    --seq-length 2048    --max-position-embeddings 2048
+Network info: --rdzv-id=101  --rdzv-backend=c10d  --rdzv-endpoint=172.21.102.25:1234
+Global batch size: 256  |  Micro batch size: 4
+Model parameters
+--num-layers 36    --hidden-size 4096    --ffn-hidden-size 14336    --num-attention-heads 32    --seq-length 2048    --max-position-embeddings 2048
+Network info: --rdzv-id=101  --rdzv-backend=c10d  --rdzv-endpoint=172.21.102.25:1234
+Global batch size: 256  |  Micro batch size: 4
+WARNING: one_logger package is required to enable e2e metrics tracking. please go to https://confluence.nvidia.com/display/MLWFO/Package+Repositories for details to install it
+using world size: 2, data-parallel size: 2, context-parallel size: 1, hierarchical context-parallel sizes: None, tensor-model-parallel size: 1, pipeline-model-parallel size: 1
+/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/training/utils.py:412: UserWarning: Overriding default arguments for tokenizer_type:GPT2BPETokenizer with tokenizer_type:NullTokenizer
+  warnings.warn(message)
+Number of virtual stages per pipeline stage: None
+accumulate and all-reduce gradients in fp32 for bfloat16 data type.
+using torch.bfloat16 for parameters ...
+/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/training/utils.py:412: UserWarning: --tokenizer-hf-use-fast argument is deprecated and will be removed soon. `use_fast` is set to True by default for HF tokenizers.Use --tokenizer-hf-no-use-fast if you want to disable `use_fast`.
+  warnings.warn(message)
+/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/training/utils.py:412: UserWarning: --tokenizer-hf-include-special-tokens argument is deprecated and will be removed soon. `include_special_tokens` is set to True by default for HF tokenizers.Use --tokenizer-hf-no-include-special-tokens if you want to disable `include_special_tokens`.
+  warnings.warn(message)
+------------------------ arguments ------------------------
+  _is_global_batch_size_explicitly_specified ...... True
+  account_for_embedding_in_pipeline_split ......... False
+  account_for_loss_in_pipeline_split .............. False
+  accumulate_allreduce_grads_in_fp32 .............. True
+  activation_func_clamp_value ..................... None
+  adam_beta1 ...................................... 0.9
+  adam_beta2 ...................................... 0.95
+  adam_eps ........................................ 1e-08
+  add_bias_linear ................................. True
+  add_position_embedding .......................... True
+  add_qkv_bias .................................... True
+  adlr_autoresume ................................. False
+  adlr_autoresume_interval ........................ 1000
+  align_grad_reduce ............................... True
+  align_param_gather .............................. False
+  allow_ambiguous_pad_tokens ...................... False
+  app_tag_run_name ................................ None
+  app_tag_run_version ............................. 0.0.0
+  apply_query_key_layer_scaling ................... False
+  apply_residual_connection_post_layernorm ........ False
+  apply_rope_fusion ............................... False
+  apply_wd_to_qk_layernorm ........................ False
+  async_ckpt_cpu_priority ......................... 10
+  async_ckpt_io_priority .......................... 3
+  async_ckpt_use_cpu_shm .......................... False
+  async_save ...................................... False
+  async_strategy .................................. nvrx
+  attention_backend ............................... AttnBackend.auto
+  attention_dropout ............................... 0.1
+  attention_output_gate ........................... False
+  attention_softmax_in_fp32 ....................... False
+  auto_detect_ckpt_format ......................... False
+  barrier_with_L1_time ............................ True
+  batch_invariant_mode ............................ False
+  bert_binary_head ................................ True
+  bert_embedder_type .............................. megatron
+  bert_load ....................................... None
+  bf16 ............................................ True
+  bias_dropout_fusion ............................. True
+  bias_gelu_fusion ................................ True
+  bias_swiglu_fusion .............................. True
+  biencoder_projection_dim ........................ 0
+  biencoder_shared_query_context_model ............ False
+  block_data_path ................................. None
+  cache_mla_latents ............................... False
+  calc_ft_timeouts ................................ False
+  calculate_per_token_loss ........................ False
+  check_for_large_grads ........................... False
+  check_for_nan_in_loss_and_grad .................. True
+  check_for_spiky_loss ............................ False
+  check_weight_hash_across_dp_replicas_interval ... None
+  ckpt_assume_constant_structure .................. False
+  ckpt_convert_format ............................. None
+  ckpt_convert_save ............................... None
+  ckpt_convert_update_legacy_dist_opt_format ...... False
+  ckpt_format ..................................... torch_dist
+  ckpt_fully_parallel_load ........................ False
+  ckpt_fully_parallel_load_exchange_algo .......... broadcast
+  ckpt_fully_parallel_load_process_group .......... dp
+  ckpt_fully_parallel_save ........................ True
+  ckpt_fully_parallel_save_deprecated ............. False
+  ckpt_fully_parallel_save_process_group .......... dp
+  ckpt_load_validate_sharding_integrity ........... True
+  ckpt_step ....................................... None
+  classes_fraction ................................ 1.0
+  clip_grad ....................................... 1.0
+  clone_scatter_output_in_embedding ............... True
+  config_logger_dir ............................... 
+  consumed_train_samples .......................... 0
+  consumed_valid_samples .......................... 0
+  context_parallel_size ........................... 1
+  cp_comm_type .................................... ['p2p']
+  cpu_offloading_num_layers ....................... 0
+  cpu_offloading_retain_pinned_cpu_buffers ........ False
+  create_all_gather_group ......................... False
+  create_attention_mask_in_dataloader ............. True
+  cross_entropy_fusion_impl ....................... native
+  cross_entropy_loss_fusion ....................... False
+  cuda_graph_impl ................................. none
+  cuda_graph_scope ................................ []
+  cuda_graph_warmup_steps ......................... 3
+  data_args_path .................................. None
+  data_cache_path ................................. None
+  data_parallel_random_init ....................... False
+  data_parallel_sharding_strategy ................. no_shard
+  data_parallel_size .............................. 2
+  data_path ....................................... None
+  data_per_class_fraction ......................... 1.0
+  data_sharding ................................... True
+  dataloader_defer_npy_index_mmap ................. False
+  dataloader_fast_cache_load ...................... False
+  dataloader_type ................................. single
+  ddp_average_in_collective ....................... False
+  ddp_bucket_size ................................. None
+  ddp_num_buckets ................................. None
+  ddp_pad_buckets_for_high_nccl_busbw ............. False
+  ddp_param_name_patterns_for_fp32_local_accumulation  []
+  ddp_reduce_scatter_with_fp32_accumulation ....... False
+  decode_only_cuda_graphs ......................... False
+  decoder_first_pipeline_num_layers ............... None
+  decoder_last_pipeline_num_layers ................ None
+  decoder_num_layers .............................. None
+  decoder_seq_length .............................. None
+  decoupled_lr .................................... None
+  decoupled_min_lr ................................ None
+  decrease_batch_size_if_needed ................... False
+  defer_embedding_wgrad_compute ................... False
+  delay_wgrad_compute ............................. False
+  deprecated_use_mcore_models ..................... False
+  deterministic_mode .............................. False
+  dino_bottleneck_size ............................ 256
+  dino_freeze_last_layer .......................... 1
+  dino_head_hidden_size ........................... 2048
+  dino_local_crops_number ......................... 10
+  dino_local_img_size ............................. 96
+  dino_norm_last_layer ............................ False
+  dino_teacher_temp ............................... 0.07
+  dino_warmup_teacher_temp ........................ 0.04
+  dino_warmup_teacher_temp_epochs ................. 30
+  disable_bf16_reduced_precision_matmul ........... False
+  disable_jit_fuser ............................... False
+  disable_straggler_on_startup .................... False
+  disable_symmetric_registration .................. False
+  dist_ckpt_format_deprecated ..................... None
+  dist_ckpt_optim_fully_reshardable ............... False
+  dist_ckpt_save_pre_mcore_014 .................... False
+  dist_ckpt_strictness ............................ assume_ok_unexpected
+  dist_ckpt_workers ............................... 1
+  distrib_optim_fully_reshardable_mem_efficient ... False
+  distribute_saved_activations .................... False
+  distributed_backend ............................. nccl
+  distributed_timeout_minutes ..................... 10
+  distributed_timeout_seconds_after_init .......... None
+  dsa_indexer_head_dim ............................ None
+  dsa_indexer_loss_coeff .......................... None
+  dsa_indexer_n_heads ............................. None
+  dsa_indexer_topk ................................ None
+  dsa_indexer_use_sparse_loss ..................... False
+  dump_param_to_param_group_map ................... None
+  embedding_init_method_std ....................... None
+  embedding_path .................................. None
+  empty_unused_memory_level ....................... 0
+  enable_chunked_prefill .......................... False
+  enable_cuda_graph ............................... False
+  enable_experimental ............................. False
+  enable_ft_package ............................... False
+  enable_full_sharding_in_hsdp .................... False
+  enable_gpt_oss .................................. False
+  enable_msc ...................................... True
+  enable_one_logger ............................... True
+  encoder_num_layers .............................. 36
+  encoder_seq_length .............................. 2048
+  end_weight_decay ................................ 0.1
+  eod_mask_loss ................................... False
+  ep_overlap_early_attn_memory_release ............ False
+  error_injection_rate ............................ 0
+  error_injection_type ............................ transient_error
+  eval_global_batch_size .......................... 256
+  eval_interval ................................... 1000000
+  eval_iters ...................................... 100
+  eval_micro_batch_size ........................... 4
+  evidence_data_path .............................. None
+  exit_duration_in_mins ........................... None
+  exit_interval ................................... None
+  exit_on_missing_checkpoint ...................... False
+  exit_signal ..................................... 15
+  exit_signal_handler ............................. False
+  exit_signal_handler_for_dataloader .............. False
+  exit_signal_handler_for_training ................ False
+  exp_avg_dtype ................................... torch.float32
+  exp_avg_sq_dtype ................................ torch.float32
+  experimental_attention_variant .................. None
+  expert_model_parallel_size ...................... 1
+  expert_tensor_parallel_size ..................... 1
+  export_default_te_spec .......................... False
+  export_force_local_attention .................... False
+  export_kd_cfg ................................... None
+  export_kd_teacher_ckpt_format ................... None
+  export_kd_teacher_load .......................... None
+  export_kd_teacher_model_config .................. None
+  export_kv_cache_quant ........................... none
+  export_legacy_megatron .......................... False
+  export_model_type ............................... GPTModel
+  export_moe_apply_probs_on_input ................. False
+  export_offline_model ............................ False
+  export_qk_l2_norm ............................... False
+  export_quant_cfg ................................ None
+  export_real_quant_cfg ........................... None
+  export_te_mcore_model ........................... False
+  external_cuda_graph ............................. False
+  fake_process_group .............................. False
+  ffn_hidden_size ................................. 14336
+  fim_data ........................................ False
+  fim_eod_token ................................... <|endoftext|>
+  fim_fragment_rate ............................... None
+  fim_middle_token ................................ <fim_middle>
+  fim_no_prefix ................................... None
+  fim_pad_token ................................... <fim_pad>
+  fim_prefix_token ................................ <fim_prefix>
+  fim_rate ........................................ 0.5
+  fim_split_sample ................................ None
+  fim_spm_rate .................................... 0.5
+  fim_suffix_token ................................ <fim_suffix>
+  fine_grained_activation_offloading .............. False
+  finetune ........................................ False
+  finetune_data_split ............................. train
+  finetune_hf_dataset ............................. None
+  first_last_layers_bf16 .......................... False
+  flash_decode .................................... False
+  flight_recorder_dump_on_timeout ................. True
+  flight_recorder_dump_path ....................... None
+  flight_recorder_extra_dump_on_exec .............. True
+  flight_recorder_include_only_active ............. True
+  flight_recorder_include_stack_trace ............. False
+  flight_recorder_trace_buffer_size ............... 2000
+  fp16 ............................................ False
+  fp16_lm_cross_entropy ........................... False
+  fp32_residual_connection ........................ False
+  fp4 ............................................. None
+  fp4_param_gather ................................ False
+  fp4_quantizer_factory ........................... None
+  fp4_recipe ...................................... nvfp4
+  fp8 ............................................. None
+  fp8_amax_compute_algo ........................... most_recent
+  fp8_amax_history_len ............................ 1
+  fp8_interval .................................... 1
+  fp8_margin ...................................... 0
+  fp8_param_gather ................................ False
+  fp8_quantizer_factory ........................... None
+  fp8_recipe ...................................... delayed
+  fp8_wgrad ....................................... True
+  fsdp_double_buffer .............................. False
+  fsdp_manual_registration ........................ False
+  ft_num_warmup_iters ............................. 5
+  full_validation ................................. False
+  fused_residual_rmsnorm .......................... False
+  global_batch_size ............................... 256
+  glu_linear_offset ............................... 0.0
+  grad_reduce_in_bf16 ............................. False
+  gradient_accumulation_fusion .................... True
+  gradient_reduce_div_fusion ...................... True
+  group_query_attention ........................... False
+  grpo_clamp_eps_lower ............................ 0.01
+  grpo_clamp_eps_upper ............................ 0.01
+  grpo_entropy_term_weight ........................ 0.0
+  grpo_filter_groups_with_same_reward ............. False
+  grpo_group_size ................................. 2
+  grpo_iterations ................................. 2
+  grpo_kl_beta .................................... 0.001
+  grpo_prompts_per_step ........................... 32
+  head_lr_mult .................................... 1.0
+  heterogeneous_layers_config_encoded_json ........ None
+  heterogeneous_layers_config_path ................ None
+  hidden_dropout .................................. 0.1
+  hidden_size ..................................... 4096
+  hierarchical_context_parallel_sizes ............. None
+  high_priority_stream_groups ..................... []
+  hybrid_context_parallel ......................... False
+  hybrid_layer_pattern ............................ None
+  hybrid_override_pattern ......................... None
+  hysteresis ...................................... 2
+  ict_head_size ................................... None
+  ict_load ........................................ None
+  img_h ........................................... 224
+  img_w ........................................... 224
+  indexer_batch_size .............................. 128
+  indexer_log_interval ............................ 1000
+  inference_batch_times_seqlen_threshold .......... -1
+  inference_coordinator_port ...................... None
+  inference_disable_triton_nvls_kernels ........... False
+  inference_dynamic_batching ...................... False
+  inference_dynamic_batching_block_size ........... 256
+  inference_dynamic_batching_buffer_size_gb ....... 40.0
+  inference_dynamic_batching_cuda_graph_max_tokens  16384
+  inference_dynamic_batching_cuda_graph_mixed_prefill_count  16
+  inference_dynamic_batching_enable_prefix_caching  False
+  inference_dynamic_batching_mamba_memory_ratio ... None
+  inference_dynamic_batching_max_requests ......... None
+  inference_dynamic_batching_max_tokens ........... None
+  inference_dynamic_batching_num_cuda_graphs ...... 16
+  inference_dynamic_batching_paused_buffer_size_gb  None
+  inference_dynamic_batching_prefix_caching_coordinator_policy  first_prefix_block
+  inference_dynamic_batching_prefix_caching_eviction_policy  ref_zero
+  inference_dynamic_batching_prefix_caching_mamba_gb  None
+  inference_dynamic_batching_prefix_caching_routing_alpha  0.5
+  inference_dynamic_batching_track_generated_token_events  False
+  inference_dynamic_batching_track_paused_request_events  False
+  inference_dynamic_batching_unified_memory_level . 0
+  inference_fuse_tp_communication ................. False
+  inference_grouped_gemm_backend .................. auto
+  inference_logging_step_interval ................. 0
+  inference_max_requests .......................... 8
+  inference_max_seq_length ........................ 2560
+  inference_moe_disable_fused_quant_kernels ....... False
+  inference_rng_tracker ........................... False
+  inference_text_gen_server_logging ............... False
+  inference_use_synchronous_zmq_collectives ....... False
+  inference_wandb_logging ......................... False
+  init_method_std ................................. 0.02
+  init_method_xavier_uniform ...................... False
+  init_model_with_meta_device ..................... False
+  initial_loss_scale .............................. 4294967296
+  inprocess_active_world_size ..................... 2
+  inprocess_barrier_timeout ....................... 120
+  inprocess_completion_timeout .................... 120
+  inprocess_empty_cuda_cache ...................... False
+  inprocess_granularity ........................... node
+  inprocess_hard_timeout .......................... 90
+  inprocess_heartbeat_interval .................... 30
+  inprocess_heartbeat_timeout ..................... 60
+  inprocess_last_call_wait ........................ 1
+  inprocess_max_iterations ........................ None
+  inprocess_monitor_process_interval .............. 1.0
+  inprocess_monitor_thread_interval ............... 1.0
+  inprocess_progress_watchdog_interval ............ 1.0
+  inprocess_restart ............................... False
+  inprocess_soft_timeout .......................... 60
+  inprocess_termination_grace_time ................ 1
+  is_hybrid_model ................................. False
+  iter_per_epoch .................................. 1250
+  iterations_to_skip .............................. []
+  keep_fp8_transpose_cache ........................ False
+  kitchen_attention_backend ....................... sdpa
+  kv_channels ..................................... 128
+  kv_lora_rank .................................... 32
+  langrl_env_config ............................... None
+  layernorm_epsilon ............................... 1e-05
+  layernorm_zero_centered_gamma ................... False
+  lazy_mpu_init ................................... False
+  linear_attention_freq ........................... None
+  linear_conv_kernel_dim .......................... 4
+  linear_key_head_dim ............................. 128
+  linear_num_key_heads ............................ 16
+  linear_num_value_heads .......................... 32
+  linear_value_head_dim ........................... 128
+  lion_beta1 ...................................... 0.95
+  lion_beta2 ...................................... 0.98
+  load ............................................ None
+  load_main_params_from_ckpt ...................... False
+  local_rank ...................................... 0
+  log_device_memory_used .......................... False
+  log_energy ...................................... False
+  log_interval .................................... 10
+  log_loss_scale_to_tensorboard ................... True
+  log_max_attention_logit ......................... False
+  log_memory_interval ............................. None
+  log_memory_to_tensorboard ....................... False
+  log_num_zeros_in_grad ........................... False
+  log_params_norm ................................. False
+  log_progress .................................... False
+  log_straggler ................................... False
+  log_throughput .................................. True
+  log_timers_to_tensorboard ....................... False
+  log_validation_ppl_to_tensorboard ............... False
+  log_world_size_to_tensorboard ................... False
+  logging_level ................................... None
+  loss_scale ...................................... None
+  loss_scale_window ............................... 1000
+  lr .............................................. 0.0003
+  lr_decay_iters .................................. 50
+  lr_decay_samples ................................ None
+  lr_decay_style .................................. cosine
+  lr_warmup_fraction .............................. None
+  lr_warmup_init .................................. 0.0
+  lr_warmup_iters ................................. 10
+  lr_warmup_samples ............................... 0
+  lr_wsd_decay_iters .............................. None
+  lr_wsd_decay_samples ............................ None
+  lr_wsd_decay_style .............................. exponential
+  main_grads_dtype ................................ torch.float32
+  main_params_dtype ............................... torch.float32
+  make_vocab_size_divisible_by .................... 128
+  mamba_head_dim .................................. 64
+  mamba_inference_conv_states_dtype ............... torch.bfloat16
+  mamba_inference_ssm_states_dtype ................ torch.bfloat16
+  mamba_num_groups ................................ 8
+  mamba_num_heads ................................. None
+  mamba_state_dim ................................. 128
+  manual_gc ....................................... False
+  manual_gc_eval .................................. True
+  manual_gc_interval .............................. 0
+  mask_factor ..................................... 1.0
+  mask_prob ....................................... 0.15
+  mask_type ....................................... random
+  masked_softmax_fusion ........................... True
+  max_position_embeddings ......................... 2048
+  max_seqlen_per_dp_cp_rank ....................... None
+  max_tokens_to_oom ............................... 12000
+  megatron_fsdp_grad_comm_dtype ................... None
+  megatron_fsdp_main_grads_dtype .................. None
+  megatron_fsdp_main_params_dtype ................. torch.float32
+  memory_snapshot_path ............................ snapshot.pickle
+  merge_file ...................................... None
+  micro_batch_size ................................ 4
+  microbatch_group_size_per_vp_stage .............. None
+  mid_level_dataset_surplus ....................... 0.005
+  min_loss_scale .................................. 1.0
+  min_lr .......................................... 3e-05
+  min_offloaded_tensor_size ....................... 1048576
+  mla_down_proj_fusion ............................ False
+  mlp_chunks_for_prefill .......................... 1
+  mmap_bin_files .................................. True
+  mock_data ....................................... True
+  modelopt_enabled ................................ False
+  moe_apply_probs_on_input ........................ False
+  moe_aux_loss_coeff .............................. 0.0
+  moe_deepep_num_sms .............................. 20
+  moe_enable_deepep ............................... False
+  moe_enable_routing_replay ....................... False
+  moe_expert_capacity_factor ...................... None
+  moe_ffn_hidden_size ............................. None
+  moe_flex_dispatcher_backend ..................... deepep
+  moe_grouped_gemm ................................ False
+  moe_hybridep_num_sms ............................ 16
+  moe_input_jitter_eps ............................ None
+  moe_latent_size ................................. None
+  moe_layer_freq .................................. 1
+  moe_layer_recompute ............................. False
+  moe_pad_expert_input_to_capacity ................ False
+  moe_pad_experts_for_cuda_graph_inference ........ False
+  moe_per_layer_logging ........................... False
+  moe_permute_fusion .............................. False
+  moe_router_bias_update_rate ..................... 0.001
+  moe_router_dtype ................................ None
+  moe_router_enable_expert_bias ................... False
+  moe_router_force_biased ......................... None
+  moe_router_force_load_balancing ................. False
+  moe_router_fusion ............................... False
+  moe_router_group_topk ........................... None
+  moe_router_load_balancing_type .................. aux_loss
+  moe_router_num_groups ........................... None
+  moe_router_padding_for_fp8 ...................... False
+  moe_router_padding_for_quantization ............. False
+  moe_router_pre_softmax .......................... False
+  moe_router_score_function ....................... softmax
+  moe_router_topk ................................. 2
+  moe_router_topk_scaling_factor .................. None
+  moe_shared_expert_gate .......................... False
+  moe_shared_expert_intermediate_size ............. None
+  moe_shared_expert_overlap ....................... False
+  moe_token_dispatcher_type ....................... allgather
+  moe_token_drop_policy ........................... probs
+  moe_upcycling_granularity ....................... 1
+  moe_use_upcycling ............................... False
+  moe_z_loss_coeff ................................ None
+  mrope_section ................................... None
+  mscale .......................................... 1.0
+  mscale_all_dim .................................. 0.0
+  mtp_hybrid_override_pattern ..................... None
+  mtp_loss_scaling_factor ......................... 0.1
+  mtp_num_layers .................................. None
+  mtp_standalone .................................. False
+  mtp_use_repeated_layer .......................... False
+  multi_latent_attention .......................... False
+  multiple_validation_sets ........................ False
+  muon_coefficient_type ........................... quintic
+  muon_extra_scale_factor ......................... 1.0
+  muon_fp32_matmul_prec ........................... medium
+  muon_momentum ................................... 0.9
+  muon_nesterov ................................... False
+  muon_num_ns_steps ............................... 5
+  muon_scalar_optimizer ........................... adam
+  muon_scale_mode ................................. spectral
+  muon_split_qkv .................................. True
+  muon_tp_mode .................................... blockwise
+  mup_attn_scale_power ............................ 1.0
+  mup_base_head_dim ............................... None
+  mup_base_hidden_size ............................ None
+  mup_embedding_mult .............................. 1.0
+  mup_output_mult ................................. 1.0
+  mup_width_mult .................................. 1.0
+  nccl_all_reduce_for_prefill ..................... False
+  nccl_communicator_config_path ................... None
+  nccl_ub ......................................... False
+  no_load_optim ................................... None
+  no_load_rng ..................................... None
+  no_persist_layer_norm ........................... False
+  no_rope_freq .................................... None
+  no_save_optim ................................... None
+  no_save_rng ..................................... None
+  no_weight_decay_cond_type ....................... None
+  non_persistent_ckpt_type ........................ None
+  non_persistent_global_ckpt_dir .................. None
+  non_persistent_local_ckpt_algo .................. fully_parallel
+  non_persistent_local_ckpt_dir ................... None
+  non_persistent_save_interval .................... None
+  normalization ................................... LayerNorm
+  null_tokenizer_eod_id ........................... None
+  null_tokenizer_pad_id ........................... -1
+  num_attention_heads ............................. 32
+  num_channels .................................... 3
+  num_classes ..................................... 1000
+  num_dataset_builder_threads ..................... 1
+  num_distributed_optimizer_instances ............. 1
+  num_experts ..................................... None
+  num_layers ...................................... 36
+  num_layers_at_end_in_bf16 ....................... 1
+  num_layers_at_start_in_bf16 ..................... 1
+  num_layers_per_virtual_pipeline_stage ........... None
+  num_query_groups ................................ 1
+  num_speculative_tokens .......................... 0
+  num_virtual_stages_per_pipeline_rank ............ None
+  num_workers ..................................... 2
+  nvtx_ranges ..................................... False
+  object_storage_cache_path ....................... None
+  offload_modules ................................. []
+  one_logger_async ................................ False
+  one_logger_project .............................. megatron-lm
+  one_logger_run_name ............................. None
+  onnx_safe ....................................... None
+  openai_gelu ..................................... False
+  optimizer ....................................... adam
+  optimizer_cpu_offload ........................... False
+  optimizer_cuda_graph ............................ False
+  optimizer_offload_fraction ...................... 1.0
+  outer_dp_sharding_strategy ...................... no_shard
+  output_bert_embeddings .......................... False
+  overlap_cpu_optimizer_d2h_h2d ................... False
+  overlap_dispatch_backward_with_experts_wgrad .... False
+  overlap_grad_reduce ............................. False
+  overlap_moe_expert_parallel_comm ................ False
+  overlap_p2p_comm ................................ False
+  overlap_p2p_comm_warmup_flush ................... False
+  overlap_param_gather ............................ False
+  overlap_param_gather_with_optimizer_step ........ False
+  override_opt_param_scheduler .................... False
+  padded_vocab_size ............................... None
+  params_dtype .................................... torch.bfloat16
+  patch_dim ....................................... 16
+  per_dataset_sequences_path ...................... None
+  per_split_data_args_path ........................ None
+  perform_initialization .......................... True
+  perform_rl_step ................................. False
+  phase_transition_iterations ..................... None
+  pin_cpu_grads ................................... True
+  pin_cpu_params .................................. True
+  pipeline_model_parallel_comm_backend ............ None
+  pipeline_model_parallel_layout .................. None
+  pipeline_model_parallel_size .................... 1
+  position_embedding_type ......................... learned_absolute
+  pretrained_checkpoint ........................... None
+  profile ......................................... False
+  profile_ranks ................................... []
+  profile_step_end ................................ 12
+  profile_step_start .............................. 10
+  pytorch_profiler_collect_callstack .............. False
+  pytorch_profiler_collect_chakra ................. False
+  pytorch_profiler_collect_shapes ................. False
+  q_lora_rank ..................................... None
+  qk_clip ......................................... False
+  qk_clip_alpha ................................... 0.5
+  qk_clip_threshold ............................... 100
+  qk_head_dim ..................................... 128
+  qk_l2_norm ...................................... False
+  qk_layernorm .................................... False
+  qk_pos_emb_head_dim ............................. 64
+  query_in_block_prob ............................. 0.1
+  quick_geglu ..................................... False
+  rampup_batch_size ............................... None
+  rank ............................................ 0
+  recompute_granularity ........................... None
+  recompute_method ................................ None
+  recompute_modules ............................... None
+  recompute_num_layers ............................ None
+  record_memory_history ........................... False
+  record_shapes ................................... False
+  refit_method .................................... gloo
+  relative_attention_max_distance ................. 128
+  relative_attention_num_buckets .................. 32
+  replication ..................................... False
+  replication_factor .............................. 2
+  replication_jump ................................ None
+  rerun_mode ...................................... validate_results
+  reset_attention_mask ............................ False
+  reset_position_ids .............................. False
+  result_rejected_tracker_filename ................ None
+  retriever_report_topk_accuracies ................ []
+  retriever_score_scaling ......................... False
+  reuse_grad_buf_for_mxfp8_param_ag ............... False
+  rl_default_temperature .......................... 1.0
+  rl_default_top_k ................................ -1
+  rl_default_top_p ................................ 0
+  rl_generation_batch_size ........................ None
+  rl_importance_sampling_truncation_coef .......... None
+  rl_inference_expert_model_parallel_size ......... None
+  rl_inference_expert_tensor_model_parallel_size .. None
+  rl_inference_logprobs_is_correction ............. False
+  rl_inference_model_unified_memory_level ......... 0
+  rl_inference_parsers ............................ []
+  rl_inference_pipeline_model_parallel_size ....... None
+  rl_inference_tensor_model_parallel_size ......... None
+  rl_kv_cache_management_mode ..................... persist
+  rl_num_parallel_generation_batches .............. None
+  rl_num_parallel_generations ..................... None
+  rl_offload_inference_model_weights_when_idle .... False
+  rl_offload_optimizer_during_inference ........... False
+  rl_parallel_generation_tasks .................... None
+  rl_partial_rollouts ............................. False
+  rl_persist_cuda_graphs .......................... False
+  rl_prompts_per_eval ............................. 32
+  rl_sequence_packing_algo ........................ fifo
+  rl_sequence_packing_max_sequences_per_bin ....... 50
+  rl_skip_bos_token ............................... False
+  rl_training_cuda_graphs ......................... False
+  rl_use_sequence_packing ......................... False
+  rl_verify_model_weights_swap .................... False
+  rope_scaling_factor ............................. 8.0
+  rope_type ....................................... None
+  rotary_base ..................................... 10000
+  rotary_interleaved .............................. False
+  rotary_percent .................................. 1.0
+  rotary_scaling_factor ........................... 1.0
+  rotary_seq_len_interpolation_factor ............. None
+  run_workload_inspector_server ................... False
+  sample_rate ..................................... 1.0
+  save ............................................ None
+  save_activations_interval ....................... None
+  save_dgrads_interval ............................ None
+  save_interval ................................... 1000000
+  save_params_interval ............................ None
+  save_retain_interval ............................ None
+  save_tokens_per_expert_interval ................. None
+  save_wgrads_interval ............................ None
+  seed ............................................ 1234
+  seq_length ...................................... 2048
+  sequence_parallel ............................... False
+  sft ............................................. False
+  sft_tokenizer_prompt_format ..................... nemotron-h-aligned
+  sgd_momentum .................................... 0.9
+  sharp_enabled_group ............................. None
+  short_seq_prob .................................. 0.1
+  skip_train ...................................... False
+  skipped_train_samples ........................... 0
+  softmax_type .................................... vanilla
+  spec ............................................ None
+  split ........................................... None
+  squared_relu .................................... False
+  start_eval_at_iter .............................. None
+  start_weight_decay .............................. 0.1
+  step_batch_size_schedule ........................ None
+  straggler_ctrlr_port ............................ 65535
+  straggler_minmax_count .......................... 1
+  strict_fsdp_dtensor_load ........................ True
+  suggested_communication_unit_size ............... None
+  swiglu .......................................... False
+  swin_backbone_type .............................. tiny
+  symmetric_ar_type ............................... None
+  te_precision_config_file ........................ None
+  te_rng_tracker .................................. False
+  tensor_model_parallel_size ...................... 1
+  tensorboard_dir ................................. None
+  tensorboard_log_interval ........................ 1
+  tensorboard_queue_size .......................... 1000
+  test_data_path .................................. None
+  test_mode ....................................... False
+  tiktoken_num_special_tokens ..................... 1000
+  tiktoken_pattern ................................ None
+  tiktoken_special_tokens ......................... None
+  timing_log_level ................................ 2
+  timing_log_option ............................... all
+  titles_data_path ................................ None
+  tokenizer_hf_include_special_tokens ............. True
+  tokenizer_hf_no_include_special_tokens .......... False
+  tokenizer_hf_no_use_fast ........................ False
+  tokenizer_hf_use_fast ........................... True
+  tokenizer_metadata .............................. None
+  tokenizer_model ................................. None
+  tokenizer_sentencepiece_legacy .................. False
+  tokenizer_special_tokens ........................ None
+  tokenizer_type .................................. NullTokenizer
+  torch_fsdp2_reshard_after_forward ............... True
+  tp_comm_bootstrap_backend ....................... nccl
+  tp_comm_bulk_dgrad .............................. True
+  tp_comm_bulk_wgrad .............................. True
+  tp_comm_overlap ................................. False
+  tp_comm_overlap_ag .............................. True
+  tp_comm_overlap_cfg ............................. None
+  tp_comm_overlap_rs .............................. True
+  tp_comm_overlap_rs_dgrad ........................ False
+  tp_comm_split_ag ................................ True
+  tp_comm_split_rs ................................ True
+  train_data_path ................................. None
+  train_iters ..................................... 100
+  train_samples ................................... None
+  train_sync_interval ............................. None
+  transformer_impl ................................ transformer_engine
+  transformer_pipeline_model_parallel_size ........ 1
+  trust_remote_code ............................... False
+  untie_embeddings_and_output_weights ............. False
+  use_checkpoint_args ............................. False
+  use_checkpoint_opt_param_scheduler .............. False
+  use_cpu_initialization .......................... None
+  use_dist_ckpt ................................... True
+  use_dist_ckpt_deprecated ........................ False
+  use_distributed_optimizer ....................... False
+  use_flash_attn .................................. False
+  use_fused_weighted_squared_relu ................. False
+  use_gloo_process_groups ......................... True
+  use_kitchen_attention ........................... False
+  use_layer_wise_distributed_optimizer ............ False
+  use_legacy_models ............................... False
+  use_legacy_static_engine ........................ False
+  use_mamba_mem_eff_path .......................... True
+  use_megatron_fsdp ............................... False
+  use_mp_args_from_checkpoint_args ................ False
+  use_mup ......................................... False
+  use_one_sent_docs ............................... False
+  use_persistent_ckpt_worker ...................... False
+  use_precision_aware_optimizer ................... False
+  use_pytorch_profiler ............................ False
+  use_ring_exchange_p2p ........................... False
+  use_rope_scaling ................................ False
+  use_rotary_position_embeddings .................. False
+  use_sharp ....................................... False
+  use_te_activation_func .......................... False
+  use_tokenizer_model_from_checkpoint_args ........ True
+  use_torch_fsdp2 ................................. False
+  use_torch_optimizer_for_cpu_offload ............. False
+  use_tp_pp_dp_mapping ............................ False
+  v_head_dim ...................................... 128
+  valid_data_path ................................. None
+  variable_seq_lengths ............................ False
+  verify_integrity ................................ False
+  virtual_pipeline_model_parallel_size ............ None
+  vision_backbone_type ............................ vit
+  vision_pretraining .............................. False
+  vision_pretraining_type ......................... classify
+  vocab_extra_ids ................................. 0
+  vocab_file ...................................... None
+  vocab_size ...................................... 50304
+  wandb_entity .................................... None
+  wandb_exp_name .................................. None
+  wandb_project ................................... None
+  wandb_save_dir .................................. None
+  weight_decay .................................... 0.1
+  weight_decay_incr_style ......................... constant
+  wgrad_deferral_limit ............................ 0
+  window_attn_skip_freq ........................... None
+  window_size ..................................... None
+  world_size ...................................... 2
+  yaml_cfg ........................................ None
+-------------------- end of arguments ---------------------
+INFO:megatron.core.num_microbatches_calculator:setting number of microbatches to constant 32
+INFO:megatron.core.tokenizers.utils.build_tokenizer: > padded vocab (size: 50304) with 0 dummy tokens (new size: 50304)
+WARNING:megatron.core.rerun_state_machine:RerunStateMachine initialized in mode RerunMode.VALIDATE_RESULTS
+> initializing torch distributed ...
+> initialized tensor model parallel with size 1
+> initialized pipeline model parallel with size 1
+> setting random seeds to 1234 ...
+> compiling dataset index builder ...
+make: Entering directory '/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/core/datasets'
+make: Nothing to be done for 'default'.
+make: Leaving directory '/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/core/datasets'
+>>> done with dataset index builder. Compilation time: 0.044 seconds
+/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+[rank0]:[W505 16:43:27.755113688 ProcessGroupNCCL.cpp:5178] Guessing device ID based on global rank. This can cause a hang if rank to GPU mapping is heterogeneous. You can specify device_id in init_process_group()
+b0025:76231:76231 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+b0025:76231:76231 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^lo,docker
+b0025:76231:76231 [0] NCCL INFO Bootstrap: Using bond0:172.21.102.25<0>
+b0025:76231:76231 [0] NCCL INFO cudaDriverVersion 13000
+b0025:76231:76231 [0] NCCL INFO NCCL version 2.29.2+cuda13.1
+b0025:76231:76231 [0] NCCL INFO NCCL git version stable 07fa371c7
+b0025:76231:76231 [0] NCCL INFO Comm config Blocking set to 1
+b0026:179296:179296 [1] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+b0026:179296:179296 [1] NCCL INFO cudaDriverVersion 13000
+b0026:179296:179296 [1] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^lo,docker
+b0026:179296:179296 [1] NCCL INFO Bootstrap: Using bond0:172.21.102.26<0>
+b0026:179296:179296 [1] NCCL INFO NCCL version 2.29.2+cuda13.1
+b0026:179296:179296 [1] NCCL INFO NCCL git version stable 07fa371c7
+b0026:179296:179296 [1] NCCL INFO Comm config Blocking set to 1
+b0025:76231:76231 [0] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v11 (v11)
+b0025:76231:76231 [0] NCCL INFO NET/Plugin: Loaded collnet plugin SHARP (v11)
+b0025:76231:76231 [0] NCCL INFO Successfully loaded external network plugin /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+b0025:76231:76231 [0] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+b0025:76231:76231 [0] NCCL INFO P2P plugin v11 IBext_v11
+b0025:76231:76231 [0] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^lo,docker
+b0025:76231:76231 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_1:1/IB/SHARP [2]mlx5_2:1/IB/SHARP [3]mlx5_3:1/IB/SHARP [4]mlx5_4:1/IB/SHARP [5]mlx5_5:1/IB/SHARP [6]mlx5_6:1/IB/SHARP [7]mlx5_7:1/IB/SHARP [8]mlx5_8:1/IB/SHARP [9]mlx5_10:1/IB/SHARP [10]mlx5_11:1/IB/SHARP [11]mlx5_12:1/IB/SHARP [RO]; OOB bond0:172.21.102.25<0>
+b0025:76231:76231 [0] NCCL INFO Initialized NET plugin IBext_v11
+b0025:76231:76231 [0] NCCL INFO Assigned NET plugin IBext_v11 to comm
+b0025:76231:76231 [0] NCCL INFO Using network IBext_v11
+b0026:179296:179296 [1] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v11 (v11)
+b0026:179296:179296 [1] NCCL INFO NET/Plugin: Loaded collnet plugin SHARP (v11)
+b0026:179296:179296 [1] NCCL INFO Successfully loaded external network plugin /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+b0026:179296:179296 [1] NCCL INFO Plugin Path : /opt/hpcx/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+b0026:179296:179296 [1] NCCL INFO P2P plugin v11 IBext_v11
+b0026:179296:179296 [1] NCCL INFO NCCL_SOCKET_IFNAME set by environment to ^lo,docker
+b0026:179296:179296 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_1:1/IB/SHARP [2]mlx5_2:1/IB/SHARP [3]mlx5_3:1/IB/SHARP [4]mlx5_4:1/IB/SHARP [5]mlx5_5:1/IB/SHARP [6]mlx5_6:1/IB/SHARP [7]mlx5_7:1/IB/SHARP [8]mlx5_8:1/IB/SHARP [9]mlx5_10:1/IB/SHARP [10]mlx5_11:1/IB/SHARP [11]mlx5_12:1/IB/SHARP [RO]; OOB bond0:172.21.102.26<0>
+b0026:179296:179296 [1] NCCL INFO Initialized NET plugin IBext_v11
+b0026:179296:179296 [1] NCCL INFO Assigned NET plugin IBext_v11 to comm
+b0026:179296:179296 [1] NCCL INFO Using network IBext_v11
+b0025:76231:76231 [0] NCCL INFO DMA-BUF is available on GPU device 0
+b0025:76231:76231 [0] NCCL INFO [Rank 0] ncclCommInitRankConfig comm 0x10c92c70 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 3000 commId 0x524aeaa87a810efe - Init START
+b0026:179296:179296 [1] NCCL INFO DMA-BUF is available on GPU device 1
+b0026:179296:179296 [1] NCCL INFO [Rank 1] ncclCommInitRankConfig comm 0x10da4b40 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 2b000 commId 0x524aeaa87a810efe - Init START
+b0026:179296:179296 [1] NCCL INFO RAS client listening socket at ::1<28028>
+b0025:76231:76231 [0] NCCL INFO RAS client listening socket at ::1<28028>
+b0025:76231:76231 [0] NCCL INFO Bootstrap timings total 0.055374 (create 0.000027, send 0.000066, recv 0.053691, ring 0.000040, delay 0.000001)
+b0026:179296:179296 [1] NCCL INFO Bootstrap timings total 0.001846 (create 0.000031, send 0.000112, recv 0.000190, ring 0.000400, delay 0.000000)
+b0026:179296:179296 [1] NCCL INFO MNNVL busId 0x2b000 fabric UUID 0.0 cliqueId 0x0 state 3 healthMask 0x80
+b0025:76231:76231 [0] NCCL INFO MNNVL busId 0x3000 fabric UUID 0.0 cliqueId 0x0 state 3 healthMask 0x80
+b0026:179296:179296 [1] NCCL INFO NCCL_NET_GDR_LEVEL set by environment to PXB
+b0025:76231:76231 [0] NCCL INFO NCCL_NET_GDR_LEVEL set by environment to PXB
+b0026:179296:179296 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is 32-47. (GPU affinity = 32-47 ; CPU affinity = 0-127).
+b0025:76231:76231 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is 16-31. (GPU affinity = 16-31 ; CPU affinity = 0-127).
+b0025:76231:76231 [0] NCCL INFO comm 0x10c92c70 rank 0 nRanks 2 nNodes 2 localRanks 1 localRank 0 MNNVL 0
+b0026:179296:179296 [1] NCCL INFO comm 0x10da4b40 rank 1 nRanks 2 nNodes 2 localRanks 1 localRank 0 MNNVL 0
+b0025:76231:76231 [0] NCCL INFO Channel 00/04 : 0 1
+b0025:76231:76231 [0] NCCL INFO Channel 01/04 : 0 1
+b0025:76231:76231 [0] NCCL INFO Channel 02/04 : 0 1
+b0025:76231:76231 [0] NCCL INFO Channel 03/04 : 0 1
+b0026:179296:179296 [1] NCCL INFO Trees [0] -1/-1/-1->1->0 [1] -1/-1/-1->1->0 [2] 0/-1/-1->1->-1 [3] 0/-1/-1->1->-1
+b0026:179296:179296 [1] NCCL INFO P2P Chunksize set to 131072
+b0025:76231:76231 [0] NCCL INFO Trees [0] 1/-1/-1->0->-1 [1] 1/-1/-1->0->-1 [2] -1/-1/-1->0->1 [3] -1/-1/-1->0->1
+b0025:76231:76231 [0] NCCL INFO P2P Chunksize set to 131072
+b0025:76231:76231 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+b0025:76231:76231 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+b0026:179296:179296 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+b0026:179296:179296 [1] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 0 isAllCudaP2p 1
+b0025:76231:76464 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 17
+b0025:76231:76463 [0] NCCL INFO [Proxy Service] Device 0 CPU core 31
+b0026:179296:179489 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 33
+b0026:179296:179488 [0] NCCL INFO [Proxy Service] Device 1 CPU core 44
+b0025:76231:76231 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+b0025:76231:76231 [0] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+b0025:76231:76231 [0] NCCL INFO 4 coll channels, 4 collnet channels, 0 nvls channels, 4 p2p channels, 4 p2p channels per peer
+b0025:76231:76231 [0] NCCL INFO Symmetric memory is not supported. cuMemEnable 1, ginSupport 0, globalNicFused 1
+b0026:179296:179296 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+b0026:179296:179296 [1] NCCL INFO threadThresholds 8/8/64 | 16/8/64 | 512 | 512
+b0026:179296:179296 [1] NCCL INFO 4 coll channels, 4 collnet channels, 0 nvls channels, 4 p2p channels, 4 p2p channels per peer
+b0026:179296:179296 [1] NCCL INFO Symmetric memory is not supported. cuMemEnable 1, ginSupport 0, globalNicFused 1
+b0025:76231:76231 [0] NCCL INFO CC Off, workFifoBytes 1048576
+b0025:76231:76231 [0] NCCL INFO ncclCommInitRankConfig comm 0x10c92c70 rank 0 nranks 2 cudaDev 0 nvmlDev 0 busId 3000 commId 0x524aeaa87a810efe - Init COMPLETE
+b0025:76231:76231 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 2 total 0.45 (kernels 0.13, alloc 0.24, bootstrap 0.06, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.00, rest 0.00)
+b0026:179296:179296 [1] NCCL INFO ncclCommInitRankConfig comm 0x10da4b40 rank 1 nranks 2 cudaDev 1 nvmlDev 1 busId 2b000 commId 0x524aeaa87a810efe - Init COMPLETE
+b0026:179296:179296 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 2 total 0.35 (kernels 0.12, alloc 0.21, bootstrap 0.00, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.00, rest 0.00)
+b0025:76231:76465 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 31
+b0025:76231:76231 [0] NCCL INFO Channel 00/0 : 1[1] -> 0[0] [receive] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 01/0 : 1[1] -> 0[0] [receive] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 02/0 : 1[1] -> 0[0] [receive] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 03/0 : 1[1] -> 0[0] [receive] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 00/0 : 0[0] -> 1[1] [send] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 01/0 : 0[0] -> 1[1] [send] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 02/0 : 0[0] -> 1[1] [send] via NET/IBext_v11/0/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Channel 03/0 : 0[0] -> 1[1] [send] via NET/IBext_v11/0/GDRDMA
+b0026:179296:179490 [0] NCCL INFO [Proxy Progress] Device 1 CPU core 44
+b0026:179296:179296 [1] NCCL INFO Channel 00/0 : 0[0] -> 1[1] [receive] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 01/0 : 0[0] -> 1[1] [receive] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 02/0 : 0[0] -> 1[1] [receive] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 03/0 : 0[0] -> 1[1] [receive] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 00/0 : 1[1] -> 0[0] [send] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 01/0 : 1[1] -> 0[0] [send] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 02/0 : 1[1] -> 0[0] [send] via NET/IBext_v11/1/GDRDMA
+b0026:179296:179296 [1] NCCL INFO Channel 03/0 : 1[1] -> 0[0] [send] via NET/IBext_v11/1/GDRDMA
+b0025:76231:76231 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+b0026:179296:179296 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 1
+[rank0]:[E505 16:53:32.501188180 ProcessGroupNCCL.cpp:689] [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=2, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600079 milliseconds before timing out.
+[rank0]:[E505 16:53:32.525452525 ProcessGroupNCCL.cpp:2293] [PG ID 0 PG GUID 0(default_pg) Rank 0]  failure detected by watchdog at work sequence id: 2 PG status: last enqueued work: 2, last completed work: 1
+[rank0]:[E505 16:53:32.525459985 ProcessGroupNCCL.cpp:736] Stack trace of the failed collective not found, potentially because FlightRecorder is disabled. You can enable it by setting TORCH_NCCL_TRACE_BUFFER_SIZE to a non-zero value.
+[rank0]:[E505 16:53:32.525479492 ProcessGroupNCCL.cpp:2626] [PG ID 0 PG GUID 0(default_pg) Rank 0] First PG on this rank to signal dumping.
+[rank0]:[E505 16:53:32.721051615 ProcessGroupNCCL.cpp:1906] [PG ID 0 PG GUID 0(default_pg) Rank 0] Received a dump signal due to a collective timeout from this local rank and we will try our best to dump the debug info. Last enqueued NCCL work: 2, last completed NCCL work: 1.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank0]:[E505 16:53:32.723760740 ProcessGroupNCCL.cpp:1622] [PG ID 0 PG GUID 0(default_pg) Rank 0] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank1]:[W505 16:53:33.986398855 socket.cpp:469] [c10d] waitForInput: poll for socket SocketImpl(fd=100, addr=[b0026]:43160, remote=[b0025]:46227) returned 0, likely a timeout
+[rank1]:[W505 16:53:33.986549542 socket.cpp:494] [c10d] waitForInput: socket SocketImpl(fd=100, addr=[b0026]:43160, remote=[b0025]:46227) timed out after 600000ms
+[rank1]:[E505 16:53:33.047679652 ProcessGroupNCCL.cpp:1841] [PG ID 0 PG GUID 0(default_pg) Rank 1] Observed flight recorder dump signal from another rank via TCPStore.
+[rank1]:[E505 16:53:33.047819725 ProcessGroupNCCL.cpp:1906] [PG ID 0 PG GUID 0(default_pg) Rank 1] Received a dump signal due to a collective timeout from  rank 0 and we will try our best to dump the debug info. Last enqueued NCCL work: 1, last completed NCCL work: 1.This is most likely caused by incorrect usages of collectives, e.g., wrong sizes used across ranks, the order of collectives is not same for all ranks or the scheduled collective, for some reason, didn't run. Additionally, this can be caused by GIL deadlock or other reasons such as network errors or bugs in the communications library (e.g. NCCL), etc. 
+[rank1]:[E505 16:53:33.050079210 ProcessGroupNCCL.cpp:1622] [PG ID 0 PG GUID 0(default_pg) Rank 1] ProcessGroupNCCL preparing to dump debug info. Include stack trace: 1, only active collectives: 0
+[rank1]: Traceback (most recent call last):
+[rank1]:   File "/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/pretrain_gpt.py", line 418, in <module>
+[rank1]:     pretrain(full_config,
+[rank1]:   File "/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/megatron/training/training.py", line 943, in pretrain
+[rank1]:     torch.distributed.all_reduce(program_start_global, op=torch.distributed.ReduceOp.MIN)
+[rank1]:   File "/usr/local/lib/python3.12/dist-packages/torch/distributed/c10d_logger.py", line 83, in wrapper
+[rank1]:     return func(*args, **kwargs)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^
+[rank1]:   File "/usr/local/lib/python3.12/dist-packages/torch/distributed/distributed_c10d.py", line 3006, in all_reduce
+[rank1]:     work = group.allreduce([tensor], opts)
+[rank1]:            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+[rank1]: torch.distributed.DistBackendError: [1] is setting up NCCL communicator and retrieving ncclUniqueId from [0] via c10d key-value store by key '1', but store->get('1') got error: wait timeout after 600000ms, keys: /default_pg/0//cuda//1
+[rank1]: Exception raised from doWait at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/TCPStore.cpp:603 (most recent call first):
+[rank1]: frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f418a1327e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+[rank1]: frame #1: <unknown function> + 0x1500638 (0x7f41aa598638 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #2: c10d::TCPStore::doGet(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2a (0x7f41af7d0cfa in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #3: c10d::TCPStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x81 (0x7f41af7d1f01 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #4: c10d::PrefixStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x356 (0x7f41af757b06 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #5: c10d::ProcessGroupNCCL::broadcastUniqueNCCLID(ncclUniqueId*, bool, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, int) + 0x6a0 (0x7f418b29ec00 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+[rank1]: frame #6: c10d::ProcessGroupNCCL::initNCCLComm(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, c10::Device&, c10d::OpType, int, bool) + 0x1800 (0x7f418b2a1460 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+[rank1]: frame #7: <unknown function> + 0x1068191 (0x7f418b2a7191 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+[rank1]: frame #8: c10d::ProcessGroupNCCL::allreduce_impl(at::Tensor&, char const*, c10d::AllreduceOptions const&) + 0x176 (0x7f418b2a79f6 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+[rank1]: frame #9: c10d::ProcessGroupNCCL::allreduce(std::vector<at::Tensor, std::allocator<at::Tensor> >&, c10d::AllreduceOptions const&) + 0x64f (0x7f418b2a818f in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+[rank1]: frame #10: <unknown function> + 0x66b36df (0x7f41af74b6df in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #11: <unknown function> + 0x66bc4b8 (0x7f41af7544b8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #12: <unknown function> + 0x5ace450 (0x7f41aeb66450 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #13: <unknown function> + 0x66d22d1 (0x7f41af76a2d1 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #14: <unknown function> + 0x66e0604 (0x7f41af778604 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+[rank1]: frame #15: <unknown function> + 0x102e661 (0x7f41b8445661 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+[rank1]: frame #16: <unknown function> + 0x462092 (0x7f41b7879092 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+[rank1]: frame #17: /usr/bin/python3() [0x581fcf]
+[rank1]: frame #18: _PyObject_MakeTpCall + 0x75 (0x548f35 in /usr/bin/python3)
+[rank1]: frame #19: _PyEval_EvalFrameDefault + 0xadf (0x5d733f in /usr/bin/python3)
+[rank1]: frame #20: PyEval_EvalCode + 0x15b (0x5d582b in /usr/bin/python3)
+[rank1]: frame #21: /usr/bin/python3() [0x6088d2]
+[rank1]: frame #22: /usr/bin/python3() [0x6b4923]
+[rank1]: frame #23: _PyRun_SimpleFileObject + 0x1aa (0x6b468a in /usr/bin/python3)
+[rank1]: frame #24: _PyRun_AnyFileObject + 0x4f (0x6b44bf in /usr/bin/python3)
+[rank1]: frame #25: Py_RunMain + 0x3b5 (0x6bc525 in /usr/bin/python3)
+[rank1]: frame #26: Py_BytesMain + 0x2d (0x6bc00d in /usr/bin/python3)
+[rank1]: frame #27: <unknown function> + 0x2a1ca (0x7f41c465f1ca in /lib/x86_64-linux-gnu/libc.so.6)
+[rank1]: frame #28: __libc_start_main + 0x8b (0x7f41c465f28b in /lib/x86_64-linux-gnu/libc.so.6)
+[rank1]: frame #29: _start + 0x25 (0x657445 in /usr/bin/python3)
+[rank1]: . This may indicate a possible application crash on rank 0 or a network set up issue.
+[rank1]:[W505 16:53:35.403681666 ProcessGroupNCCL.cpp:1569] Warning: WARNING: destroy_process_group() was not called before program exit, which can leak resources. For more info, please see https://pytorch.org/docs/stable/distributed.html#shutdown (function operator())
+b0026:179296:179981 [1] NCCL INFO comm 0x10da4b40 rank 1 nRanks 2 cudaDev 1 busId 2b000 - Abort START
+b0026:179296:179981 [1] NCCL INFO misc/socket.cc:27 -> 3
+b0026:179296:179981 [1] NCCL INFO misc/socket.cc:44 -> 3
+b0026:179296:179981 [1] NCCL INFO misc/socket.cc:583 -> 3
+b0026:179296:179488 [1] NCCL INFO misc/socket.cc:658 -> 3
+b0026:179296:179981 [1] NCCL INFO comm 0x10da4b40 rank 1 nranks 2 cudaDev 1 busId 2b000 - Abort COMPLETE
+b0026:179296:179981 [1] NCCL INFO Unloading plugin libnccl-net.so
+b0025:76231:76363 [0] NCCL INFO comm 0x10c92c70 rank 0 nRanks 2 cudaDev 0 busId 3000 - Abort START
+b0025:76231:76363 [0] NCCL INFO misc/socket.cc:27 -> 3
+b0025:76231:76363 [0] NCCL INFO misc/socket.cc:44 -> 3
+b0025:76231:76363 [0] NCCL INFO misc/socket.cc:583 -> 3
+b0025:76231:76463 [0] NCCL INFO misc/socket.cc:658 -> 3
+b0025:76231:76363 [0] NCCL INFO comm 0x10c92c70 rank 0 nranks 2 cudaDev 0 busId 3000 - Abort COMPLETE
+b0025:76231:76363 [0] NCCL INFO Unloading plugin libnccl-net.so
+[rank0]:[E505 16:54:33.073354611 ProcessGroupNCCL.cpp:750] [Rank 0] Some NCCL operations have failed or timed out. Due to the asynchronous nature of CUDA kernels, subsequent GPU operations might run on corrupted/incomplete data.
+[rank0]:[E505 16:54:33.073369011 ProcessGroupNCCL.cpp:764] [Rank 0] To avoid data inconsistency, we are taking the entire process down.
+[rank0]:[E505 16:54:33.073862792 ProcessGroupNCCL.cpp:2109] [PG ID 0 PG GUID 0(default_pg) Rank 0] Process group watchdog thread terminated with exception: [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=2, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600079 milliseconds before timing out.
+Exception raised from checkTimeout at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f013e44e7e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x304 (0x7f013f5ac904 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x1860 (0x7f013f5b2030 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x113 (0x7f013f5b3773 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7f016ce6edb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7f01789c6aa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7f0178a53c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+terminate called after throwing an instance of 'c10::DistBackendError'
+  what():  [PG ID 0 PG GUID 0(default_pg) Rank 0] Process group watchdog thread terminated with exception: [Rank 0] Watchdog caught collective operation timeout: WorkNCCL(SeqNum=2, OpType=ALLREDUCE, NumelIn=1, NumelOut=1, Timeout(ms)=600000) ran for 600079 milliseconds before timing out.
+Exception raised from checkTimeout at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:692 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f013e44e7e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+frame #1: c10d::ProcessGroupNCCL::WorkNCCL::checkTimeout(std::optional<std::chrono::duration<long, std::ratio<1l, 1000l> > >) + 0x304 (0x7f013f5ac904 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #2: c10d::ProcessGroupNCCL::Watchdog::runLoop() + 0x1860 (0x7f013f5b2030 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #3: c10d::ProcessGroupNCCL::Watchdog::run() + 0x113 (0x7f013f5b3773 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #4: <unknown function> + 0xecdb4 (0x7f016ce6edb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #5: <unknown function> + 0x9caa4 (0x7f01789c6aa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #6: <unknown function> + 0x129c6c (0x7f0178a53c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+Exception raised from run at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/ProcessGroupNCCL.cpp:2115 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f013e44e7e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x82b0dd (0x7f013ed860dd in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cuda.so)
+frame #2: <unknown function> + 0xecdb4 (0x7f016ce6edb4 in /lib/x86_64-linux-gnu/libstdc++.so.6)
+frame #3: <unknown function> + 0x9caa4 (0x7f01789c6aa4 in /lib/x86_64-linux-gnu/libc.so.6)
+frame #4: <unknown function> + 0x129c6c (0x7f0178a53c6c in /lib/x86_64-linux-gnu/libc.so.6)
+
+E0505 16:54:38.301000 76130 torch/distributed/elastic/multiprocessing/api.py:984] failed (exitcode: -6) local_rank: 0 (pid: 76231) of binary: /usr/bin/python3
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 362, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 990, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 981, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 170, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 317, in launch_agent
+    raise ChildFailedError(
+torch.distributed.elastic.multiprocessing.errors.ChildFailedError: 
+============================================================
+/home/shaohao_mit/benchmarks/megatron-lm/Megatron-LM/pretrain_gpt.py FAILED
+------------------------------------------------------------
+Failures:
+  <NO_OTHER_FAILURES>
+------------------------------------------------------------
+Root Cause (first observed failure):
+[0]:
+  time      : 2026-05-05_16:54:38
+  host      : b0025
+  rank      : 0 (local_rank: 0)
+  exitcode  : -6 (pid: 76231)
+  error_file: <N/A>
+  traceback : Signal 6 (SIGABRT) received by PID 76231
+============================================================
+[W505 16:54:38.263822576 TCPStore.cpp:138] [c10d] recvValueWithTimeout failed on SocketImpl(fd=74, addr=[b0026]:53868, remote=[b0025]:1234): Failed to recv, got 0 bytes. Connection was likely closed. Did the remote server shutdown or crash?
+Exception raised from recvBytes at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/Utils.hpp:682 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f2a109327e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x673c0ea (0x7f2a35fd40ea in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #2: c10d::TCPStore::doWait(c10::ArrayRef<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::chrono::duration<long, std::ratio<1l, 1000l> >) + 0x1c3 (0x7f2a35fd08d3 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #3: c10d::TCPStore::doGet(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2a (0x7f2a35fd0cfa in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x81 (0x7f2a35fd1f01 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #5: <unknown function> + 0xf53ae3 (0x7f2a3eb6aae3 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+frame #6: <unknown function> + 0x462092 (0x7f2a3e079092 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+frame #7: /usr/bin/python3() [0x581fcf]
+frame #8: _PyObject_MakeTpCall + 0x75 (0x548f35 in /usr/bin/python3)
+frame #9: /usr/bin/python3() [0x54cc47]
+frame #10: _PyEval_EvalFrameDefault + 0x4cb0 (0x5db510 in /usr/bin/python3)
+frame #11: _PyObject_Call_Prepend + 0xc2 (0x54a782 in /usr/bin/python3)
+frame #12: /usr/bin/python3() [0x5a36a8]
+frame #13: PyObject_Call + 0x6c (0x54b0ac in /usr/bin/python3)
+frame #14: _PyEval_EvalFrameDefault + 0x4cb0 (0x5db510 in /usr/bin/python3)
+frame #15: PyEval_EvalCode + 0x15b (0x5d582b in /usr/bin/python3)
+frame #16: /usr/bin/python3() [0x6088d2]
+frame #17: /usr/bin/python3() [0x6b4923]
+frame #18: _PyRun_SimpleFileObject + 0x1aa (0x6b468a in /usr/bin/python3)
+frame #19: _PyRun_AnyFileObject + 0x4f (0x6b44bf in /usr/bin/python3)
+frame #20: Py_RunMain + 0x3b5 (0x6bc525 in /usr/bin/python3)
+frame #21: Py_BytesMain + 0x2d (0x6bc00d in /usr/bin/python3)
+frame #22: <unknown function> + 0x2a1ca (0x7f2a4ae431ca in /lib/x86_64-linux-gnu/libc.so.6)
+frame #23: __libc_start_main + 0x8b (0x7f2a4ae4328b in /lib/x86_64-linux-gnu/libc.so.6)
+frame #24: _start + 0x25 (0x657445 in /usr/bin/python3)
+
+W0505 16:54:38.829000 179204 torch/distributed/elastic/multiprocessing/api.py:1010] Sending process 179296 closing signal SIGTERM
+[W505 16:54:39.682897379 TCPStore.cpp:106] [c10d] sendBytes failed on SocketImpl(fd=74, addr=[b0026]:53868, remote=[b0025]:1234): Broken pipe
+Exception raised from sendBytes at /opt/pytorch/pytorch/torch/csrc/distributed/c10d/Utils.hpp:653 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x98 (0x7f2a109327e8 in /usr/local/lib/python3.12/dist-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x673b6f0 (0x7f2a35fd36f0 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #2: c10d::TCPStore::doWait(c10::ArrayRef<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > >, std::chrono::duration<long, std::ratio<1l, 1000l> >) + 0xfe (0x7f2a35fd080e in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #3: c10d::TCPStore::doGet(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x2a (0x7f2a35fd0cfa in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #4: c10d::TCPStore::get(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&) + 0x81 (0x7f2a35fd1f01 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_cpu.so)
+frame #5: <unknown function> + 0xf53ae3 (0x7f2a3eb6aae3 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+frame #6: <unknown function> + 0x462092 (0x7f2a3e079092 in /usr/local/lib/python3.12/dist-packages/torch/lib/libtorch_python.so)
+frame #7: /usr/bin/python3() [0x581fcf]
+frame #8: _PyObject_MakeTpCall + 0x75 (0x548f35 in /usr/bin/python3)
+frame #9: /usr/bin/python3() [0x54cc47]
+frame #10: _PyEval_EvalFrameDefault + 0x4cb0 (0x5db510 in /usr/bin/python3)
+frame #11: _PyObject_Call_Prepend + 0xc2 (0x54a782 in /usr/bin/python3)
+frame #12: /usr/bin/python3() [0x5a36a8]
+frame #13: PyObject_Call + 0x6c (0x54b0ac in /usr/bin/python3)
+frame #14: _PyEval_EvalFrameDefault + 0x4cb0 (0x5db510 in /usr/bin/python3)
+frame #15: PyEval_EvalCode + 0x15b (0x5d582b in /usr/bin/python3)
+frame #16: /usr/bin/python3() [0x6088d2]
+frame #17: /usr/bin/python3() [0x6b4923]
+frame #18: _PyRun_SimpleFileObject + 0x1aa (0x6b468a in /usr/bin/python3)
+frame #19: _PyRun_AnyFileObject + 0x4f (0x6b44bf in /usr/bin/python3)
+frame #20: Py_RunMain + 0x3b5 (0x6bc525 in /usr/bin/python3)
+frame #21: Py_BytesMain + 0x2d (0x6bc00d in /usr/bin/python3)
+frame #22: <unknown function> + 0x2a1ca (0x7f2a4ae431ca in /lib/x86_64-linux-gnu/libc.so.6)
+frame #23: __libc_start_main + 0x8b (0x7f2a4ae4328b in /lib/x86_64-linux-gnu/libc.so.6)
+frame #24: _start + 0x25 (0x657445 in /usr/bin/python3)
+
+W0505 16:54:39.247000 179204 torch/distributed/elastic/rendezvous/dynamic_rendezvous.py:1293] The node 'b0026_179204_0' has failed to shutdown the rendezvous '101' due to an error of type RendezvousConnectionError.
+Traceback (most recent call last):
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/rendezvous/c10d_rendezvous_backend.py", line 114, in _call_store
+    return getattr(self._store, store_op)(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+torch.distributed.DistNetworkError: Failed to recv, got 0 bytes. Connection was likely closed. Did the remote server shutdown or crash?
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/usr/local/bin/torchrun", line 6, in <module>
+    sys.exit(main())
+             ^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/multiprocessing/errors/__init__.py", line 362, in wrapper
+    return f(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 990, in main
+    run(args)
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/run.py", line 981, in run
+    elastic_launch(
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 170, in __call__
+    return launch_agent(self._config, self._entrypoint, list(args))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/launcher/api.py", line 308, in launch_agent
+    result = agent.run()
+             ^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/metrics/api.py", line 134, in wrapper
+    result = f(*args, **kwargs)
+             ^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/agent/server/api.py", line 731, in run
+    result = self._invoke_run(role)
+             ^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/agent/server/api.py", line 944, in _invoke_run
+    num_nodes_waiting = rdzv_handler.num_nodes_waiting()
+                        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/rendezvous/dynamic_rendezvous.py", line 1264, in num_nodes_waiting
+    self._state_holder.sync()
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/rendezvous/dynamic_rendezvous.py", line 438, in sync
+    get_response = self._backend.get_state()
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/rendezvous/c10d_rendezvous_backend.py", line 75, in get_state
+    base64_state: bytes = self._call_store("get", self._key)
+                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.12/dist-packages/torch/distributed/elastic/rendezvous/c10d_rendezvous_backend.py", line 116, in _call_store
+    raise RendezvousConnectionError(
+torch.distributed.elastic.rendezvous.api.RendezvousConnectionError: The connection to the C10d store has failed. See inner exception for details.
+INFO:    Terminating squashfuse_ll after timeout
+INFO:    Timeouts can be caused by a running background process
+srun: error: b0026: task 1: Exited with exit code 1
+srun: error: b0025: task 0: Exited with exit code 1
