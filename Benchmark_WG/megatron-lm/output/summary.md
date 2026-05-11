@@ -133,6 +133,22 @@ Both 2-node jobs (a0010, b0007) loaded these plugins, so inter-node
 all-reduce is going over InfiniBand RDMA with SHARP available for in-network
 reductions.
 
+## What is MFU?
+
+**MFU (Model FLOPs Utilization)** is the fraction of the GPU's theoretical peak FLOPs that end-to-end training actually achieves:
+
+```
+MFU = (model FLOPs per step) / (step_time × hardware_peak_FLOPs)
+```
+
+The numerator is an analytical count of FLOPs the model requires for one forward+backward step (≈ 6 × params × tokens for a dense transformer). The denominator is measured wall-clock step time times the GPU's published peak. It is comparable across GPU generations: 46% MFU on B200 and 46% MFU on H100 both mean "half the chip's potential, by this metric."
+
+MFU is lower than 100% because the numerator only counts matmul-like (GEMM) work, while the wall-clock denominator includes time spent on things that contribute zero to it: memory-bound ops (LayerNorm, softmax, dropout, residuals), the Adam optimizer step, gradient all-reduce, smaller GEMM shapes that don't saturate Tensor Cores, and kernel launch / scheduling overhead.
+
+A related metric, **HFU (Hardware FLOPs Utilization)**, counts all FLOPs the hardware actually executes including activation recomputation. HFU ≥ MFU always; MFU is more honest because recomputation is wasted work from the model's perspective.
+
+The term was coined in the PaLM paper (Chowdhery et al., 2022, §5.1), which reported ~46% MFU for PaLM-540B on TPU v4.
+
 ## Microbenchmark vs. End-to-End Throughput
 
 End-to-end training BF16 throughput compared against the gpu-fryer GEMM microbenchmark on the same hardware:
@@ -161,7 +177,7 @@ Your model: hidden=2048, FFN=8192, mbs× seq=2048-ish. The GEMMs in this run are
 ### What "good" looks like
 
 - gpu-fryer 1493 TFLOP/s = 66% of B200 dense BF16 peak (2250) — healthy GEMM number.
-- Megatron 1024 TFLOP/s = ~46% of dense peak, or 69% of the GEMM microbenchmark. For a 1.3 B GPT in BF16 with FP32 master weights and Adam, 40–55% of peak is the typical reported MFU range for NVIDIA-published B200/H100 training numbers. You're at the high end.
+- Megatron 1024 TFLOP/s = ~46% of B200's 2250 TFLOP/s dense BF16 peak, or 69% of the gpu-fryer GEMM microbenchmark. The 69% figure is the more defensible one because the denominator is measured on the same silicon. Published MFU for transformer pretraining typically lands in the 30–50% range depending on model size and precision, with larger models (7B+) at the high end; direct comparison to those numbers is limited here because they're usually reported at much larger scales than this 1.3B run, and the GEMM shapes in a 1.3B model (hidden=2048, FFN=8192) sit below the size where Tensor Cores fully saturate.
 
 So the ratio you're seeing isn't a bug or a misconfig — it's the normal "microbenchmark vs. real training" gap. If you wanted to close it further you'd need (a) larger hidden dim / FFN to push GEMMs closer to gpu-fryer's tile, (b) FP8 training (Megatron's TE FP8 path) which lifts the GEMM ceiling, or (c) gradient accumulation / larger micro-batch to amortize the non-FLOP overhead.
 

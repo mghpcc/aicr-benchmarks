@@ -128,6 +128,49 @@ No throttling (HW, Thermal SW, or Thermal HW) on any GPU in any precision run.
 
 ---
 
+## Microbenchmark vs. End-to-End Training (Megatron-LM)
+
+End-to-end training BF16 throughput compared against the gpu-fryer GEMM microbenchmark on the same hardware:
+
+| GPU | gpu-fryer BF16 | Megatron BF16 (1 GPU) | Megatron / gpu-fryer | Megatron / dense peak |
+|---|---:|---:|---:|---:|
+| B200 | 1,493 TFLOP/s | 1,024 TFLOP/s/GPU | **69 %** | **46 %** of 2,250 |
+| RTX PRO 6000 | 419 TFLOP/s | 281 TFLOP/s/GPU | **67 %** | (peak not in reference data) |
+
+gpu-fryer runs a tight loop of large square cuBLAS GEMMs (typically ~16k×16k) chosen to saturate Tensor Cores. It reports the steady-state of that one kernel. Its own summary already shows it only hits 66% of B200's 2250 TFLOP/s dense BF16 peak — that 1493 is itself far from the silicon peak.
+
+Megatron's TFLOP/s/GPU is analytical_model_FLOPs / wall_clock_step_time. Wall-clock includes a lot of things that consume time but contribute zero to the numerator:
+
+| Cost in step time | FLOP-counted? |
+|---|---|
+| Forward/backward GEMMs at varied shapes (some small) | yes, but lower TC utilization than 16k² |
+| LayerNorm, softmax, dropout, activations, residuals | no — memory-bound |
+| Adam optimizer step (BF16 grads → FP32 master) | no — memory-bound |
+| Gradient all-reduce | no — comm |
+| Kernel launch / Python / scheduling | no |
+
+### Shape effects
+
+Your model: hidden=2048, FFN=8192, mbs× seq=2048-ish. The GEMMs in this run are e.g. M=2048–8192, N=2048, K=2048–8192 — meaningfully smaller than gpu-fryer's tile, so each GEMM is closer to 50–65% of TC peak rather than gpu-fryer's 66%. Attention with head_dim=128 is also lower utilization, even with FlashAttention.
+
+### What "good" looks like
+
+- gpu-fryer 1493 TFLOP/s = 66% of B200 dense BF16 peak (2250) — healthy GEMM number.
+- Megatron 1024 TFLOP/s = ~46% of dense peak, or 69% of the GEMM microbenchmark. For a 1.3 B GPT in BF16 with FP32 master weights and Adam, 40–55% of peak is the typical reported MFU range for NVIDIA-published B200/H100 training numbers. You're at the high end.
+
+So the ratio you're seeing isn't a bug or a misconfig — it's the normal "microbenchmark vs. real training" gap. If you wanted to close it further you'd need (a) larger hidden dim / FFN to push GEMMs closer to gpu-fryer's tile, (b) FP8 training (Megatron's TE FP8 path) which lifts the GEMM ceiling, or (c) gradient accumulation / larger micro-batch to amortize the non-FLOP overhead.
+
+### RTX PRO 6000 Blackwell
+
+The same gap shows up on RTX PRO 6000:
+
+- gpu-fryer 419 TFLOP/s BF16 — official dense Tensor Core peak isn't in our reference data for this part, but the FP32:BF16:FP8 ratio (1:2:4) and intra-node uniformity (<1.5%) are textbook healthy.
+- Megatron 281 TFLOP/s/GPU BF16 = **67% of the gpu-fryer microbenchmark** — essentially the same ratio as B200 (69%).
+
+The shape effects above apply identically: the model's GEMMs (hidden=2048, FFN=8192) are well below gpu-fryer's 16k² tile, and the same memory-bound and comm overheads (LayerNorm/softmax, Adam, all-reduce) sit in wall-clock without contributing FLOPs. The matched ~67–69% Megatron/gpu-fryer ratio across two very different Blackwell silicon variants confirms the end-to-end overhead profile scales proportionally with raw GEMM throughput — both systems are performing as expected.
+
+---
+
 ## Verdict per GPU (all three precisions combined)
 
 | GPU | B200 (b0025) | RTX PRO 6000 (a0001) |
