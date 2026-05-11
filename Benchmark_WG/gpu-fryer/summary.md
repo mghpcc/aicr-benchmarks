@@ -1,4 +1,4 @@
-# GPU Fryer Results — 2026-05-05
+# GPU Fryer Results
 
 **Files:** `b0025-9553.out` (8× NVIDIA B200) | `a0001-9554.out` (8× NVIDIA RTX PRO 6000 Blackwell Server Edition)
 Each file contains three back-to-back runs: **FP32 → BF16 → FP8**.
@@ -7,12 +7,15 @@ Each file contains three back-to-back runs: **FP32 → BF16 → FP8**.
 
 ## Summary Table (per-GPU mean across 8 GPUs, in TFLOPS)
 
-| | **B200** (b0025) | **H200** (ref) | **RTX PRO 6000** (a0001) | **L40S** (ref) | **B200 / H200** | **B200 / RTX PRO 6000** | **RTX PRO 6000 / L40S** |
-|---|---|---|---|---|---|---|---|
-| GPU memory | ~160 GB | — | ~85 GB | 48 GB | — | — | — |
-| **FP32 TFLOPS** | **768** | **368** | **205** | **98** | **209%** | **375%** | **209%** |
-| **BF16 TFLOPS** | **1,493** | **713** | **419** | **198** | **209%** | **356%** | **212%** |
-| **FP8 TFLOPS** | **4,103** | **1,468** | **881** | N/A | **280%** | **466%** | — |
+| GPU / Metric | **GPU memory** | **FP32 TFLOPS** | **BF16 TFLOPS** | **FP8 TFLOPS** |
+|---|---|---|---|---|
+| **B200** (b0025) | ~160 GB | **768** | **1,493** | **4,103** |
+| **H200** (ref) | 144 GB | **368** | **713** | **1,468** |
+| **RTX PRO 6000** (a0001) | ~85 GB | **205** | **419** | **881** |
+| **L40S** (ref) | 48 GB | **98** | **198** | not supported |
+| **B200 / H200** | — | **2.09×** | **2.09×** | **2.80×** |
+| **B200 / RTX PRO 6000** | — | **3.75×** | **3.56×** | **4.66×** |
+| **RTX PRO 6000 / L40S** | — | **2.09×** | **2.12×** | — |
 
 Precision ratios: B200 → 1 : 1.94 : 5.34 (FP32 : BF16 : FP8); H200 → 1 : 1.94 : 3.99; RTX PRO 6000 → 1 : 2.04 : 4.30; L40S → 1 : 2.02 (FP32 : BF16, no FP8 Tensor Core).
 
@@ -61,11 +64,11 @@ Extremely uniform across all 8 GPUs in all three precisions. Spread is <1.5% wit
 
 ## Expected Ceiling Comparison
 
-| | B200 (per-GPU dense Tensor Core peak)* | Achieved | % of peak |
+| | B200 (per-GPU dense Tensor Core peak)* | Achieved | fraction of peak |
 |---|---|---|---|
-| TF32 (FP32 input) | ~1,125 TFLOPS | 768 | 68% |
-| BF16 | ~2,250 TFLOPS | 1,493 | 66% |
-| FP8 | ~4,500 TFLOPS | 4,103 | 91% |
+| TF32 (FP32 input) | ~1,125 TFLOPS | 768 | 0.68× |
+| BF16 | ~2,250 TFLOPS | 1,493 | 0.66× |
+| FP8 | ~4,500 TFLOPS | 4,103 | 0.91× |
 
 *Dense, no sparsity. B200 sparse peaks are 2× these values.
 
@@ -79,7 +82,7 @@ For the RTX PRO 6000 Blackwell Server Edition, official Tensor Core specs aren't
 |---|---|---|---|
 | B200 (measured) | 768 TFLOPS | 1,493 TFLOPS | 4,103 TFLOPS |
 | H200 (reference) | 368 TFLOPS | 713 TFLOPS | 1,468 TFLOPS |
-| **B200 / H200** | **209%** | **209%** | **280%** |
+| **B200 / H200** | **2.09×** | **2.09×** | **2.80×** |
 
 The B200 delivers **~2.1× the throughput of an H200** in FP32 and BF16, consistent with Blackwell's generational leap over Hopper. The FP32:BF16 ratio is identical on both (1:1.94), confirming the same Tensor Core data-type scaling law. The gap widens sharply at FP8 — **2.8×** — because Blackwell's 5th-gen Tensor Cores have a substantially higher FP8 peak relative to Hopper's 4th-gen cores (B200 achieves 91% of dense peak vs H200's lower FP8 ceiling). For FP8-quantised inference workloads, the B200 advantage is disproportionately larger than the raw 2× marketing figure suggests.
 
@@ -89,7 +92,7 @@ The B200 delivers **~2.1× the throughput of an H200** in FP32 and BF16, consist
 |---|---|---|---|
 | B200 (measured) | 768 TFLOPS | 1,493 TFLOPS | 4,103 TFLOPS |
 | RTX PRO 6000 (measured) | 205 TFLOPS | 419 TFLOPS | 881 TFLOPS |
-| **B200 / RTX PRO 6000** | **375%** | **356%** | **466%** |
+| **B200 / RTX PRO 6000** | **3.75×** | **3.56×** | **4.66×** |
 
 Despite sharing the same Blackwell architecture and generation, the B200 outperforms the RTX PRO 6000 by **3.6–3.7× in FP32/BF16** and **4.7× in FP8**. Both are measured on 8-GPU nodes under identical gpu-fryer workloads, so the gap directly reflects the silicon difference: the B200 is a full datacenter part (GH200/GB200 die with ~208 SMs at full Blackwell density), while the RTX PRO 6000 Blackwell Server Edition is a workstation/professional part with a substantially cut-down die. The FP8 gap (4.7×) is larger than the FP32/BF16 gap (3.6×) because the B200's FP8 utilisation is exceptionally high (91% of dense peak) while the RTX PRO 6000's FP8 path is proportionally more bandwidth-bound on its smaller die. Both GPUs pass all health checks and show consistent intra-node uniformity.
 
@@ -99,7 +102,7 @@ Despite sharing the same Blackwell architecture and generation, the B200 outperf
 |---|---|---|---|
 | RTX PRO 6000 (measured) | 205 TFLOPS | 419 TFLOPS | 881 TFLOPS |
 | L40S (reference) | 98 TFLOPS | 198 TFLOPS | N/A |
-| **RTX PRO 6000 / L40S** | **209%** | **212%** | — |
+| **RTX PRO 6000 / L40S** | **2.09×** | **2.12×** | — |
 
 The RTX PRO 6000 Blackwell delivers roughly **2.1× the dense Tensor Core throughput** of an L40S in both FP32 and BF16. This is consistent with the architectural generational jump: the L40S is Ada Lovelace (4th-gen Tensor Cores, no FP8 Tensor Core path), while the RTX PRO 6000 is Blackwell (5th-gen Tensor Cores with native FP8 support). The ~2× uplift in FP32/BF16 aligns with Blackwell's documented improvements in GEMM throughput and higher SM count relative to AD102. The L40S also has only 48 GB GDDR6 versus the RTX PRO 6000's 85 GB, which matters for large-model inference and fine-tuning.
 
@@ -122,6 +125,49 @@ No throttling (HW, Thermal SW, or Thermal HW) on any GPU in any precision run.
 - No ECC errors, XID events, or NaN/inf reported in any of the 6 sub-runs.
 - Each sub-run shows a clean ramp-up phase (small matrix), a long stable plateau (steady-state at large matrix), and a brief cooldown dip on the final measurement (teardown artifact, not real degradation).
 - "All GPUs seem healthy" reported by gpu-fryer at the end of each of the 6 sub-runs.
+
+---
+
+## Microbenchmark vs. End-to-End Training (Megatron-LM)
+
+End-to-end training BF16 throughput compared against the gpu-fryer GEMM microbenchmark on the same hardware:
+
+| GPU | gpu-fryer BF16 | Megatron BF16 (1 GPU) | Megatron / gpu-fryer | Megatron / dense peak |
+|---|---:|---:|---:|---:|
+| B200 | 1,493 TFLOP/s | 1,024 TFLOP/s/GPU | **69 %** | **46 %** of 2,250 |
+| RTX PRO 6000 | 419 TFLOP/s | 281 TFLOP/s/GPU | **67 %** | (peak not in reference data) |
+
+gpu-fryer runs a tight loop of large square cuBLAS GEMMs (typically ~16k×16k) chosen to saturate Tensor Cores. It reports the steady-state of that one kernel. Its own summary already shows it only hits 66% of B200's 2250 TFLOP/s dense BF16 peak — that 1493 is itself far from the silicon peak.
+
+Megatron's TFLOP/s/GPU is analytical_model_FLOPs / wall_clock_step_time. Wall-clock includes a lot of things that consume time but contribute zero to the numerator:
+
+| Cost in step time | FLOP-counted? |
+|---|---|
+| Forward/backward GEMMs at varied shapes (some small) | yes, but lower TC utilization than 16k² |
+| LayerNorm, softmax, dropout, activations, residuals | no — memory-bound |
+| Adam optimizer step (BF16 grads → FP32 master) | no — memory-bound |
+| Gradient all-reduce | no — comm |
+| Kernel launch / Python / scheduling | no |
+
+### Shape effects
+
+Your model: hidden=2048, FFN=8192, mbs× seq=2048-ish. The GEMMs in this run are e.g. M=2048–8192, N=2048, K=2048–8192 — meaningfully smaller than gpu-fryer's tile, so each GEMM is closer to 50–65% of TC peak rather than gpu-fryer's 66%. Attention with head_dim=128 is also lower utilization, even with FlashAttention.
+
+### What "good" looks like
+
+- gpu-fryer 1493 TFLOP/s = 66% of B200 dense BF16 peak (2250) — healthy GEMM number.
+- Megatron 1024 TFLOP/s = ~46% of dense peak, or 69% of the GEMM microbenchmark. For a 1.3 B GPT in BF16 with FP32 master weights and Adam, 40–55% of peak is the typical reported MFU range for NVIDIA-published B200/H100 training numbers. You're at the high end.
+
+So the ratio you're seeing isn't a bug or a misconfig — it's the normal "microbenchmark vs. real training" gap. If you wanted to close it further you'd need (a) larger hidden dim / FFN to push GEMMs closer to gpu-fryer's tile, (b) FP8 training (Megatron's TE FP8 path) which lifts the GEMM ceiling, or (c) gradient accumulation / larger micro-batch to amortize the non-FLOP overhead.
+
+### RTX PRO 6000 Blackwell
+
+The same gap shows up on RTX PRO 6000:
+
+- gpu-fryer 419 TFLOP/s BF16 — official dense Tensor Core peak isn't in our reference data for this part, but the FP32:BF16:FP8 ratio (1:2:4) and intra-node uniformity (<1.5%) are textbook healthy.
+- Megatron 281 TFLOP/s/GPU BF16 = **67% of the gpu-fryer microbenchmark** — essentially the same ratio as B200 (69%).
+
+The shape effects above apply identically: the model's GEMMs (hidden=2048, FFN=8192) are well below gpu-fryer's 16k² tile, and the same memory-bound and comm overheads (LayerNorm/softmax, Adam, all-reduce) sit in wall-clock without contributing FLOPs. The matched ~67–69% Megatron/gpu-fryer ratio across two very different Blackwell silicon variants confirms the end-to-end overhead profile scales proportionally with raw GEMM throughput — both systems are performing as expected.
 
 ---
 
