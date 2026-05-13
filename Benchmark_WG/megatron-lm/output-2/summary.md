@@ -91,6 +91,8 @@ cost changes as GPUs/node is varied across 2-node jobs.
 |     4     |      8     |       975.5 |          269.25 |       2.34 % |              **97.1 %**        |
 |     8     |     16     |       975.7 |          141.19 |       1.22 % |              **97.2 %**        |
 
+**In short:** grads-sync drops from 1032 ms (k=1) to 141 ms (k=8) — roughly 1/k. The gradient size is fixed by the model, but NCCL uses a hierarchical all-reduce (intra-node reduce-scatter → inter-node all-reduce → intra-node all-gather), so with more GPUs per node, fast intra-node NVLink does most of the reduction first and only a 1/k slice has to cross the slow InfiniBand link.
+
 Scaling efficiency is computed vs the single-node baseline at the same GPUs/node
 (i.e., for 2×4: 975.5 / 993.5 = 98.2 % vs 1-node/4-GPU; actual table uses vs the
 1-GPU B200 single-node baseline for relative reference).
