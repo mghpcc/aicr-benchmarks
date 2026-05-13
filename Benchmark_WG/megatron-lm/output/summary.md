@@ -133,22 +133,6 @@ Both 2-node jobs (a0010, b0007) loaded these plugins, so inter-node
 all-reduce is going over InfiniBand RDMA with SHARP available for in-network
 reductions.
 
-## What is MFU?
-
-**MFU (Model FLOPs Utilization)** is the fraction of the GPU's theoretical peak FLOPs that end-to-end training actually achieves:
-
-```
-MFU = (model FLOPs per step) / (step_time × hardware_peak_FLOPs)
-```
-
-The numerator is an analytical count of FLOPs the model requires for one forward+backward step (≈ 6 × params × tokens for a dense transformer). The denominator is measured wall-clock step time times the GPU's published peak. It is comparable across GPU generations: 46% MFU on B200 and 46% MFU on H100 both mean "half the chip's potential, by this metric."
-
-MFU is lower than 100% because the numerator only counts matmul-like (GEMM) work, while the wall-clock denominator includes time spent on things that contribute zero to it: memory-bound ops (LayerNorm, softmax, dropout, residuals), the Adam optimizer step, gradient all-reduce, smaller GEMM shapes that don't saturate Tensor Cores, and kernel launch / scheduling overhead.
-
-A related metric, **HFU (Hardware FLOPs Utilization)**, counts all FLOPs the hardware actually executes including activation recomputation. HFU ≥ MFU always; MFU is more honest because recomputation is wasted work from the model's perspective.
-
-The term was coined in the PaLM paper (Chowdhery et al., 2022, §5.1), which reported ~46% MFU for PaLM-540B on TPU v4.
-
 ## Microbenchmark vs. End-to-End Throughput
 
 End-to-end training BF16 throughput compared against the gpu-fryer GEMM microbenchmark on the same hardware:
@@ -221,3 +205,21 @@ The shape effects above apply identically: the model's GEMMs (hidden=2048, FFN=8
    a 1.3 B model: larger models (7B+) with bigger GEMM shapes report the 45–50 %
    end of the published range; a 1.3 B run at this hidden size sits slightly
    below that ceiling, yet still comfortably above the 30 % lower bound.
+
+---
+
+## Side note: What is MFU?
+
+**MFU (Model FLOPs Utilization)** is the fraction of the GPU's theoretical peak FLOPs that end-to-end training actually achieves:
+
+```
+MFU = (model FLOPs per step) / (step_time × hardware_peak_FLOPs)
+```
+
+The numerator is an analytical count of FLOPs the model requires for one forward+backward step (≈ 6 × params × tokens for a dense transformer). The denominator is measured wall-clock step time times the GPU's published peak. It is comparable across GPU generations: 46% MFU on B200 and 46% MFU on H100 both mean "half the chip's potential, by this metric."
+
+MFU is lower than 100% because the numerator only counts matmul-like (GEMM) work, while the wall-clock denominator includes time spent on things that contribute zero to it: memory-bound ops (LayerNorm, softmax, dropout, residuals), the Adam optimizer step, gradient all-reduce, smaller GEMM shapes that don't saturate Tensor Cores, and kernel launch / scheduling overhead.
+
+A related metric, **HFU (Hardware FLOPs Utilization)**, counts all FLOPs the hardware actually executes including activation recomputation. HFU ≥ MFU always; MFU is more honest because recomputation is wasted work from the model's perspective.
+
+The term was coined in the PaLM paper (Chowdhery et al., 2022, §5.1), which reported ~46% MFU for PaLM-540B on TPU v4.
