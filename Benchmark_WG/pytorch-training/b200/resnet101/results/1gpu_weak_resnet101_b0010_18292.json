@@ -1,0 +1,114 @@
+{
+  "tag": "1gpu_weak_resnet101_b0010_18292",
+  "scaling_mode": "weak",
+  "world_size": 1,
+  "nodes": 1,
+  "gpus_per_node": 1,
+  "model": "resnet101",
+  "batch_size_per_gpu": 128,
+  "global_batch_size": 128,
+  "image_size": 224,
+  "precision": "bf16",
+  "channels_last": true,
+  "compile": false,
+  "warmup_sec_target": 60.0,
+  "warmup_sec_actual": 59.79994482999609,
+  "warmup_steps": 1381,
+  "bench_sec_target": 600.0,
+  "bench_sec_actual": 610.359089895006,
+  "bench_steps": 14355,
+  "mean_step_sec": 0.04251793754859592,
+  "stdev_step_sec": 3.624402312980489e-05,
+  "p50_step_sec": 0.04251501399266999,
+  "p95_step_sec": 0.042560917005175725,
+  "p99_step_sec": 0.042682964995037764,
+  "images_per_sec_per_gpu": 3010.4940968432975,
+  "images_per_sec_global": 3010.4940968432975,
+  "peak_mem_gb": {
+    "min_gb": 8.450214385986328,
+    "mean_gb": 8.450214385986328,
+    "max_gb": 8.450214385986328,
+    "spread_pct": 0.0
+  },
+  "straggler_ratio": 1.0,
+  "slowest_rank": 0,
+  "fastest_rank": 0,
+  "gpu_sampling_rank0": {
+    "n_samples": 548,
+    "interval_sec": 1.0,
+    "gpu_activity_pct": {
+      "min": 54.0,
+      "mean": 93.62956204379562,
+      "max": 94.0
+    },
+    "mem_controller_pct": {
+      "min": 15.0,
+      "mean": 28.10948905109489,
+      "max": 31.0
+    },
+    "mem_used_mb": {
+      "min": 11174.0,
+      "mean": 11174.0,
+      "max": 11174.0
+    },
+    "power_w": {
+      "min": 602.1,
+      "mean": 641.6422810218978,
+      "max": 649.9
+    },
+    "sm_clock_mhz": {
+      "min": 1965.0,
+      "mean": 1965.0,
+      "max": 1965.0
+    }
+  },
+  "per_rank": [
+    {
+      "rank": 0,
+      "mean_step_sec": 0.04251793771982193,
+      "stdev_step_sec": 3.6244022339815274e-05,
+      "p50_step_sec": 0.04251501336693764,
+      "p95_step_sec": 0.042560916393995285,
+      "p99_step_sec": 0.042682964354753494,
+      "images_per_sec": 3010.494140625,
+      "peak_mem_gb": 8.450214385986328,
+      "n_steps": 14355,
+      "gpu_sampling": {
+        "n_samples": 548,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 54.0,
+          "mean": 93.62956204379562,
+          "max": 94.0
+        },
+        "mem_controller_pct": {
+          "min": 15.0,
+          "mean": 28.10948905109489,
+          "max": 31.0
+        },
+        "mem_used_mb": {
+          "min": 11174.0,
+          "mean": 11174.0,
+          "max": 11174.0
+        },
+        "power_w": {
+          "min": 602.1,
+          "mean": 641.6422810218978,
+          "max": 649.9
+        },
+        "sm_clock_mhz": {
+          "min": 1965.0,
+          "mean": 1965.0,
+          "max": 1965.0
+        }
+      }
+    }
+  ],
+  "torch_version": "2.11.0+cu130",
+  "cuda_version": "13.0",
+  "device_name": "NVIDIA B200",
+  "device_capability": [
+    10,
+    0
+  ]
+}

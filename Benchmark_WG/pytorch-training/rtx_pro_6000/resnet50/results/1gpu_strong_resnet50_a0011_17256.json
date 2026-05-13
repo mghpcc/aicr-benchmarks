@@ -1,0 +1,114 @@
+{
+  "tag": "1gpu_strong_resnet50_a0011_17256",
+  "scaling_mode": "strong",
+  "world_size": 1,
+  "nodes": 1,
+  "gpus_per_node": 1,
+  "model": "resnet50",
+  "batch_size_per_gpu": 2048,
+  "global_batch_size": 2048,
+  "image_size": 224,
+  "precision": "bf16",
+  "channels_last": true,
+  "compile": false,
+  "warmup_sec_target": 60.0,
+  "warmup_sec_actual": 60.249860846000956,
+  "warmup_steps": 69,
+  "bench_sec_target": 600.0,
+  "bench_sec_actual": 601.4734407479991,
+  "bench_steps": 745,
+  "mean_step_sec": 0.807336818692708,
+  "stdev_step_sec": 0.0002242867164246583,
+  "p50_step_sec": 0.8073364379961276,
+  "p95_step_sec": 0.8076956010045251,
+  "p99_step_sec": 0.8078089870105032,
+  "images_per_sec_per_gpu": 2536.735539097863,
+  "images_per_sec_global": 2536.735539097863,
+  "peak_mem_gb": {
+    "min_gb": 85.7286376953125,
+    "mean_gb": 85.7286376953125,
+    "max_gb": 85.7286376953125,
+    "spread_pct": 0.0
+  },
+  "straggler_ratio": 1.0,
+  "slowest_rank": 0,
+  "fastest_rank": 0,
+  "gpu_sampling_rank0": {
+    "n_samples": 525,
+    "interval_sec": 1.0,
+    "gpu_activity_pct": {
+      "min": 0.0,
+      "mean": 99.68380952380953,
+      "max": 100.0
+    },
+    "mem_controller_pct": {
+      "min": 0.0,
+      "mean": 90.40190476190476,
+      "max": 98.0
+    },
+    "mem_used_mb": {
+      "min": 96923.0,
+      "mean": 96923.0,
+      "max": 96923.0
+    },
+    "power_w": {
+      "min": 372.36,
+      "mean": 429.0957333333333,
+      "max": 456.59
+    },
+    "sm_clock_mhz": {
+      "min": 2400.0,
+      "mean": 2414.1638095238095,
+      "max": 2422.0
+    }
+  },
+  "per_rank": [
+    {
+      "rank": 0,
+      "mean_step_sec": 0.8073368072509766,
+      "stdev_step_sec": 0.00022428671945817769,
+      "p50_step_sec": 0.8073364496231079,
+      "p95_step_sec": 0.8076956272125244,
+      "p99_step_sec": 0.8078089952468872,
+      "images_per_sec": 2536.735595703125,
+      "peak_mem_gb": 85.7286376953125,
+      "n_steps": 745,
+      "gpu_sampling": {
+        "n_samples": 525,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 0.0,
+          "mean": 99.68380952380953,
+          "max": 100.0
+        },
+        "mem_controller_pct": {
+          "min": 0.0,
+          "mean": 90.40190476190476,
+          "max": 98.0
+        },
+        "mem_used_mb": {
+          "min": 96923.0,
+          "mean": 96923.0,
+          "max": 96923.0
+        },
+        "power_w": {
+          "min": 372.36,
+          "mean": 429.0957333333333,
+          "max": 456.59
+        },
+        "sm_clock_mhz": {
+          "min": 2400.0,
+          "mean": 2414.1638095238095,
+          "max": 2422.0
+        }
+      }
+    }
+  ],
+  "torch_version": "2.11.0+cu130",
+  "cuda_version": "13.0",
+  "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "device_capability": [
+    12,
+    0
+  ]
+}

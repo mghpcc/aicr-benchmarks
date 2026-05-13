@@ -1,0 +1,46 @@
+=== Job info ===
+Job ID    : 18336
+Node      : b0026
+GPUs      : 1
+name, driver_version, memory.total [MiB]
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 0] host=b0026 local_rank=0 world_size=1 device=NVIDIA B200
+[rank0] scaling=strong per_gpu=1024 global=1024
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 327 steps in 60.0s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 3340 steps (estimated 600s)
+
+================================================================
+RESULTS [1gpu_strong_resnet50_b0026_18336]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 1 / 1
+Device               : NVIDIA B200
+Compute capability   : [10, 0]
+Model                : resnet50
+Per-GPU / global bs  : 1024 / 1024
+Precision            : bf16
+Steps measured       : 3340 in 601.6s
+Mean step (s)        : 0.1801 (stdev 0.0002)
+p50 / p95 / p99 (s)  : 0.1801 / 0.1805 / 0.1807
+Images/sec per GPU   : 5684.7
+Images/sec global    : 5684.7
+Peak mem (GB)        : min=43.05 mean=43.05 max=43.05 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=27% mean=99% max=100% (540 samples)
+Power rank0 (W)      : mean=771 max=795
+SM clock rank0 (MHz) : mean=1962 max=1965
+================================================================
+[rank0] Wrote results/1gpu_strong_resnet50_b0026_18336.json

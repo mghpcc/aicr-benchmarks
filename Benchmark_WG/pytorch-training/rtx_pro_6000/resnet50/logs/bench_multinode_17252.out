@@ -1,0 +1,699 @@
+=== Multi-node setup ===
+Job ID         : 17252
+Nodes          : 2
+Node list      : a[0013-0014]
+Head node      : a0013 (172.21.101.13)
+Rendezvous port: 29500
+GPUs/node      : 8
+========================
+[a0013] launching torchrun, node_rank=0
+[a0014] launching torchrun, node_rank=1
+[rank 3] host=a0013 local_rank=3 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 7] host=a0013 local_rank=7 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 13] host=a0014 local_rank=5 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 1] host=a0013 local_rank=1 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 2] host=a0013 local_rank=2 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 5] host=a0013 local_rank=5 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 8] host=a0014 local_rank=0 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 9] host=a0014 local_rank=1 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 6] host=a0013 local_rank=6 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition[rank 0] host=a0013 local_rank=0 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+
+[rank0] scaling=weak per_gpu=128 global=2048
+[rank 4] host=a0013 local_rank=4 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 12] host=a0014 local_rank=4 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0013:80312:80312 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80312:80312 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80312:80312 [0] NCCL INFO cudaDriverVersion 13000
+a0013:80313:80313 [1] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80318:80318 [6] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80313:80313 [1] NCCL INFO cudaDriverVersion 13000
+a0013:80318:80318 [6] NCCL INFO cudaDriverVersion 13000
+a0013:80312:80312 [0] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80314:80314 [2] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80315:80315 [3] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80317:80317 [5] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80314:80314 [2] NCCL INFO cudaDriverVersion 13000
+a0013:80317:80317 [5] NCCL INFO cudaDriverVersion 13000
+a0013:80315:80315 [3] NCCL INFO cudaDriverVersion 13000
+a0013:80319:80319 [7] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80319:80319 [7] NCCL INFO cudaDriverVersion 13000
+a0013:80317:80317 [5] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80317:80317 [5] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80312:80312 [0] NCCL INFO Comm config Blocking set to 1
+a0013:80317:80317 [5] NCCL INFO Comm config Blocking set to 1
+a0013:80318:80318 [6] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80318:80318 [6] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80313:80313 [1] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80313:80313 [1] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80314:80314 [2] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80314:80314 [2] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80315:80315 [3] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80315:80315 [3] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80319:80319 [7] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80319:80319 [7] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80318:80318 [6] NCCL INFO Comm config Blocking set to 1
+a0013:80314:80314 [2] NCCL INFO Comm config Blocking set to 1
+a0013:80319:80319 [7] NCCL INFO Comm config Blocking set to 1
+a0013:80313:80313 [1] NCCL INFO Comm config Blocking set to 1
+a0013:80315:80315 [3] NCCL INFO Comm config Blocking set to 1
+a0014:88604:88604 [5] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88604:88604 [5] NCCL INFO cudaDriverVersion 13000
+a0014:88599:88599 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88599:88599 [0] NCCL INFO cudaDriverVersion 13000
+a0014:88599:88599 [0] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88604:88604 [5] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88604:88604 [5] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88599:88599 [0] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88604:88604 [5] NCCL INFO Comm config Blocking set to 1
+a0014:88599:88599 [0] NCCL INFO Comm config Blocking set to 1
+[rank 14] host=a0014 local_rank=6 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0013:80316:80316 [4] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0013:80316:80316 [4] NCCL INFO cudaDriverVersion 13000
+a0014:88600:88600 [1] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88600:88600 [1] NCCL INFO cudaDriverVersion 13000
+a0013:80316:80316 [4] NCCL INFO Bootstrap: Using bond1:172.23.101.13<0>
+a0013:80316:80316 [4] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88600:88600 [1] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88600:88600 [1] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0013:80316:80316 [4] NCCL INFO Comm config Blocking set to 1
+a0014:88600:88600 [1] NCCL INFO Comm config Blocking set to 1
+[rank 11] host=a0014 local_rank=3 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 10] host=a0014 local_rank=2 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 15] host=a0014 local_rank=7 world_size=16 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0014:88603:88603 [4] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88603:88603 [4] NCCL INFO cudaDriverVersion 13000
+a0014:88603:88603 [4] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88603:88603 [4] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88603:88603 [4] NCCL INFO Comm config Blocking set to 1
+a0013:80319:80319 [7] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80313:80313 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80318:80318 [6] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80312:80312 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80317:80317 [5] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80314:80314 [2] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80319:80319 [7] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80319:80319 [7] NCCL INFO Initialized NET plugin IB
+a0013:80319:80319 [7] NCCL INFO Assigned NET plugin IB to comm
+a0013:80319:80319 [7] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80319:80319 [7] NCCL INFO Using network IB
+a0014:88605:88605 [6] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88605:88605 [6] NCCL INFO cudaDriverVersion 13000
+a0014:88605:88605 [6] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88605:88605 [6] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88605:88605 [6] NCCL INFO Comm config Blocking set to 1
+a0013:80316:80316 [4] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80319:80319 [7] NCCL INFO DMA-BUF is available on GPU device 7
+a0013:80319:80319 [7] NCCL INFO ncclCommInitRankConfig comm 0x55cf1f2a0300 rank 7 nranks 16 cudaDev 7 nvmlDev 7 busId 1c8000 commId 0x884a064e19aea518 - Init START
+a0013:80315:80315 [3] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80313:80313 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80313:80313 [1] NCCL INFO Initialized NET plugin IB
+a0013:80312:80312 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80318:80318 [6] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80312:80312 [0] NCCL INFO Initialized NET plugin IB
+a0013:80318:80318 [6] NCCL INFO Initialized NET plugin IB
+a0013:80313:80313 [1] NCCL INFO Assigned NET plugin IB to comm
+a0013:80313:80313 [1] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80313:80313 [1] NCCL INFO Using network IB
+a0013:80312:80312 [0] NCCL INFO Assigned NET plugin IB to comm
+a0013:80312:80312 [0] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80312:80312 [0] NCCL INFO Using network IB
+a0013:80318:80318 [6] NCCL INFO Assigned NET plugin IB to comm
+a0013:80318:80318 [6] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80318:80318 [6] NCCL INFO Using network IB
+a0013:80317:80317 [5] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80317:80317 [5] NCCL INFO Initialized NET plugin IB
+a0013:80314:80314 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80314:80314 [2] NCCL INFO Initialized NET plugin IB
+a0013:80317:80317 [5] NCCL INFO Assigned NET plugin IB to comm
+a0013:80317:80317 [5] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80317:80317 [5] NCCL INFO Using network IB
+a0013:80314:80314 [2] NCCL INFO Assigned NET plugin IB to comm
+a0013:80314:80314 [2] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80314:80314 [2] NCCL INFO Using network IB
+a0013:80315:80315 [3] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80315:80315 [3] NCCL INFO Initialized NET plugin IB
+a0013:80316:80316 [4] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.13<0>
+a0013:80316:80316 [4] NCCL INFO Initialized NET plugin IB
+a0013:80315:80315 [3] NCCL INFO Assigned NET plugin IB to comm
+a0013:80315:80315 [3] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80315:80315 [3] NCCL INFO Using network IB
+a0013:80316:80316 [4] NCCL INFO Assigned NET plugin IB to comm
+a0013:80316:80316 [4] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0013:80316:80316 [4] NCCL INFO Using network IB
+a0014:88602:88602 [3] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88601:88601 [2] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88601:88601 [2] NCCL INFO cudaDriverVersion 13000
+a0014:88602:88602 [3] NCCL INFO cudaDriverVersion 13000
+a0014:88601:88601 [2] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88602:88602 [3] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88601:88601 [2] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88602:88602 [3] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88602:88602 [3] NCCL INFO Comm config Blocking set to 1
+a0014:88601:88601 [2] NCCL INFO Comm config Blocking set to 1
+a0014:88606:88606 [7] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0014:88606:88606 [7] NCCL INFO cudaDriverVersion 13000
+a0014:88606:88606 [7] NCCL INFO Bootstrap: Using bond1:172.23.101.14<0>
+a0014:88606:88606 [7] NCCL INFO NCCL version 2.28.9+cuda13.0
+a0014:88606:88606 [7] NCCL INFO Comm config Blocking set to 1
+a0014:88600:88600 [1] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88599:88599 [0] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88604:88604 [5] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88603:88603 [4] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0013:80312:80312 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0013:80312:80312 [0] NCCL INFO ncclCommInitRankConfig comm 0x563581f9c800 rank 0 nranks 16 cudaDev 0 nvmlDev 0 busId 3000 commId 0x884a064e19aea518 - Init START
+a0013:80318:80318 [6] NCCL INFO DMA-BUF is available on GPU device 6
+a0013:80318:80318 [6] NCCL INFO ncclCommInitRankConfig comm 0x562e37817e40 rank 6 nranks 16 cudaDev 6 nvmlDev 6 busId 18e000 commId 0x884a064e19aea518 - Init START
+a0013:80313:80313 [1] NCCL INFO DMA-BUF is available on GPU device 1
+a0013:80317:80317 [5] NCCL INFO DMA-BUF is available on GPU device 5
+a0013:80313:80313 [1] NCCL INFO ncclCommInitRankConfig comm 0x561668bd4fc0 rank 1 nranks 16 cudaDev 1 nvmlDev 1 busId 42000 commId 0x884a064e19aea518 - Init START
+a0013:80317:80317 [5] NCCL INFO ncclCommInitRankConfig comm 0x55f381fece00 rank 5 nranks 16 cudaDev 5 nvmlDev 5 busId 144000 commId 0x884a064e19aea518 - Init START
+a0013:80314:80314 [2] NCCL INFO DMA-BUF is available on GPU device 2
+a0013:80314:80314 [2] NCCL INFO ncclCommInitRankConfig comm 0x5619303ebfc0 rank 2 nranks 16 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x884a064e19aea518 - Init START
+a0013:80315:80315 [3] NCCL INFO DMA-BUF is available on GPU device 3
+a0013:80316:80316 [4] NCCL INFO DMA-BUF is available on GPU device 4
+a0013:80316:80316 [4] NCCL INFO ncclCommInitRankConfig comm 0x56281fd0f140 rank 4 nranks 16 cudaDev 4 nvmlDev 4 busId 104000 commId 0x884a064e19aea518 - Init START
+a0013:80315:80315 [3] NCCL INFO ncclCommInitRankConfig comm 0x5587451d5e80 rank 3 nranks 16 cudaDev 3 nvmlDev 3 busId c7000 commId 0x884a064e19aea518 - Init START
+a0013:80315:80315 [3] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80316:80316 [4] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80317:80317 [5] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80314:80314 [2] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80318:80318 [6] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80313:80313 [1] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88604:88604 [5] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88604:88604 [5] NCCL INFO Initialized NET plugin IB
+a0014:88604:88604 [5] NCCL INFO Assigned NET plugin IB to comm
+a0014:88604:88604 [5] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88604:88604 [5] NCCL INFO Using network IB
+a0014:88599:88599 [0] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88599:88599 [0] NCCL INFO Initialized NET plugin IB
+a0014:88600:88600 [1] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88600:88600 [1] NCCL INFO Initialized NET plugin IB
+a0014:88599:88599 [0] NCCL INFO Assigned NET plugin IB to comm
+a0014:88599:88599 [0] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88599:88599 [0] NCCL INFO Using network IB
+a0014:88603:88603 [4] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88603:88603 [4] NCCL INFO Initialized NET plugin IB
+a0014:88600:88600 [1] NCCL INFO Assigned NET plugin IB to comm
+a0014:88600:88600 [1] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88600:88600 [1] NCCL INFO Using network IB
+a0014:88603:88603 [4] NCCL INFO Assigned NET plugin IB to comm
+a0014:88603:88603 [4] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88603:88603 [4] NCCL INFO Using network IB
+a0014:88604:88604 [5] NCCL INFO DMA-BUF is available on GPU device 5
+a0014:88604:88604 [5] NCCL INFO ncclCommInitRankConfig comm 0x55cadc175f40 rank 13 nranks 16 cudaDev 5 nvmlDev 5 busId 144000 commId 0x884a064e19aea518 - Init START
+a0014:88599:88599 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0014:88600:88600 [1] NCCL INFO DMA-BUF is available on GPU device 1
+a0014:88599:88599 [0] NCCL INFO ncclCommInitRankConfig comm 0x56215a73c280 rank 8 nranks 16 cudaDev 0 nvmlDev 0 busId 3000 commId 0x884a064e19aea518 - Init START
+a0014:88600:88600 [1] NCCL INFO ncclCommInitRankConfig comm 0x5620f87d70c0 rank 9 nranks 16 cudaDev 1 nvmlDev 1 busId 42000 commId 0x884a064e19aea518 - Init START
+a0014:88603:88603 [4] NCCL INFO DMA-BUF is available on GPU device 4
+a0014:88603:88603 [4] NCCL INFO ncclCommInitRankConfig comm 0x556d4314fcc0 rank 12 nranks 16 cudaDev 4 nvmlDev 4 busId 104000 commId 0x884a064e19aea518 - Init START
+a0013:80319:80319 [7] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88599:88599 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88605:88605 [6] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88605:88605 [6] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88605:88605 [6] NCCL INFO Initialized NET plugin IB
+a0014:88605:88605 [6] NCCL INFO Assigned NET plugin IB to comm
+a0014:88605:88605 [6] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88605:88605 [6] NCCL INFO Using network IB
+a0014:88605:88605 [6] NCCL INFO DMA-BUF is available on GPU device 6
+a0014:88605:88605 [6] NCCL INFO ncclCommInitRankConfig comm 0x55e90f8b3a00 rank 14 nranks 16 cudaDev 6 nvmlDev 6 busId 18e000 commId 0x884a064e19aea518 - Init START
+a0014:88604:88604 [5] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88606:88606 [7] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88601:88601 [2] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88602:88602 [3] NCCL INFO NET/Plugin: Could not find: libnccl-net.so
+a0014:88606:88606 [7] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88606:88606 [7] NCCL INFO Initialized NET plugin IB
+a0014:88606:88606 [7] NCCL INFO Assigned NET plugin IB to comm
+a0014:88606:88606 [7] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88606:88606 [7] NCCL INFO Using network IB
+a0014:88601:88601 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88601:88601 [2] NCCL INFO Initialized NET plugin IB
+a0014:88601:88601 [2] NCCL INFO Assigned NET plugin IB to comm
+a0014:88601:88601 [2] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88601:88601 [2] NCCL INFO Using network IB
+a0014:88606:88606 [7] NCCL INFO DMA-BUF is available on GPU device 7
+a0014:88606:88606 [7] NCCL INFO ncclCommInitRankConfig comm 0x560bb3632f80 rank 15 nranks 16 cudaDev 7 nvmlDev 7 busId 1c8000 commId 0x884a064e19aea518 - Init START
+a0014:88606:88606 [7] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80312:80312 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88601:88601 [2] NCCL INFO DMA-BUF is available on GPU device 2
+a0014:88601:88601 [2] NCCL INFO ncclCommInitRankConfig comm 0x55e35ec40d80 rank 10 nranks 16 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x884a064e19aea518 - Init START
+a0014:88605:88605 [6] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88600:88600 [1] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88602:88602 [3] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB [1]mlx5_3:1/IB [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.14<0>
+a0014:88602:88602 [3] NCCL INFO Initialized NET plugin IB
+a0014:88602:88602 [3] NCCL INFO Assigned NET plugin IB to comm
+a0014:88602:88602 [3] NCCL INFO Assigned GIN plugin GIN_IB_GDAKI to comm
+a0014:88602:88602 [3] NCCL INFO Using network IB
+a0014:88602:88602 [3] NCCL INFO DMA-BUF is available on GPU device 3
+a0014:88602:88602 [3] NCCL INFO ncclCommInitRankConfig comm 0x55cb326b7cc0 rank 11 nranks 16 cudaDev 3 nvmlDev 3 busId c7000 commId 0x884a064e19aea518 - Init START
+a0014:88601:88601 [2] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88602:88602 [3] NCCL INFO RAS client listening socket at ::1<28028>
+a0014:88603:88603 [4] NCCL INFO RAS client listening socket at ::1<28028>
+a0013:80315:80315 [3] NCCL INFO Bootstrap timings total 0.088243 (create 0.000013, send 0.000032, recv 0.000070, ring 0.087932, delay 0.000000)
+a0013:80316:80316 [4] NCCL INFO Bootstrap timings total 0.088245 (create 0.000014, send 0.000035, recv 0.000081, ring 0.087930, delay 0.000000)
+a0013:80317:80317 [5] NCCL INFO Bootstrap timings total 0.089233 (create 0.000025, send 0.000064, recv 0.000099, ring 0.087856, delay 0.000001)
+a0013:80312:80312 [0] NCCL INFO Bootstrap timings total 0.089511 (create 0.000015, send 0.000036, recv 0.000357, ring 0.005188, delay 0.000000)
+a0013:80313:80313 [1] NCCL INFO Bootstrap timings total 0.089296 (create 0.000027, send 0.000097, recv 0.000127, ring 0.087851, delay 0.000001)
+a0013:80314:80314 [2] NCCL INFO Bootstrap timings total 0.089204 (create 0.000014, send 0.000039, recv 0.000984, ring 0.087943, delay 0.000000)
+a0014:88603:88603 [4] NCCL INFO Bootstrap timings total 0.061803 (create 0.000040, send 0.000080, recv 0.000121, ring 0.000233, delay 0.000001)
+a0014:88604:88604 [5] NCCL INFO Bootstrap timings total 0.068184 (create 0.000025, send 0.000135, recv 0.041963, ring 0.025734, delay 0.000001)
+a0013:80319:80319 [7] NCCL INFO Bootstrap timings total 0.119136 (create 0.000026, send 0.000067, recv 0.057282, ring 0.061474, delay 0.000001)
+a0013:80318:80318 [6] NCCL INFO Bootstrap timings total 0.089376 (create 0.000013, send 0.000041, recv 0.000023, ring 0.087943, delay 0.000000)
+a0014:88606:88606 [7] NCCL INFO Bootstrap timings total 0.005787 (create 0.000022, send 0.000067, recv 0.000193, ring 0.005254, delay 0.000000)
+a0014:88602:88602 [3] NCCL INFO Bootstrap timings total 0.000743 (create 0.000012, send 0.000045, recv 0.000119, ring 0.000402, delay 0.000000)
+a0014:88605:88605 [6] NCCL INFO Bootstrap timings total 0.026328 (create 0.000029, send 0.000085, recv 0.020642, ring 0.004467, delay 0.000001)
+a0014:88601:88601 [2] NCCL INFO Bootstrap timings total 0.004736 (create 0.000015, send 0.000063, recv 0.004028, ring 0.000428, delay 0.000001)
+a0014:88600:88600 [1] NCCL INFO Bootstrap timings total 0.061982 (create 0.000015, send 0.000089, recv 0.057483, ring 0.004077, delay 0.000000)
+a0014:88599:88599 [0] NCCL INFO Bootstrap timings total 0.062004 (create 0.000042, send 0.000094, recv 0.000163, ring 0.060501, delay 0.000001)
+a0013:80313:80313 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is empty, ignoring. (GPU affinity = 32-47 ; CPU affinity = 0-31,64-95).
+a0013:80313:80313 [1] NCCL INFO NVLS multicast support is not available on dev 1 (NVLS_NCHANNELS 0)
+a0013:80312:80312 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is 16-31. (GPU affinity = 16-31 ; CPU affinity = 0-31,64-95).
+a0013:80316:80316 [4] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 4 is 80-95. (GPU affinity = 80-95 ; CPU affinity = 0-31,64-95).
+a0013:80316:80316 [4] NCCL INFO NVLS multicast support is not available on dev 4 (NVLS_NCHANNELS 0)
+a0013:80314:80314 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is empty, ignoring. (GPU affinity = 48-63 ; CPU affinity = 0-31,64-95).
+a0013:80317:80317 [5] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 5 is empty, ignoring. (GPU affinity = 96-111 ; CPU affinity = 0-31,64-95).
+a0013:80319:80319 [7] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 7 is 64-79. (GPU affinity = 64-79 ; CPU affinity = 0-31,64-95).
+a0013:80317:80317 [5] NCCL INFO NVLS multicast support is not available on dev 5 (NVLS_NCHANNELS 0)
+a0013:80314:80314 [2] NCCL INFO NVLS multicast support is not available on dev 2 (NVLS_NCHANNELS 0)
+a0013:80312:80312 [0] NCCL INFO NVLS multicast support is not available on dev 0 (NVLS_NCHANNELS 0)
+a0014:88605:88605 [6] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 6 is empty, ignoring. (GPU affinity = 112-127 ; CPU affinity = 0-31,64-95).
+a0014:88605:88605 [6] NCCL INFO NVLS multicast support is not available on dev 6 (NVLS_NCHANNELS 0)
+a0013:80318:80318 [6] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 6 is empty, ignoring. (GPU affinity = 112-127 ; CPU affinity = 0-31,64-95).
+a0013:80318:80318 [6] NCCL INFO NVLS multicast support is not available on dev 6 (NVLS_NCHANNELS 0)
+a0013:80315:80315 [3] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 3 is 0-15. (GPU affinity = 0-15 ; CPU affinity = 0-31,64-95).
+a0013:80315:80315 [3] NCCL INFO NVLS multicast support is not available on dev 3 (NVLS_NCHANNELS 0)
+a0014:88604:88604 [5] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 5 is empty, ignoring. (GPU affinity = 96-111 ; CPU affinity = 0-31,64-95).
+a0014:88604:88604 [5] NCCL INFO NVLS multicast support is not available on dev 5 (NVLS_NCHANNELS 0)
+a0014:88606:88606 [7] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 7 is 64-79. (GPU affinity = 64-79 ; CPU affinity = 0-31,64-95).
+a0014:88606:88606 [7] NCCL INFO NVLS multicast support is not available on dev 7 (NVLS_NCHANNELS 0)
+a0014:88603:88603 [4] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 4 is 80-95. (GPU affinity = 80-95 ; CPU affinity = 0-31,64-95).
+a0014:88603:88603 [4] NCCL INFO NVLS multicast support is not available on dev 4 (NVLS_NCHANNELS 0)
+a0014:88601:88601 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is empty, ignoring. (GPU affinity = 48-63 ; CPU affinity = 0-31,64-95).
+a0014:88601:88601 [2] NCCL INFO NVLS multicast support is not available on dev 2 (NVLS_NCHANNELS 0)
+a0014:88599:88599 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is 16-31. (GPU affinity = 16-31 ; CPU affinity = 0-31,64-95).
+a0014:88599:88599 [0] NCCL INFO NVLS multicast support is not available on dev 0 (NVLS_NCHANNELS 0)
+a0014:88602:88602 [3] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 3 is 0-15. (GPU affinity = 0-15 ; CPU affinity = 0-31,64-95).
+a0014:88602:88602 [3] NCCL INFO NVLS multicast support is not available on dev 3 (NVLS_NCHANNELS 0)
+a0014:88600:88600 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is empty, ignoring. (GPU affinity = 32-47 ; CPU affinity = 0-31,64-95).
+a0014:88600:88600 [1] NCCL INFO NVLS multicast support is not available on dev 1 (NVLS_NCHANNELS 0)
+a0013:80319:80319 [7] NCCL INFO NVLS multicast support is not available on dev 7 (NVLS_NCHANNELS 0)
+a0013:80317:80317 [5] NCCL INFO comm 0x55f381fece00 rank 5 nRanks 16 nNodes 2 localRanks 8 localRank 5 MNNVL 0
+a0013:80317:80317 [5] NCCL INFO Trees [0] 6/-1/-1->5->1 [1] 6/-1/-1->5->1
+a0013:80317:80317 [5] NCCL INFO P2P Chunksize set to 131072
+a0013:80316:80316 [4] NCCL INFO comm 0x56281fd0f140 rank 4 nRanks 16 nNodes 2 localRanks 8 localRank 4 MNNVL 0
+a0013:80315:80315 [3] NCCL INFO comm 0x5587451d5e80 rank 3 nRanks 16 nNodes 2 localRanks 8 localRank 3 MNNVL 0
+a0013:80316:80316 [4] NCCL INFO Trees [0] -1/-1/-1->4->0 [1] -1/-1/-1->4->0
+a0013:80316:80316 [4] NCCL INFO P2P Chunksize set to 131072
+a0013:80314:80314 [2] NCCL INFO comm 0x5619303ebfc0 rank 2 nRanks 16 nNodes 2 localRanks 8 localRank 2 MNNVL 0
+a0013:80315:80315 [3] NCCL INFO Trees [0] 1/-1/-1->3->2 [1] 1/-1/-1->3->2
+a0013:80312:80312 [0] NCCL INFO comm 0x563581f9c800 rank 0 nRanks 16 nNodes 2 localRanks 8 localRank 0 MNNVL 0
+a0013:80315:80315 [3] NCCL INFO P2P Chunksize set to 131072
+a0013:80319:80319 [7] NCCL INFO comm 0x55cf1f2a0300 rank 7 nRanks 16 nNodes 2 localRanks 8 localRank 7 MNNVL 0
+a0013:80318:80318 [6] NCCL INFO comm 0x562e37817e40 rank 6 nRanks 16 nNodes 2 localRanks 8 localRank 6 MNNVL 0
+a0013:80314:80314 [2] NCCL INFO Trees [0] 3/10/-1->2->-1 [1] 3/-1/-1->2->10
+a0013:80313:80313 [1] NCCL INFO comm 0x561668bd4fc0 rank 1 nRanks 16 nNodes 2 localRanks 8 localRank 1 MNNVL 0
+a0013:80314:80314 [2] NCCL INFO P2P Chunksize set to 131072
+a0013:80318:80318 [6] NCCL INFO Trees [0] 7/-1/-1->6->5 [1] 7/-1/-1->6->5
+a0013:80318:80318 [6] NCCL INFO P2P Chunksize set to 131072
+a0013:80312:80312 [0] NCCL INFO Channel 00/02 :  0  7  6  5  1  3  4 10  8 15 14 13  9 11 12  2
+a0013:80319:80319 [7] NCCL INFO Trees [0] 0/-1/-1->7->6 [1] 0/-1/-1->7->6
+a0013:80312:80312 [0] NCCL INFO Channel 01/02 :  0  7  6  5  1  3  4 10  8 15 14 13  9 11 12  2
+a0013:80319:80319 [7] NCCL INFO P2P Chunksize set to 131072
+a0014:88604:88604 [5] NCCL INFO comm 0x55cadc175f40 rank 13 nRanks 16 nNodes 2 localRanks 8 localRank 5 MNNVL 0
+a0014:88606:88606 [7] NCCL INFO comm 0x560bb3632f80 rank 15 nRanks 16 nNodes 2 localRanks 8 localRank 7 MNNVL 0
+a0014:88602:88602 [3] NCCL INFO comm 0x55cb326b7cc0 rank 11 nRanks 16 nNodes 2 localRanks 8 localRank 3 MNNVL 0
+a0014:88603:88603 [4] NCCL INFO comm 0x556d4314fcc0 rank 12 nRanks 16 nNodes 2 localRanks 8 localRank 4 MNNVL 0
+a0014:88601:88601 [2] NCCL INFO comm 0x55e35ec40d80 rank 10 nRanks 16 nNodes 2 localRanks 8 localRank 2 MNNVL 0
+a0013:80312:80312 [0] NCCL INFO Trees [0] 4/-1/-1->0->7 [1] 4/-1/-1->0->7
+a0013:80312:80312 [0] NCCL INFO P2P Chunksize set to 131072
+a0014:88604:88604 [5] NCCL INFO Trees [0] 14/-1/-1->13->9 [1] 14/-1/-1->13->9
+a0014:88606:88606 [7] NCCL INFO Trees [0] 8/-1/-1->15->14 [1] 8/-1/-1->15->14
+a0014:88604:88604 [5] NCCL INFO P2P Chunksize set to 131072
+a0014:88605:88605 [6] NCCL INFO comm 0x55e90f8b3a00 rank 14 nRanks 16 nNodes 2 localRanks 8 localRank 6 MNNVL 0
+a0014:88606:88606 [7] NCCL INFO P2P Chunksize set to 131072
+a0014:88602:88602 [3] NCCL INFO Trees [0] 9/-1/-1->11->10 [1] 9/-1/-1->11->10
+a0014:88603:88603 [4] NCCL INFO Trees [0] -1/-1/-1->12->8 [1] -1/-1/-1->12->8
+a0014:88601:88601 [2] NCCL INFO Trees [0] 11/-1/-1->10->2 [1] 11/2/-1->10->-1
+a0013:80313:80313 [1] NCCL INFO Trees [0] 5/-1/-1->1->3 [1] 5/-1/-1->1->3
+a0013:80313:80313 [1] NCCL INFO P2P Chunksize set to 131072
+a0014:88602:88602 [3] NCCL INFO P2P Chunksize set to 131072
+a0014:88603:88603 [4] NCCL INFO P2P Chunksize set to 131072
+a0014:88601:88601 [2] NCCL INFO P2P Chunksize set to 131072
+a0014:88600:88600 [1] NCCL INFO comm 0x5620f87d70c0 rank 9 nRanks 16 nNodes 2 localRanks 8 localRank 1 MNNVL 0
+a0014:88599:88599 [0] NCCL INFO comm 0x56215a73c280 rank 8 nRanks 16 nNodes 2 localRanks 8 localRank 0 MNNVL 0
+a0014:88605:88605 [6] NCCL INFO Trees [0] 15/-1/-1->14->13 [1] 15/-1/-1->14->13
+a0014:88605:88605 [6] NCCL INFO P2P Chunksize set to 131072
+a0014:88600:88600 [1] NCCL INFO Trees [0] 13/-1/-1->9->11 [1] 13/-1/-1->9->11
+a0014:88600:88600 [1] NCCL INFO P2P Chunksize set to 131072
+a0014:88599:88599 [0] NCCL INFO Trees [0] 12/-1/-1->8->15 [1] 12/-1/-1->8->15
+a0014:88599:88599 [0] NCCL INFO P2P Chunksize set to 131072
+a0013:80316:80316 [4] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80317:80317 [5] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80316:80316 [4] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80317:80317 [5] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80315:80315 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80313:80313 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80315:80315 [3] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80313:80313 [1] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80318:80318 [6] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80318:80318 [6] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80312:80312 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80312:80312 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80314:80314 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80314:80314 [2] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80319:80319 [7] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0013:80319:80319 [7] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0013:80315:80411 [0] NCCL INFO [Proxy Service] Device 3 CPU core 8
+a0013:80315:80416 [0] NCCL INFO [Proxy Service UDS] Device 3 CPU core 10
+a0013:80317:80410 [0] NCCL INFO [Proxy Service] Device 5 CPU core 21
+a0013:80313:80412 [0] NCCL INFO [Proxy Service] Device 1 CPU core 26
+a0013:80312:80414 [0] NCCL INFO [Proxy Service] Device 0 CPU core 27
+a0013:80317:80417 [0] NCCL INFO [Proxy Service UDS] Device 5 CPU core 66
+a0013:80318:80413 [0] NCCL INFO [Proxy Service] Device 6 CPU core 78
+a0013:80314:80419 [0] NCCL INFO [Proxy Service] Device 2 CPU core 76
+a0013:80312:80422 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 17
+a0013:80319:80421 [0] NCCL INFO [Proxy Service] Device 7 CPU core 67
+a0013:80318:80418 [0] NCCL INFO [Proxy Service UDS] Device 6 CPU core 2
+a0013:80314:80420 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 8
+a0013:80313:80415 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 78
+a0013:80319:80423 [0] NCCL INFO [Proxy Service UDS] Device 7 CPU core 74
+a0013:80316:80424 [0] NCCL INFO [Proxy Service] Device 4 CPU core 89
+a0013:80316:80425 [0] NCCL INFO [Proxy Service UDS] Device 4 CPU core 85
+a0014:88602:88602 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88605:88605 [6] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88605:88605 [6] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88602:88602 [3] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88599:88599 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88600:88600 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88606:88606 [7] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88600:88600 [1] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88599:88599 [0] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88601:88601 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88603:88603 [4] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88606:88606 [7] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88604:88604 [5] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0014:88601:88601 [2] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88603:88603 [4] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88604:88604 [5] NCCL INFO Check P2P Type isAllDirectP2p 0 directMode 0 isAllCudaP2p 1
+a0014:88606:88692 [0] NCCL INFO [Proxy Service] Device 7 CPU core 76
+a0014:88600:88690 [0] NCCL INFO [Proxy Service] Device 1 CPU core 88
+a0014:88599:88693 [0] NCCL INFO [Proxy Service] Device 0 CPU core 17
+a0014:88602:88688 [0] NCCL INFO [Proxy Service] Device 3 CPU core 8
+a0014:88603:88694 [0] NCCL INFO [Proxy Service] Device 4 CPU core 81
+a0014:88605:88689 [0] NCCL INFO [Proxy Service] Device 6 CPU core 30
+a0014:88602:88691 [0] NCCL INFO [Proxy Service UDS] Device 3 CPU core 15
+a0014:88603:88699 [0] NCCL INFO [Proxy Service UDS] Device 4 CPU core 91
+a0014:88604:88696 [0] NCCL INFO [Proxy Service] Device 5 CPU core 71
+a0014:88599:88698 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 28
+a0014:88601:88695 [0] NCCL INFO [Proxy Service] Device 2 CPU core 15
+a0014:88606:88703 [0] NCCL INFO [Proxy Service UDS] Device 7 CPU core 78
+a0014:88605:88697 [0] NCCL INFO [Proxy Service UDS] Device 6 CPU core 17
+a0014:88601:88701 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 3
+a0014:88600:88700 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 8
+a0014:88604:88702 [0] NCCL INFO [Proxy Service UDS] Device 5 CPU core 27
+a0013:80313:80313 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80315:80315 [3] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80313:80313 [1] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80315:80315 [3] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80313:80313 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80315:80315 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80318:80318 [6] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80314:80314 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80318:80318 [6] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80318:80318 [6] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80314:80314 [2] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80314:80314 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88606:88606 [7] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88603:88603 [4] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88606:88606 [7] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88606:88606 [7] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88603:88603 [4] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88603:88603 [4] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80319:80319 [7] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80319:80319 [7] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80319:80319 [7] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80312:80312 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80312:80312 [0] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80312:80312 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88599:88599 [0] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88599:88599 [0] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88599:88599 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88601:88601 [2] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88601:88601 [2] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88601:88601 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88600:88600 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88600:88600 [1] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88600:88600 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80317:80317 [5] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80317:80317 [5] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80317:80317 [5] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88605:88605 [6] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88605:88605 [6] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88605:88605 [6] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0014:88602:88602 [3] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88602:88602 [3] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88602:88602 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80316:80316 [4] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0013:80316:80316 [4] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0013:80316:80316 [4] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80312:80312 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0014:88604:88604 [5] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0014:88604:88604 [5] NCCL INFO threadThresholds 8/8/64 | 128/8/64 | 512 | 512
+a0014:88604:88604 [5] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 1 p2p channels per peer
+a0013:80314:80314 [2] NCCL INFO ncclCommInitRankConfig comm 0x5619303ebfc0 rank 2 nranks 16 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80318:80318 [6] NCCL INFO ncclCommInitRankConfig comm 0x562e37817e40 rank 6 nranks 16 cudaDev 6 nvmlDev 6 busId 18e000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80318:80318 [6] NCCL INFO Init timings - ncclCommInitRankConfig: rank 6 nranks 16 total 0.29 (kernels 0.13, alloc 0.04, bootstrap 0.09, allgathers 0.01, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80314:80314 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 16 total 0.29 (kernels 0.14, alloc 0.03, bootstrap 0.09, allgathers 0.01, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80315:80315 [3] NCCL INFO ncclCommInitRankConfig comm 0x5587451d5e80 rank 3 nranks 16 cudaDev 3 nvmlDev 3 busId c7000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80319:80319 [7] NCCL INFO ncclCommInitRankConfig comm 0x55cf1f2a0300 rank 7 nranks 16 cudaDev 7 nvmlDev 7 busId 1c8000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80313:80313 [1] NCCL INFO ncclCommInitRankConfig comm 0x561668bd4fc0 rank 1 nranks 16 cudaDev 1 nvmlDev 1 busId 42000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80319:80319 [7] NCCL INFO Init timings - ncclCommInitRankConfig: rank 7 nranks 16 total 0.29 (kernels 0.12, alloc 0.02, bootstrap 0.12, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.01)
+a0013:80317:80317 [5] NCCL INFO ncclCommInitRankConfig comm 0x55f381fece00 rank 5 nranks 16 cudaDev 5 nvmlDev 5 busId 144000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80315:80315 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 16 total 0.29 (kernels 0.14, alloc 0.03, bootstrap 0.09, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80313:80313 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 16 total 0.29 (kernels 0.13, alloc 0.04, bootstrap 0.09, allgathers 0.01, topo 0.01, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80312:80312 [0] NCCL INFO ncclCommInitRankConfig comm 0x563581f9c800 rank 0 nranks 16 cudaDev 0 nvmlDev 0 busId 3000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80317:80317 [5] NCCL INFO Init timings - ncclCommInitRankConfig: rank 5 nranks 16 total 0.29 (kernels 0.14, alloc 0.03, bootstrap 0.09, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80312:80312 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 16 total 0.29 (kernels 0.14, alloc 0.04, bootstrap 0.09, allgathers 0.01, topo 0.01, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80316:80316 [4] NCCL INFO ncclCommInitRankConfig comm 0x56281fd0f140 rank 4 nranks 16 cudaDev 4 nvmlDev 4 busId 104000 commId 0x884a064e19aea518 - Init COMPLETE
+a0013:80316:80316 [4] NCCL INFO Init timings - ncclCommInitRankConfig: rank 4 nranks 16 total 0.28 (kernels 0.13, alloc 0.03, bootstrap 0.09, allgathers 0.01, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88603:88603 [4] NCCL INFO ncclCommInitRankConfig comm 0x556d4314fcc0 rank 12 nranks 16 cudaDev 4 nvmlDev 4 busId 104000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88601:88601 [2] NCCL INFO ncclCommInitRankConfig comm 0x55e35ec40d80 rank 10 nranks 16 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88600:88600 [1] NCCL INFO ncclCommInitRankConfig comm 0x5620f87d70c0 rank 9 nranks 16 cudaDev 1 nvmlDev 1 busId 42000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88605:88605 [6] NCCL INFO ncclCommInitRankConfig comm 0x55e90f8b3a00 rank 14 nranks 16 cudaDev 6 nvmlDev 6 busId 18e000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88604:88604 [5] NCCL INFO ncclCommInitRankConfig comm 0x55cadc175f40 rank 13 nranks 16 cudaDev 5 nvmlDev 5 busId 144000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88603:88603 [4] NCCL INFO Init timings - ncclCommInitRankConfig: rank 12 nranks 16 total 0.25 (kernels 0.13, alloc 0.03, bootstrap 0.06, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88601:88601 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 10 nranks 16 total 0.13 (kernels 0.08, alloc 0.02, bootstrap 0.00, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88600:88600 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 9 nranks 16 total 0.28 (kernels 0.16, alloc 0.03, bootstrap 0.06, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88599:88599 [0] NCCL INFO ncclCommInitRankConfig comm 0x56215a73c280 rank 8 nranks 16 cudaDev 0 nvmlDev 0 busId 3000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88605:88605 [6] NCCL INFO Init timings - ncclCommInitRankConfig: rank 14 nranks 16 total 0.15 (kernels 0.08, alloc 0.02, bootstrap 0.03, allgathers 0.01, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88604:88604 [5] NCCL INFO Init timings - ncclCommInitRankConfig: rank 13 nranks 16 total 0.28 (kernels 0.16, alloc 0.03, bootstrap 0.07, allgathers 0.01, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88606:88606 [7] NCCL INFO ncclCommInitRankConfig comm 0x560bb3632f80 rank 15 nranks 16 cudaDev 7 nvmlDev 7 busId 1c8000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88599:88599 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 8 nranks 16 total 0.28 (kernels 0.16, alloc 0.03, bootstrap 0.06, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88606:88606 [7] NCCL INFO Init timings - ncclCommInitRankConfig: rank 15 nranks 16 total 0.13 (kernels 0.08, alloc 0.02, bootstrap 0.01, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0014:88602:88602 [3] NCCL INFO ncclCommInitRankConfig comm 0x55cb326b7cc0 rank 11 nranks 16 cudaDev 3 nvmlDev 3 busId c7000 commId 0x884a064e19aea518 - Init COMPLETE
+a0014:88602:88602 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 11 nranks 16 total 0.13 (kernels 0.09, alloc 0.01, bootstrap 0.00, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.01, rest 0.00)
+a0013:80317:80317 [5] NCCL INFO Channel 00 : 5[5] -> 1[1] via SHM/direct/direct
+a0014:88600:88600 [1] NCCL INFO Channel 00 : 9[1] -> 11[3] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 00 : 11[3] -> 12[4] via SHM/direct/direct
+a0014:88604:88604 [5] NCCL INFO Channel 00 : 13[5] -> 9[1] via SHM/direct/direct
+a0014:88599:88599 [0] NCCL INFO Channel 00 : 8[0] -> 15[7] via SHM/direct/direct
+a0013:80314:80426 [0] NCCL INFO [Proxy Progress] Device 2 CPU core 8
+a0013:80314:80314 [2] NCCL INFO Channel 00/0 : 12[4] -> 2[2] [receive] via NET/IB/0/GDRDMA
+a0013:80314:80314 [2] NCCL INFO Channel 01/0 : 12[4] -> 2[2] [receive] via NET/IB/0/GDRDMA
+a0013:80315:80315 [3] NCCL INFO Channel 00 : 3[3] -> 4[4] via SHM/direct/direct
+a0013:80313:80313 [1] NCCL INFO Channel 00 : 1[1] -> 3[3] via SHM/direct/direct
+a0013:80312:80312 [0] NCCL INFO Channel 00 : 0[0] -> 7[7] via SHM/direct/direct
+a0014:88601:88704 [0] NCCL INFO [Proxy Progress] Device 2 CPU core 30
+a0014:88601:88601 [2] NCCL INFO Channel 00/0 : 4[4] -> 10[2] [receive] via NET/IB/0/GDRDMA
+a0014:88601:88601 [2] NCCL INFO Channel 01/0 : 4[4] -> 10[2] [receive] via NET/IB/0/GDRDMA
+a0013:80317:80317 [5] NCCL INFO Channel 01 : 5[5] -> 1[1] via SHM/direct/direct
+a0013:80312:80312 [0] NCCL INFO Channel 01 : 0[0] -> 7[7] via SHM/direct/direct
+a0013:80313:80313 [1] NCCL INFO Channel 01 : 1[1] -> 3[3] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 01 : 3[3] -> 4[4] via SHM/direct/direct
+a0013:80318:80318 [6] NCCL INFO Channel 00 : 6[6] -> 5[5] via SHM/direct/direct
+a0014:88600:88600 [1] NCCL INFO Channel 01 : 9[1] -> 11[3] via SHM/direct/direct
+a0014:88599:88599 [0] NCCL INFO Channel 01 : 8[0] -> 15[7] via SHM/direct/direct
+a0014:88604:88604 [5] NCCL INFO Channel 01 : 13[5] -> 9[1] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 01 : 11[3] -> 12[4] via SHM/direct/direct
+a0013:80319:80319 [7] NCCL INFO Channel 00 : 7[7] -> 6[6] via SHM/direct/direct
+a0013:80318:80318 [6] NCCL INFO Channel 01 : 6[6] -> 5[5] via SHM/direct/direct
+a0014:88605:88605 [6] NCCL INFO Channel 00 : 14[6] -> 13[5] via SHM/direct/direct
+a0014:88606:88606 [7] NCCL INFO Channel 00 : 15[7] -> 14[6] via SHM/direct/direct
+a0013:80319:80319 [7] NCCL INFO Channel 01 : 7[7] -> 6[6] via SHM/direct/direct
+a0013:80316:80427 [0] NCCL INFO [Proxy Progress] Device 4 CPU core 84
+a0013:80316:80316 [4] NCCL INFO Channel 00/0 : 4[4] -> 10[2] [send] via NET/IB/0
+a0013:80316:80316 [4] NCCL INFO Channel 01/0 : 4[4] -> 10[2] [send] via NET/IB/0
+a0014:88605:88605 [6] NCCL INFO Channel 01 : 14[6] -> 13[5] via SHM/direct/direct
+a0014:88606:88606 [7] NCCL INFO Channel 01 : 15[7] -> 14[6] via SHM/direct/direct
+a0014:88603:88603 [4] NCCL INFO Channel 00/0 : 12[4] -> 2[2] [send] via NET/IB/0
+a0014:88603:88705 [0] NCCL INFO [Proxy Progress] Device 4 CPU core 89
+a0014:88603:88603 [4] NCCL INFO Channel 01/0 : 12[4] -> 2[2] [send] via NET/IB/0
+a0014:88601:88601 [2] NCCL INFO Channel 00 : 10[2] -> 8[0] via SHM/direct/direct
+a0014:88601:88601 [2] NCCL INFO Channel 01 : 10[2] -> 8[0] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 00 : 2[2] -> 0[0] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 01 : 2[2] -> 0[0] via SHM/direct/direct
+a0013:80312:80312 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80313:80313 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80315:80315 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80314:80314 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80316:80316 [4] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88606:88606 [7] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80317:80317 [5] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88605:88605 [6] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88604:88604 [5] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88603:88603 [4] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80318:80318 [6] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0013:80319:80319 [7] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88602:88602 [3] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88601:88601 [2] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88600:88600 [1] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+a0014:88599:88599 [0] NCCL INFO Connected all rings, use ring PXN 0 GDR 0
+[rank0] Warmup: target 60.0s, min 20 steps
+a0014:88599:88599 [0] NCCL INFO Channel 00 : 8[0] -> 12[4] via SHM/direct/direct
+a0014:88601:88601 [2] NCCL INFO Channel 00 : 10[2] -> 11[3] via SHM/direct/direct
+a0014:88604:88604 [5] NCCL INFO Channel 00 : 13[5] -> 14[6] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 00 : 2[2] -> 3[3] via SHM/direct/direct
+a0013:80312:80312 [0] NCCL INFO Channel 00 : 0[0] -> 4[4] via SHM/direct/direct
+a0014:88601:88601 [2] NCCL INFO Channel 01 : 10[2] -> 11[3] via SHM/direct/direct
+a0014:88604:88604 [5] NCCL INFO Channel 01 : 13[5] -> 14[6] via SHM/direct/direct
+a0013:80313:80313 [1] NCCL INFO Channel 00 : 1[1] -> 5[5] via SHM/direct/direct
+a0013:80317:80317 [5] NCCL INFO Channel 00 : 5[5] -> 6[6] via SHM/direct/direct
+a0014:88599:88599 [0] NCCL INFO Channel 01 : 8[0] -> 12[4] via SHM/direct/direct
+a0014:88600:88600 [1] NCCL INFO Channel 00 : 9[1] -> 13[5] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 01 : 2[2] -> 3[3] via SHM/direct/direct
+a0013:80312:80312 [0] NCCL INFO Channel 01 : 0[0] -> 4[4] via SHM/direct/direct
+a0013:80313:80313 [1] NCCL INFO Channel 01 : 1[1] -> 5[5] via SHM/direct/direct
+a0013:80317:80317 [5] NCCL INFO Channel 01 : 5[5] -> 6[6] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 00/0 : 10[2] -> 2[2] [receive] via NET/IB/0/GDRDMA
+a0013:80314:80314 [2] NCCL INFO Channel 01/0 : 10[2] -> 2[2] [receive] via NET/IB/0/GDRDMA
+a0013:80314:80314 [2] NCCL INFO Channel 00/0 : 2[2] -> 10[2] [send] via NET/IB/0/GDRDMA
+a0013:80314:80314 [2] NCCL INFO Channel 01/0 : 2[2] -> 10[2] [send] via NET/IB/0/GDRDMA
+a0014:88600:88600 [1] NCCL INFO Channel 01 : 9[1] -> 13[5] via SHM/direct/direct
+a0014:88603:88603 [4] NCCL INFO Channel 00 : 12[4] -> 8[0] via SHM/direct/direct
+a0014:88605:88605 [6] NCCL INFO Channel 00 : 14[6] -> 15[7] via SHM/direct/direct
+a0014:88601:88601 [2] NCCL INFO Channel 00/0 : 2[2] -> 10[2] [receive] via NET/IB/0/GDRDMA
+a0014:88601:88601 [2] NCCL INFO Channel 01/0 : 2[2] -> 10[2] [receive] via NET/IB/0/GDRDMA
+a0014:88601:88601 [2] NCCL INFO Channel 00/0 : 10[2] -> 2[2] [send] via NET/IB/0/GDRDMA
+a0014:88601:88601 [2] NCCL INFO Channel 01/0 : 10[2] -> 2[2] [send] via NET/IB/0/GDRDMA
+a0013:80316:80316 [4] NCCL INFO Channel 00 : 4[4] -> 0[0] via SHM/direct/direct
+a0013:80318:80318 [6] NCCL INFO Channel 00 : 6[6] -> 7[7] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 00 : 3[3] -> 1[1] via SHM/direct/direct
+a0014:88605:88605 [6] NCCL INFO Channel 01 : 14[6] -> 15[7] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 00 : 11[3] -> 9[1] via SHM/direct/direct
+a0014:88603:88603 [4] NCCL INFO Channel 01 : 12[4] -> 8[0] via SHM/direct/direct
+a0014:88606:88606 [7] NCCL INFO Channel 00 : 15[7] -> 8[0] via SHM/direct/direct
+a0013:80316:80316 [4] NCCL INFO Channel 01 : 4[4] -> 0[0] via SHM/direct/direct
+a0013:80318:80318 [6] NCCL INFO Channel 01 : 6[6] -> 7[7] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 01 : 3[3] -> 1[1] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 01 : 11[3] -> 9[1] via SHM/direct/direct
+a0013:80319:80319 [7] NCCL INFO Channel 00 : 7[7] -> 0[0] via SHM/direct/direct
+a0014:88606:88606 [7] NCCL INFO Channel 01 : 15[7] -> 8[0] via SHM/direct/direct
+a0013:80319:80319 [7] NCCL INFO Channel 01 : 7[7] -> 0[0] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 00 : 11[3] -> 10[2] via SHM/direct/direct
+a0014:88602:88602 [3] NCCL INFO Channel 01 : 11[3] -> 10[2] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 00 : 3[3] -> 2[2] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 01 : 3[3] -> 2[2] via SHM/direct/direct
+a0014:88605:88605 [6] NCCL INFO Connected all trees
+a0013:80318:80318 [6] NCCL INFO Connected all trees
+a0013:80317:80317 [5] NCCL INFO Connected all trees
+a0013:80319:80319 [7] NCCL INFO Connected all trees
+a0013:80316:80316 [4] NCCL INFO Connected all trees
+a0013:80312:80312 [0] NCCL INFO Connected all trees
+a0014:88604:88604 [5] NCCL INFO Connected all trees
+a0014:88606:88606 [7] NCCL INFO Connected all trees
+a0014:88603:88603 [4] NCCL INFO Connected all trees
+a0014:88599:88599 [0] NCCL INFO Connected all trees
+a0013:80313:80313 [1] NCCL INFO Connected all trees
+a0014:88600:88600 [1] NCCL INFO Connected all trees
+a0013:80315:80315 [3] NCCL INFO Connected all trees
+a0013:80314:80314 [2] NCCL INFO Connected all trees
+a0014:88602:88602 [3] NCCL INFO Connected all trees
+a0014:88601:88601 [2] NCCL INFO Connected all trees
+[rank0] Warmup done: 1180 steps in 58.4s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 12198 steps (estimated 601s)
+a0014:88601:88601 [2] NCCL INFO Channel 01/1 : 10[2] -> 0[0] [send] via NET/IB/0/GDRDMA/Shared
+a0014:88603:88603 [4] NCCL INFO Channel 01/1 : 12[4] -> 0[0] [send] via NET/IB/1/GDRDMA/Shared
+a0013:80317:80317 [5] NCCL INFO Channel 00 : 5[5] -> 0[0] via SHM/direct/direct
+a0013:80314:80314 [2] NCCL INFO Channel 00 : 2[2] -> 0[0] via SHM/direct/direct
+a0013:80316:80316 [4] NCCL INFO Channel 00 : 4[4] -> 0[0] via SHM/direct/direct
+a0013:80315:80315 [3] NCCL INFO Channel 00 : 3[3] -> 0[0] via SHM/direct/direct
+a0013:80318:80318 [6] NCCL INFO Channel 00 : 6[6] -> 0[0] via SHM/direct/direct
+a0013:80319:80319 [7] NCCL INFO Channel 00 : 7[7] -> 0[0] via SHM/direct/direct
+a0013:80313:80313 [1] NCCL INFO Channel 00 : 1[1] -> 0[0] via SHM/direct/direct
+a0013:80312:89186 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 23
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 15[7] -> 0[0] [receive] via NET/IB/1/Shared
+a0014:88599:97449 [0] NCCL INFO [Proxy Progress] Device 0 CPU core 30
+a0014:88599:88599 [0] NCCL INFO Channel 01/1 : 8[0] -> 0[0] [send] via NET/IB/1/Shared
+a0014:88605:97451 [0] NCCL INFO [Proxy Progress] Device 6 CPU core 82
+a0014:88602:97450 [0] NCCL INFO [Proxy Progress] Device 3 CPU core 9
+a0014:88602:88602 [3] NCCL INFO Channel 01/1 : 11[3] -> 0[0] [send] via NET/IB/0/Shared
+a0014:88605:88605 [6] NCCL INFO Channel 01/1 : 14[6] -> 0[0] [send] via NET/IB/1/Shared
+a0014:88600:97452 [0] NCCL INFO [Proxy Progress] Device 1 CPU core 31
+a0014:88600:88600 [1] NCCL INFO Channel 01/1 : 9[1] -> 0[0] [send] via NET/IB/0/Shared
+a0014:88606:97453 [0] NCCL INFO [Proxy Progress] Device 7 CPU core 71
+a0014:88606:88606 [7] NCCL INFO Channel 01/1 : 15[7] -> 0[0] [send] via NET/IB/0/Shared
+a0014:88604:97454 [0] NCCL INFO [Proxy Progress] Device 5 CPU core 83
+a0014:88604:88604 [5] NCCL INFO Channel 01/1 : 13[5] -> 0[0] [send] via NET/IB/0/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 14[6] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 13[5] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 12[4] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 11[3] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 10[2] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 9[1] -> 0[0] [receive] via NET/IB/1/Shared
+a0013:80312:80312 [0] NCCL INFO Channel 01/1 : 8[0] -> 0[0] [receive] via NET/IB/1/Shared
+
+================================================================
+RESULTS [2node_8gpu_16rank_weak_resnet50_17252]
+================================================================
+Scaling mode         : weak
+World size / nodes   : 16 / 2
+Device               : NVIDIA RTX PRO 6000 Blackwell Server Edition
+Compute capability   : [12, 0]
+Model                : resnet50
+Per-GPU / global bs  : 128 / 2048
+Precision            : bf16
+Steps measured       : 12198 in 589.3s
+Mean step (s)        : 0.0483 (stdev 0.0001)
+p50 / p95 / p99 (s)  : 0.0483 / 0.0485 / 0.0488
+Images/sec per GPU   : 2649.6
+Images/sec global    : 42394.0
+Peak mem (GB)        : min=5.72 mean=5.72 max=5.72 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=93% mean=97% max=97% (537 samples)
+Power rank0 (W)      : mean=399 max=418
+SM clock rank0 (MHz) : mean=2385 max=2407
+================================================================
+[rank0] Wrote results/2node_8gpu_16rank_weak_resnet50_17252.json
+a0014:88603:88603 [4] NCCL INFO comm 0x556d4314fcc0 rank 12 nranks 16 cudaDev 4 busId 104000 - Destroy COMPLETE
+a0014:88604:88604 [5] NCCL INFO comm 0x55cadc175f40 rank 13 nranks 16 cudaDev 5 busId 144000 - Destroy COMPLETE
+a0014:88599:88599 [0] NCCL INFO comm 0x56215a73c280 rank 8 nranks 16 cudaDev 0 busId 3000 - Destroy COMPLETE
+a0014:88605:88605 [6] NCCL INFO comm 0x55e90f8b3a00 rank 14 nranks 16 cudaDev 6 busId 18e000 - Destroy COMPLETE
+a0014:88606:88606 [7] NCCL INFO comm 0x560bb3632f80 rank 15 nranks 16 cudaDev 7 busId 1c8000 - Destroy COMPLETE
+a0014:88600:88600 [1] NCCL INFO comm 0x5620f87d70c0 rank 9 nranks 16 cudaDev 1 busId 42000 - Destroy COMPLETE
+a0014:88602:88602 [3] NCCL INFO comm 0x55cb326b7cc0 rank 11 nranks 16 cudaDev 3 busId c7000 - Destroy COMPLETE
+a0014:88601:88601 [2] NCCL INFO comm 0x55e35ec40d80 rank 10 nranks 16 cudaDev 2 busId 8c000 - Destroy COMPLETE
+a0013:80319:80319 [7] NCCL INFO comm 0x55cf1f2a0300 rank 7 nranks 16 cudaDev 7 busId 1c8000 - Destroy COMPLETE
+a0013:80312:80312 [0] NCCL INFO comm 0x563581f9c800 rank 0 nranks 16 cudaDev 0 busId 3000 - Destroy COMPLETE
+a0013:80318:80318 [6] NCCL INFO comm 0x562e37817e40 rank 6 nranks 16 cudaDev 6 busId 18e000 - Destroy COMPLETE
+a0013:80317:80317 [5] NCCL INFO comm 0x55f381fece00 rank 5 nranks 16 cudaDev 5 busId 144000 - Destroy COMPLETE
+a0013:80316:80316 [4] NCCL INFO comm 0x56281fd0f140 rank 4 nranks 16 cudaDev 4 busId 104000 - Destroy COMPLETE
+a0013:80315:80315 [3] NCCL INFO comm 0x5587451d5e80 rank 3 nranks 16 cudaDev 3 busId c7000 - Destroy COMPLETE
+a0013:80314:80314 [2] NCCL INFO comm 0x5619303ebfc0 rank 2 nranks 16 cudaDev 2 busId 8c000 - Destroy COMPLETE
+a0013:80313:80313 [1] NCCL INFO comm 0x561668bd4fc0 rank 1 nranks 16 cudaDev 1 busId 42000 - Destroy COMPLETE
+a0014:88601:88601 [2] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88604:88604 [5] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88606:88606 [7] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88602:88602 [3] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88600:88600 [1] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88605:88605 [6] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88599:88599 [0] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0014:88603:88603 [4] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80319:80319 [7] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80314:80314 [2] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80317:80317 [5] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80313:80313 [1] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80316:80316 [4] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80312:80312 [0] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80318:80318 [6] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+a0013:80315:80315 [3] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault

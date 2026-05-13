@@ -1,0 +1,133 @@
+=== Job info ===
+Job ID    : 17462
+Node      : a0007
+GPUs      : 8
+index, name, memory.total [MiB]
+0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+2, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+3, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+4, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+5, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+6, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+7, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 0] host=a0007 local_rank=0 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank0] scaling=strong per_gpu=64 global=512
+[rank 7] host=a0007 local_rank=7 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 3] host=a0007 local_rank=3 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 1] host=a0007 local_rank=1 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 5] host=a0007 local_rank=5 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 4] host=a0007 local_rank=4 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 2] host=a0007 local_rank=2 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 6] host=a0007 local_rank=6 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 1096 steps in 57.7s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 11283 steps (estimated 600s)
+
+[2026-05-11 18:22:08] a0007:68265:68340 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68269:68337 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68271:68331 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68270:68354 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68267:68334 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68266:68348 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68268:68344 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:22:08] a0007:68264:68328 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 18:28:14] a0007:68265:68340 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68264:68328 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68265:68340 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68269:68337 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68264:68328 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68268:68344 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68267:68334 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68268:68344 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68269:68337 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68270:68354 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68267:68334 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68271:68331 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68270:68354 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68266:68348 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68271:68331 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68266:68348 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68264:68328 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68271:68331 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68267:68334 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68268:68344 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68265:68340 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68269:68337 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68270:68354 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68266:68348 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 18:28:14] a0007:68264:68328 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68271:68331 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68269:68337 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68265:68340 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68268:68344 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68267:68334 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68266:68348 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 18:28:14] a0007:68270:68354 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+================================================================
+RESULTS [1node_8gpu_strong_resnet152_17462]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 8 / 1
+Device               : NVIDIA RTX PRO 6000 Blackwell Server Edition
+Compute capability   : [12, 0]
+Model                : resnet152
+Per-GPU / global bs  : 64 / 512
+Precision            : bf16
+Steps measured       : 11283 in 595.9s
+Mean step (s)        : 0.0528 (stdev 0.0002)
+p50 / p95 / p99 (s)  : 0.0528 / 0.0531 / 0.0532
+Images/sec per GPU   : 1211.8
+Images/sec global    : 9694.6
+Peak mem (GB)        : min=6.24 mean=6.24 max=6.24 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=14% mean=95% max=97% (548 samples)
+Power rank0 (W)      : mean=375 max=386
+SM clock rank0 (MHz) : mean=2366 max=2400
+================================================================
+[rank0] Wrote results/1node_8gpu_strong_resnet152_17462.json

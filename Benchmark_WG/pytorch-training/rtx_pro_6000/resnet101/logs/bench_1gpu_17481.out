@@ -1,0 +1,46 @@
+=== Job info ===
+Job ID    : 17481
+Node      : a0002
+GPUs      : 1
+name, driver_version, memory.total [MiB]
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+NVIDIA RTX PRO 6000 Blackwell Server Edition, 580.105.08, 97887 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 0] host=a0002 local_rank=0 world_size=1 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank0] scaling=strong per_gpu=512 global=512
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 199 steps in 60.2s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 2043 steps (estimated 600s)
+
+================================================================
+RESULTS [1gpu_strong_resnet101_a0002_17481]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 1 / 1
+Device               : NVIDIA RTX PRO 6000 Blackwell Server Edition
+Compute capability   : [12, 0]
+Model                : resnet101
+Per-GPU / global bs  : 512 / 512
+Precision            : bf16
+Steps measured       : 2043 in 602.6s
+Mean step (s)        : 0.2950 (stdev 0.0001)
+p50 / p95 / p99 (s)  : 0.2950 / 0.2952 / 0.2952
+Images/sec per GPU   : 1735.7
+Images/sec global    : 1735.7
+Peak mem (GB)        : min=31.80 mean=31.80 max=31.80 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=43% mean=99% max=100% (526 samples)
+Power rank0 (W)      : mean=449 max=470
+SM clock rank0 (MHz) : mean=2395 max=2400
+================================================================
+[rank0] Wrote results/1gpu_strong_resnet101_a0002_17481.json

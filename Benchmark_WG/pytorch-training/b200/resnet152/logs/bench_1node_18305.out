@@ -1,0 +1,53 @@
+=== Job info ===
+Job ID    : 18305
+Node      : b0024
+GPUs      : 8
+index, name, memory.total [MiB]
+0, NVIDIA B200, 183359 MiB
+1, NVIDIA B200, 183359 MiB
+2, NVIDIA B200, 183359 MiB
+3, NVIDIA B200, 183359 MiB
+4, NVIDIA B200, 183359 MiB
+5, NVIDIA B200, 183359 MiB
+6, NVIDIA B200, 183359 MiB
+7, NVIDIA B200, 183359 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 1] host=b0024 local_rank=1 world_size=8 device=NVIDIA B200
+[rank 0] host=b0024 local_rank=0 world_size=8 device=NVIDIA B200
+[rank0] scaling=strong per_gpu=128 global=1024
+[rank 4] host=b0024 local_rank=4 world_size=8 device=NVIDIA B200
+[rank 7] host=b0024 local_rank=7 world_size=8 device=NVIDIA B200
+[rank 6] host=b0024 local_rank=6 world_size=8 device=NVIDIA B200
+[rank 3] host=b0024 local_rank=3 world_size=8 device=NVIDIA B200
+[rank 5] host=b0024 local_rank=5 world_size=8 device=NVIDIA B200[rank 2] host=b0024 local_rank=2 world_size=8 device=NVIDIA B200
+
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 968 steps in 59.8s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 9999 steps (estimated 601s)
+
+================================================================
+RESULTS [1node_8gpu_strong_resnet152_18305]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 8 / 1
+Device               : NVIDIA B200
+Compute capability   : [10, 0]
+Model                : resnet152
+Per-GPU / global bs  : 128 / 1024
+Precision            : bf16
+Steps measured       : 9999 in 616.2s
+Mean step (s)        : 0.0616 (stdev 0.0003)
+p50 / p95 / p99 (s)  : 0.0616 / 0.0620 / 0.0623
+Images/sec per GPU   : 2078.1
+Images/sec global    : 16624.6
+Peak mem (GB)        : min=11.69 mean=11.70 max=11.70 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=0% mean=93% max=96% (426 samples)
+Power rank0 (W)      : mean=646 max=659
+SM clock rank0 (MHz) : mean=1965 max=1965
+================================================================
+[rank0] Wrote results/1node_8gpu_strong_resnet152_18305.json

@@ -1,0 +1,229 @@
+=== Job info ===
+Job ID    : 17254
+Node      : a0007
+GPUs      : 8
+index, name, memory.total [MiB]
+0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+2, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+3, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+4, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+5, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+6, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+7, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 7] host=a0007 local_rank=7 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 2] host=a0007 local_rank=2 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 6] host=a0007 local_rank=6 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 0] host=a0007 local_rank=0 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank0] scaling=strong per_gpu=128 global=1024
+[rank 5] host=a0007 local_rank=5 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 4] host=a0007 local_rank=4 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 3] host=a0007 local_rank=3 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition[rank 1] host=a0007 local_rank=1 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 1189 steps in 58.5s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 12233 steps (estimated 600s)
+
+[2026-05-11 17:33:53] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:33:53] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:34] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:38:34] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:34] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:38:43] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:38:43] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:01] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: client reregistration(17)
+
+[2026-05-11 17:39:01] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:01] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port active(9)
+
+[2026-05-11 17:39:16] a0007:49559:49626 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49554:49630 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49555:49627 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49556:49632 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49557:49631 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49558:49625 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49560:49628 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+[2026-05-11 17:39:16] a0007:49553:49629 [0] transport/net_ib.cc:253 NCCL WARN NET/IB : mlx5_3:1 Got non-fatal async event: port error(10)
+
+================================================================
+RESULTS [1node_8gpu_strong_resnet50_17254]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 8 / 1
+Device               : NVIDIA RTX PRO 6000 Blackwell Server Edition
+Compute capability   : [12, 0]
+Model                : resnet50
+Per-GPU / global bs  : 128 / 1024
+Precision            : bf16
+Steps measured       : 12233 in 593.8s
+Mean step (s)        : 0.0485 (stdev 0.0001)
+p50 / p95 / p99 (s)  : 0.0485 / 0.0486 / 0.0487
+Images/sec per GPU   : 2637.1
+Images/sec global    : 21097.2
+Peak mem (GB)        : min=5.72 mean=5.72 max=5.72 spread=0.1%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=14% mean=98% max=98% (541 samples)
+Power rank0 (W)      : mean=389 max=413
+SM clock rank0 (MHz) : mean=2391 max=2392
+================================================================
+[rank0] Wrote results/1node_8gpu_strong_resnet50_17254.json

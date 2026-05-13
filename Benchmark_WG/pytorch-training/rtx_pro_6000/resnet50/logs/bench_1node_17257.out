@@ -1,0 +1,53 @@
+=== Job info ===
+Job ID    : 17257
+Node      : a0008
+GPUs      : 8
+index, name, memory.total [MiB]
+0, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+1, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+2, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+3, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+4, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+5, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+6, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+7, NVIDIA RTX PRO 6000 Blackwell Server Edition, 97887 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 5] host=a0008 local_rank=5 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 4] host=a0008 local_rank=4 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 7] host=a0008 local_rank=7 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 6] host=a0008 local_rank=6 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 3] host=a0008 local_rank=3 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 2] host=a0008 local_rank=2 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank 0] host=a0008 local_rank=0 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+[rank0] scaling=strong per_gpu=256 global=2048
+[rank 1] host=a0008 local_rank=1 world_size=8 device=NVIDIA RTX PRO 6000 Blackwell Server Edition
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 580 steps in 59.0s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 6000 steps (estimated 600s)
+
+================================================================
+RESULTS [1node_8gpu_strong_resnet50_17257]
+================================================================
+Scaling mode         : strong
+World size / nodes   : 8 / 1
+Device               : NVIDIA RTX PRO 6000 Blackwell Server Edition
+Compute capability   : [12, 0]
+Model                : resnet50
+Per-GPU / global bs  : 256 / 2048
+Precision            : bf16
+Steps measured       : 6000 in 592.2s
+Mean step (s)        : 0.0987 (stdev 0.0001)
+p50 / p95 / p99 (s)  : 0.0987 / 0.0989 / 0.0990
+Images/sec per GPU   : 2593.6
+Images/sec global    : 20749.1
+Peak mem (GB)        : min=11.05 mean=11.05 max=11.05 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=8% mean=99% max=99% (537 samples)
+Power rank0 (W)      : mean=418 max=475
+SM clock rank0 (MHz) : mean=2397 max=2407
+================================================================
+[rank0] Wrote results/1node_8gpu_strong_resnet50_17257.json

@@ -1,0 +1,42 @@
+W0511 17:30:32.142000 88450 site-packages/torch/distributed/run.py:851] 
+W0511 17:30:32.142000 88450 site-packages/torch/distributed/run.py:851] *****************************************
+W0511 17:30:32.142000 88450 site-packages/torch/distributed/run.py:851] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0511 17:30:32.142000 88450 site-packages/torch/distributed/run.py:851] *****************************************
+W0511 17:30:32.142000 80215 site-packages/torch/distributed/run.py:851] 
+W0511 17:30:32.142000 80215 site-packages/torch/distributed/run.py:851] *****************************************
+W0511 17:30:32.142000 80215 site-packages/torch/distributed/run.py:851] Setting OMP_NUM_THREADS environment variable for each process to be 1 in default, to avoid your system being overloaded, please further tune the variable for optimal performance in your application as needed. 
+W0511 17:30:32.142000 80215 site-packages/torch/distributed/run.py:851] *****************************************
+/home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+/home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/distributed/c10d_logger.py:83: UserWarning: barrier(): using the device under current context. You can specify `device_id` in `init_process_group` to mute this warning.
+  return func(*args, **kwargs)
+[W511 17:41:32.457854859 TCPStore.cpp:115] [c10d] recvVector failed on SocketImpl(fd=75, addr=[a0014]:54884, remote=[a0013]:29500): Failed to recv, got 0 bytes. Connection was likely closed. Did the remote server shutdown or crash?
+Exception raised from recvBytes at /pytorch/torch/csrc/distributed/c10d/Utils.hpp:682 (most recent call first):
+frame #0: c10::Error::Error(c10::SourceLocation, std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >) + 0x9d (0x7ff4c594405d in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libc10.so)
+frame #1: <unknown function> + 0x6a9061d (0x7ff4e417e61d in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+frame #2: <unknown function> + 0x6a92746 (0x7ff4e4180746 in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+frame #3: c10d::TCPStore::compareSet(std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> > const&, std::vector<unsigned char, std::allocator<unsigned char> > const&, std::vector<unsigned char, std::allocator<unsigned char> > const&) + 0x1ef (0x7ff4e417b1ff in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libtorch_cpu.so)
+frame #4: <unknown function> + 0xec315a (0x7ff4f3c9515a in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libtorch_python.so)
+frame #5: <unknown function> + 0x411060 (0x7ff4f31e3060 in /home/g_paik_neu/.conda/envs/myenv/lib/python3.12/site-packages/torch/lib/libtorch_python.so)
+frame #6: <unknown function> + 0x21d338 (0x564cbeb3f338 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #7: _PyObject_MakeTpCall + 0x2bc (0x564cbeb15fac in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #8: <unknown function> + 0x2479b8 (0x564cbeb699b8 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #9: _PyEval_EvalFrameDefault + 0x540f (0x564cbeb24cdf in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #10: _PyObject_FastCallDictTstate + 0x1ce (0x564cbeb18c1e in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #11: _PyObject_Call_Prepend + 0xe7 (0x564cbeb4fc47 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #12: <unknown function> + 0x2feda9 (0x564cbec20da9 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #13: _PyObject_Call + 0xb5 (0x564cbeb52595 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #14: _PyEval_EvalFrameDefault + 0x540f (0x564cbeb24cdf in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #15: PyEval_EvalCode + 0x9f (0x564cbebd875f in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #16: <unknown function> + 0x2f24ea (0x564cbec144ea in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #17: <unknown function> + 0x2ed015 (0x564cbec0f015 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #18: <unknown function> + 0x2ea020 (0x564cbec0c020 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #19: _PyRun_SimpleFileObject + 0x1c6 (0x564cbec0bce6 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #20: _PyRun_AnyFileObject + 0x44 (0x564cbec0ba14 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #21: Py_RunMain + 0x39e (0x564cbec085ae in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #22: Py_BytesMain + 0x37 (0x564cbebc0677 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+frame #23: <unknown function> + 0x295d0 (0x7ff587acd5d0 in /lib64/libc.so.6)
+frame #24: __libc_start_main + 0x80 (0x7ff587acd680 in /lib64/libc.so.6)
+frame #25: <unknown function> + 0x29e4e7 (0x564cbebc04e7 in /home/g_paik_neu/.conda/envs/myenv/bin/python3.12)
+
+W0511 17:41:32.447000 88450 site-packages/torch/distributed/elastic/rendezvous/dynamic_rendezvous.py:1293] The node 'a0014_88450_0' has failed to shutdown the rendezvous '17252' due to an error of type RendezvousConnectionError.

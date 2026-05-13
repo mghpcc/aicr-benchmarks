@@ -1,0 +1,46 @@
+=== Job info ===
+Job ID    : 18301
+Node      : b0026
+GPUs      : 1
+name, driver_version, memory.total [MiB]
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+NVIDIA B200, 580.105.08, 183359 MiB
+torch: 2.11.0+cu130
+arch_list: ['sm_75', 'sm_80', 'sm_86', 'sm_90', 'sm_100', 'sm_120']
+================
+[rank 0] host=b0026 local_rank=0 world_size=1 device=NVIDIA B200
+[rank0] scaling=weak per_gpu=128 global=128
+NCCL version 2.28.9+cuda13.0
+[rank0] Warmup: target 60.0s, min 20 steps
+[rank0] Warmup done: 1008 steps in 59.7s
+[rank0] Benchmark: target 600.0s, min 50 steps
+[rank0] Bench target: 10366 steps (estimated 600s)
+
+================================================================
+RESULTS [1gpu_weak_resnet152_b0026_18301]
+================================================================
+Scaling mode         : weak
+World size / nodes   : 1 / 1
+Device               : NVIDIA B200
+Compute capability   : [10, 0]
+Model                : resnet152
+Per-GPU / global bs  : 128 / 128
+Precision            : bf16
+Steps measured       : 10366 in 611.7s
+Mean step (s)        : 0.0590 (stdev 0.0000)
+p50 / p95 / p99 (s)  : 0.0590 / 0.0591 / 0.0591
+Images/sec per GPU   : 2169.3
+Images/sec global    : 2169.3
+Peak mem (GB)        : min=11.70 mean=11.70 max=11.70 spread=0.0%
+Straggler ratio      : 1.000 (slowest/fastest rank)
+GPU activity rank0   : min=11% mean=93% max=95% (550 samples)
+Power rank0 (W)      : mean=651 max=661
+SM clock rank0 (MHz) : mean=1965 max=1965
+================================================================
+[rank0] Wrote results/1gpu_weak_resnet152_b0026_18301.json

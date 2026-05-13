@@ -1,0 +1,394 @@
+{
+  "tag": "1node_8gpu_weak_resnet50_17251",
+  "scaling_mode": "weak",
+  "world_size": 8,
+  "nodes": 1,
+  "gpus_per_node": 8,
+  "model": "resnet50",
+  "batch_size_per_gpu": 128,
+  "global_batch_size": 1024,
+  "image_size": 224,
+  "precision": "bf16",
+  "channels_last": true,
+  "compile": false,
+  "warmup_sec_target": 60.0,
+  "warmup_sec_actual": 58.66053609800292,
+  "warmup_steps": 1191,
+  "bench_sec_target": 600.0,
+  "bench_sec_actual": 592.3658013129898,
+  "bench_steps": 12271,
+  "mean_step_sec": 0.0482682380984936,
+  "stdev_step_sec": 8.354863317751557e-05,
+  "p50_step_sec": 0.04825325999991037,
+  "p95_step_sec": 0.048371665994636714,
+  "p99_step_sec": 0.048566263998509385,
+  "images_per_sec_per_gpu": 2651.847364695807,
+  "images_per_sec_global": 21214.778917566455,
+  "peak_mem_gb": {
+    "min_gb": 5.719921588897705,
+    "mean_gb": 5.719921588897705,
+    "max_gb": 5.719921588897705,
+    "spread_pct": 0.0
+  },
+  "straggler_ratio": 1.0000012348629916,
+  "slowest_rank": 2,
+  "fastest_rank": 7,
+  "gpu_sampling_rank0": {
+    "n_samples": 539,
+    "interval_sec": 1.0,
+    "gpu_activity_pct": {
+      "min": 48.0,
+      "mean": 97.48794063079778,
+      "max": 98.0
+    },
+    "mem_controller_pct": {
+      "min": 34.0,
+      "mean": 72.20222634508349,
+      "max": 73.0
+    },
+    "mem_used_mb": {
+      "min": 7531.0,
+      "mean": 7531.0,
+      "max": 7531.0
+    },
+    "power_w": {
+      "min": 370.09,
+      "mean": 403.8233766233766,
+      "max": 424.61
+    },
+    "sm_clock_mhz": {
+      "min": 2377.0,
+      "mean": 2385.8571428571427,
+      "max": 2400.0
+    }
+  },
+  "per_rank": [
+    {
+      "rank": 0,
+      "mean_step_sec": 0.048268239945173264,
+      "stdev_step_sec": 8.354863530257717e-05,
+      "p50_step_sec": 0.04825326055288315,
+      "p95_step_sec": 0.04837166517972946,
+      "p99_step_sec": 0.04856626316905022,
+      "images_per_sec": 2651.847412109375,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 539,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 48.0,
+          "mean": 97.48794063079778,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 34.0,
+          "mean": 72.20222634508349,
+          "max": 73.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 370.09,
+          "mean": 403.8233766233766,
+          "max": 424.61
+        },
+        "sm_clock_mhz": {
+          "min": 2377.0,
+          "mean": 2385.8571428571427,
+          "max": 2400.0
+        }
+      }
+    },
+    {
+      "rank": 1,
+      "mean_step_sec": 0.04826826602220535,
+      "stdev_step_sec": 8.403023821301758e-05,
+      "p50_step_sec": 0.04825307056307793,
+      "p95_step_sec": 0.04837077483534813,
+      "p99_step_sec": 0.048566751182079315,
+      "images_per_sec": 2651.845703125,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 539,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 88.0,
+          "mean": 97.88126159554731,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 65.0,
+          "mean": 71.6808905380334,
+          "max": 73.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 363.48,
+          "mean": 394.12144712430427,
+          "max": 411.65
+        },
+        "sm_clock_mhz": {
+          "min": 2385.0,
+          "mean": 2391.417439703154,
+          "max": 2407.0
+        }
+      }
+    },
+    {
+      "rank": 2,
+      "mean_step_sec": 0.048268284648656845,
+      "stdev_step_sec": 8.402248931815848e-05,
+      "p50_step_sec": 0.04825307056307793,
+      "p95_step_sec": 0.04837506636977196,
+      "p99_step_sec": 0.0485677532851696,
+      "images_per_sec": 2651.8447265625,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 539,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 97.0,
+          "mean": 97.72356215213358,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 69.0,
+          "mean": 70.67903525046383,
+          "max": 72.0
+        },
+        "mem_used_mb": {
+          "min": 7505.0,
+          "mean": 7505.0,
+          "max": 7505.0
+        },
+        "power_w": {
+          "min": 352.38,
+          "mean": 388.9223933209648,
+          "max": 405.04
+        },
+        "sm_clock_mhz": {
+          "min": 2385.0,
+          "mean": 2387.1966604823747,
+          "max": 2407.0
+        }
+      }
+    },
+    {
+      "rank": 3,
+      "mean_step_sec": 0.048268258571624756,
+      "stdev_step_sec": 8.387061097892001e-05,
+      "p50_step_sec": 0.04825357347726822,
+      "p95_step_sec": 0.04837362468242645,
+      "p99_step_sec": 0.04856634885072708,
+      "images_per_sec": 2651.84619140625,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 540,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 14.0,
+          "mean": 97.6962962962963,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 11.0,
+          "mean": 68.62222222222222,
+          "max": 70.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 371.19,
+          "mean": 407.00364814814816,
+          "max": 427.39
+        },
+        "sm_clock_mhz": {
+          "min": 2385.0,
+          "mean": 2391.198148148148,
+          "max": 2407.0
+        }
+      }
+    },
+    {
+      "rank": 4,
+      "mean_step_sec": 0.04826827347278595,
+      "stdev_step_sec": 8.423112740274519e-05,
+      "p50_step_sec": 0.048253390938043594,
+      "p95_step_sec": 0.04837483540177345,
+      "p99_step_sec": 0.04856684058904648,
+      "images_per_sec": 2651.845458984375,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 539,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 0.0,
+          "mean": 97.71428571428571,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 0.0,
+          "mean": 73.30426716141002,
+          "max": 74.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 374.34,
+          "mean": 402.64628942486087,
+          "max": 420.23
+        },
+        "sm_clock_mhz": {
+          "min": 2385.0,
+          "mean": 2391.9888682745827,
+          "max": 2407.0
+        }
+      }
+    },
+    {
+      "rank": 5,
+      "mean_step_sec": 0.04826825484633446,
+      "stdev_step_sec": 8.507094025844708e-05,
+      "p50_step_sec": 0.04825317859649658,
+      "p95_step_sec": 0.04837203398346901,
+      "p99_step_sec": 0.04857758432626724,
+      "images_per_sec": 2651.846435546875,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 540,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 14.0,
+          "mean": 97.6,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 11.0,
+          "mean": 66.17962962962963,
+          "max": 67.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 366.36,
+          "mean": 397.9698333333333,
+          "max": 413.35
+        },
+        "sm_clock_mhz": {
+          "min": 2392.0,
+          "mean": 2392.0425925925924,
+          "max": 2407.0
+        }
+      }
+    },
+    {
+      "rank": 6,
+      "mean_step_sec": 0.04826828092336655,
+      "stdev_step_sec": 8.485352009302005e-05,
+      "p50_step_sec": 0.048253029584884644,
+      "p95_step_sec": 0.04837225377559662,
+      "p99_step_sec": 0.04858056828379631,
+      "images_per_sec": 2651.844970703125,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 540,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 0.0,
+          "mean": 97.73518518518519,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 0.0,
+          "mean": 74.46111111111111,
+          "max": 76.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 373.57,
+          "mean": 398.2945555555556,
+          "max": 415.88
+        },
+        "sm_clock_mhz": {
+          "min": 2385.0,
+          "mean": 2389.4074074074074,
+          "max": 2392.0
+        }
+      }
+    },
+    {
+      "rank": 7,
+      "mean_step_sec": 0.04826822504401207,
+      "stdev_step_sec": 8.331244316650555e-05,
+      "p50_step_sec": 0.048253096640110016,
+      "p95_step_sec": 0.048371169716119766,
+      "p99_step_sec": 0.048564840108156204,
+      "images_per_sec": 2651.84814453125,
+      "peak_mem_gb": 5.719921588897705,
+      "n_steps": 12271,
+      "gpu_sampling": {
+        "n_samples": 540,
+        "interval_sec": 1.0,
+        "gpu_activity_pct": {
+          "min": 90.0,
+          "mean": 97.88333333333334,
+          "max": 98.0
+        },
+        "mem_controller_pct": {
+          "min": 62.0,
+          "mean": 68.11296296296297,
+          "max": 69.0
+        },
+        "mem_used_mb": {
+          "min": 7531.0,
+          "mean": 7531.0,
+          "max": 7531.0
+        },
+        "power_w": {
+          "min": 356.39,
+          "mean": 392.59874074074077,
+          "max": 408.08
+        },
+        "sm_clock_mhz": {
+          "min": 2392.0,
+          "mean": 2392.027777777778,
+          "max": 2407.0
+        }
+      }
+    }
+  ],
+  "torch_version": "2.11.0+cu130",
+  "cuda_version": "13.0",
+  "device_name": "NVIDIA RTX PRO 6000 Blackwell Server Edition",
+  "device_capability": [
+    12,
+    0
+  ]
+}
