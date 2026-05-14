@@ -10,7 +10,7 @@ Preview or submit one PyTorch DataLoader Slurm job for explicit AICR GPU nodes.
 scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--nodelist <nodes>] [--apply] [--] [runner args...]
 ```
 
-The public Make entrypoint is:
+The Make entrypoint is:
 
 ```bash
 make benchmark-dataloader CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> GPU_COUNT=<1|8> MODE=<single|replicated|distributed-sharded> NODELIST=<node[,node...]>

@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Render public DataLoader Markdown, CSV, JSON, and PNG summaries from parsed result artifacts.
+Render DataLoader Markdown, CSV, JSON, and PNG summaries from parsed result artifacts.
 
 ## Usage
 
@@ -10,7 +10,7 @@ Render public DataLoader Markdown, CSV, JSON, and PNG summaries from parsed resu
 scripts/report/render-dataloader-report.py --date DATE --cluster {b200,rtxpro6000} [--results-root RESULTS] [--output-dir DIR] [--repeat-aggregation {standard,olympic}]
 ```
 
-The public Make entrypoint is:
+The Make entrypoint is:
 
 ```bash
 make render-dataloader CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>
@@ -63,4 +63,4 @@ The DataLoader docs include a synthetic known-answer fixture under
 `tests/fixtures/dataloader/olympic-repeat/`. A test-only helper under
 `tests/scripts/` validates this Olympic aggregation behavior and the rendered
 Markdown/HTML report shape through the executable documentation framework. Test
-helpers are not part of the public command surface.
+helpers are not part of the command surface.

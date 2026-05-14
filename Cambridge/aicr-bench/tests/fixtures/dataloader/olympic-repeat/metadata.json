@@ -1,0 +1,28 @@
+{
+  "schema_version": 1,
+  "fixture_id": "dataloader-olympic-repeat-known-answer",
+  "fixture_type": "synthetic-parsed-summary",
+  "date": "2026-05-11",
+  "cluster": "b200",
+  "input_summary_glob": "input/parsed-summaries/b200/nodes/*/dataloader/*/summary.json",
+  "purpose": "Validate DataLoader Olympic repeat aggregation with a small known-answer fixture.",
+  "not_benchmark_evidence": true,
+  "expected": {
+    "aggregation": "olympic",
+    "aggregated_config_count": 1,
+    "repeat_sample_count": 5,
+    "repeat_included_count": 3,
+    "dropped_samples_per_second": [
+      100.0,
+      140.0
+    ],
+    "included_samples_per_second": [
+      110.0,
+      120.0,
+      130.0
+    ],
+    "olympic_samples_per_second": 120.0,
+    "olympic_rank_imbalance_percent": 3.0,
+    "olympic_vast_read_gb_per_second": 0.12
+  }
+}
