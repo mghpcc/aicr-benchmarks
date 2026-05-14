@@ -1,5 +1,7 @@
 # GDS RTX Single-node medium
 
+<!-- aicr-study-status: published -->
+
 Purpose: RTX single-node `medium` profile run.
 
 ## Command Run
@@ -18,7 +20,7 @@ make verify-gds CLUSTER=rtxpro6000 PROFILE=medium NODELIST=a0001 APPLY=1
 - Nodes: `a0001`
 - Slurm jobs: `16556`
 - Run IDs: `225306Z-r01`
-- Result: all promoted rows/jobs in this study passed.
+- Result: all rows/jobs in this study passed.
 - Scope: RTX single-node `medium` profile with sequential and random phases.
 - Sequential read: `10.089 GiB/s`
 - Sequential write: `7.180 GiB/s`
@@ -92,29 +94,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "ff804170ec4b2f6b4455232ba78aa2a6406c936d28550414991e1c0e6f12fce5" "gds-rtx-single-node-medium-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf gds-rtx-single-node-medium-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `gds-rtx-single-node-medium-2026-05-10.provenance.json`.
-
-## Generated Artifacts
-
-<details>
-<summary>Full generated artifact list from provenance</summary>
-
-- `results/by-date/2026-05-10/parsed/rtxpro6000/nodes/a0001/gds/225306Z-r01/status.json` (66 bytes)
-- `results/by-date/2026-05-10/parsed/rtxpro6000/nodes/a0001/gds/225306Z-r01/summary.json` (10584 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gds-summary.txt` (3814 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gdscheck-platform.txt` (4162 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gdsio-random-read.txt` (194 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gdsio-random-write.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gdsio-sequential-read.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/gdsio-sequential-write.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/nvidia-smi-L.txt` (808 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/canonical/nvidia-smi-topo-m.txt` (1359 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/metadata/record.json` (2140 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225306Z-r01/wrapper/cufile.log` (0 bytes)
-- `results/reports/2026-05-10/gds/225303Z-gds-rtxpro6000.json` (968 bytes)
-- `results/reports/2026-05-10/gds/gds-rtx-single-node-medium-dashboard.md` (2571 bytes)
-- `results/slurm/rtx-gds-1n-8g-16556.err` (0 bytes)
-- `results/slurm/rtx-gds-1n-8g-16556.out` (382 bytes)
-
-</details>

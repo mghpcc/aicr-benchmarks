@@ -1,5 +1,7 @@
 # GDS B200 Single-node medium
 
+<!-- aicr-study-status: published -->
+
 Purpose: B200 single-node `medium` profile run.
 
 ## Command Run
@@ -18,7 +20,7 @@ make verify-gds CLUSTER=b200 PROFILE=medium NODELIST=b0002 APPLY=1
 - Nodes: `b0002`
 - Slurm jobs: `16535`
 - Run IDs: `214743Z-r01`
-- Result: all promoted rows/jobs in this study passed.
+- Result: all rows/jobs in this study passed.
 - Scope: B200 single-node `medium` profile with sequential and random phases.
 - Sequential read: `9.694 GiB/s`
 - Sequential write: `7.511 GiB/s`
@@ -92,29 +94,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "4f9e14375fa797e04f0d3fe9bdeb9873e2577b2c84e68434c926e36e37146d0b" "gds-b200-single-node-medium-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf gds-b200-single-node-medium-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `gds-b200-single-node-medium-2026-05-10.provenance.json`.
-
-## Generated Artifacts
-
-<details>
-<summary>Full generated artifact list from provenance</summary>
-
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/214743Z-r01/status.json` (66 bytes)
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/214743Z-r01/summary.json` (10414 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gds-summary.txt` (3747 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gdscheck-platform.txt` (4003 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gdsio-random-read.txt` (194 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gdsio-random-write.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gdsio-sequential-read.txt` (194 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/gdsio-sequential-write.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/nvidia-smi-L.txt` (544 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/canonical/nvidia-smi-topo-m.txt` (3016 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/metadata/record.json` (2044 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214743Z-r01/wrapper/cufile.log` (0 bytes)
-- `results/reports/2026-05-10/gds/214739Z-gds-b200.json` (956 bytes)
-- `results/reports/2026-05-10/gds/gds-b200-single-node-medium-dashboard.md` (2549 bytes)
-- `results/slurm/b200-gds-1n-8g-16535.err` (0 bytes)
-- `results/slurm/b200-gds-1n-8g-16535.out` (358 bytes)
-
-</details>

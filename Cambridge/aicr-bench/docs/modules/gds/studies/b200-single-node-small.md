@@ -1,5 +1,7 @@
 # GDS B200 Single-node small
 
+<!-- aicr-study-status: published -->
+
 Purpose: B200 single-node `small` profile run.
 
 ## Command Run
@@ -18,7 +20,7 @@ make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0002 APPLY=1
 - Nodes: `b0002`
 - Slurm jobs: `16534`
 - Run IDs: `214655Z-r01`
-- Result: all promoted rows/jobs in this study passed.
+- Result: all rows/jobs in this study passed.
 - Scope: B200 single-node `small` profile.
 - Sequential read: `8.884 GiB/s`
 - Sequential write: `5.255 GiB/s`
@@ -86,27 +88,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "91e733417e1ecd876073f035bdc193052aa88c695e5cfcaf27a8c1c2868b4b62" "gds-b200-single-node-small-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf gds-b200-single-node-small-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `gds-b200-single-node-small-2026-05-10.provenance.json`.
-
-## Generated Artifacts
-
-<details>
-<summary>Full generated artifact list from provenance</summary>
-
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/214655Z-r01/status.json` (66 bytes)
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/214655Z-r01/summary.json` (8733 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/gds-summary.txt` (2940 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/gdscheck-platform.txt` (4003 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/gdsio-sequential-read.txt` (190 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/gdsio-sequential-write.txt` (192 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/nvidia-smi-L.txt` (544 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/canonical/nvidia-smi-topo-m.txt` (3016 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/metadata/record.json` (1836 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/214655Z-r01/wrapper/cufile.log` (0 bytes)
-- `results/reports/2026-05-10/gds/214652Z-gds-b200.json` (955 bytes)
-- `results/reports/2026-05-10/gds/gds-b200-single-node-small-dashboard.md` (2140 bytes)
-- `results/slurm/b200-gds-1n-8g-16534.err` (0 bytes)
-- `results/slurm/b200-gds-1n-8g-16534.out` (358 bytes)
-
-</details>

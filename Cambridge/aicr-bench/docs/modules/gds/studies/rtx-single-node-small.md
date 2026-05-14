@@ -1,5 +1,7 @@
 # GDS RTX Single-node small
 
+<!-- aicr-study-status: published -->
+
 Purpose: RTX single-node `small` profile run.
 
 ## Command Run
@@ -18,7 +20,7 @@ make verify-gds CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001 APPLY=1
 - Nodes: `a0001`
 - Slurm jobs: `16554`
 - Run IDs: `225234Z-r01`
-- Result: all promoted rows/jobs in this study passed.
+- Result: all rows/jobs in this study passed.
 - Scope: RTX single-node `small` profile.
 - Sequential read: `8.698 GiB/s`
 - Sequential write: `5.150 GiB/s`
@@ -86,27 +88,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "dec769e4ed58b9158fb0924e81782d8747fb841a8dfda1ec80ca20e7de33ff23" "gds-rtx-single-node-small-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf gds-rtx-single-node-small-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `gds-rtx-single-node-small-2026-05-10.provenance.json`.
-
-## Generated Artifacts
-
-<details>
-<summary>Full generated artifact list from provenance</summary>
-
-- `results/by-date/2026-05-10/parsed/rtxpro6000/nodes/a0001/gds/225234Z-r01/status.json` (66 bytes)
-- `results/by-date/2026-05-10/parsed/rtxpro6000/nodes/a0001/gds/225234Z-r01/summary.json` (8863 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/gds-summary.txt` (2985 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/gdscheck-platform.txt` (4162 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/gdsio-sequential-read.txt` (189 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/gdsio-sequential-write.txt` (191 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/nvidia-smi-L.txt` (808 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/canonical/nvidia-smi-topo-m.txt` (1359 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/metadata/record.json` (1920 bytes)
-- `results/by-date/2026-05-10/raw/rtxpro6000/nodes/a0001/gds/225234Z-r01/wrapper/cufile.log` (0 bytes)
-- `results/reports/2026-05-10/gds/225231Z-gds-rtxpro6000.json` (967 bytes)
-- `results/reports/2026-05-10/gds/gds-rtx-single-node-small-dashboard.md` (2150 bytes)
-- `results/slurm/rtx-gds-1n-8g-16554.err` (0 bytes)
-- `results/slurm/rtx-gds-1n-8g-16554.out` (382 bytes)
-
-</details>

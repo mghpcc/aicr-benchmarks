@@ -1,5 +1,7 @@
 # GDS B200 Focused Serial Fleet Olympic
 
+<!-- aicr-study-status: published -->
+
 Purpose: B200 five-node `medium` profile fleet run with serial submission and olympic aggregation.
 
 ## Run Configuration

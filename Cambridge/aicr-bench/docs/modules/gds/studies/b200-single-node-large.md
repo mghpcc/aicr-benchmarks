@@ -1,5 +1,7 @@
 # GDS B200 Single-node large
 
+<!-- aicr-study-status: published -->
+
 Purpose: B200 single-node `large` profile run.
 
 ## Command Run
@@ -18,7 +20,7 @@ make verify-gds CLUSTER=b200 PROFILE=large NODELIST=b0002 APPLY=1
 - Nodes: `b0002`
 - Slurm jobs: `16536`
 - Run IDs: `215245Z-r01`
-- Result: all promoted rows/jobs in this study passed.
+- Result: all rows/jobs in this study passed.
 - Scope: B200 single-node `large` profile with sequential, random, async, and CPU/GPU read phases.
 - Sequential read: `9.382 GiB/s`
 - Sequential write: `7.393 GiB/s`
@@ -95,32 +97,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "b41e9813b32eeb3cd8179c40a0aeff470f4429c97e70e795c8be8b0632be104a" "gds-b200-single-node-large-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf gds-b200-single-node-large-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `gds-b200-single-node-large-2026-05-10.provenance.json`.
-
-## Generated Artifacts
-
-<details>
-<summary>Full generated artifact list from provenance</summary>
-
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/215245Z-r01/status.json` (66 bytes)
-- `results/by-date/2026-05-10/parsed/b200/nodes/b0002/gds/215245Z-r01/summary.json` (12915 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gds-summary.txt` (4982 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdscheck-platform.txt` (4003 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-async-stream-read.txt` (199 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-async-stream-write.txt` (199 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-cpu-gpu-read.txt` (200 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-random-read.txt` (195 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-random-write.txt` (196 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-sequential-read.txt` (198 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/gdsio-sequential-write.txt` (198 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/nvidia-smi-L.txt` (544 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/canonical/nvidia-smi-topo-m.txt` (3016 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/metadata/record.json` (2366 bytes)
-- `results/by-date/2026-05-10/raw/b200/nodes/b0002/gds/215245Z-r01/wrapper/cufile.log` (0 bytes)
-- `results/reports/2026-05-10/gds/215242Z-gds-b200.json` (955 bytes)
-- `results/reports/2026-05-10/gds/gds-b200-single-node-large-dashboard.md` (2800 bytes)
-- `results/slurm/b200-gds-1n-8g-16536.err` (0 bytes)
-- `results/slurm/b200-gds-1n-8g-16536.out` (358 bytes)
-
-</details>
