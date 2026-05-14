@@ -88,5 +88,49 @@ NCCL profiles are `small`, `medium`, and `large`. Custom message-shape work belo
 ## Artifacts
 
 NCCL runs produce raw captures, parsed summaries, suite reports, and optional
-survey manifests under the configured `results` root. Reviewed study pages link
-downloadable bundles, provenance, checksums, and retrieve/verify commands.
+submitter manifests under the configured `results` root.
+
+Raw run directories:
+
+```text
+results/by-date/<date>/raw/<cluster>/nodes/<node>/nccl-suite-local/<run_id>/
+results/by-date/<date>/raw/<cluster>/multi-node/nccl-suite-rdma/<run_id>/
+results/by-date/<date>/raw/<cluster>/multi-node/nccl-suite-survey/<run_id>/
+```
+
+Canonical files:
+
+```text
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-summary.md
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-env.txt
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-command.sh
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-records.jsonl
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-capabilities.json
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/gpu-preflight.txt
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/<suite-class>--<collective>-stdout.txt
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/<suite-class>--<collective>-stderr.txt
+```
+
+Metadata and parsed files:
+
+```text
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/metadata/record.json
+results/by-date/<date>/parsed/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/summary.json
+results/by-date/<date>/parsed/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/status.json
+```
+
+Manifest, index, and rendered report files:
+
+```text
+results/by-date/<date>/index.jsonl
+results/by-node/<cluster>/<node>/history.jsonl
+results/reports/<date>/nccl-suite-local/<manifest>.json
+results/reports/<date>/nccl-suite-rdma/<manifest>.json
+results/reports/<date>/nccl-suite-survey/<manifest>.json
+results/reports/<date>/nccl-suite-<cluster>.md
+results/reports/<date>/nccl-suite-survey/<cluster>-index.md
+results/reports/<date>/nccl-suite-survey/<cluster>-<nodes>n.md
+```
+
+Reviewed study pages link downloadable bundles, provenance, checksums, and
+retrieve/verify commands rather than raw generated run trees.

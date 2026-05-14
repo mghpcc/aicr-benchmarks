@@ -1,5 +1,7 @@
 # NCCL Default local RTX
 
+<!-- aicr-study-status: published -->
+
 Purpose: RTX 8-GPU local baseline.
 
 ## Command Run
@@ -70,7 +72,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "597434c2a74d21709c72cf1bcf24003bb17ab846c7f6cccd1f89356f39b1d771" "nccl-rtx-local-suite-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf nccl-rtx-local-suite-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `nccl-rtx-local-suite-2026-05-10.provenance.json`.
-
-## Generated Artifacts

@@ -1,5 +1,7 @@
 # NCCL B200 local two rank socket policy
 
+<!-- aicr-study-status: published -->
+
 Purpose: B200 local two-rank socket-policy run.
 
 ## Command Run
@@ -70,7 +72,3 @@ wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/4
 printf "%s  %s\n" "570ffb67e545198f62901d0c5da3b929df08ce5e76b432ea9ed68a2961bf1130" "nccl-b200-local-suite-2026-05-10.tar.gz" | sha256sum -c -
 tar -tzf nccl-b200-local-suite-2026-05-10.tar.gz | head
 ```
-
-The matching provenance file is `nccl-b200-local-suite-2026-05-10.provenance.json`.
-
-## Generated Artifacts

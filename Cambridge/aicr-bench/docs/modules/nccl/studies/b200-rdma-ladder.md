@@ -2,6 +2,7 @@
 
 <!-- aicr-study-status: published -->
 
+
 Purpose: May 12, 2026 B200 medium-profile NCCL RDMA ladder results.
 
 ## Run Shape
@@ -47,7 +48,7 @@ scripts/verify/submit-nccl-fleet.sh \
 | 8 | `b0001,b0002,b0003,b0004,b0005,b0006,b0007,b0008` |
 | 16 | `b0001,b0002,b0003,b0004,b0005,b0006,b0007,b0008,b0009,b0010,b0011,b0012,b0013,b0014,b0015,b0016` |
 
-## Results
+## Result Summary
 
 | Nodes | GPUs | Samples | Passes | Status | AR Olympic avg (GB/s) | RS Olympic avg (GB/s) | AG Olympic avg (GB/s) | A2A Olympic avg (GB/s) | Wrong |
 | ---: | ---: | --- | --- | --- | ---: | ---: | ---: | ---: | ---: |
@@ -98,7 +99,7 @@ This study shares one collection-day artifact bundle with the
 | Bundle SHA-256 | `dfaa89229f1cb5994b45f7d487e97da6f2834896c2128bb9f86641fc4956a63b` |
 | Provenance SHA-256 | `be065fca24aa00476d3e6a9bd9e88903c6e1e029ab6ad5d343f0c94da4dec32a` |
 
-Retrieve and verify:
+## Retrieve And Verify
 
 ```bash
 wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/b01c7cc/nccl/2026-05-12/nccl-b200-rtx-clean-prefix-rdma-results-olympic-2026-05-12.tar.gz
