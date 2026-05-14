@@ -11,7 +11,6 @@ here. Keep copy-paste command blocks literal.
 - [install.sh](install.md)
 - [make](make.md)
 - [pull-verified-containers.sh](pull-verified-containers.md)
-- [parse-nccl-debug-algorithms.py](parse-nccl-debug-algorithms.md)
 - [render-dataloader-report.py](render-dataloader-report.md)
 - [render-ddp-resnet50-report.py](render-ddp-resnet50-report.md)
 - [render-hpl-mxp-report.py](render-hpl-mxp-report.md)

@@ -10,7 +10,7 @@ Render NCCL suite reports from parsed NCCL suite artifacts.
 scripts/report/render-nccl-suite-report.py --date DATE --cluster {b200,rtxpro6000} --scope {local,rdma,survey} [options]
 ```
 
-The public Make entrypoint is:
+Make entrypoint:
 
 ```bash
 make render-nccl-suite NCCL_SCOPE=<local|rdma|survey> CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>

@@ -10,7 +10,7 @@ Preview or submit NCCL suite Slurm jobs for explicit node pools or discovered id
 scripts/verify/submit-nccl-fleet.sh --scope <local|rdma|survey> --cluster <b200|rtxpro6000> [options]
 ```
 
-The public Make entrypoint is:
+Make entrypoint:
 
 ```bash
 make verify-nccl-suite NCCL_SCOPE=<local|rdma|survey> CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> NODELIST=<node[,node...]>
@@ -22,11 +22,11 @@ make verify-nccl-suite NCCL_SCOPE=<local|rdma|survey> CLUSTER=<b200|rtxpro6000> 
 - `--scope <local|rdma|survey>`: Suite scope. `local` disables IB and defaults to eight processes, one process per GPU, with 16 CPU cores per process; `rdma` uses fixed multi-node groups; `survey` samples candidate node groups for campaign planning.
 - `--cluster <name>`: `b200` or `rtxpro6000`.
 - `--profile <name>`: `small`, `medium`, or `large`. Default: `small`.
-- `--suite-class <name>`: Optional local-mode class filter. Public examples include B200 `b200_1proc_8g`, B200 `b200_2rank_socket_4g`, and RTX `rtx_pair_policy`.
+- `--suite-class <name>`: Optional local-mode class filter. Supported examples include B200 `b200_1proc_8g`, B200 `b200_2rank_socket_4g`, and RTX `rtx_pair_policy`.
 - `--nodes <list>`: Candidate nodes, separated by commas or spaces.
 - `--nodes-per-job <n>`: RDMA group size. B200 accepts `2,4,8,16`; RTX accepts `2,4,8`.
 - `--survey-sizes <list>`: Survey node counts, separated by commas or spaces. B200 accepts `1,2,4,8,16`; RTX accepts `1,2,4,8`.
-- `--allow-nonstandard-node-count`: Expert diagnostic escape hatch for RDMA or survey node counts outside the public ladders, such as B200 `3` or `31`. Do not use this for promoted public scaling evidence without review.
+- `--allow-nonstandard-node-count`: Allow RDMA or survey node counts outside the standard ladders, such as B200 `3` or `31`.
 - `--partition <name>`: Override Slurm partition.
 - `--time <value>`: Override Slurm time limit.
 - `--repeat-count <n>`: Submit repeated jobs. Default: `1`.
@@ -83,7 +83,7 @@ Preview one eight-node RTX RDMA group:
 scripts/verify/submit-nccl-fleet.sh --scope rdma --cluster rtxpro6000 --profile small --nodes a0001,a0002,a0003,a0004,a0005,a0006,a0007,a0008 --nodes-per-job 8
 ```
 
-Preview one nonstandard B200 diagnostic group:
+Preview one nonstandard B200 RDMA group:
 
 ```bash
 scripts/verify/submit-nccl-fleet.sh --scope rdma --cluster b200 --profile small --nodes b0001,b0002,b0003 --nodes-per-job 3 --allow-nonstandard-node-count

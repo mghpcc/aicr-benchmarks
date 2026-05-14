@@ -18,7 +18,7 @@ This script is normally called by Slurm wrappers under `slurm/verify/`. Use `mak
 - `--scope <local|rdma|survey>`: Required suite scope.
 - `--cluster <name>`: `b200` or `rtxpro6000`. Defaults from environment when present.
 - `--profile <name>`: `small`, `medium`, or `large`. Default: `small`.
-- `--suite-class <name>`: Optional local diagnostic class filter. Public examples include B200 `b200_1proc_8g`, B200 `b200_2rank_socket_4g`, and RTX `rtx_pair_policy`.
+- `--suite-class <name>`: Optional local suite-class filter. Supported examples include B200 `b200_1proc_8g`, B200 `b200_2rank_socket_4g`, and RTX `rtx_pair_policy`.
 - `--nodes-per-job <n>`: Multi-node node-count metadata.
 - `--inspect-profile`: Print the selected profile without running NCCL.
 - `--help`: Print help.
