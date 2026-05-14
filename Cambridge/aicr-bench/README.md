@@ -11,19 +11,12 @@ Run commands from this install root so `benchmark-settings.env` resolves through
 
 The public docs use a two-layer model. Scripts are benchmark primitives for users building their own Slurm workflows, studies, reports, or automation. Make is the curated campaign driver that composes those primitives into repeatable runs, dashboards, and repo-standard artifact layouts.
 
-## Install
+## Use
 
-From the `Cambridge/` directory:
-
-```bash
-./install.sh --prefix=/path/to/install
-```
-
-The installed tree is created at `/path/to/install/aicr-bench`.
-
-From the installed tree:
+Run AICR-Bench commands from the `Cambridge/aicr-bench` directory:
 
 ```bash
+cd Cambridge/aicr-bench
 cp benchmark-settings.env.example benchmark-settings.env
 make setup-python-local
 make doctor-python
