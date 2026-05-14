@@ -45,6 +45,20 @@ Replace the scheduler placeholders, then submit the customized workload. If the 
 sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-nccl.sbatch
 ```
 
+## Slurm Sbatch Scripts
+
+Use the module-local primitive when you want a compact starting point. Use the
+cluster-specific templates when you want the repo's scope and cluster defaults
+already spelled out.
+
+- [slurm-nccl.sbatch](slurm-nccl.sbatch)
+- [b200-nccl-suite-local-1n-8g.sbatch](../../../slurm/verify/b200-nccl-suite-local-1n-8g.sbatch)
+- [b200-nccl-suite-rdma.sbatch](../../../slurm/verify/b200-nccl-suite-rdma.sbatch)
+- [b200-nccl-suite-survey.sbatch](../../../slurm/verify/b200-nccl-suite-survey.sbatch)
+- [rtxpro6000-nccl-suite-local-1n-8g.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-local-1n-8g.sbatch)
+- [rtxpro6000-nccl-suite-rdma.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-rdma.sbatch)
+- [rtxpro6000-nccl-suite-survey.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-survey.sbatch)
+
 ## Using the Make Interface
 
 ### One Node Local Dry Run

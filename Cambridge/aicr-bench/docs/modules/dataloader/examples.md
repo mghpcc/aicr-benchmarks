@@ -45,6 +45,20 @@ Replace the scheduler placeholders, then submit the customized workload. If the 
 sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-dataloader.sbatch
 ```
 
+## Slurm Sbatch Scripts
+
+Use the module-local primitive when you want a compact starting point. Use the
+cluster-specific templates when you want the repo's node count and GPU count
+defaults already spelled out.
+
+- [slurm-dataloader.sbatch](slurm-dataloader.sbatch)
+- [b200-dataloader-1n-1g.sbatch](../../../slurm/benchmark/b200-dataloader-1n-1g.sbatch)
+- [b200-dataloader-1n-8g.sbatch](../../../slurm/benchmark/b200-dataloader-1n-8g.sbatch)
+- [b200-dataloader-mn-8g.sbatch](../../../slurm/benchmark/b200-dataloader-mn-8g.sbatch)
+- [rtxpro6000-dataloader-1n-1g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-1n-1g.sbatch)
+- [rtxpro6000-dataloader-1n-8g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-1n-8g.sbatch)
+- [rtxpro6000-dataloader-mn-8g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-mn-8g.sbatch)
+
 ## Using the Make Interface
 
 ### One GPU Dry Run

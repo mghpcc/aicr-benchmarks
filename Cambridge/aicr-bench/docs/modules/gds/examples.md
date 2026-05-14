@@ -45,6 +45,16 @@ Replace the scheduler placeholders, then submit the customized workload. If the 
 sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-gds.sbatch
 ```
 
+## Slurm Sbatch Scripts
+
+Use the module-local primitive when you want a compact starting point. Use the
+cluster-specific templates when you want the repo's cluster defaults already
+spelled out.
+
+- [slurm-gds.sbatch](slurm-gds.sbatch)
+- [b200-gds-1n-8g.sbatch](../../../slurm/verify/b200-gds-1n-8g.sbatch)
+- [rtxpro6000-gds-1n-8g.sbatch](../../../slurm/verify/rtxpro6000-gds-1n-8g.sbatch)
+
 ## Using the Make Interface
 
 ### One Node Applied Example
