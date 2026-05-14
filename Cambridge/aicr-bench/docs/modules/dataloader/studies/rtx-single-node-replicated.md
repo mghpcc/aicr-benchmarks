@@ -169,6 +169,10 @@ For the first RTX multi-node pass, carry forward `batch_size=768`,
 
 ## Figures
 
+The heatmaps use batch size from small at the bottom to large at the top. The
+scatter plots show throughput against retained rank imbalance for the candidate
+rows.
+
 Worker scan figures:
 
 ![RTX one-node replicated throughput matrix](figures/dataloader-one-node-replicated-throughput-matrix-rtxpro6000-2026-05-12.png)

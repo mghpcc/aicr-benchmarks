@@ -181,6 +181,10 @@ alternative.
 
 ## Figures
 
+The first two heatmaps compare the completed eight-node and sixteen-node rows.
+The cumulative figures compare per-node throughput and retained rank imbalance
+across two, four, eight, and sixteen nodes.
+
 ![B200 eight/sixteen-node throughput matrix](figures/dataloader-b200-8-16node-throughput-matrix-2026-05-14.png)
 
 ![B200 eight/sixteen-node rank-imbalance matrix](figures/dataloader-b200-8-16node-imbalance-matrix-2026-05-14.png)

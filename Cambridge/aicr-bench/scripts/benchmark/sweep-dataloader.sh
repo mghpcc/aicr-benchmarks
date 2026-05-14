@@ -8,10 +8,11 @@ source "${BENCHMARK_DIR}/../verify/_common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/benchmark/sweep-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <csv>] [--nodes-list <csv>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--repeat-count <n>] [--num-workers-list <csv>] [--batch-size-list <csv>] [--prefetch-factor-list <csv>] [--pin-memory-list <csv>] [--persistent-workers-list <csv>] [--cpus-per-task <n>] [--cpus-per-task-list <csv>] [--partition <name>] [--time <HH:MM:SS>] [--nodelist <node[,node...]>] [--apply] [--] [runner args...]
+  scripts/benchmark/sweep-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes-list <csv>] [--nodes <csv>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--repeat-count <n>] [--num-workers-list <csv>] [--batch-size-list <csv>] [--prefetch-factor-list <csv>] [--pin-memory-list <csv>] [--persistent-workers-list <csv>] [--cpus-per-task <n>] [--cpus-per-task-list <csv>] [--partition <name>] [--time <HH:MM:SS>] [--nodelist <node[,node...]>] [--apply] [--] [runner args...]
 
 Default behavior is a dry run: print one Slurm submission command per sweep point.
-The default sweep varies --num-workers across 4,8,16,24,32 while holding the canonical dataloader config constant.
+The default sweep varies --num-workers across 4,8,16,24,32 while holding the canonical DataLoader config constant.
+Use --nodes-list for the node-count sweep axis. --nodes remains a compatibility alias.
 When --nodelist has more nodes than a sweep point requests, the helper treats it as an ordered pool and passes the first N nodes to that point.
 Arguments after -- are forwarded to scripts/benchmark/run-dataloader.sh for every submitted job and must not repeat sweep-owned runner flags.
 Profiles control runner workload intensity defaults only. Sweep axes remain explicit.
@@ -282,7 +283,7 @@ fi
 submit_script="scripts/benchmark/submit-dataloader.sh"
 submitted_count=0
 
-echo "Dataloader sweep matrix"
+echo "DataLoader sweep matrix"
 echo "  Cluster        : ${cluster}"
 echo "  Partition      : ${partition}"
 echo "  Time limit     : ${time_limit}"
@@ -370,5 +371,5 @@ if [[ "$apply" -eq 0 ]]; then
   echo "Dry run only. Pass --apply to submit the sweep."
 else
   echo
-  echo "Submitted ${submitted_count} dataloader sweep job(s)."
+  echo "Submitted ${submitted_count} DataLoader sweep job(s)."
 fi

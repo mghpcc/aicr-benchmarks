@@ -1,6 +1,11 @@
 # DataLoader Make Interface
 
-Purpose: run curated DataLoader jobs and sweeps through Make.
+Purpose: run curated DataLoader campaign shapes through Make.
+
+`benchmark-dataloader` is the curated Make campaign target. It delegates to the
+matrix sweep submitter, even when the selected shape contains only one matrix
+point. Use `scripts/benchmark/submit-dataloader.sh` directly when you need a
+single host-side Slurm submission primitive.
 
 ## One GPU Dry Run
 
@@ -60,7 +65,7 @@ Use B200 `DATALOADER_NODES=1,2,4,8,16` and RTX
 make benchmark-dataloader CLUSTER=b200 GPU_COUNT=8 MODE=distributed-sharded DATALOADER_NODES=2 NODELIST=b0001,b0002 DATALOADER_BATCH_SIZES=256 DATALOADER_NUM_WORKERS=16 DATALOADER_PREFETCH_FACTORS=4
 ```
 
-## Fleet Runs
+## Node Selection
 
 Omit `NODELIST` only when Slurm should choose from the available node pool.
 
@@ -70,7 +75,7 @@ Omit `NODELIST` only when Slurm should choose from the available node pool.
 make benchmark-dataloader CLUSTER=b200 GPU_COUNT=8 MODE=replicated NODELIST=b0001 DATALOADER_REPEAT_COUNT=5 DATALOADER_REPEAT_AGGREGATION=olympic
 ```
 
-## ASCII Dashboard
+## Rendered Report
 
 DataLoader renders a Markdown report:
 

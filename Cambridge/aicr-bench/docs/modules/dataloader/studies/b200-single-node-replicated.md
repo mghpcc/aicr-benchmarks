@@ -86,6 +86,10 @@ because it has similar throughput but `9.04%` retained imbalance.
 
 ## Figures
 
+The throughput and rank-imbalance heatmaps use batch size from small at the
+bottom to large at the top. The scatter plot shows throughput against retained
+rank imbalance for the candidate rows.
+
 ![B200 one-node replicated throughput matrix](figures/dataloader-one-node-replicated-throughput-matrix-b200-2026-05-12.png)
 
 ![B200 one-node replicated rank-imbalance matrix](figures/dataloader-one-node-replicated-imbalance-matrix-b200-2026-05-12.png)

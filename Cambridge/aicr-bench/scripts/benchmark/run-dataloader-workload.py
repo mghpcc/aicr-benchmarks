@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 def build_parser():
-    parser = argparse.ArgumentParser(description="Run the v1 ImageNet dataloader benchmark.")
+    parser = argparse.ArgumentParser(description="Run the v1 ImageNet DataLoader benchmark.")
     parser.add_argument("--dataset-root", required=True, help="ImageNet root containing train/ and val/")
     parser.add_argument("--split", default="train", choices=["train", "val"])
     parser.add_argument("--batch-size", type=int, required=True)

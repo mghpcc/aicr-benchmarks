@@ -1112,7 +1112,7 @@ if [[ "${scope}" == "${AICR_SCOPE_NODE}" ]]; then
   aicr_append_index_row_from_record "${AICR_BMARK_DIR}/$(aicr_by_node_history_path "${cluster}" "${node_short}")" "${record_abs}"
 fi
 
-echo "Dataloader benchmark status: ${status}"
+echo "DataLoader benchmark status: ${status}"
 echo "Record: ${record_rel}"
 echo "Summary: ${summary_rel}"
 

@@ -3,6 +3,8 @@
 ## Purpose
 
 Preview or submit one PyTorch DataLoader Slurm job for explicit AICR GPU nodes.
+This is the host-side one-job submitter; use
+`scripts/benchmark/sweep-dataloader.sh` for parameter matrices.
 
 ## Usage
 

@@ -10,7 +10,7 @@ usage() {
 Usage:
   scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--nodelist <nodes>] [--apply] [--] [runner args...]
 
-Default behavior is a dry run: print the sbatch command that would submit the dataloader benchmark.
+Default behavior is a dry run: print the sbatch command that would submit the DataLoader benchmark.
 Use --nodelist to select one node or a comma-separated node list explicitly.
 Arguments after -- are forwarded to scripts/benchmark/run-dataloader.sh inside the batch job.
 Profiles control workload intensity defaults only. Explicit runner args override profile defaults.
@@ -210,4 +210,4 @@ if [[ "$apply" -eq 0 ]]; then
 fi
 
 job_id="$("${sbatch_cmd[@]}")"
-echo "Submitted dataloader benchmark job ${job_id}"
+echo "Submitted DataLoader benchmark job ${job_id}"

@@ -2,7 +2,9 @@
 
 ## Purpose
 
-Run the DataLoader workload inside an existing Slurm allocation and write raw, parsed, and record artifacts.
+Run the DataLoader workload inside an existing Slurm allocation and write raw,
+parsed, and record artifacts. This is the allocation-side runner used by the
+Slurm wrappers and host-side submitters.
 
 ## Usage
 
@@ -10,7 +12,10 @@ Run the DataLoader workload inside an existing Slurm allocation and write raw, p
 scripts/benchmark/run-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--mode <single|replicated|distributed-sharded>] [--requested-gpu-count <n>] [--dataset-root <path>] [--split <train|val>] [--image <path>] [--gpu <index>] [--batch-size <n>] [--num-workers <n>] [--prefetch-factor <n>] [--pin-memory <0|1>] [--persistent-workers <0|1>] [--warmup-batches <n>] [--measured-batches <n>] [--h2d <0|1>] [--transfer-labels <0|1>] [--drop-last <0|1>] [--byte-estimate-sample-count <n>]
 ```
 
-This script is normally called by Slurm wrappers under `slurm/benchmark/`. Use `make benchmark-dataloader` or `scripts/benchmark/submit-dataloader.sh` from the install root for normal operation.
+This script is normally called by Slurm wrappers under `slurm/benchmark/`. Use
+`make benchmark-dataloader`, `scripts/benchmark/submit-dataloader.sh`, or
+`scripts/benchmark/sweep-dataloader.sh` from the install root for normal
+operation.
 
 ## Options
 

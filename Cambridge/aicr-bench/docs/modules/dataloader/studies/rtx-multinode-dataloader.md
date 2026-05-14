@@ -205,7 +205,7 @@ imbalance, and repeat stability. That selection feeds the
 The durable GitHub record for this study is static matplotlib figures plus the
 tables above. The figures below are rendered from the aggregate rows
 on this page so repeated settings appear consistently across the tables and
-heatmaps.
+heatmaps. Heatmaps use batch size from small at the bottom to large at the top.
 
 First-stage figures:
 

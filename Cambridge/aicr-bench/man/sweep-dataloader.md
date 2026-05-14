@@ -2,7 +2,7 @@
 
 ## Purpose
 
-Preview or submit a matrix of DataLoader Slurm jobs through `submit-dataloader.sh`.
+Preview or submit a DataLoader matrix through the host-side one-job submitter.
 
 ## Usage
 
@@ -16,6 +16,7 @@ scripts/benchmark/sweep-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <
 - `--profile <name>`: `small`, `medium`, or `large`. Controls runner workload intensity defaults only.
 - `--inspect-profile`: Print the selected profile without submitting jobs.
 - `--nodes-list <csv>`: Node-count axis for scale sweeps. B200 accepts `1,2,4,8,16`; RTX accepts `1,2,4,8`.
+- `--nodes <csv>`: Compatibility alias for `--nodes-list`.
 - `--gpu-count <1|8>`: One GPU or eight GPUs per node.
 - `--mode <name>`: `single`, `replicated`, or `distributed-sharded`.
 - `--repeat-count <n>`: Submit each matrix point multiple times.

@@ -27,7 +27,7 @@ Allocation-side runner:
 scripts/benchmark/run-dataloader.sh --help
 ```
 
-Host-side submitter:
+Host-side one-job Slurm submitter:
 
 <!-- aicr-test
 id: dataloader-submit-help
@@ -45,7 +45,7 @@ expect:
 scripts/benchmark/submit-dataloader.sh --help
 ```
 
-Host-side sweep submitter:
+Host-side matrix sweep submitter:
 
 ```bash
 scripts/benchmark/sweep-dataloader.sh --help
@@ -91,7 +91,9 @@ for routine runs.
 
 ## Artifacts
 
-Direct DataLoader runner, submitter, and sweep runs write node or multi-node raw captures, parsed summaries, and index records. Rendered reports are renderer or Make outputs and are intentionally not listed here.
+Direct DataLoader runner, one-job submitter, and matrix sweep runs write node
+or multi-node raw captures, parsed summaries, and index records. Rendered
+reports are renderer or Make outputs and are intentionally not listed here.
 
 Raw run directories:
 

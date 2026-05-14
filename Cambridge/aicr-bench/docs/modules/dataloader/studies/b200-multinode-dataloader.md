@@ -178,7 +178,7 @@ next node count.
 ## Figures
 
 The durable record for this study is static matplotlib figures plus the tables
-above.
+above. Heatmaps use batch size from small at the bottom to large at the top.
 
 First-stage figures:
 

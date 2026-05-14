@@ -107,6 +107,10 @@ batch-size fix for the distributed-sharded imbalance.
 
 ## Figures
 
+The first three figures summarize the eight-node sweep. The cumulative figures
+compare per-node throughput and retained rank imbalance across two, four, and
+eight nodes.
+
 ![RTX eight-node throughput matrix](figures/dataloader-rtx-8node-throughput-matrix-2026-05-13.png)
 
 ![RTX eight-node rank-imbalance matrix](figures/dataloader-rtx-8node-imbalance-matrix-2026-05-13.png)
