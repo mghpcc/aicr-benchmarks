@@ -106,6 +106,8 @@ results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/ca
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-command.sh
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-records.jsonl
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-capabilities.json
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-capability-probe-stdout.txt
+results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/nccl-suite-capability-probe-stderr.txt
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/gpu-preflight.txt
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/<suite-class>--<collective>-stdout.txt
 results/by-date/<date>/raw/<cluster>/<scope-path>/nccl-suite-<scope>/<run_id>/canonical/<suite-class>--<collective>-stderr.txt
