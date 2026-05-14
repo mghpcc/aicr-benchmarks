@@ -1,0 +1,8 @@
+benchmark-settings.env
+.tools/
+__pycache__/
+scratch/
+results/
+apptainer/images/
+data/
+graphify-out/

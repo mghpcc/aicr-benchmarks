@@ -1,0 +1,129 @@
+{
+  "schema_version": 1,
+  "profile": "large",
+  "phases": [
+    {
+      "name": "platform",
+      "type": "gdscheck"
+    },
+    {
+      "name": "sequential-write",
+      "type": "gdsio",
+      "target": "sequential",
+      "xfer_type": 0,
+      "io_type": 1,
+      "gpu_id": 0,
+      "threads": 16,
+      "memory_type": 0,
+      "size": "128G",
+      "io_size": "16M",
+      "duration": 120,
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "sequential-read",
+      "type": "gdsio",
+      "target": "sequential",
+      "dependency": "sequential-write",
+      "xfer_type": 0,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 16,
+      "memory_type": 0,
+      "size": "128G",
+      "io_size": "16M",
+      "duration": 120,
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_READ_CMD",
+        "AICR_GDS_THROUGHPUT_CMD"
+      ]
+    },
+    {
+      "name": "random-write",
+      "type": "gdsio",
+      "target": "random",
+      "xfer_type": 0,
+      "io_type": 3,
+      "gpu_id": 0,
+      "threads": 64,
+      "memory_type": 0,
+      "size": "32G",
+      "io_size": "4K",
+      "duration": 120,
+      "random_seed": 20260429,
+      "env_overrides": [
+        "AICR_GDS_RANDOM_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "random-read",
+      "type": "gdsio",
+      "target": "random",
+      "dependency": "random-write",
+      "xfer_type": 0,
+      "io_type": 2,
+      "gpu_id": 0,
+      "threads": 64,
+      "memory_type": 0,
+      "size": "32G",
+      "io_size": "4K",
+      "duration": 120,
+      "random_seed": 20260429,
+      "env_overrides": [
+        "AICR_GDS_RANDOM_READ_CMD"
+      ]
+    },
+    {
+      "name": "async-stream-write",
+      "type": "gdsio",
+      "target": "async",
+      "xfer_type": 5,
+      "io_type": 1,
+      "gpu_id": 0,
+      "threads": 16,
+      "memory_type": 0,
+      "size": "128G",
+      "io_size": "16M",
+      "duration": 120,
+      "env_overrides": [
+        "AICR_GDS_ASYNC_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "async-stream-read",
+      "type": "gdsio",
+      "target": "async",
+      "dependency": "async-stream-write",
+      "xfer_type": 5,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 16,
+      "memory_type": 0,
+      "size": "128G",
+      "io_size": "16M",
+      "duration": 120,
+      "env_overrides": [
+        "AICR_GDS_ASYNC_READ_CMD"
+      ]
+    },
+    {
+      "name": "cpu-gpu-read",
+      "type": "gdsio",
+      "target": "sequential",
+      "dependency": "sequential-write",
+      "xfer_type": 2,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 16,
+      "memory_type": 0,
+      "size": "128G",
+      "io_size": "16M",
+      "duration": 60,
+      "env_overrides": [
+        "AICR_GDS_CPU_GPU_READ_CMD"
+      ]
+    }
+  ]
+}

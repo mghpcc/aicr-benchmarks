@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "profile": "small",
+  "phases": [
+    {
+      "name": "platform",
+      "type": "gdscheck"
+    },
+    {
+      "name": "sequential-write",
+      "type": "gdsio",
+      "target": "sequential",
+      "xfer_type": 0,
+      "io_type": 1,
+      "gpu_id": 0,
+      "threads": 4,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "16M",
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "sequential-read",
+      "type": "gdsio",
+      "target": "sequential",
+      "dependency": "sequential-write",
+      "xfer_type": 0,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 4,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "16M",
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_READ_CMD",
+        "AICR_GDS_THROUGHPUT_CMD"
+      ]
+    }
+  ]
+}

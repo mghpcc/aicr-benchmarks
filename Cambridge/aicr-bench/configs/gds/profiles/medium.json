@@ -1,0 +1,79 @@
+{
+  "schema_version": 1,
+  "profile": "medium",
+  "phases": [
+    {
+      "name": "platform",
+      "type": "gdscheck"
+    },
+    {
+      "name": "sequential-write",
+      "type": "gdsio",
+      "target": "sequential",
+      "xfer_type": 0,
+      "io_type": 1,
+      "gpu_id": 0,
+      "threads": 8,
+      "memory_type": 0,
+      "size": "64G",
+      "io_size": "16M",
+      "duration": 60,
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "sequential-read",
+      "type": "gdsio",
+      "target": "sequential",
+      "dependency": "sequential-write",
+      "xfer_type": 0,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 8,
+      "memory_type": 0,
+      "size": "64G",
+      "io_size": "16M",
+      "duration": 60,
+      "env_overrides": [
+        "AICR_GDS_THROUGHPUT_READ_CMD",
+        "AICR_GDS_THROUGHPUT_CMD"
+      ]
+    },
+    {
+      "name": "random-write",
+      "type": "gdsio",
+      "target": "random",
+      "xfer_type": 0,
+      "io_type": 3,
+      "gpu_id": 0,
+      "threads": 32,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "4K",
+      "duration": 60,
+      "random_seed": 20260429,
+      "env_overrides": [
+        "AICR_GDS_RANDOM_WRITE_CMD"
+      ]
+    },
+    {
+      "name": "random-read",
+      "type": "gdsio",
+      "target": "random",
+      "dependency": "random-write",
+      "xfer_type": 0,
+      "io_type": 2,
+      "gpu_id": 0,
+      "threads": 32,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "4K",
+      "duration": 60,
+      "random_seed": 20260429,
+      "env_overrides": [
+        "AICR_GDS_RANDOM_READ_CMD"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+[project]
+name = "aicr-bench"
+version = "0.1.0"
+description = "AICR-Bench operator tooling and benchmark report helpers."
+requires-python = ">=3.11,<3.12"
+dependencies = [
+  "jsonschema>=4.23",
+  "matplotlib",
+  "pandas",
+  "plotly",
+  "snakemake",
+]
+
+[tool.uv]
+package = false
