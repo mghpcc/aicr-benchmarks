@@ -6,6 +6,7 @@ Every public script named in prose documentation should link back to its page
 here. Keep copy-paste command blocks literal.
 
 - [aicr-doctest.py](aicr-doctest.md)
+- [check-artifact-policy.sh](check-artifact-policy.md)
 - [check-man-links.py](check-man-links.md)
 - [doctor-python.sh](doctor-python.md)
 - [install.sh](install.md)
@@ -40,7 +41,6 @@ here. Keep copy-paste command blocks literal.
 - [submit-elbencho.sh](submit-elbencho.md)
 - [submit-gds-fleet.sh](submit-gds-fleet.md)
 - [submit-hpl-mxp.sh](submit-hpl-mxp.md)
-- [submit-nccl-fleet.sh](submit-nccl-fleet.md)
 - [submit-nccl-suite.sh](submit-nccl-suite.md)
 - [sweep-dataloader.sh](sweep-dataloader.md)
 - [valprep.sh](valprep.md)

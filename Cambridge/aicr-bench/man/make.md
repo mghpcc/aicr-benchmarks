@@ -73,19 +73,20 @@ make render-gds-ascii CLUSTER=b200 DATE=today
 Common NCCL shapes:
 
 ```bash
-make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0001
-make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0001 NCCL_SUITE_CLASS=b200_1proc_8g APPLY=1
-make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0001 NCCL_SUITE_CLASS=b200_2rank_socket_4g APPLY=1
-make verify-nccl-suite NCCL_SCOPE=local CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001 NCCL_SUITE_CLASS=rtx_pair_policy APPLY=1
-make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 PROFILE=small NODELIST=b0001,b0002 NCCL_NODES_PER_JOB=2 APPLY=1
-make verify-nccl-suite NCCL_SCOPE=scale CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001,a0002 NCCL_SCALES=1,2
+make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0002
+make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0002 NCCL_SUITE_CLASS=b200_1proc_8g APPLY=1
+make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0002 NCCL_SUITE_CLASS=b200_2rank_socket_4g APPLY=1
+make verify-nccl-suite NCCL_SCOPE=local CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0002 NCCL_SUITE_CLASS=rtx_pair_policy APPLY=1
+make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 PROFILE=small NODELIST=b0002,b0003 NCCL_NODES_PER_JOB=2 APPLY=1
+make verify-nccl-suite NCCL_SCOPE=scale CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0002,a0003 NCCL_SCALES=1,2
 make render-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 DATE=today
 ```
 
-Nonstandard NCCL RDMA node counts must be explicit:
+Campaign-scale NCCL replay is manual because it can run for hours:
 
 ```bash
-make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 PROFILE=small NODELIST=<nodes> NCCL_NODES_PER_JOB=31 NCCL_ALLOW_NONSTANDARD_NODE_COUNT=1 NCCL_SUITE_OPS=allreduce APPLY=1
+make verify-nccl-suite NCCL_SCOPE=scale CLUSTER=b200 PROFILE=small NODELIST=<nodes> NCCL_SCALES=1,2,4,8,16 REPEAT_COUNT=5 REPEAT_AGGREGATION=olympic APPLY=1
+make verify-nccl-suite NCCL_SCOPE=scale CLUSTER=rtxpro6000 PROFILE=small NODELIST=<nodes> NCCL_SCALES=1,2,4 REPEAT_COUNT=5 REPEAT_AGGREGATION=olympic APPLY=1
 ```
 
 ### DataLoader
@@ -167,12 +168,14 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 
 | Variable | Meaning |
 | --- | --- |
-| `NCCL_SCOPE` | `local`, `rdma`, or `survey`. Default: `survey`. |
+| `NCCL_SCOPE` | `local`, `rdma`, or `scale`. Default: `scale`. |
 | `NCCL_SUITE_OPS` | Optional comma-separated NCCL operation filter, such as `allreduce`. |
-| `NCCL_SUITE_CLASS` | Optional local-mode class filter, such as `b200_1proc_8g`, `b200_2rank_socket_4g`, or `rtx_pair_policy`. |
-| `NCCL_NODES_PER_JOB` | RDMA group size. B200 standard ladder: `2`, `4`, `8`, `16`; RTX standard ladder: `2`, `4`, `8`. |
-| `NCCL_SURVEY_SIZES` | Survey node counts. Make defaults to `1` for teaching previews. |
-| `NCCL_ALLOW_NONSTANDARD_NODE_COUNT` | `1` permits RDMA/survey node counts outside standard ladders. |
+| `NCCL_SUITE_CLASS` | Optional local-mode class filter, such as `b200_8rank_1g`, `b200_1proc_8g`, `b200_2rank_socket_4g`, `rtx_8rank_1g`, or `rtx_pair_policy`. |
+| `NCCL_NODES_PER_JOB` | RDMA group size, or one scale for `NCCL_SCOPE=scale`. B200 RDMA supports `2`, `4`, `8`, `16`; RTX RDMA supports `2`, `4`, `8`. |
+| `NCCL_SCALES` | Scale node counts. B200 default: `1,2,4,8,16`; RTX default: `1,2,4`. |
+| `NCCL_SUBMIT_STAGGER_SECONDS` | Delay between NCCL suite submissions. Default: `5`. |
+| `NCCL_SCALE_STAGGER_SECONDS` | Delay after one scale finishes before the next starts. Default: `0`. |
+| `GPU_PREFLIGHT_FILTER` | `1` keeps only nodes with passing same-day GPU Topology evidence before submitter grouping. |
 | `NCCL_DEBUG`, `NCCL_DEBUG_SUBSYS`, `NCCL_DEBUG_FILE` | Optional NCCL debug controls. |
 
 ### DataLoader Variables

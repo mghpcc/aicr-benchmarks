@@ -15,14 +15,17 @@ Each module has:
 - `make.md`: curated Make interface.
 - `examples.md`: Slurm primitive examples, representative Make commands, and produced artifact lists.
 - `studies.md`: fuller curated studies and reports.
+- `test-plan.md`: executable coverage, HPC replay steps, known gaps, and acceptance criteria.
 
 Use the module pages when learning a workflow:
 
 - [Make driver](make-driver.md)
-- [GPU topology](gpu-topology/)
-- [GDS](gds/)
-- [NCCL](nccl/)
-- [DataLoader](dataloader/)
-- [DDP ResNet-50](ddp/)
-- [HPL-MxP](hpl-mxp/)
-- [Elbencho](elbencho/)
+- Profiling
+  - [GPU Topology](gpu-topology/)
+  - [GPU Direct Storage (GDS)](gds/)
+  - [NVIDIA Collective Communications Library (NCCL)](nccl/)
+- Benchmarking
+  - [Elbencho Storage Benchmarking](elbencho/)
+  - [PyTorch DataLoader](dataloader/)
+  - [PyTorch Distributed Data Parallel (DDP)](ddp/)
+  - [HPL-MxP](hpl-mxp/)

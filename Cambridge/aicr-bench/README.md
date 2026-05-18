@@ -25,13 +25,15 @@ make doctor-python
 ## Profiling & Benchmarking Modules
 
 - [Make driver](docs/modules/make-driver.md)
-- [GPU Topology](docs/modules/gpu-topology/)
-- [GPU Direct Storage (GDS)](docs/modules/gds/)
-- [NVIDIA Collective Communications Library (NCCL)](docs/modules/nccl/)
-- [PyTorch DataLoader](docs/modules/dataloader/)
-- [PyTorch Distributed Data Parallel (DDP)](docs/modules/ddp/)
-- [HPL-MxP](docs/modules/hpl-mxp/)
-- [Elbencho](docs/modules/elbencho/)
+- Profiling
+  - [GPU Topology](docs/modules/gpu-topology/)
+  - [GPU Direct Storage (GDS)](docs/modules/gds/)
+  - [NVIDIA Collective Communications Library (NCCL)](docs/modules/nccl/)
+- Benchmarking
+  - [Elbencho Storage Benchmarking](docs/modules/elbencho/)
+  - [PyTorch DataLoader](docs/modules/dataloader/)
+  - [PyTorch Distributed Data Parallel (DDP)](docs/modules/ddp/)
+  - [HPL-MxP](docs/modules/hpl-mxp/)
 
 ## Reference
 

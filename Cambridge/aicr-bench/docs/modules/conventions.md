@@ -18,6 +18,100 @@ Each public module directory provides:
 - `studies.md`: recommended studies, collection roadmaps, or curated reports.
 - `test-plan.md`: executable coverage, HPC replay steps, known gaps, and acceptance criteria for documented commands.
 
+Module index pages group modules by role:
+
+- Profiling and readiness modules document system state, readiness, or
+  infrastructure behavior. Current examples are GPU Topology, GDS, and NCCL.
+- Benchmarking modules document user-facing benchmark workloads and result
+  campaigns. Current examples are Elbencho, DataLoader, DDP, and HPL-MxP.
+
+The role affects study language. A readiness module can have a `studies.md`
+page, but it should say when the module is not a performance study tool and
+should keep example studies self-contained inside `docs/modules/<module>/`.
+
+## Page Contracts
+
+Use the same headings and intent across modules:
+
+- `README.md`: purpose, page map, when to use the module, and primary entry
+  points.
+- `scripts.md`: public primitive scripts, command roles, safe examples, and a
+  final artifact section.
+- `make.md`: curated Make targets, common variables, dry-run and apply shape,
+  and a final artifact section.
+- `examples.md`: Slurm primitive templates, representative Make examples, and
+  artifact classes.
+- `studies.md`: recommended studies, campaign replay notes, or a clear statement
+  that study use is limited.
+- `test-plan.md`: current coverage, replay entry points, command coverage table,
+  local replay, AICR HPC replay, render replay when relevant, campaign replay
+  when relevant, and known gaps.
+
+Do not use visible prose to promise a command, Make target, script, Slurm
+template, man page, or report path unless the referenced surface exists or the
+page explicitly marks it as planned.
+
+## Test Plan Replay Levels
+
+Use one `Replay level` column in module test-plan command coverage tables.
+Use these labels consistently:
+
+- `Local doctest`: runs in the default `make docs-test-*` target without Slurm,
+  GPUs, or generated result trees.
+- `Local dry-run doctest`: runs in the default docs test and exercises a
+  dry-run command without submitting Slurm jobs. Use this when the command can
+  run on a workstation with explicit inputs and does not need Slurm discovery.
+- `Local replay`: local validation command that is run during handoff checks but
+  is not an `aicr-test` block.
+- `AICR HPC dry-run doctest`: reserved for future default docs tests that must
+  run on AICR HPC because they use Slurm-aware discovery, but still submit no
+  jobs.
+- `AICR HPC dry-run replay`: documented Slurm-aware dry-run command that is
+  replayed manually on AICR HPC.
+- `AICR HPC apply doctest`: runs only with `DOCS_APPLY=1` and explicit
+  `NODELIST`; submits smoke-sized Slurm work.
+- `AICR HPC apply replay`: documented applied command that is replayed manually
+  on AICR HPC.
+- `AICR HPC allocation replay`: runs inside an existing Slurm allocation or
+  through a Slurm wrapper; not part of default docs tests.
+- `AICR HPC render replay`: reads generated or restored result trees.
+- `Manual/HPC review`: templates, long campaigns, or study workflows that are
+  documented but not default doctests.
+
+## Executable Documentation
+
+Documentation tests use `aicr-test` metadata blocks. Defaults must be safe:
+
+- Default `make docs-test-*` targets may run local help, inspect, and dry-run
+  commands.
+- Default docs tests must not submit Slurm jobs, require GPUs, require VAST
+  pressure, or require generated result trees. Avoid default doctests for
+  dry-run commands that perform Slurm node discovery or write fleet manifests;
+  document those commands as AICR HPC dry-run replay instead.
+- Applied docs tests must require `DOCS_APPLY=1` and an explicit `NODELIST`.
+- Applied docs tests should use smoke-sized profiles or tiny scale ladders.
+- Long campaign replay belongs in the module test plan, not in default doctests.
+- Render replay reads generated or restored result trees. It is an AICR HPC
+  replay step unless the module has committed render fixtures.
+
+Every mature module should expose:
+
+- `make docs-test-plan-<module>` to list selected tests.
+- `make docs-test-<module>` to run local-safe tests.
+- `DOCS_APPLY=1 ... make docs-test-<module>` for gated AICR HPC apply checks
+  when the module has an applied Slurm path.
+
+## Node And Cluster Examples
+
+Use real AICR node-name conventions only:
+
+- RTX Pro 6000 nodes: `a0001` through `a0019`.
+- B200 nodes: `b0001` through `b0031`.
+
+Prefer placeholders such as `<a-node>`, `<b-node>`, `<node>`, or
+`<node1>,<node2>` when the exact node is not important. Do not introduce
+alternate naming schemes in examples, test plans, or man pages.
+
 ## Script Roles
 
 Use these roles consistently:
@@ -29,6 +123,21 @@ Use these roles consistently:
 - `sweep-*`: host-side matrix submitter for parameter sweeps.
 
 Existing script and Make target names are stable public interfaces.
+
+## Make Interface
+
+Make targets are the curated public driver and should compose script primitives
+without hiding the important runtime shape.
+
+Use these naming patterns:
+
+- `verify-<module>` for verification/readiness workflows.
+- `benchmark-<module>` for benchmark workflows.
+- `render-<module>` or `render-<module>-<view>` for read-only report replay.
+- `docs-test-plan-<module>` and `docs-test-<module>` for executable docs.
+
+Make examples should show dry-run first, then gated apply examples. Apply
+examples should include `APPLY=1` and explicit node or node-count controls.
 
 ## Man Page Links
 
@@ -78,6 +187,11 @@ Renderers read existing parsed artifacts and create dashboards, reports, CSV, JS
 
 Dashboard statistic definitions live in [Stats Explained](../stats-explained.md).
 Generated reports should link there rather than to operator-private paths.
+
+Render replay belongs in `test-plan.md` when a module produces reports or
+dashboards. If no committed fixture exists, the test plan should say that render
+replay requires generated or restored `results/` trees and is not part of the
+default docs tests.
 
 ## Profiles And Overrides
 

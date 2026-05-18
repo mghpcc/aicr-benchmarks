@@ -15,8 +15,7 @@
 	verify-gds \
 	render-gds-ascii \
 	verify-nccl-suite \
-	verify-nccl-local \
-	verify-nccl-rdma \
+	render-nccl-suite \
 	archive-verify \
 	archive-verification-campaign \
 	archive-verification-campaign-all \
@@ -71,7 +70,6 @@ PROFILE ?= small
 REPEAT_COUNT ?= 1
 REPEAT_AGGREGATION ?= standard
 GPU_PREFLIGHT_FILTER ?= 0
-# Legacy NCCL local/RDMA targets intentionally omit stagger flags and use script defaults.
 # SUBMIT_STAGGER_SECONDS remains a compatibility override for both GDS and NCCL suite.
 SUBMIT_STAGGER_SECONDS ?=
 GDS_SUBMIT_STAGGER_SECONDS ?= $(if $(strip $(SUBMIT_STAGGER_SECONDS)),$(SUBMIT_STAGGER_SECONDS),30)
@@ -267,6 +265,8 @@ help:
 		"      Submit NCCL local, RDMA, or scale-suite jobs." \
 		"  make render CLUSTER=<b200|rtxpro6000> DATE=<date>" \
 		"      Render system verification campaign and by-node reports." \
+		"  make render-nccl-suite NCCL_SCOPE=<local|rdma|scale> CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"      Print an NCCL suite report from existing result trees." \
 		"  make validate-reports CLUSTER=<b200|rtxpro6000> DATE=<date>" \
 		"      Validate rendered system verification report JSON and links." \
 		"  make docs-link-check" \
@@ -481,30 +481,6 @@ verify-nccl-suite: require-settings
 		--round-stagger-seconds $(ROUND_STAGGER_SECONDS) \
 		$(APPLY_FLAG)
 
-verify-nccl-local: require-settings
-	bash scripts/verify/run-nccl-local-fleet.sh \
-		--cluster $(CLUSTER) \
-		--repeat-count $(REPEAT_COUNT) \
-		$(REPEAT_AGGREGATION_FLAG) \
-		$(APPLY_FLAG)
-
-ifeq ($(CLUSTER),b200)
-verify-nccl-rdma: require-settings
-	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
-	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 4 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
-	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 8 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
-	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 16 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
-else
-ifeq ($(CLUSTER),rtxpro6000)
-verify-nccl-rdma:
-	@echo "Skipping NCCL RDMA: CLUSTER=rtxpro6000 does not have RDMA verification support in this slice."
-else
-verify-nccl-rdma:
-	@echo "ERROR: unsupported CLUSTER=$(CLUSTER); expected b200 or rtxpro6000." >&2
-	@exit 2
-endif
-endif
-
 archive-verify:
 	bash scripts/report/archive-results.sh --date $(DATE) --cluster $(CLUSTER) $(ARCHIVE_ROTATE_FLAG)
 
@@ -520,6 +496,9 @@ render:
 
 render-gds-ascii:
 	$(REPO_PY) scripts/report/render-verify-dashboard.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --check gds --ascii
+
+render-nccl-suite:
+	$(REPO_PY) scripts/report/render-nccl-suite-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --scope $(NCCL_SCOPE) $(NCCL_NODES_PER_JOB_FLAG)
 
 render-report-index:
 	$(REPO_PY) scripts/report/report_index.py --results-root results --write
