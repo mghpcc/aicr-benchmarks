@@ -2,7 +2,6 @@
 import argparse
 import json
 import math
-import os
 import statistics
 import sys
 from pathlib import Path
@@ -15,6 +14,8 @@ from repeat_aggregation import aggregate_values, normalize_repeat_aggregation
 
 GDS_DETAIL_PHASES = (
     "platform",
+    "functional-write",
+    "functional-read",
     "sequential-write",
     "sequential-read",
     "random-write",
@@ -23,22 +24,8 @@ GDS_DETAIL_PHASES = (
     "async-stream-read",
     "cpu-gpu-read",
 )
-STATS_DOCS_PATH = "docs/stats-explained.md"
-
-
-def repo_root():
-    return Path(__file__).resolve().parents[2]
-
-
-def stats_docs_link(output_path=None):
-    if not output_path:
-        return STATS_DOCS_PATH
-    base = Path(output_path)
-    base_dir = base.parent if base.suffix else base
-    try:
-        return os.path.relpath(repo_root() / STATS_DOCS_PATH, base_dir.resolve()).replace(os.sep, "/")
-    except OSError:
-        return STATS_DOCS_PATH
+STATS_WIKI_PATH = "docs/stats-explained.md"
+REPORT_STATS_LINK = "../../../docs/stats-explained.md"
 
 
 def build_parser():
@@ -295,6 +282,8 @@ def phase_status(summary, phase):
         return (phases.get(phase) or {}).get("status") or "-"
     legacy_map = {
         "platform": "platform",
+        "functional-write": "functional_write",
+        "functional-read": "functional_read",
         "sequential-write": "throughput_write",
         "sequential-read": "throughput_read",
     }
@@ -388,11 +377,15 @@ def empty_gds_row(node, discovery_state, job_id, status):
         "profile": "-",
         "status": status,
         "platform_status": "-",
+        "functional_write_status": "-",
+        "functional_read_status": "-",
         "throughput_read_status": "-",
         "throughput_write_status": "-",
+        "functional_status_pair": "-",
         "sequential_status_pair": "-",
         "random_status_pair": "-",
         "extra_phase_statuses": "-",
+        "functional_write_throughput_gib_s": "-",
         "throughput_read_throughput_gib_s": "-",
         "throughput_write_throughput_gib_s": "-",
         "random_read_throughput_gib_s": "-",
@@ -409,6 +402,8 @@ def gds_rows_from_summaries(paths, manifest):
     for path in paths:
         summary = load_json(path)
         node = summary.get("host") or path.parts[-4]
+        functional_write_status = phase_status(summary, "functional-write")
+        functional_read_status = phase_status(summary, "functional-read")
         sequential_write_status = phase_status(summary, "sequential-write")
         sequential_read_status = phase_status(summary, "sequential-read")
         random_write_status = phase_status(summary, "random-write")
@@ -430,11 +425,15 @@ def gds_rows_from_summaries(paths, manifest):
             "profile": summary.get("profile") or "-",
             "status": summary.get("status") or "-",
             "platform_status": phase_status(summary, "platform"),
+            "functional_write_status": functional_write_status,
+            "functional_read_status": functional_read_status,
             "throughput_read_status": profile_status(summary, "throughput_read"),
             "throughput_write_status": profile_status(summary, "throughput_write"),
+            "functional_status_pair": phase_pair(functional_write_status, functional_read_status),
             "sequential_status_pair": phase_pair(sequential_write_status, sequential_read_status),
             "random_status_pair": phase_pair(random_write_status, random_read_status),
             "extra_phase_statuses": "; ".join(extra_statuses) if extra_statuses else "-",
+            "functional_write_throughput_gib_s": fmt_float(summary.get("functional_write_throughput_gib_s")),
             "throughput_read_throughput_gib_s": fmt_float(summary.get("throughput_read_throughput_gib_s")),
             "throughput_write_throughput_gib_s": fmt_float(summary.get("throughput_write_throughput_gib_s")),
             "random_read_throughput_gib_s": phase_metric(summary, "random-read", "throughput_gib_s"),
@@ -739,7 +738,7 @@ NCCL_TESTS = (
     ("alltoall_perf", "A2A"),
 )
 
-NCCL_METRICS = tuple((f"{test_name}_busbw", f"{label} busbw (GB/s)") for test_name, label in NCCL_TESTS)
+NCCL_METRICS = tuple((f"{test_name}_busbw", f"{label} busbw") for test_name, label in NCCL_TESTS)
 ANOMALY_MIN_ABS_DELTA_PCT = 1.0
 
 
@@ -1206,29 +1205,29 @@ def table_columns(check, repeated=False, repeat_aggregation="standard"):
             ("samples", "Samples"),
             ("passes", "Passes"),
             ("status", "Status"),
-            ("all_reduce_perf_busbw", f"AR {center_suffix} (GB/s)"),
-            ("all_reduce_perf_busbw_range", "AR min..max (GB/s)"),
+            ("all_reduce_perf_busbw", f"AR {center_suffix}"),
+            ("all_reduce_perf_busbw_range", "AR min..max"),
         ]
         if repeat_aggregation == "olympic":
-            columns.append(("all_reduce_perf_busbw_dropped", "AR drop min/max (GB/s)"))
+            columns.append(("all_reduce_perf_busbw_dropped", "AR drop min/max"))
         columns.extend([
-            ("reduce_scatter_perf_busbw", f"RS {center_suffix} (GB/s)"),
-            ("reduce_scatter_perf_busbw_range", "RS min..max (GB/s)"),
+            ("reduce_scatter_perf_busbw", f"RS {center_suffix}"),
+            ("reduce_scatter_perf_busbw_range", "RS min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("reduce_scatter_perf_busbw_dropped", "RS drop min/max (GB/s)"))
+            columns.append(("reduce_scatter_perf_busbw_dropped", "RS drop min/max"))
         columns.extend([
-            ("all_gather_perf_busbw", f"AG {center_suffix} (GB/s)"),
-            ("all_gather_perf_busbw_range", "AG min..max (GB/s)"),
+            ("all_gather_perf_busbw", f"AG {center_suffix}"),
+            ("all_gather_perf_busbw_range", "AG min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("all_gather_perf_busbw_dropped", "AG drop min/max (GB/s)"))
+            columns.append(("all_gather_perf_busbw_dropped", "AG drop min/max"))
         columns.extend([
-            ("alltoall_perf_busbw", f"A2A {center_suffix} (GB/s)"),
-            ("alltoall_perf_busbw_range", "A2A min..max (GB/s)"),
+            ("alltoall_perf_busbw", f"A2A {center_suffix}"),
+            ("alltoall_perf_busbw_range", "A2A min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("alltoall_perf_busbw_dropped", "A2A drop min/max (GB/s)"))
+            columns.append(("alltoall_perf_busbw_dropped", "A2A drop min/max"))
         columns.extend([
             ("wrong_count", "Wrong"),
             ("aggregation_notes", "Aggregation"),
@@ -1242,10 +1241,10 @@ def table_columns(check, repeated=False, repeat_aggregation="standard"):
             ("run_id", "Run"),
             ("status", "Status"),
             ("tests_passed", "Tests"),
-            ("all_reduce_perf_busbw", "AR busbw (GB/s)"),
-            ("reduce_scatter_perf_busbw", "RS busbw (GB/s)"),
-            ("all_gather_perf_busbw", "AG busbw (GB/s)"),
-            ("alltoall_perf_busbw", "A2A busbw (GB/s)"),
+            ("all_reduce_perf_busbw", "AR busbw"),
+            ("reduce_scatter_perf_busbw", "RS busbw"),
+            ("all_gather_perf_busbw", "AG busbw"),
+            ("alltoall_perf_busbw", "A2A busbw"),
             ("wrong_count", "Wrong"),
             ("notes", "Notes"),
         ]
@@ -1257,29 +1256,29 @@ def table_columns(check, repeated=False, repeat_aggregation="standard"):
             ("samples", "Samples"),
             ("passes", "Passes"),
             ("status", "Status"),
-            ("all_reduce_perf_busbw", f"AR {center_suffix} (GB/s)"),
-            ("all_reduce_perf_busbw_range", "AR min..max (GB/s)"),
+            ("all_reduce_perf_busbw", f"AR {center_suffix}"),
+            ("all_reduce_perf_busbw_range", "AR min..max"),
         ]
         if repeat_aggregation == "olympic":
-            columns.append(("all_reduce_perf_busbw_dropped", "AR drop min/max (GB/s)"))
+            columns.append(("all_reduce_perf_busbw_dropped", "AR drop min/max"))
         columns.extend([
-            ("reduce_scatter_perf_busbw", f"RS {center_suffix} (GB/s)"),
-            ("reduce_scatter_perf_busbw_range", "RS min..max (GB/s)"),
+            ("reduce_scatter_perf_busbw", f"RS {center_suffix}"),
+            ("reduce_scatter_perf_busbw_range", "RS min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("reduce_scatter_perf_busbw_dropped", "RS drop min/max (GB/s)"))
+            columns.append(("reduce_scatter_perf_busbw_dropped", "RS drop min/max"))
         columns.extend([
-            ("all_gather_perf_busbw", f"AG {center_suffix} (GB/s)"),
-            ("all_gather_perf_busbw_range", "AG min..max (GB/s)"),
+            ("all_gather_perf_busbw", f"AG {center_suffix}"),
+            ("all_gather_perf_busbw_range", "AG min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("all_gather_perf_busbw_dropped", "AG drop min/max (GB/s)"))
+            columns.append(("all_gather_perf_busbw_dropped", "AG drop min/max"))
         columns.extend([
-            ("alltoall_perf_busbw", f"A2A {center_suffix} (GB/s)"),
-            ("alltoall_perf_busbw_range", "A2A min..max (GB/s)"),
+            ("alltoall_perf_busbw", f"A2A {center_suffix}"),
+            ("alltoall_perf_busbw_range", "A2A min..max"),
         ])
         if repeat_aggregation == "olympic":
-            columns.append(("alltoall_perf_busbw_dropped", "A2A drop min/max (GB/s)"))
+            columns.append(("alltoall_perf_busbw_dropped", "A2A drop min/max"))
         columns.extend([
             ("wrong_count", "Wrong"),
             ("aggregation_notes", "Aggregation"),
@@ -1294,10 +1293,10 @@ def table_columns(check, repeated=False, repeat_aggregation="standard"):
             ("run_id", "Run"),
             ("status", "Status"),
             ("tests_passed", "Tests"),
-            ("all_reduce_perf_busbw", "AR busbw (GB/s)"),
-            ("reduce_scatter_perf_busbw", "RS busbw (GB/s)"),
-            ("all_gather_perf_busbw", "AG busbw (GB/s)"),
-            ("alltoall_perf_busbw", "A2A busbw (GB/s)"),
+            ("all_reduce_perf_busbw", "AR busbw"),
+            ("reduce_scatter_perf_busbw", "RS busbw"),
+            ("all_gather_perf_busbw", "AG busbw"),
+            ("alltoall_perf_busbw", "A2A busbw"),
             ("wrong_count", "Wrong"),
             ("notes", "Notes"),
         ]
@@ -1343,7 +1342,7 @@ def table_columns(check, repeated=False, repeat_aggregation="standard"):
         ("profile", "Profile"),
         ("status", "Status"),
         ("platform_status", "Platform"),
-        ("sequential_status_pair", "Sequential W/R"),
+        ("functional_status_pair", "Functional W/R"),
         ("throughput_read_throughput_gib_s", "Sequential Read GiB/s"),
         ("throughput_write_throughput_gib_s", "Sequential Write GiB/s"),
         ("random_read_throughput_gib_s", "Random Read GiB/s"),
@@ -1696,7 +1695,7 @@ def render_gds_stats_ascii(rows):
         parts.append(render_table(detail_rows, gds_phase_detail_columns()))
 
     parts.append("GDS Statistics")
-    parts.append(f"Stats definitions: {STATS_DOCS_PATH}")
+    parts.append(f"Stats definitions: {STATS_WIKI_PATH}")
     parts.append(render_table(gds_stats_rows(stats), gds_stats_columns()))
 
     parts.append("GDS Anomalies")
@@ -1714,7 +1713,7 @@ def render_gds_stats_ascii(rows):
     return "\n\n".join(parts)
 
 
-def render_gds_stats_markdown(rows, stats_link):
+def render_gds_stats_markdown(rows):
     stats, anomalies, _ = build_gds_stats(rows)
     lines = []
 
@@ -1733,7 +1732,7 @@ def render_gds_stats_markdown(rows, stats_link):
         "## GDS Statistics",
         "",
         "Only passed rows with numeric throughput values are included. Mean shows the overall level; median and MAD are preferred for anomaly detection because severe outliers can distort standard deviation.",
-        f"See [Stats Explained]({stats_link}) for definitions of Mean, Median, StdDev, percentiles, MAD, CV, Delta, and Robust Z.",
+        f"See [Stats Explained]({REPORT_STATS_LINK}) for definitions of Mean, Median, StdDev, percentiles, MAD, CV, Delta, and Robust Z.",
         "",
     ])
     lines.extend(markdown_table(gds_stats_rows(stats), gds_stats_columns()))
@@ -1742,7 +1741,7 @@ def render_gds_stats_markdown(rows, stats_link):
     lines.extend([
         "## GDS Anomalies",
         "",
-        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. Rows below `{ANOMALY_MIN_ABS_DELTA_PCT:.1f}%` absolute delta are suppressed from this table. See [Stats Explained]({stats_link}) for `Delta` and `Robust Z` definitions.",
+        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. Rows below `{ANOMALY_MIN_ABS_DELTA_PCT:.1f}%` absolute delta are suppressed from this table. See [Stats Explained]({REPORT_STATS_LINK}) for `Delta` and `Robust Z` definitions.",
         "",
     ])
     visible, suppressed = visible_anomalies(anomalies)
@@ -1767,8 +1766,7 @@ def render_nccl_stats_ascii(rows, check):
     parts = []
 
     parts.append(f"{title} Statistics")
-    parts.append("Bandwidth values are largest-message busbw in GB/s.")
-    parts.append(f"Stats definitions: {STATS_DOCS_PATH}")
+    parts.append(f"Stats definitions: {STATS_WIKI_PATH}")
     parts.append(render_table(nccl_stats_rows(stats), gds_stats_columns()))
 
     parts.append(f"{title} Anomalies")
@@ -1786,7 +1784,7 @@ def render_nccl_stats_ascii(rows, check):
     return "\n\n".join(parts)
 
 
-def render_nccl_stats_markdown(rows, check, stats_link):
+def render_nccl_stats_markdown(rows, check):
     stats, anomalies, _ = build_nccl_stats(rows, check)
     title = "NCCL RDMA" if check == "nccl-rdma" else "NCCL Local"
     lines = []
@@ -1794,8 +1792,8 @@ def render_nccl_stats_markdown(rows, check, stats_link):
     lines.extend([
         f"## {title} Statistics",
         "",
-        "Only passed rows with numeric largest-message `busbw` values are included. All bandwidth values in this section are GB/s. Mean shows the overall level; median and MAD are preferred for fleet comparison because outliers can distort standard deviation.",
-        f"See [Stats Explained]({stats_link}) for definitions of Mean, Median, StdDev, percentiles, MAD, CV, Delta, and Robust Z.",
+        "Only passed rows with numeric largest-message `busbw` values are included. Mean shows the overall level; median and MAD are preferred for fleet comparison because outliers can distort standard deviation.",
+        f"See [Stats Explained]({REPORT_STATS_LINK}) for definitions of Mean, Median, StdDev, percentiles, MAD, CV, Delta, and Robust Z.",
         "",
     ])
     lines.extend(markdown_table(nccl_stats_rows(stats), gds_stats_columns()))
@@ -1804,7 +1802,7 @@ def render_nccl_stats_markdown(rows, check, stats_link):
     lines.extend([
         f"## {title} Anomalies",
         "",
-        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. Rows below `{ANOMALY_MIN_ABS_DELTA_PCT:.1f}%` absolute delta are suppressed from this table. See [Stats Explained]({stats_link}) for `Delta` and `Robust Z` definitions.",
+        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. Rows below `{ANOMALY_MIN_ABS_DELTA_PCT:.1f}%` absolute delta are suppressed from this table. See [Stats Explained]({REPORT_STATS_LINK}) for `Delta` and `Robust Z` definitions.",
         "",
     ])
     visible, suppressed = visible_anomalies(anomalies)
@@ -1983,8 +1981,7 @@ def render_topology_intelligence_markdown(rows):
     return "\n".join(lines)
 
 
-def render_markdown(rows, title, manifest, check, include_stats=True, cluster=None, stats_link=None):
-    stats_link = stats_link or STATS_DOCS_PATH
+def render_markdown(rows, title, manifest, check, include_stats=True, cluster=None):
     repeated = rows_are_repeated(rows)
     repeat_aggregation = manifest_repeat_aggregation(manifest or {})
     columns = table_columns(check, repeated, repeat_aggregation)
@@ -2030,9 +2027,9 @@ def render_markdown(rows, title, manifest, check, include_stats=True, cluster=No
         lines.extend([f"{center} columns aggregate passed numeric samples for each node.", ""])
 
     if check == "gds" and include_stats:
-        lines.append(render_gds_stats_markdown(rows, stats_link))
+        lines.append(render_gds_stats_markdown(rows))
     elif check in {"nccl-local", "nccl-rdma"} and include_stats:
-        lines.append(render_nccl_stats_markdown(rows, check, stats_link))
+        lines.append(render_nccl_stats_markdown(rows, check))
     elif check == "gpu-topology":
         lines.append(render_topology_intelligence_markdown(rows))
 
@@ -2046,17 +2043,13 @@ def render_markdown(rows, title, manifest, check, include_stats=True, cluster=No
     return "\n".join(lines)
 
 
-def markdown_output_path(results_root, date, cluster, check, nodes_per_job=None):
+def write_markdown(results_root, date, cluster, check, text, nodes_per_job=None):
     report_dir = results_root / "reports" / date
+    report_dir.mkdir(parents=True, exist_ok=True)
     suffix = ""
     if check == "nccl-rdma" and nodes_per_job not in (None, 2):
         suffix = f"-{nodes_per_job}n"
-    return report_dir / f"{check}-{cluster}{suffix}.md"
-
-
-def write_markdown(results_root, date, cluster, check, text, nodes_per_job=None):
-    path = markdown_output_path(results_root, date, cluster, check, nodes_per_job)
-    path.parent.mkdir(parents=True, exist_ok=True)
+    path = report_dir / f"{check}-{cluster}{suffix}.md"
     path.write_text(text, encoding="utf-8")
     return path
 
@@ -2112,16 +2105,7 @@ def main():
         print(ascii_text)
 
     if want_markdown:
-        output_path = markdown_output_path(results_root, args.date, args.cluster, args.check, effective_nodes_per_job) if args.write else None
-        markdown = render_markdown(
-            rows,
-            title,
-            manifest,
-            args.check,
-            include_stats=not args.no_stats,
-            cluster=args.cluster,
-            stats_link=stats_docs_link(output_path),
-        )
+        markdown = render_markdown(rows, title, manifest, args.check, include_stats=not args.no_stats, cluster=args.cluster)
         if args.write:
             path = write_markdown(results_root, args.date, args.cluster, args.check, markdown, effective_nodes_per_job)
             print(f"Wrote {path}")

@@ -7,8 +7,8 @@ script primitives into repeatable dry-runs, Slurm submissions, dashboard
 rendering, and repo-standard artifact layouts.
 
 Use Make when you want the repo's opinionated workflow. Use the script man pages
-when you want the primitive interface behind a target. For the teaching
-explanation, see [docs/modules/make-driver.md](../docs/modules/make-driver.md).
+when you want the primitive interface behind a target. For a brief overview, see
+[docs/modules/make-driver.md](../docs/modules/make-driver.md).
 
 ## Quick Start
 
@@ -67,7 +67,7 @@ make render-gds-ascii CLUSTER=b200 DATE=today
 
 | Target | Purpose |
 | --- | --- |
-| `make verify-nccl-suite` | Dry-run or submit NCCL local, RDMA, or survey jobs. |
+| `make verify-nccl-suite` | Dry-run or submit NCCL local, RDMA, or scale jobs. |
 | `make render-nccl-suite` | Print the NCCL suite Markdown dashboard from existing results. |
 
 Common NCCL shapes:
@@ -78,7 +78,7 @@ make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b000
 make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0001 NCCL_SUITE_CLASS=b200_2rank_socket_4g APPLY=1
 make verify-nccl-suite NCCL_SCOPE=local CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001 NCCL_SUITE_CLASS=rtx_pair_policy APPLY=1
 make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 PROFILE=small NODELIST=b0001,b0002 NCCL_NODES_PER_JOB=2 APPLY=1
-make verify-nccl-suite NCCL_SCOPE=survey CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001,a0002 NCCL_SURVEY_SIZES=1,2
+make verify-nccl-suite NCCL_SCOPE=scale CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001,a0002 NCCL_SCALES=1,2
 make render-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 DATE=today
 ```
 
@@ -115,9 +115,9 @@ make render-dataloader CLUSTER=rtxpro6000 DATE=today
 Common DDP shapes:
 
 ```bash
-make benchmark-ddp-resnet50 CLUSTER=b200 DDP_NODES=1 NODELIST=b0001 DDP_RUN_ARGS="--warmup-iters 100 --measured-iters 500 --batch-size 64 --num-workers 0 --persistent-workers 0"
-make benchmark-ddp-resnet50 CLUSTER=rtxpro6000 DDP_NODES=2 NODELIST=a0001,a0002 DDP_LAUNCHER=torchrun
-make benchmark-ddp-resnet50 CLUSTER=b200 DDP_NODES=1 NODELIST=b0001 DDP_LAUNCHER=srun DDP_RUN_ARGS="--warmup-iters 100 --measured-iters 500 --batch-size 64 --num-workers 0 --persistent-workers 0"
+make benchmark-ddp-resnet50 CLUSTER=b200 NODES=1 NODELIST=b0001 DDP_RUN_ARGS="--warmup-iters 100 --measured-iters 500 --batch-size 64 --num-workers 0 --persistent-workers 0"
+make benchmark-ddp-resnet50 CLUSTER=rtxpro6000 NODES=2 NODELIST=a0001,a0002 LAUNCHER=torchrun
+make benchmark-ddp-resnet50 CLUSTER=b200 NODES=1 NODELIST=b0001 LAUNCHER=srun DDP_RUN_ARGS="--warmup-iters 100 --measured-iters 500 --batch-size 64 --num-workers 0 --persistent-workers 0"
 make render-ddp-resnet50 CLUSTER=b200 DATE=today
 make render-ddp-resnet50-ascii CLUSTER=b200 DATE=today
 ```

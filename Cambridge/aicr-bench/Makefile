@@ -1,49 +1,129 @@
-.PHONY: help require-settings doctor-python setup-python-local docs-link-check docs-test docs-test-plan install-containers install-containers-local verify-gds render-gds-ascii verify-nccl-suite render-nccl-suite benchmark-dataloader render-dataloader benchmark-ddp-resnet50 render-ddp-resnet50 render-ddp-resnet50-ascii benchmark-hpl-mxp benchmark-hpl-mxp-smoke render-hpl-mxp
+.PHONY: \
+	help \
+	help-benchmarks \
+	require-settings \
+	doctor \
+	doctor-python \
+	doctor-python-slurm \
+	rebuild-runtime \
+	install-containers \
+	refresh-python-locks \
+	setup \
+	setup-python-local \
+	verify \
+	verify-topology \
+	verify-gds \
+	render-gds-ascii \
+	verify-nccl-suite \
+	verify-nccl-local \
+	verify-nccl-rdma \
+	archive-verify \
+	archive-verification-campaign \
+	archive-verification-campaign-all \
+	render \
+	render-report-index \
+	render-benchmark-candidates \
+	validate-reports \
+	docs-link-check \
+	docs-test \
+	docs-test-plan \
+	docs-test-gpu-topology \
+	docs-test-plan-gpu-topology \
+	docs-test-gds \
+	docs-test-plan-gds \
+	docs-test-nccl \
+	docs-test-plan-nccl \
+	docs-test-dataloader \
+	docs-test-plan-dataloader \
+	docs-test-ddp \
+	docs-test-plan-ddp \
+	docs-test-hpl-mxp \
+	docs-test-plan-hpl-mxp \
+	docs-test-elbencho \
+	docs-test-plan-elbencho \
+	check-artifact-policy \
+	validate-benchmark-campaign-registry \
+	system-verify \
+	daily-verify \
+	benchmark-readiness-nccl \
+	benchmark-elbencho \
+	benchmark-dataloader \
+	benchmark-ddp-resnet50 \
+	benchmark-ddp-launcher-comparison \
+	benchmark-hpl-mxp \
+	benchmark-hpl-mxp-smoke \
+	install-elbencho \
+	benchmark-dry-run-suite \
+	render-dataloader \
+	render-dataloader-b200 \
+	render-ddp-resnet50 \
+	render-hpl-mxp \
+	render-benchmark-campaign \
+	render-ddp-b200 \
+	archive-benchmark-study-b200
+
+.NOTPARALLEL: verify system-verify daily-verify
 
 CLUSTER ?= b200
-PROFILE ?= small
 DATE ?= today
 APPLY ?= 0
+PROFILE ?= small
 REPEAT_COUNT ?= 1
 REPEAT_AGGREGATION ?= standard
-GDS_SUBMIT_STAGGER_SECONDS ?= 60
-NCCL_SUBMIT_STAGGER_SECONDS ?= 5
-NCCL_SURVEY_STAGGER_SECONDS ?= 0
-NCCL_SCOPE ?= survey
-NCCL_SUITE_OPS ?=
+GPU_PREFLIGHT_FILTER ?= 0
+# Legacy NCCL local/RDMA targets intentionally omit stagger flags and use script defaults.
+# SUBMIT_STAGGER_SECONDS remains a compatibility override for both GDS and NCCL suite.
+SUBMIT_STAGGER_SECONDS ?=
+GDS_SUBMIT_STAGGER_SECONDS ?= $(if $(strip $(SUBMIT_STAGGER_SECONDS)),$(SUBMIT_STAGGER_SECONDS),15)
+NCCL_SUBMIT_STAGGER_SECONDS ?= $(if $(strip $(SUBMIT_STAGGER_SECONDS)),$(SUBMIT_STAGGER_SECONDS),5)
+ROUND_STAGGER_SECONDS ?= 60
+NCCL_SCALE_STAGGER_SECONDS ?= 0
+NCCL_SCOPE ?= scale
 NCCL_SUITE_CLASS ?=
 NCCL_NODES_PER_JOB ?=
-NCCL_SURVEY_SIZES ?= 1
-NCCL_ALLOW_NONSTANDARD_NODE_COUNT ?= 0
-NCCL_DEBUG ?=
-NCCL_DEBUG_SUBSYS ?=
-NCCL_DEBUG_FILE ?=
-ROUND_STAGGER_SECONDS ?= 60
-NODELIST ?=
+NCCL_SCALES ?=
+WORKLOAD ?= small-block
 NODES ?= 1
 GPU_COUNT ?= 1
 MODE ?=
+LAUNCHER ?= torchrun
+NODE_REPORT_DATE ?= $(DATE)
+FROM_NODE_REPORT ?= 0
+NODELIST ?=
 DATALOADER_NODES ?= $(NODES)
 DATALOADER_BATCH_SIZES ?= 256
-DATALOADER_NUM_WORKERS ?= 8
+DATALOADER_INPUT_BACKENDS ?= pytorch-cpu-dataloader
+DATALOADER_NUM_WORKERS ?= 4,8,16,24,32
 DATALOADER_PREFETCH_FACTORS ?= 4
+DATALOADER_DALI_NUM_THREADS ?= 0
+DATALOADER_DALI_PREFETCH_QUEUE_DEPTHS ?= 2
+DATALOADER_DALI_DECODE_MODES ?= random-crop
+DATALOADER_DALI_HW_DECODER_LOADS ?= 0.65
 DATALOADER_PIN_MEMORY ?= 1
 DATALOADER_PERSISTENT_WORKERS ?= 1
 DATALOADER_REPEAT_COUNT ?= 1
 DATALOADER_REPEAT_AGGREGATION ?= $(REPEAT_AGGREGATION)
 DATALOADER_CPUS_PER_TASK ?= 16
+DATALOADER_DEPENDENCY ?=
 DATALOADER_RUN_ARGS ?=
-DDP_NODES ?= $(NODES)
-DDP_LAUNCHER ?= torchrun
-DDP_CPUS_PER_TASK ?=
 DDP_RUN_ARGS ?=
-HPL_MXP_PRESET ?= smoke
+DDP_TIME ?= 02:00:00
+DDP_REPEAT_COUNT ?= 1
+DDP_REPEAT_STAGGER_SECONDS ?= 30
+DDP_SRUN_MPI ?= pmix
+DDP_SRUN_CPU_BIND ?=
+DDP_SRUN_MEM_BIND ?=
+DDP_COMPARISON_SCALES ?= 1,2,4
+DDP_COMPARISON_INCLUDE_DEFAULT_SRUN ?= 0
+DDP_COMPARISON_STAGGER_SECONDS ?= 30
 HPL_MXP_MATRIX_SIZE ?= auto
 HPL_MXP_NB ?= auto
 HPL_MXP_NPROW ?= auto
 HPL_MXP_NPCOL ?= auto
-HPL_MXP_TIME ?= 00:30:00
+HPL_MXP_PRESET ?= smoke
+HPL_MXP_AFFINITY_PROFILE ?=
 HPL_MXP_IMAGE ?=
+HPL_MXP_TIME ?= 00:30:00
 HPL_MXP_SLOPPY_TYPE ?= 2
 HPL_MXP_TEST_LOOP ?=
 HPL_MXP_CPUS_PER_TASK ?= 16
@@ -57,145 +137,251 @@ HPL_MXP_ANQ_DEVICE ?=
 HPL_MXP_FILL_DEVICE ?=
 HPL_MXP_FILL_DEVICE_BUFFER_SIZE ?=
 HPL_MXP_CALL_DGEMV_THREADS ?=
+HPL_MXP_PRESET_GEMM_KERNEL ?=
 HPL_MXP_CPU_AFFINITY ?=
 HPL_MXP_MEM_AFFINITY ?=
+HPL_MXP_UCX_AFFINITY ?=
+HPL_MXP_U_PANEL_CHUNK_NBS ?=
 HPL_MXP_SCALING_STUDY ?= exploratory
-HPL_MXP_TARGET_GPU_MEMORY_PCT ?=
 HPL_MXP_BASELINE_MATRIX_SIZE ?=
-DOCS_APPLY ?= 0
-DOCS_SUITE ?= all
-DOCS_TEST_ID ?=
+HPL_MXP_REPEAT_COUNT ?= 1
+HPL_MXP_REPEAT_STAGGER_SECONDS ?= 30
+ELBENCHO_INSTALL_METHOD ?= container
+ELBENCHO_TAG ?= master-ubuntu-cuda-multiarch
+ELBENCHO_IMAGE ?=
+ELBENCHO_CPUS_PER_TASK ?= 64
+ELBENCHO_PROFILE ?= $(PROFILE)
+ELBENCHO_TIME ?= 01:00:00
+ELBENCHO_REPEAT_COUNT ?= 1
+ELBENCHO_REPEAT_STAGGER_SECONDS ?= 30
+ELBENCHO_TARGET_ROOT ?=
+ELBENCHO_SIZE ?=
+ELBENCHO_BLOCK ?=
+ELBENCHO_THREADS ?=
+ELBENCHO_IODEPTH ?=
+ELBENCHO_DEPENDENCY ?=
+ELBENCHO_FILE_PATTERN ?=
+ELBENCHO_FILES ?=
+ELBENCHO_DIRS ?=
+BENCHMARK_DRY_RUN_INCLUDE_ELBENCHO ?= 0
+SETUP_READY_TIMEOUT_SECONDS ?= 180
+SETUP_READY_POLL_SECONDS ?= 5
+SETUP_REPLACE_EXISTING ?= 1
+SETUP_REBUILD_RUNTIME ?= 1
+WAIT ?= 0
+RUNTIME_REPLACE_CURRENT ?= 0
 CONTAINER_REFRESH ?= 0
+INSTALL_ELBENCHO_CONTAINER ?= 0
 CONTAINER_PARTITION ?= GPU1
 CONTAINER_NODELIST ?=
 CONTAINER_TIME ?= 04:00:00
 CONTAINER_WAIT ?= 1
+RUNTIME_PARTITION ?=
+PYTHON_DOCTOR_PARTITION ?=
+PYTHON_DOCTOR_TIME ?= 00:05:00
+PYTHON_DOCTOR_CPUS_PER_TASK ?= 2
+PYTHON_DOCTOR_GRES ?=
+ARCHIVE_ROTATE ?= 0
+VERIFICATION_CAMPAIGN_PUBLIC_ROOT ?= /work/aicr/commissioning/benchmarks/public-study-artifacts
+VERIFICATION_CAMPAIGN_PRIVATE_ROOT ?= /work/aicr/commissioning/benchmarks/results-archive
+VERIFICATION_CAMPAIGN_OSN_REMOTE ?= bmark:csim-bmark
+VERIFICATION_CAMPAIGN_SKIP_OSN ?= 0
 REPO_PY ?= bash scripts/lib/run-repo-python.sh
-DOCS_PY ?= python3
+DOCS ?=
+DOCS_TEST_SUITE ?= all
+DOCS_APPLY ?= 0
 
 APPLY_FLAG := $(if $(filter 1,$(APPLY)),--apply,)
+DOCS_ARGS := $(if $(strip $(DOCS)),--docs $(DOCS),)
 DOCS_APPLY_FLAG := $(if $(filter 1,$(DOCS_APPLY)),--apply,)
-DOCS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodelist $(NODELIST),)
-DOCS_TEST_ID_FLAG := $(if $(strip $(DOCS_TEST_ID)),--test-id $(DOCS_TEST_ID),)
-REPEAT_AGGREGATION_FLAG := --repeat-aggregation $(REPEAT_AGGREGATION)
-GDS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
+VERIFICATION_CAMPAIGN_SKIP_OSN_FLAG := $(if $(filter 1,$(VERIFICATION_CAMPAIGN_SKIP_OSN)),--skip-osn,)
+WAIT_FLAG := $(if $(filter 1,$(WAIT)),--wait,)
+RUNTIME_REPLACE_FLAG := $(if $(filter 1,$(RUNTIME_REPLACE_CURRENT)),--replace-current,)
+CONTAINER_REFRESH_FLAG := $(if $(filter 1,$(CONTAINER_REFRESH)),--refresh,)
+INSTALL_ELBENCHO_CONTAINER_FLAG := $(if $(filter 1,$(INSTALL_ELBENCHO_CONTAINER)),--include-elbencho,)
+CONTAINER_NODELIST_FLAG := $(if $(strip $(CONTAINER_NODELIST)),--nodelist $(CONTAINER_NODELIST),)
+CONTAINER_WAIT_FLAG := $(if $(filter 0,$(CONTAINER_WAIT)),--no-wait,)
+RUNTIME_PARTITION_FLAG := $(if $(strip $(RUNTIME_PARTITION)),--partition $(RUNTIME_PARTITION),)
+PYTHON_DOCTOR_PARTITION_FLAG := $(if $(strip $(PYTHON_DOCTOR_PARTITION)),--partition $(PYTHON_DOCTOR_PARTITION),)
+PYTHON_DOCTOR_GRES_FLAG := $(if $(strip $(PYTHON_DOCTOR_GRES)),--gres $(PYTHON_DOCTOR_GRES),)
+SETUP_SMOKE_FLAG := $(if $(filter 1,$(APPLY)),--submit-smoke-tests,)
+SETUP_REPLACE_FLAG := $(if $(filter 1,$(SETUP_REPLACE_EXISTING)),--replace-existing,)
+ARCHIVE_ROTATE_FLAG := $(if $(filter 1,$(ARCHIVE_ROTATE)),--rotate,)
+FROM_NODE_REPORT_FLAG := $(if $(filter 1,$(FROM_NODE_REPORT)),--from-node-report,)
+NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodelist $(NODELIST),)
+GPU_TOPOLOGY_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 NCCL_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 NCCL_SUITE_CLASS_FLAG := $(if $(strip $(NCCL_SUITE_CLASS)),--suite-class $(NCCL_SUITE_CLASS),)
 NCCL_NODES_PER_JOB_FLAG := $(if $(strip $(NCCL_NODES_PER_JOB)),--nodes-per-job $(NCCL_NODES_PER_JOB),)
-NCCL_SURVEY_SIZES_FLAG := $(if $(filter survey,$(NCCL_SCOPE)),$(if $(strip $(NCCL_SURVEY_SIZES)),--survey-sizes $(NCCL_SURVEY_SIZES),),)
-NCCL_SURVEY_STAGGER_SECONDS_FLAG := $(if $(filter survey,$(NCCL_SCOPE)),--survey-stagger-seconds $(NCCL_SURVEY_STAGGER_SECONDS),)
-NCCL_ALLOW_NONSTANDARD_NODE_COUNT_FLAG := $(if $(filter 1,$(NCCL_ALLOW_NONSTANDARD_NODE_COUNT)),--allow-nonstandard-node-count,)
-NCCL_SUITE_OPS_ENV := $(if $(strip $(NCCL_SUITE_OPS)),NCCL_SUITE_OPS=$(NCCL_SUITE_OPS),)
-NCCL_DEBUG_ENV := $(if $(strip $(NCCL_DEBUG)),NCCL_DEBUG=$(NCCL_DEBUG),)
-NCCL_DEBUG_SUBSYS_ENV := $(if $(strip $(NCCL_DEBUG_SUBSYS)),NCCL_DEBUG_SUBSYS=$(NCCL_DEBUG_SUBSYS),)
-NCCL_DEBUG_FILE_ENV := $(if $(strip $(NCCL_DEBUG_FILE)),NCCL_DEBUG_FILE=$(NCCL_DEBUG_FILE),)
-DATALOADER_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodelist $(NODELIST),)
-DATALOADER_MODE_FLAG := $(if $(strip $(MODE)),--mode $(MODE),)
-DDP_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodelist $(NODELIST),)
-DDP_CPUS_PER_TASK_FLAG := $(if $(strip $(DDP_CPUS_PER_TASK)),--cpus-per-task $(DDP_CPUS_PER_TASK),)
-HPL_MXP_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodelist $(NODELIST),)
+NCCL_SCALES_FLAG := $(if $(strip $(NCCL_SCALES)),--scales $(NCCL_SCALES),)
+MODE_FLAG := $(if $(strip $(MODE)),--mode $(MODE),)
+DDP_REPEAT_COUNT_FLAG := $(if $(strip $(DDP_REPEAT_COUNT)),--repeat-count $(DDP_REPEAT_COUNT),)
+DDP_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(DDP_REPEAT_STAGGER_SECONDS)),--repeat-stagger-seconds $(DDP_REPEAT_STAGGER_SECONDS),)
+DATALOADER_DEPENDENCY_FLAG := $(if $(strip $(DATALOADER_DEPENDENCY)),--dependency $(DATALOADER_DEPENDENCY),)
 HPL_MXP_IMAGE_FLAG := $(if $(strip $(HPL_MXP_IMAGE)),--image $(HPL_MXP_IMAGE),)
-HPL_MXP_TEST_LOOP_FLAG := $(if $(strip $(HPL_MXP_TEST_LOOP)),--test-loop $(HPL_MXP_TEST_LOOP),)
 HPL_MXP_CPUS_PER_TASK_FLAG := $(if $(strip $(HPL_MXP_CPUS_PER_TASK)),--cpus-per-task $(HPL_MXP_CPUS_PER_TASK),)
-HPL_MXP_NPROW_FLAG := $(if $(strip $(HPL_MXP_NPROW)),--nprow $(HPL_MXP_NPROW),)
-HPL_MXP_NPCOL_FLAG := $(if $(strip $(HPL_MXP_NPCOL)),--npcol $(HPL_MXP_NPCOL),)
+HPL_MXP_OMPI_COLL_FLAG := $(if $(strip $(HPL_MXP_OMPI_COLL)),--ompi-coll $(HPL_MXP_OMPI_COLL),)
+HPL_MXP_PMIX_MCA_GDS_FLAG := $(if $(strip $(HPL_MXP_PMIX_MCA_GDS)),--pmix-mca-gds $(HPL_MXP_PMIX_MCA_GDS),)
+HPL_MXP_NPROW_FLAG := $(if $(filter-out auto,$(strip $(HPL_MXP_NPROW))),--nprow $(HPL_MXP_NPROW),)
+HPL_MXP_NPCOL_FLAG := $(if $(filter-out auto,$(strip $(HPL_MXP_NPCOL))),--npcol $(HPL_MXP_NPCOL),)
+HPL_MXP_AFFINITY_PROFILE_FLAG := $(if $(strip $(HPL_MXP_AFFINITY_PROFILE)),--affinity-profile $(HPL_MXP_AFFINITY_PROFILE),)
+HPL_MXP_MPI_USE_MPI_FLAG := $(if $(strip $(HPL_MXP_MPI_USE_MPI)),--mpi-use-mpi $(HPL_MXP_MPI_USE_MPI),)
+HPL_MXP_MPI_PANEL_BROADCAST_FLAG := $(if $(strip $(HPL_MXP_MPI_PANEL_BROADCAST)),--use-mpi-panel-broadcast $(HPL_MXP_MPI_PANEL_BROADCAST),)
+HPL_MXP_PRIORITIZE_TRSM_FLAG := $(if $(strip $(HPL_MXP_PRIORITIZE_TRSM)),--prioritize-trsm $(HPL_MXP_PRIORITIZE_TRSM),)
+HPL_MXP_PRIORITIZE_FACTORIZATION_FLAG := $(if $(strip $(HPL_MXP_PRIORITIZE_FACTORIZATION)),--prioritize-factorization $(HPL_MXP_PRIORITIZE_FACTORIZATION),)
 HPL_MXP_ANQ_DEVICE_FLAG := $(if $(strip $(HPL_MXP_ANQ_DEVICE)),--anq-device $(HPL_MXP_ANQ_DEVICE),)
 HPL_MXP_FILL_DEVICE_FLAG := $(if $(strip $(HPL_MXP_FILL_DEVICE)),--fill-device $(HPL_MXP_FILL_DEVICE),)
 HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG := $(if $(strip $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE)),--fill-device-buffer-size $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE),)
 HPL_MXP_CALL_DGEMV_THREADS_FLAG := $(if $(strip $(HPL_MXP_CALL_DGEMV_THREADS)),--call-dgemv-with-multiple-threads $(HPL_MXP_CALL_DGEMV_THREADS),)
+HPL_MXP_PRESET_GEMM_KERNEL_FLAG := $(if $(strip $(HPL_MXP_PRESET_GEMM_KERNEL)),--preset-gemm-kernel $(HPL_MXP_PRESET_GEMM_KERNEL),)
 HPL_MXP_CPU_AFFINITY_FLAG := $(if $(strip $(HPL_MXP_CPU_AFFINITY)),--cpu-affinity $(HPL_MXP_CPU_AFFINITY),)
 HPL_MXP_MEM_AFFINITY_FLAG := $(if $(strip $(HPL_MXP_MEM_AFFINITY)),--mem-affinity $(HPL_MXP_MEM_AFFINITY),)
-HPL_MXP_TARGET_GPU_MEMORY_PCT_FLAG := $(if $(strip $(HPL_MXP_TARGET_GPU_MEMORY_PCT)),--target-gpu-memory-pct $(HPL_MXP_TARGET_GPU_MEMORY_PCT),)
+HPL_MXP_UCX_AFFINITY_FLAG := $(if $(strip $(HPL_MXP_UCX_AFFINITY)),--ucx-affinity $(HPL_MXP_UCX_AFFINITY),)
+HPL_MXP_U_PANEL_CHUNK_NBS_FLAG := $(if $(strip $(HPL_MXP_U_PANEL_CHUNK_NBS)),--u-panel-chunk-nbs $(HPL_MXP_U_PANEL_CHUNK_NBS),)
+HPL_MXP_SCALING_STUDY_FLAG := $(if $(strip $(HPL_MXP_SCALING_STUDY)),--scaling-study $(HPL_MXP_SCALING_STUDY),)
 HPL_MXP_BASELINE_MATRIX_SIZE_FLAG := $(if $(strip $(HPL_MXP_BASELINE_MATRIX_SIZE)),--baseline-matrix-size $(HPL_MXP_BASELINE_MATRIX_SIZE),)
-CONTAINER_REFRESH_FLAG := $(if $(filter 1,$(CONTAINER_REFRESH)),--refresh,)
-CONTAINER_NODELIST_FLAG := $(if $(strip $(CONTAINER_NODELIST)),--nodelist $(CONTAINER_NODELIST),)
-CONTAINER_WAIT_FLAG := $(if $(filter 0,$(CONTAINER_WAIT)),--no-wait,)
+HPL_MXP_TEST_LOOP_FLAG := $(if $(strip $(HPL_MXP_TEST_LOOP)),--test-loop $(HPL_MXP_TEST_LOOP),)
+HPL_MXP_REPEAT_COUNT_FLAG := $(if $(strip $(HPL_MXP_REPEAT_COUNT)),--repeat-count $(HPL_MXP_REPEAT_COUNT),)
+HPL_MXP_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(HPL_MXP_REPEAT_STAGGER_SECONDS)),--repeat-stagger-seconds $(HPL_MXP_REPEAT_STAGGER_SECONDS),)
+ELBENCHO_IMAGE_FLAG := $(if $(strip $(ELBENCHO_IMAGE)),--image $(ELBENCHO_IMAGE),)
+ELBENCHO_REPEAT_COUNT_FLAG := $(if $(strip $(ELBENCHO_REPEAT_COUNT)),--repeat-count $(ELBENCHO_REPEAT_COUNT),)
+ELBENCHO_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(ELBENCHO_REPEAT_STAGGER_SECONDS)),--repeat-stagger-seconds $(ELBENCHO_REPEAT_STAGGER_SECONDS),)
+ELBENCHO_DEPENDENCY_FLAG := $(if $(strip $(ELBENCHO_DEPENDENCY)),--dependency $(ELBENCHO_DEPENDENCY),)
+BENCHMARK_DRY_RUN_ELBENCHO_FLAG := $(if $(filter 1,$(BENCHMARK_DRY_RUN_INCLUDE_ELBENCHO)),--include-elbencho,)
+DDP_COMPARISON_DEFAULT_SRUN_FLAG := $(if $(filter 1,$(DDP_COMPARISON_INCLUDE_DEFAULT_SRUN)),--include-default-srun,)
+REPEAT_AGGREGATION_FLAG := --repeat-aggregation $(REPEAT_AGGREGATION)
+GPU_PREFLIGHT_FILTER_FLAG := $(if $(filter 1,$(GPU_PREFLIGHT_FILTER)),--gpu-preflight-filter,)
+GDS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 REPORT_DATE := $(shell if [ "$(DATE)" = "today" ]; then date -u +%F; else printf '%s' "$(DATE)"; fi)
 
 help:
 	@printf '%s\n' \
-		"AICR-Bench Cambridge interface" \
+		"AICR-Bench Make interface" \
 		"" \
-		"GDS:" \
-		"  make verify-gds CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large>" \
-		"      Dry-run GDS Slurm submissions across currently idle nodes." \
-		"  make verify-gds CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> NODELIST=<node>" \
-		"      Limit GDS Slurm submissions to one node or a comma-separated node list." \
-		"  make verify-gds CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> APPLY=1" \
-		"      Submit GDS jobs and render a report after completion." \
-		"  make verify-gds CLUSTER=<b200|rtxpro6000> PROFILE=custom NODELIST=<node> AICR_GDS_CUSTOM_GDSIO_ARGS='<args>' APPLY=1" \
-		"      Submit one custom gdsio command. The script owns the target file by default." \
-		"  make render-gds-ascii CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Print the GDS ASCII dashboard from existing results." \
-		"NCCL:" \
-		"  make verify-nccl-suite NCCL_SCOPE=local CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> NODELIST=<node>" \
-		"      Dry-run one-node local NCCL checks with IB disabled." \
-		"  make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=<node> NCCL_SUITE_CLASS=b200_1proc_8g APPLY=1" \
-		"      Submit the B200 single-process, 8-GPU local check." \
-		"  make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=<node> NCCL_SUITE_CLASS=b200_2rank_socket_4g APPLY=1" \
-		"      Submit the B200 two-process, 4-GPU-per-process NUMA/socket-pinned local check." \
-		"  make verify-nccl-suite NCCL_SCOPE=local CLUSTER=rtxpro6000 PROFILE=small NODELIST=<node> NCCL_SUITE_CLASS=rtx_pair_policy APPLY=1" \
-		"      Submit the RTX two-GPU P2P pair-policy check." \
-		"  make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=<b200|rtxpro6000> PROFILE=small NODELIST=<nodes> NCCL_NODES_PER_JOB=<2|4|8|16> APPLY=1" \
-		"      Submit explicit multi-node RDMA checks. RTX supports 2/4/8; B200 supports 2/4/8/16." \
-		"  make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=b200 PROFILE=small NODELIST=<nodes> NCCL_NODES_PER_JOB=31 NCCL_SUITE_OPS=allreduce NCCL_ALLOW_NONSTANDARD_NODE_COUNT=1 APPLY=1" \
-		"      Submit an expert AllReduce diagnostic node count outside the public ladder." \
-		"  make verify-nccl-suite NCCL_SCOPE=survey CLUSTER=<b200|rtxpro6000> PROFILE=small NODELIST=<nodes> NCCL_SURVEY_SIZES=1,2 APPLY=1" \
-		"      Submit rank-per-GPU NCCL survey groups for candidate-node discovery." \
-		"  make render-nccl-suite CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Print the NCCL suite Markdown dashboard from existing results." \
+		"Primary verification targets:" \
+		"  make system-verify CLUSTER=<b200|rtxpro6000> PROFILE=<small|...> APPLY=1" \
+		"      Submit setup and verification jobs, then archive/render/validate reports." \
+		"      Benchmark-day repeated sampling: REPEAT_COUNT=5 REPEAT_AGGREGATION=olympic." \
+		"      For RTX workload filtering, add GPU_PREFLIGHT_FILTER=1." \
+		"  make verify-nccl-suite NCCL_SCOPE=<local|rdma|scale> CLUSTER=<b200|rtxpro6000> PROFILE=<smoke|small|...> [NODELIST=<nodes>] APPLY=1" \
+		"      Submit NCCL local, RDMA, or scale-suite jobs." \
+		"  make render CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"      Render system verification campaign and by-node reports." \
+		"  make validate-reports CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"      Validate rendered system verification report JSON and links." \
+		"  make docs-link-check" \
+		"      Check public documentation hygiene and man-page links." \
+		"  make check-artifact-policy" \
+		"      Fail if raw or unpromoted generated artifacts are present in Git." \
+		"  make validate-benchmark-campaign-registry" \
+		"      Validate the benchmark campaign requirements registry and policy gates." \
+		"" \
+		"Primary benchmark targets:" \
+		"  make benchmark-dry-run-suite CLUSTER=<b200|rtxpro6000> NODE_REPORT_DATE=<date>" \
+		"      Run the benchmark submission preflight; prints sbatch shapes and submits no Slurm jobs." \
+		"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> ..." \
+		"      Preview or submit DataLoader benchmark sweeps." \
+		"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
+		"      Preview or submit ResNet-50 DDP runs." \
+		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
+		"      Guarded HPL entrypoint; HPL_MXP_PRESET selects smoke, staged, campaign, or workspace rows." \
+		"  make render-benchmark-campaign DATE=<date>" \
+		"      Render the benchmark campaign requirements dashboard." \
+		"Common variables:" \
+		"  CLUSTER=b200|rtxpro6000   DATE=<YYYY-MM-DD|today>   APPLY=0|1" \
+		"  NODELIST=<node[,node...]> limits supported submitters to explicit nodes." \
+		"  For verify-nccl-suite, NODELIST is a candidate pool; NCCL_SCALES controls groups." \
+		"  NCCL_SCALES=1,2,4 on RTX and 1,2,4,8,16 on B200." \
+		"  NODE_REPORT_DATE=<date> selects the node report used for benchmark node selection." \
+		"  REPEAT_COUNT=5 REPEAT_AGGREGATION=olympic is the benchmark-day GDS/NCCL policy." \
+		"  make install-containers CONTAINER_NODELIST=<node> submits container pulls through Slurm." \
+		"" \
+		"Run 'make help-benchmarks' for benchmark-specific variables." \
+		"Deprecated compatibility aliases:" \
+		"  daily-verify -> system-verify" \
+		"  benchmark-readiness-nccl -> verify-nccl-suite" \
+		"  benchmark-hpl-mxp-smoke -> benchmark-hpl-mxp HPL_MXP_PRESET=smoke"
+
+help-benchmarks:
+	@printf '%s\n' \
+		"AICR-Bench benchmark Make targets" \
+		"" \
+		"Interface model:" \
+		"  Make is the supported front door for benchmark execution." \
+		"  Direct scripts under scripts/benchmark/ are low-level implementation surfaces." \
+		"  scripts/operator/aicr is for reporting, archive, and doctor workflows." \
+		"" \
+		"Dry-run/apply contract:" \
+		"  Benchmark submission targets are dry-run first by default." \
+		"  Add APPLY=1 to submit jobs." \
+		"  benchmark-dry-run-suite is a benchmark submission preflight and submits no Slurm jobs." \
+		"  Render targets write generated review artifacts under results/reports/<date>/." \
+		"  Generated runtime trees remain uncommitted unless explicitly promoted." \
+		"" \
+		"Benchmark-day verification variables:" \
+		"  REPEAT_COUNT=5 repeats GDS and NCCL suite readiness samples for final review." \
+		"  REPEAT_AGGREGATION=olympic drops high/low passed numeric samples and averages the middle 3." \
+		"  GPU_PREFLIGHT_FILTER=1 filters RTX GDS/NCCL submissions from same-day topology evidence." \
+		"  Failed, skipped, and missing samples remain visible; they are not hidden by aggregation." \
+		"" \
+		"Date variables:" \
+		"  DATE is the report, archive, and render date; accepts today, yesterday, or YYYY-MM-DD." \
+		"  NODE_REPORT_DATE selects the strict-passed node report for benchmark submissions." \
+		"  NODE_REPORT_DATE defaults to DATE." \
 		"" \
 		"DataLoader:" \
-		"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> GPU_COUNT=<1|8> MODE=<single|replicated|distributed-sharded> NODELIST=<node[,node...]>" \
-		"      Dry-run PyTorch DataLoader submissions against AICR_IMAGENET_DIR." \
-		"  make benchmark-dataloader CLUSTER=rtxpro6000 GPU_COUNT=1 MODE=single NODELIST=<node> APPLY=1 DATALOADER_RUN_ARGS='<args>'" \
-		"      Submit one explicit RTX single-GPU DataLoader job." \
-		"  make render-dataloader CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Print the DataLoader Markdown dashboard from existing results." \
+		"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> FROM_NODE_REPORT=1 NODE_REPORT_DATE=<date> ..." \
+		"  Key vars: DATALOADER_NODES, GPU_COUNT, MODE, DATALOADER_BATCH_SIZES," \
+		"            DATALOADER_INPUT_BACKENDS, DATALOADER_NUM_WORKERS, DATALOADER_PREFETCH_FACTORS," \
+		"            DATALOADER_REPEAT_COUNT, DATALOADER_RUN_ARGS." \
+		"  DataLoader node sweeps support DATALOADER_NODES=1,2,4,8,16 for B200 and RTX." \
 		"" \
-		"DDP:" \
-		"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large> DDP_NODES=<1|2|4|8|16> NODELIST=<node[,node...]>" \
-		"      Dry-run fixed-iteration PyTorch DDP ResNet-50 submissions." \
-		"  make benchmark-ddp-resnet50 CLUSTER=rtxpro6000 DDP_NODES=1 NODELIST=<node> APPLY=1 DDP_RUN_ARGS='<args>'" \
-		"      Submit one explicit RTX DDP ResNet-50 teaching job." \
-		"  make render-ddp-resnet50 CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Print the DDP ResNet-50 Markdown summary from existing results." \
-		"  make render-ddp-resnet50-ascii CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Print the DDP ResNet-50 ASCII dashboard from existing results." \
+		"DDP ResNet-50:" \
+		"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> NODES=<n> LAUNCHER=torchrun ..." \
+		"  Key vars: NODES, LAUNCHER, DDP_RUN_ARGS, DDP_TIME, DDP_REPEAT_COUNT," \
+		"            DDP_REPEAT_STAGGER_SECONDS, DDP_SRUN_MPI, DDP_SRUN_CPU_BIND," \
+		"            DDP_SRUN_MEM_BIND." \
+		"  DDP_RUN_ARGS may select --input-backend pytorch-cpu-dataloader, dali-gpu-decode, or synthetic-gpu." \
+		"  Campaign-required rows use LAUNCHER=torchrun; srun is optional comparison evidence." \
 		"" \
 		"HPL-MxP:" \
-		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<1|2|4|8|16> NODELIST=<node[,node...]>" \
-		"      Dry-run an NVIDIA HPL-MxP submission through the HPC Benchmarks container." \
-		"  make benchmark-hpl-mxp CLUSTER=b200 NODES=1 NODELIST=<node> HPL_MXP_PRESET=campaign-candidate HPL_MXP_TEST_LOOP=10 APPLY=1" \
-		"      Submit the reviewed single-node B200 campaign-candidate shape." \
-		"  make benchmark-hpl-mxp-smoke CLUSTER=<b200|rtxpro6000> NODES=1 NODELIST=<node> APPLY=1" \
-		"      Submit a small HPL-MxP smoke row before larger shapes." \
-		"  make render-hpl-mxp CLUSTER=<b200|rtxpro6000> DATE=<YYYY-MM-DD|today>" \
-		"      Render the HPL-MxP Markdown campaign report from existing results." \
+		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=<smoke|staged|campaign-candidate|workspace-fp16>" \
+		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=workspace-fp16 HPL_MXP_AFFINITY_PROFILE=derived-nps4 HPL_MXP_SCALING_STUDY=weak" \
+		"  Key vars: HPL_MXP_PRESET, HPL_MXP_MATRIX_SIZE, HPL_MXP_NB, HPL_MXP_TIME, HPL_MXP_TEST_LOOP." \
+		"            HPL_MXP_REPEAT_COUNT=5 submits independent samples for Olympic reporting." \
+		"            HPL_MXP_CPUS_PER_TASK for host-heavy FP64/GMRES tuning." \
+		"            HPL_MXP_NPROW, HPL_MXP_NPCOL, HPL_MXP_AFFINITY_PROFILE," \
+		"            HPL_MXP_MPI_USE_MPI," \
+		"            HPL_MXP_MPI_PANEL_BROADCAST, HPL_MXP_PRIORITIZE_FACTORIZATION," \
+		"            HPL_MXP_ANQ_DEVICE, HPL_MXP_FILL_DEVICE, HPL_MXP_CALL_DGEMV_THREADS," \
+		"            HPL_MXP_PRESET_GEMM_KERNEL," \
+		"            HPL_MXP_CPU_AFFINITY, HPL_MXP_MEM_AFFINITY, HPL_MXP_UCX_AFFINITY," \
+		"            HPL_MXP_U_PANEL_CHUNK_NBS for sizing/tuning studies." \
+		"            HPL_MXP_SCALING_STUDY and HPL_MXP_BASELINE_MATRIX_SIZE for scaling." \
+		"  HPL_MXP_PRESET=workspace-fp16 uses the NVIDIA FP16 ladder and derived NPS4 affinity profile." \
+		"  May 16 formal rows use the NVIDIA container FP16 N ladder, workspace-fp16, weak study metadata, and derived NPS4 affinity." \
+		"  RTX formal nodes are 1/2/4; B200 formal nodes are 1/2/4/8/16." \
+		"  campaign-candidate rows remain available for older reviewed target-size studies." \
+		"  Compatibility alias: benchmark-hpl-mxp-smoke forwards to benchmark-hpl-mxp with HPL_MXP_PRESET=smoke." \
 		"" \
-		"Python helpers:" \
-		"  make setup-python-local" \
-		"  make doctor-python" \
+		"Elbencho:" \
+		"  make benchmark-elbencho CLUSTER=<b200|rtxpro6000> WORKLOAD=<peak-cluster|small-block|small-file|metadata> PROFILE=<smoke|small>" \
+		"  PROFILE selects reviewed file-backed templates; ELBENCHO_PROFILE is an Elbencho-specific override." \
+		"  ELBENCHO_REPEAT_COUNT submits serialized Slurm repeats with afterok dependencies." \
+		"  ELBENCHO_SIZE, ELBENCHO_BLOCK, ELBENCHO_THREADS, ELBENCHO_IODEPTH, ELBENCHO_FILE_PATTERN, ELBENCHO_FILES, and ELBENCHO_DIRS tune profile templates for calibration." \
+		"  ELBENCHO_CMD remains an expert override." \
 		"" \
-		"Executable documentation:" \
-		"  make docs-link-check" \
-		"      Check that prose script mentions link to man pages." \
-		"  make docs-test" \
-		"      Run local and dry-run executable documentation checks." \
-		"  make docs-test DOCS_APPLY=1 NODELIST=<node>" \
-		"      Also allow applied one-node Slurm documentation checks." \
-		"  make docs-test-plan" \
-		"      Print selected documentation checks without running them." \
+		"Rendering:" \
+		"  make render-dataloader CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"  make render-ddp-resnet50 CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"  make render-hpl-mxp CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"  make render-benchmark-campaign DATE=<date>" \
 		"" \
-		"Runtime containers for later modules:" \
-		"  make install-containers" \
-		"      Submit the default container install as a Slurm job on CONTAINER_PARTITION=GPU1." \
-		"  make install-containers CONTAINER_NODELIST=<node>" \
-		"      Submit the container install to a specific RTX node." \
-		"  make install-containers CONTAINER_REFRESH=1" \
-		"      Rebuild/replace the default images through the same Slurm path." \
-		"  make install-containers CONTAINER_WAIT=0" \
-		"      Submit and return immediately; monitor with squeue and results/setup logs."
+		"Closeout archive:" \
+		"  make archive-benchmark-study-b200 CLUSTER=b200 DATE=<date>"
+
+doctor:
+	scripts/operator/aicr doctor repo-root
 
 require-settings:
 	@settings_file="$${AICR_SETTINGS_FILE:-benchmark-settings.env}"; \
@@ -208,18 +394,25 @@ require-settings:
 doctor-python:
 	bash scripts/setup/doctor-python.sh
 
+doctor-python-slurm: require-settings
+	bash scripts/setup/submit-python-runtime-slurm.sh \
+		--cluster $(CLUSTER) \
+		--time $(PYTHON_DOCTOR_TIME) \
+		--cpus-per-task $(PYTHON_DOCTOR_CPUS_PER_TASK) \
+		$(PYTHON_DOCTOR_PARTITION_FLAG) \
+		$(PYTHON_DOCTOR_GRES_FLAG) \
+		$(NODELIST_FLAG) \
+		$(APPLY_FLAG) \
+		$(WAIT_FLAG)
+
 setup-python-local:
 	bash scripts/setup/setup-python-local.sh
 
-docs-link-check:
-	$(DOCS_PY) scripts/docs/check-public-docs.py
-	$(DOCS_PY) scripts/docs/check-man-links.py
+refresh-python-locks:
+	bash scripts/setup/refresh-python-locks.sh
 
-docs-test: docs-link-check
-	$(DOCS_PY) scripts/docs/aicr-doctest.py --suite $(DOCS_SUITE) --cluster $(CLUSTER) $(DOCS_NODELIST_FLAG) $(DOCS_TEST_ID_FLAG) $(DOCS_APPLY_FLAG) run
-
-docs-test-plan:
-	$(DOCS_PY) scripts/docs/aicr-doctest.py --suite $(DOCS_SUITE) --cluster $(CLUSTER) $(DOCS_NODELIST_FLAG) $(DOCS_TEST_ID_FLAG) $(DOCS_APPLY_FLAG) plan
+rebuild-runtime: require-settings
+	bash scripts/setup/submit-runtime-rebuild.sh $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG)
 
 install-containers: require-settings
 	bash scripts/setup/submit-container-install.sh \
@@ -227,127 +420,263 @@ install-containers: require-settings
 		--time $(CONTAINER_TIME) \
 		$(CONTAINER_NODELIST_FLAG) \
 		$(CONTAINER_REFRESH_FLAG) \
+		$(INSTALL_ELBENCHO_CONTAINER_FLAG) \
 		$(CONTAINER_WAIT_FLAG)
 
-install-containers-local:
-	bash apptainer/pull/pull-verified-containers.sh $(CONTAINER_REFRESH_FLAG)
+setup:
+	bash scripts/setup/init-repo-layout.sh
+	@if ! bash scripts/setup/check-runtime-assets.sh; then \
+		if [ "$(SETUP_REBUILD_RUNTIME)" = "1" ]; then \
+			echo "Runtime assets are missing or incomplete; rebuilding before setup."; \
+			bash scripts/setup/submit-runtime-rebuild.sh $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG) --wait-complete || exit 1; \
+			if [ "$(APPLY)" != "1" ]; then \
+				echo "Dry run only. Re-run with APPLY=1 to rebuild runtime before setup."; \
+				exit 0; \
+			fi; \
+			bash scripts/setup/check-runtime-assets.sh || exit 1; \
+		else \
+			echo "ERROR: runtime assets are missing or incomplete." >&2; \
+			echo "Run make rebuild-runtime APPLY=1, or rerun setup with SETUP_REBUILD_RUNTIME=1." >&2; \
+			exit 1; \
+		fi; \
+	fi; \
+	bash scripts/setup/run-setup-gate-and-promote.sh \
+		--cluster $(CLUSTER) \
+		--ready-timeout-seconds $(SETUP_READY_TIMEOUT_SECONDS) \
+		--ready-poll-seconds $(SETUP_READY_POLL_SECONDS) \
+		$(SETUP_SMOKE_FLAG) \
+		$(SETUP_REPLACE_FLAG)
+
+verify: verify-topology verify-gds verify-nccl-suite
+
+verify-topology: require-settings
+	bash scripts/verify/run-gpu-topology-fleet.sh --cluster $(CLUSTER) $(GPU_TOPOLOGY_NODELIST_FLAG) $(APPLY_FLAG)
 
 verify-gds: require-settings
-	bash scripts/verify/submit-gds-fleet.sh \
+	bash scripts/verify/run-gds-fleet.sh \
 		--cluster $(CLUSTER) \
 		--profile $(PROFILE) \
 		$(GDS_NODELIST_FLAG) \
 		--repeat-count $(REPEAT_COUNT) \
 		$(REPEAT_AGGREGATION_FLAG) \
+		$(GPU_PREFLIGHT_FILTER_FLAG) \
 		--submit-stagger-seconds $(GDS_SUBMIT_STAGGER_SECONDS) \
 		--round-stagger-seconds $(ROUND_STAGGER_SECONDS) \
 		$(APPLY_FLAG)
 
-render-gds-ascii:
-	$(REPO_PY) scripts/report/render-verify-dashboard.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --check gds --ascii
-
 verify-nccl-suite: require-settings
-	env $(NCCL_SUITE_OPS_ENV) $(NCCL_DEBUG_ENV) $(NCCL_DEBUG_SUBSYS_ENV) $(NCCL_DEBUG_FILE_ENV) \
-		bash scripts/verify/submit-nccl-fleet.sh \
+	bash scripts/verify/submit-nccl-suite.sh \
 		--scope $(NCCL_SCOPE) \
 		--cluster $(CLUSTER) \
 		--profile $(PROFILE) \
 		$(NCCL_NODELIST_FLAG) \
 		$(NCCL_SUITE_CLASS_FLAG) \
 		$(NCCL_NODES_PER_JOB_FLAG) \
-		$(NCCL_SURVEY_SIZES_FLAG) \
-		$(NCCL_ALLOW_NONSTANDARD_NODE_COUNT_FLAG) \
+		$(NCCL_SCALES_FLAG) \
 		--repeat-count $(REPEAT_COUNT) \
 		$(REPEAT_AGGREGATION_FLAG) \
+		$(GPU_PREFLIGHT_FILTER_FLAG) \
 		--submit-stagger-seconds $(NCCL_SUBMIT_STAGGER_SECONDS) \
-		$(NCCL_SURVEY_STAGGER_SECONDS_FLAG) \
+		--scale-stagger-seconds $(NCCL_SCALE_STAGGER_SECONDS) \
 		--round-stagger-seconds $(ROUND_STAGGER_SECONDS) \
 		$(APPLY_FLAG)
 
-render-nccl-suite:
-	$(REPO_PY) scripts/report/render-nccl-suite-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --scope $(NCCL_SCOPE) $(NCCL_NODES_PER_JOB_FLAG) $(REPEAT_AGGREGATION_FLAG)
+verify-nccl-local: require-settings
+	bash scripts/verify/run-nccl-local-fleet.sh \
+		--cluster $(CLUSTER) \
+		--repeat-count $(REPEAT_COUNT) \
+		$(REPEAT_AGGREGATION_FLAG) \
+		$(APPLY_FLAG)
+
+ifeq ($(CLUSTER),b200)
+verify-nccl-rdma: require-settings
+	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
+	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 4 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
+	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 8 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
+	bash scripts/verify/run-nccl-rdma-fleet.sh --cluster $(CLUSTER) --nodes-per-job 16 --repeat-count $(REPEAT_COUNT) $(REPEAT_AGGREGATION_FLAG) $(APPLY_FLAG)
+else
+ifeq ($(CLUSTER),rtxpro6000)
+verify-nccl-rdma:
+	@echo "Skipping NCCL RDMA: CLUSTER=rtxpro6000 does not have RDMA verification support in this slice."
+else
+verify-nccl-rdma:
+	@echo "ERROR: unsupported CLUSTER=$(CLUSTER); expected b200 or rtxpro6000." >&2
+	@exit 2
+endif
+endif
+
+archive-verify:
+	bash scripts/report/archive-results.sh --date $(DATE) --cluster $(CLUSTER) $(ARCHIVE_ROTATE_FLAG)
+
+archive-verification-campaign:
+	bash scripts/report/archive-verification-campaign-results.sh --date $(DATE) --cluster $(CLUSTER) --public-root $(VERIFICATION_CAMPAIGN_PUBLIC_ROOT) --private-root $(VERIFICATION_CAMPAIGN_PRIVATE_ROOT) --osn-remote $(VERIFICATION_CAMPAIGN_OSN_REMOTE) $(VERIFICATION_CAMPAIGN_SKIP_OSN_FLAG) $(ARCHIVE_ROTATE_FLAG)
+
+archive-verification-campaign-all:
+	bash scripts/report/archive-verification-campaign-results.sh --date $(DATE) --public-root $(VERIFICATION_CAMPAIGN_PUBLIC_ROOT) --private-root $(VERIFICATION_CAMPAIGN_PRIVATE_ROOT) --osn-remote $(VERIFICATION_CAMPAIGN_OSN_REMOTE) $(VERIFICATION_CAMPAIGN_SKIP_OSN_FLAG) $(ARCHIVE_ROTATE_FLAG)
+
+render:
+	scripts/operator/aicr render nodes --date $(DATE) --cluster $(CLUSTER) --both --write
+	scripts/operator/aicr render campaign --date $(DATE) --cluster $(CLUSTER) --both --write
+
+render-gds-ascii:
+	$(REPO_PY) scripts/report/render-verify-dashboard.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --check gds --ascii
+
+render-report-index:
+	$(REPO_PY) scripts/report/report_index.py --results-root results --write
+
+render-benchmark-candidates:
+	scripts/operator/aicr render nodes --date $(DATE) --cluster $(CLUSTER) --both --write
+	$(MAKE) render-report-index
+
+validate-reports:
+	scripts/operator/aicr render nodes --date $(DATE) --cluster $(CLUSTER) --ascii
+	scripts/operator/aicr render campaign --date $(DATE) --cluster $(CLUSTER) --ascii
+	$(REPO_PY) -m json.tool results/reports/$(REPORT_DATE)/nodes-$(CLUSTER)-$(REPORT_DATE).json >/dev/null
+	$(REPO_PY) -m json.tool results/reports/$(REPORT_DATE)/campaign-$(CLUSTER)-$(REPORT_DATE).json >/dev/null
+	grep -n "campaign-$(CLUSTER)-$(REPORT_DATE).md" results/reports/README.md
+	grep -n "nodes-$(CLUSTER)-$(REPORT_DATE).md" results/reports/README.md
+	grep -n "nccl-suite-$(CLUSTER).md" results/reports/README.md
+	grep -n '\](' results/reports/$(REPORT_DATE)/nodes-$(CLUSTER)-$(REPORT_DATE).md
+	grep -n '\](' results/reports/$(REPORT_DATE)/campaign-$(CLUSTER)-$(REPORT_DATE).md
+	git diff --check
+
+docs-link-check:
+	$(REPO_PY) scripts/docs/check-public-docs.py
+	$(REPO_PY) scripts/docs/check-man-links.py
+
+docs-test-plan:
+	$(REPO_PY) scripts/docs/aicr-doctest.py --suite $(DOCS_TEST_SUITE) $(DOCS_ARGS) $(DOCS_APPLY_FLAG) --cluster $(CLUSTER) --nodelist "$(NODELIST)" --date $(DATE) plan
+
+docs-test:
+	$(REPO_PY) scripts/docs/aicr-doctest.py --suite $(DOCS_TEST_SUITE) $(DOCS_ARGS) $(DOCS_APPLY_FLAG) --cluster $(CLUSTER) --nodelist "$(NODELIST)" --date $(DATE) run
+
+docs-test-plan-gpu-topology:
+	$(MAKE) docs-test-plan DOCS=docs/modules/gpu-topology DOCS_TEST_SUITE=gpu-topology
+
+docs-test-gpu-topology:
+	$(MAKE) docs-test DOCS=docs/modules/gpu-topology DOCS_TEST_SUITE=gpu-topology
+
+docs-test-plan-gds:
+	$(MAKE) docs-test-plan DOCS=docs/modules/gds DOCS_TEST_SUITE=gds
+
+docs-test-gds:
+	$(MAKE) docs-test DOCS=docs/modules/gds DOCS_TEST_SUITE=gds
+
+docs-test-plan-nccl:
+	$(MAKE) docs-test-plan DOCS=docs/modules/nccl DOCS_TEST_SUITE=nccl
+
+docs-test-nccl:
+	$(MAKE) docs-test DOCS=docs/modules/nccl DOCS_TEST_SUITE=nccl
+
+docs-test-plan-dataloader:
+	$(MAKE) docs-test-plan DOCS=docs/modules/dataloader DOCS_TEST_SUITE=dataloader
+
+docs-test-dataloader:
+	$(MAKE) docs-test DOCS=docs/modules/dataloader DOCS_TEST_SUITE=dataloader
+
+docs-test-plan-ddp:
+	$(MAKE) docs-test-plan DOCS=docs/modules/ddp DOCS_TEST_SUITE=ddp
+
+docs-test-ddp:
+	$(MAKE) docs-test DOCS=docs/modules/ddp DOCS_TEST_SUITE=ddp
+
+docs-test-plan-hpl-mxp:
+	$(MAKE) docs-test-plan DOCS=docs/modules/hpl-mxp DOCS_TEST_SUITE=hpl-mxp
+
+docs-test-hpl-mxp:
+	$(MAKE) docs-test DOCS=docs/modules/hpl-mxp DOCS_TEST_SUITE=hpl-mxp
+
+docs-test-plan-elbencho:
+	$(MAKE) docs-test-plan DOCS=docs/modules/elbencho DOCS_TEST_SUITE=elbencho
+
+docs-test-elbencho:
+	$(MAKE) docs-test DOCS=docs/modules/elbencho DOCS_TEST_SUITE=elbencho
+
+check-artifact-policy:
+	bash scripts/report/check-artifact-policy.sh
+
+validate-benchmark-campaign-registry:
+	$(REPO_PY) scripts/report/validate-benchmark-campaign-registry.py
+
+system-verify: setup verify
+ifeq ($(APPLY),1)
+	$(MAKE) archive-verify CLUSTER=$(CLUSTER) DATE=$(DATE) ARCHIVE_ROTATE=$(ARCHIVE_ROTATE)
+	$(MAKE) render CLUSTER=$(CLUSTER) DATE=$(DATE)
+	$(MAKE) validate-reports CLUSTER=$(CLUSTER) DATE=$(DATE)
+else
+	@echo "System verification dry run complete. Re-run with APPLY=1 to archive, render, and validate."
+endif
+
+daily-verify:
+	@echo "daily-verify is deprecated; use system-verify for benchmark-day system state capture."
+	$(MAKE) system-verify CLUSTER=$(CLUSTER) DATE=$(DATE) APPLY=$(APPLY) PROFILE=$(PROFILE) REPEAT_COUNT=$(REPEAT_COUNT) REPEAT_AGGREGATION=$(REPEAT_AGGREGATION) GPU_PREFLIGHT_FILTER=$(GPU_PREFLIGHT_FILTER) ARCHIVE_ROTATE=$(ARCHIVE_ROTATE)
+
+benchmark-readiness-nccl:
+	@echo "benchmark-readiness-nccl is deprecated; use verify-nccl-suite or system-verify."
+	$(MAKE) verify-nccl-suite CLUSTER=$(CLUSTER) DATE=$(DATE) APPLY=$(APPLY) PROFILE=$(PROFILE) REPEAT_COUNT=$(REPEAT_COUNT) REPEAT_AGGREGATION=$(REPEAT_AGGREGATION) GPU_PREFLIGHT_FILTER=$(GPU_PREFLIGHT_FILTER) ARCHIVE_ROTATE=$(ARCHIVE_ROTATE)
+
+benchmark-elbencho: require-settings
+	ELBENCHO_TARGET_ROOT="$(ELBENCHO_TARGET_ROOT)" ELBENCHO_SIZE="$(ELBENCHO_SIZE)" ELBENCHO_BLOCK="$(ELBENCHO_BLOCK)" ELBENCHO_THREADS="$(ELBENCHO_THREADS)" ELBENCHO_IODEPTH="$(ELBENCHO_IODEPTH)" ELBENCHO_FILE_PATTERN="$(ELBENCHO_FILE_PATTERN)" ELBENCHO_FILES="$(ELBENCHO_FILES)" ELBENCHO_DIRS="$(ELBENCHO_DIRS)" bash scripts/benchmark/submit-elbencho.sh --cluster $(CLUSTER) --workload $(WORKLOAD) --profile $(ELBENCHO_PROFILE) --nodes $(NODES) --date $(NODE_REPORT_DATE) --cpus-per-task $(ELBENCHO_CPUS_PER_TASK) --time $(ELBENCHO_TIME) $(ELBENCHO_REPEAT_COUNT_FLAG) $(ELBENCHO_REPEAT_STAGGER_SECONDS_FLAG) $(ELBENCHO_DEPENDENCY_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG)
 
 benchmark-dataloader: require-settings
 	bash scripts/benchmark/sweep-dataloader.sh \
 		--cluster $(CLUSTER) \
-		--profile $(PROFILE) \
 		--nodes-list $(DATALOADER_NODES) \
 		--gpu-count $(GPU_COUNT) \
-		$(DATALOADER_MODE_FLAG) \
-		$(DATALOADER_NODELIST_FLAG) \
+		$(MODE_FLAG) \
+		--date $(NODE_REPORT_DATE) \
+		$(FROM_NODE_REPORT_FLAG) \
+		$(NODELIST_FLAG) \
+		--input-backend-list $(DATALOADER_INPUT_BACKENDS) \
 		--batch-size-list $(DATALOADER_BATCH_SIZES) \
 		--num-workers-list $(DATALOADER_NUM_WORKERS) \
 		--prefetch-factor-list $(DATALOADER_PREFETCH_FACTORS) \
+		--dali-num-threads-list $(DATALOADER_DALI_NUM_THREADS) \
+		--dali-prefetch-queue-depth-list $(DATALOADER_DALI_PREFETCH_QUEUE_DEPTHS) \
+		--dali-decode-mode-list $(DATALOADER_DALI_DECODE_MODES) \
+		--dali-hw-decoder-load-list $(DATALOADER_DALI_HW_DECODER_LOADS) \
 		--pin-memory-list $(DATALOADER_PIN_MEMORY) \
 		--persistent-workers-list $(DATALOADER_PERSISTENT_WORKERS) \
 		--cpus-per-task $(DATALOADER_CPUS_PER_TASK) \
 		--repeat-count $(DATALOADER_REPEAT_COUNT) \
+		$(DATALOADER_DEPENDENCY_FLAG) \
 		$(APPLY_FLAG) \
 		-- $(DATALOADER_RUN_ARGS)
 
-render-dataloader:
-	$(REPO_PY) scripts/report/render-dataloader-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --repeat-aggregation $(DATALOADER_REPEAT_AGGREGATION)
-
 benchmark-ddp-resnet50: require-settings
-	bash scripts/benchmark/submit-ddp-resnet50.sh \
-		--cluster $(CLUSTER) \
-		--profile $(PROFILE) \
-		--nodes $(DDP_NODES) \
-		--launcher $(DDP_LAUNCHER) \
-		$(DDP_NODELIST_FLAG) \
-		$(DDP_CPUS_PER_TASK_FLAG) \
-		$(APPLY_FLAG) \
-		-- $(DDP_RUN_ARGS)
+	DDP_SRUN_MPI="$(DDP_SRUN_MPI)" DDP_SRUN_CPU_BIND="$(DDP_SRUN_CPU_BIND)" DDP_SRUN_MEM_BIND="$(DDP_SRUN_MEM_BIND)" bash scripts/benchmark/submit-ddp-resnet50.sh --cluster $(CLUSTER) --nodes $(NODES) --launcher $(LAUNCHER) --date $(NODE_REPORT_DATE) $(DDP_REPEAT_COUNT_FLAG) $(DDP_REPEAT_STAGGER_SECONDS_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
 
-render-ddp-resnet50:
-	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER)
-
-render-ddp-resnet50-ascii:
-	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER) --ascii
+benchmark-ddp-launcher-comparison: require-settings
+	bash scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster $(CLUSTER) --date $(NODE_REPORT_DATE) --scales $(DDP_COMPARISON_SCALES) --time $(DDP_TIME) --srun-mpi $(DDP_SRUN_MPI) --srun-cpu-bind $(if $(strip $(DDP_SRUN_CPU_BIND)),$(DDP_SRUN_CPU_BIND),none) --srun-mem-bind $(if $(strip $(DDP_SRUN_MEM_BIND)),$(DDP_SRUN_MEM_BIND),none) --submit-stagger-seconds $(DDP_COMPARISON_STAGGER_SECONDS) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(DDP_COMPARISON_DEFAULT_SRUN_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
 
 benchmark-hpl-mxp: require-settings
-	bash scripts/benchmark/submit-hpl-mxp.sh \
-		--cluster $(CLUSTER) \
-		--nodes $(NODES) \
-		--preset $(HPL_MXP_PRESET) \
-		--matrix-size $(HPL_MXP_MATRIX_SIZE) \
-		--nb $(HPL_MXP_NB) \
-		$(HPL_MXP_NPROW_FLAG) \
-		$(HPL_MXP_NPCOL_FLAG) \
-		--time $(HPL_MXP_TIME) \
-		$(HPL_MXP_IMAGE_FLAG) \
-		--sloppy-type $(HPL_MXP_SLOPPY_TYPE) \
-		$(HPL_MXP_TEST_LOOP_FLAG) \
-		$(HPL_MXP_CPUS_PER_TASK_FLAG) \
-		--ompi-coll $(HPL_MXP_OMPI_COLL) \
-		--pmix-mca-gds $(HPL_MXP_PMIX_MCA_GDS) \
-		--mpi-use-mpi $(HPL_MXP_MPI_USE_MPI) \
-		--use-mpi-panel-broadcast $(HPL_MXP_MPI_PANEL_BROADCAST) \
-		--prioritize-trsm $(HPL_MXP_PRIORITIZE_TRSM) \
-		--prioritize-factorization $(HPL_MXP_PRIORITIZE_FACTORIZATION) \
-		--scaling-study $(HPL_MXP_SCALING_STUDY) \
-		$(HPL_MXP_ANQ_DEVICE_FLAG) \
-		$(HPL_MXP_FILL_DEVICE_FLAG) \
-		$(HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG) \
-		$(HPL_MXP_CALL_DGEMV_THREADS_FLAG) \
-		$(HPL_MXP_CPU_AFFINITY_FLAG) \
-		$(HPL_MXP_MEM_AFFINITY_FLAG) \
-		$(HPL_MXP_TARGET_GPU_MEMORY_PCT_FLAG) \
-		$(HPL_MXP_BASELINE_MATRIX_SIZE_FLAG) \
-		$(HPL_MXP_NODELIST_FLAG) \
-		$(APPLY_FLAG)
+	bash scripts/benchmark/submit-hpl-mxp.sh --cluster $(CLUSTER) --nodes $(NODES) --preset $(HPL_MXP_PRESET) --matrix-size $(HPL_MXP_MATRIX_SIZE) --nb $(HPL_MXP_NB) $(HPL_MXP_NPROW_FLAG) $(HPL_MXP_NPCOL_FLAG) $(HPL_MXP_AFFINITY_PROFILE_FLAG) --time $(HPL_MXP_TIME) --sloppy-type $(HPL_MXP_SLOPPY_TYPE) $(HPL_MXP_TEST_LOOP_FLAG) $(HPL_MXP_REPEAT_COUNT_FLAG) $(HPL_MXP_REPEAT_STAGGER_SECONDS_FLAG) --date $(NODE_REPORT_DATE) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(HPL_MXP_IMAGE_FLAG) $(HPL_MXP_CPUS_PER_TASK_FLAG) $(HPL_MXP_OMPI_COLL_FLAG) $(HPL_MXP_PMIX_MCA_GDS_FLAG) $(HPL_MXP_MPI_USE_MPI_FLAG) $(HPL_MXP_MPI_PANEL_BROADCAST_FLAG) $(HPL_MXP_PRIORITIZE_TRSM_FLAG) $(HPL_MXP_PRIORITIZE_FACTORIZATION_FLAG) $(HPL_MXP_ANQ_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG) $(HPL_MXP_CALL_DGEMV_THREADS_FLAG) $(HPL_MXP_PRESET_GEMM_KERNEL_FLAG) $(HPL_MXP_CPU_AFFINITY_FLAG) $(HPL_MXP_MEM_AFFINITY_FLAG) $(HPL_MXP_UCX_AFFINITY_FLAG) $(HPL_MXP_U_PANEL_CHUNK_NBS_FLAG) $(HPL_MXP_SCALING_STUDY_FLAG) $(HPL_MXP_BASELINE_MATRIX_SIZE_FLAG) $(APPLY_FLAG)
 
-benchmark-hpl-mxp-smoke: require-settings
-	bash scripts/benchmark/submit-hpl-mxp.sh \
-		--cluster $(CLUSTER) \
-		--nodes $(NODES) \
-		--preset smoke \
-		--time $(HPL_MXP_TIME) \
-		$(HPL_MXP_IMAGE_FLAG) \
-		$(HPL_MXP_TEST_LOOP_FLAG) \
-		$(HPL_MXP_CPUS_PER_TASK_FLAG) \
-		$(HPL_MXP_NODELIST_FLAG) \
-		$(APPLY_FLAG)
+benchmark-hpl-mxp-smoke:
+	@echo "benchmark-hpl-mxp-smoke is a compatibility alias; use benchmark-hpl-mxp HPL_MXP_PRESET=smoke."
+	$(MAKE) benchmark-hpl-mxp HPL_MXP_PRESET=smoke
+
+install-elbencho: require-settings
+	bash scripts/benchmark/install-elbencho-runtime.sh --method $(ELBENCHO_INSTALL_METHOD) --tag $(ELBENCHO_TAG) $(ELBENCHO_IMAGE_FLAG) $(APPLY_FLAG)
+
+benchmark-dry-run-suite: require-settings
+	bash scripts/benchmark/dry-run-suite.sh --cluster $(CLUSTER) --date $(NODE_REPORT_DATE) $(BENCHMARK_DRY_RUN_ELBENCHO_FLAG)
+
+render-dataloader:
+	$(REPO_PY) scripts/report/render-dataloader-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(DATALOADER_REPEAT_AGGREGATION)
+
+render-dataloader-b200: render-dataloader
+
+render-ddp-resnet50:
+	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --date $(DATE) --cluster $(CLUSTER)
 
 render-hpl-mxp:
-	$(REPO_PY) scripts/report/render-hpl-mxp-report.py --results-root results --date $(REPORT_DATE) --cluster $(CLUSTER)
+	$(REPO_PY) scripts/report/render-hpl-mxp-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(REPEAT_AGGREGATION)
+
+render-benchmark-campaign:
+	$(REPO_PY) scripts/report/render-benchmark-campaign.py --date $(DATE)
+
+render-ddp-b200: render-ddp-resnet50
+
+archive-benchmark-study-b200:
+	bash scripts/report/archive-benchmark-study-results.sh --date $(DATE) --cluster $(CLUSTER)

@@ -19,8 +19,10 @@ Each module has:
 Use the module pages when learning a workflow:
 
 - [Make driver](make-driver.md)
+- [GPU topology](gpu-topology/)
 - [GDS](gds/)
 - [NCCL](nccl/)
 - [DataLoader](dataloader/)
 - [DDP ResNet-50](ddp/)
 - [HPL-MxP](hpl-mxp/)
+- [Elbencho](elbencho/)
