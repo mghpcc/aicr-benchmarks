@@ -44,7 +44,7 @@ def repo_root() -> Path:
 
 
 def markdown_files(root: Path) -> list[Path]:
-    skip_dirs = {".git", "results"}
+    skip_dirs = {".git", "graphify-out", "results"}
     paths: list[Path] = []
     for path in root.rglob("*.md"):
         parts = set(path.relative_to(root).parts)

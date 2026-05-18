@@ -25,10 +25,12 @@ make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001
 
 ## Run On One Node
 
-Add `APPLY=1` only when you want to submit the Slurm job.
+Add `APPLY=1` only when you want to submit the Slurm job. Use `smoke` for
+documentation replay and first-contact validation; use `small` or larger only
+when you intentionally want a longer storage-backed check.
 
 <!-- aicr-test
-id: gds-one-node-small
+id: gds-one-node-smoke
 suite: gds
 kind: slurm-apply
 safety: one-node
@@ -39,12 +41,12 @@ expect:
     - "Submitted"
 -->
 ```bash
-make verify-gds CLUSTER={{cluster}} PROFILE=small NODELIST={{node}} APPLY=1
+make verify-gds CLUSTER={{cluster}} PROFILE=smoke NODELIST={{node}} APPLY=1
 ```
 
 ## Fleet Runs
 
-Fleet submissions default to a 60-second stagger between nodes to keep public
+Fleet submissions default to a 30-second stagger between nodes to keep public
 examples from becoming accidental filesystem stress tests. Override
 `GDS_SUBMIT_STAGGER_SECONDS` only when you intentionally want a different launch
 rate.
@@ -55,17 +57,32 @@ make verify-gds CLUSTER=b200 PROFILE=small APPLY=1
 
 Fleet runs should be used only when you intend to run every selected idle node. Use `NODELIST` for targeted support work.
 
-For promoted benchmark-style GDS studies, use dependency-chain stagger mode so
-Slurm starts only one selected GDS job at a time:
+For promoted benchmark-style GDS studies, use dependency-chain stagger mode.
+This spaces `sbatch` calls by five seconds, then uses Slurm
+`afterany:<previous_job_id>` dependencies so Slurm starts only one selected GDS
+job at a time:
 
+<!-- aicr-test
+id: gds-benchmark-stagger-dry-run
+suite: gds
+kind: slurm-dry-run
+safety: dry-run
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "benchmark dependency chain"
+    - "--dependency=afterany:<previous-gds-job-id>"
+    - "sleep 5 between sbatch calls"
+-->
 ```bash
-make verify-gds CLUSTER=b200 PROFILE=medium NODELIST=b0001,b0002,b0003 REPEAT_COUNT=12 REPEAT_AGGREGATION=olympic GDS_SUBMIT_STAGGER_SECONDS=benchmark APPLY=1
+AICR_GDS_FLEET_IDLE_NODES_CSV=b0001,b0002 make verify-gds CLUSTER=b200 PROFILE=smoke NODELIST=b0001,b0002 REPEAT_COUNT=2 REPEAT_AGGREGATION=olympic GDS_SUBMIT_STAGGER_SECONDS=benchmark
 ```
 
 ## Repeat Runs
 
 ```bash
-make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001 REPEAT_COUNT=3 REPEAT_AGGREGATION=standard APPLY=1
+make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001 REPEAT_COUNT=3 REPEAT_AGGREGATION=standard
 ```
 
 ## ASCII Dashboard

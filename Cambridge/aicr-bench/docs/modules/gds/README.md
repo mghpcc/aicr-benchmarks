@@ -8,6 +8,6 @@ GDS validates host CUDA/GDS tooling with `gdscheck -p` and profile-selected `gds
 - [Make interface](make.md)
 - [Examples](examples.md)
 - [Studies](studies.md)
+- [Test plan](test-plan.md)
 
 Examples start with the Slurm primitive file for custom automation, then show the curated Make implementation.
-

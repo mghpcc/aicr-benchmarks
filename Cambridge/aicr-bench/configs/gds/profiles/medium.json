@@ -7,6 +7,38 @@
       "type": "gdscheck"
     },
     {
+      "name": "functional-write",
+      "type": "gdsio",
+      "target": "functional",
+      "xfer_type": 0,
+      "io_type": 1,
+      "gpu_id": 0,
+      "threads": 4,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "16M",
+      "env_overrides": [
+        "AICR_GDS_FUNCTIONAL_WRITE_CMD",
+        "AICR_GDS_FUNCTIONAL_CMD"
+      ]
+    },
+    {
+      "name": "functional-read",
+      "type": "gdsio",
+      "target": "functional",
+      "dependency": "functional-write",
+      "xfer_type": 0,
+      "io_type": 0,
+      "gpu_id": 0,
+      "threads": 4,
+      "memory_type": 0,
+      "size": "16G",
+      "io_size": "16M",
+      "env_overrides": [
+        "AICR_GDS_FUNCTIONAL_READ_CMD"
+      ]
+    },
+    {
       "name": "sequential-write",
       "type": "gdsio",
       "target": "sequential",

@@ -7,7 +7,7 @@ Purpose: Repeated medium-profile B200 GDS fleet run with standard aggregation.
 ## Command Run
 
 ```bash
-make verify-gds CLUSTER=b200 PROFILE=medium NODELIST=b0002 GDS_REPEAT_COUNT=3 APPLY=1
+make verify-gds CLUSTER=b200 PROFILE=medium NODELIST=b0002 REPEAT_COUNT=3 APPLY=1
 ```
 
 ## Result Summary

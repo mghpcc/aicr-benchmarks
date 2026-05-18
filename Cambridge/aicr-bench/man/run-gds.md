@@ -7,13 +7,13 @@ Run GDS validation on one allocated GPU node.
 ## Usage
 
 ```text
-scripts/verify/run-gds.sh [--profile <small|medium|large>] [--inspect-profile]
+scripts/verify/run-gds.sh [--profile <smoke|small|medium|large>] [--inspect-profile]
 scripts/verify/run-gds.sh --custom-gdsio-args '<gdsio args>'
 ```
 
 ## Options
 
-- `--profile <name>`: Select `small`, `medium`, `large`, or `custom`. Default: `small`.
+- `--profile <name>`: Select `smoke`, `small`, `medium`, `large`, or `custom`. Default: `small`.
 - `--profile-config <path>`: Override the selected profile config JSON.
 - `--custom-gdsio-args <args>`: Run one custom `gdsio` phase only.
 - `--allow-custom-target-file`: Permit `--custom-gdsio-args` to provide its
@@ -34,6 +34,12 @@ Inspect the default profile:
 
 ```bash
 scripts/verify/run-gds.sh --profile small --inspect-profile
+```
+
+Inspect the smallest launch profile:
+
+```bash
+scripts/verify/run-gds.sh --profile smoke --inspect-profile
 ```
 
 Run on an allocated node:

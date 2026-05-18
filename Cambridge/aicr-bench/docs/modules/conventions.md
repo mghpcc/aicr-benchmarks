@@ -46,7 +46,10 @@ scale job families. DataLoader and DDP use explicit one-job submitters,
 DataLoader sweeps, and Make campaign shapes instead of standalone fleet
 submitters.
 
-GDS fleet submissions default to a conservative 60-second launch stagger because each node can run sustained filesystem traffic. Faster launch rates should be treated as intentional stress behavior, not the public teaching default.
+GDS direct fleet submissions and the curated `make verify-gds` interface
+default to a conservative 30-second numeric stagger because each node can run
+sustained filesystem traffic. Faster launch rates should be treated as
+intentional stress behavior, not the public teaching default.
 
 ## Benchmark Stagger Policy
 
@@ -59,8 +62,9 @@ mode when the module submitter supports it.
 
 GDS supports this as `--submit-stagger-seconds benchmark`. In that mode the
 submitter still spaces `sbatch` calls by five seconds to avoid scheduler bursts,
-but every job after the first depends on the previous job with `afterany`, so
-Slurm starts only one selected GDS job at a time.
+but every job after the first is submitted with
+`--dependency=afterany:<previous_job_id>`, so Slurm starts only one selected GDS
+job at a time even though the submitter has queued the whole chain.
 
 This policy applies to GDS now and should apply to DataLoader and DDP when their
 storage-backed campaign submitters grow the same mode. It does not apply to NCCL

@@ -8,12 +8,53 @@ GDS scripts validate host CUDA/GDS tooling with `gdscheck -p` and profile-select
 
 Allocation-side runner:
 
+<!-- aicr-test
+id: gds-run-help
+suite: gds
+kind: local
+safety: help
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "Usage:"
+    - "--inspect-profile"
+-->
 ```bash
 scripts/verify/run-gds.sh --help
 ```
 
 Host-side fleet submitter:
 
+<!-- aicr-test
+id: gds-fleet-help
+suite: gds
+kind: local
+safety: help
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "--submit-stagger-seconds"
+    - "benchmark"
+-->
+```bash
+scripts/verify/run-gds-fleet.sh --help
+```
+
+Compatibility wrapper:
+
+<!-- aicr-test
+id: gds-submit-wrapper-help
+suite: gds
+kind: local
+safety: help
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "--submit-stagger-seconds"
+-->
 ```bash
 scripts/verify/submit-gds-fleet.sh --help
 ```
@@ -37,10 +78,47 @@ expect:
 scripts/verify/run-gds.sh --profile small --inspect-profile
 ```
 
+The `smoke` profile is the default applied documentation test profile because
+it proves the allocation-side flow without sustained storage pressure.
+
+<!-- aicr-test
+id: gds-inspect-smoke
+suite: gds
+kind: local
+safety: inspect
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "profile=smoke"
+-->
+```bash
+scripts/verify/run-gds.sh --profile smoke --inspect-profile
+```
+
+Custom argument profiles can also be inspected without launching `gdsio`.
+
+<!-- aicr-test
+id: gds-inspect-custom-args
+suite: gds
+kind: local
+safety: inspect
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "profile=custom"
+    - "config=custom-gdsio-args"
+-->
+```bash
+scripts/verify/run-gds.sh --custom-gdsio-args '-x 0 -I 0 -d 0 -w 1 -m 0 -s 1G -i 1M' --inspect-profile
+```
+
 ## Profiles
 
 | Profile | Use |
 | --- | --- |
+| `smoke` | Tiny launch, construction, and teardown proof. |
 | `small` | Teaching-sized readiness check. |
 | `medium` | Longer readiness check. |
 | `large` | Extended validation. |
@@ -49,8 +127,11 @@ scripts/verify/run-gds.sh --profile small --inspect-profile
 ## Custom Direct Use
 
 Use [run-gds.sh](../../../man/run-gds.md) inside an existing Slurm allocation.
-Use [submit-gds-fleet.sh](../../../man/submit-gds-fleet.md) when you want the
+Use [run-gds-fleet.sh](../../../man/run-gds-fleet.md) when you want the
 script layer to discover or target nodes and submit GDS jobs directly.
+
+The direct fleet submitter and curated Make interface default to a 30-second
+numeric GDS stagger for public examples and repeatable validation.
 
 Use JSON for durable custom profiles, or `--custom-gdsio-args` for one-off
 experiments. The script owns the target file unless expert target-file override
@@ -80,10 +161,11 @@ rm -f -- "$custom_target"
 
 For promoted benchmark-style GDS runs, use
 `--submit-stagger-seconds benchmark` with
-[submit-gds-fleet.sh](../../../man/submit-gds-fleet.md). Numeric stagger values
+[run-gds-fleet.sh](../../../man/run-gds-fleet.md). Numeric stagger values
 are useful when you intentionally want to study filesystem launch pressure;
-`benchmark` creates a Slurm dependency chain so only one selected GDS job runs at
-a time.
+`benchmark` spaces `sbatch` calls by five seconds and creates a Slurm
+`afterany` dependency chain by job ID so only one selected GDS job runs at a
+time.
 
 ## Artifacts
 

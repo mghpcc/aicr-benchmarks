@@ -71,7 +71,7 @@ expect:
     - "Submitted"
 -->
 ```bash
-make verify-gds CLUSTER={{cluster}} PROFILE=small NODELIST={{node}} APPLY=1
+make verify-gds CLUSTER={{cluster}} PROFILE=smoke NODELIST={{node}} APPLY=1
 ```
 
 Artifacts produced:

@@ -7,7 +7,7 @@ source "${DIR}/_common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/verify/run-gds.sh [--profile <small|medium|large>] [--inspect-profile]
+  scripts/verify/run-gds.sh [--profile <smoke|small|medium|large>] [--inspect-profile]
   scripts/verify/run-gds.sh --custom-gdsio-args '<gdsio args>'
 
 Profiles select GDS readiness intensity. Every profile records gdscheck -p plus
@@ -42,7 +42,7 @@ required_gdsio_fields = [
     "size",
     "io_size",
 ]
-known_targets = {"sequential", "random", "async"}
+known_targets = {"functional", "sequential", "random", "async"}
 name_re = re.compile(r"^[a-z0-9][a-z0-9-]*$")
 env_re = re.compile(r"^[A-Z0-9_]+$")
 size_re = re.compile(r"^[0-9]+[KMGT]?$")
@@ -213,7 +213,7 @@ else:
 PY
 }
 
-profile="${PROFILE:-small}"
+profile="${PROFILE:-${GDS_PROFILE:-${AICR_GDS_PROFILE:-small}}}"
 gds_profile_config="${AICR_GDS_PROFILE_CONFIG:-}"
 custom_gdsio_args="${AICR_GDS_CUSTOM_GDSIO_ARGS:-}"
 allow_custom_target_file="${AICR_GDS_ALLOW_CUSTOM_TARGET_FILE:-0}"
@@ -267,10 +267,10 @@ while [[ $# -gt 0 ]]; do
 done
 
 case "$profile" in
-  small|medium|large|custom) ;;
+  smoke|small|medium|large|custom) ;;
   *)
     echo "ERROR: unsupported GDS profile: ${profile}" >&2
-    echo "Supported profiles: small, medium, large, custom" >&2
+    echo "Supported profiles: smoke, small, medium, large, custom" >&2
     exit 2
     ;;
 esac
@@ -286,7 +286,7 @@ if [[ "$inspect_profile" == "1" ]]; then
     echo "profile=custom"
     echo "config=custom-gdsio-args"
     printf '%-12s  %-8s  %-10s  %-10s  %-40s  %s\n' "phase" "type" "dependency" "target" "shape" "env_overrides"
-    printf '%-12s  %-8s  %-10s  %-10s  %-40s  %s\n' "custom" "gdsio" "-" "sequential" "${custom_gdsio_args}" "-"
+    printf '%-12s  %-8s  %-10s  %-10s  %-40s  %s\n' "custom" "gdsio" "-" "functional" "${custom_gdsio_args}" "-"
     exit 0
   fi
   load_gds_profile_config "$gds_profile_config" "$profile" inspect
@@ -334,15 +334,23 @@ gdscheck_bin="${AICR_GDSCHECK_BIN:-${gds_tool_dir}/gdscheck}"
 gdsio_bin="${AICR_GDSIO_BIN:-${gds_tool_dir}/gdsio}"
 gds_run_scratch_dir="${AICR_GDS_SCRATCH_DIR}/${cluster}/${node_short}/${run_id}"
 cleanup_gds_targets="${AICR_GDS_CLEANUP_TARGETS:-1}"
+cleanup_functional_target=0
 cleanup_sequential_target=0
 cleanup_random_target=1
 cleanup_async_target=1
 legacy_shared_read_target="${AICR_GDS_SCRATCH_DIR}/gds-throughput.dat"
 legacy_shared_write_target="${AICR_GDS_SCRATCH_DIR}/gds-write-throughput.dat"
 
-if [[ -n "${AICR_GDS_THROUGHPUT_FILE:-}" && "${AICR_GDS_THROUGHPUT_FILE}" != "${legacy_shared_read_target}" ]]; then
-  gds_sequential_target_file="${AICR_GDS_THROUGHPUT_FILE}"
-elif [[ -n "${AICR_GDS_WRITE_THROUGHPUT_FILE:-}" && "${AICR_GDS_WRITE_THROUGHPUT_FILE}" != "${legacy_shared_write_target}" ]]; then
+if [[ -n "${AICR_GDS_READ_THROUGHPUT_FILE:-}" && "${AICR_GDS_READ_THROUGHPUT_FILE}" != "${legacy_shared_read_target}" ]]; then
+  gds_functional_target_file="${AICR_GDS_READ_THROUGHPUT_FILE}"
+elif [[ -n "${AICR_GDS_THROUGHPUT_FILE:-}" && "${AICR_GDS_THROUGHPUT_FILE}" != "${legacy_shared_read_target}" ]]; then
+  gds_functional_target_file="${AICR_GDS_THROUGHPUT_FILE}"
+else
+  gds_functional_target_file="${gds_run_scratch_dir}/gds-functional-target.dat"
+  cleanup_functional_target=1
+fi
+
+if [[ -n "${AICR_GDS_WRITE_THROUGHPUT_FILE:-}" && "${AICR_GDS_WRITE_THROUGHPUT_FILE}" != "${legacy_shared_write_target}" ]]; then
   gds_sequential_target_file="${AICR_GDS_WRITE_THROUGHPUT_FILE}"
 else
   gds_sequential_target_file="${gds_run_scratch_dir}/gds-sequential-target.dat"
@@ -355,12 +363,16 @@ gds_async_target_file="${gds_run_scratch_dir}/gds-async-target.dat"
 mkdir -p \
   "${AICR_GDS_SCRATCH_DIR}" \
   "${gds_run_scratch_dir}" \
+  "$(dirname "$gds_functional_target_file")" \
   "$(dirname "$gds_sequential_target_file")" \
   "$(dirname "$gds_random_target_file")" \
   "$(dirname "$gds_async_target_file")"
 
 cleanup_targets() {
   [[ "${cleanup_gds_targets}" == "1" ]] || return 0
+  if [[ "${cleanup_functional_target}" == "1" ]]; then
+    rm -f -- "$gds_functional_target_file"
+  fi
   if [[ "${cleanup_sequential_target}" == "1" ]]; then
     rm -f -- "$gds_sequential_target_file"
   fi
@@ -481,6 +493,7 @@ custom_gdsio_cmd() {
 
 gds_target_file_for_key() {
   case "$1" in
+    functional) printf '%s\n' "$gds_functional_target_file" ;;
     sequential) printf '%s\n' "$gds_sequential_target_file" ;;
     random) printf '%s\n' "$gds_random_target_file" ;;
     async) printf '%s\n' "$gds_async_target_file" ;;
@@ -510,7 +523,7 @@ command_with_env_overrides() {
 }
 
 if [[ "$profile" == "custom" && -n "$custom_gdsio_args" ]]; then
-  add_phase "custom" "gdsio" "$(custom_gdsio_cmd "$custom_gdsio_args" "$gds_sequential_target_file")" ""
+  add_phase "custom" "gdsio" "$(custom_gdsio_cmd "$custom_gdsio_args" "$gds_functional_target_file")" ""
 else
   while IFS='|' read -r phase_name phase_kind dependency target_key xfer_type io_type gpu_id threads memory_type size io_size duration random_seed env_overrides; do
     [[ -n "$phase_name" ]] || continue
@@ -677,8 +690,8 @@ if [[ -f "$cufile_log_abs" ]]; then
 fi
 
 export overall_status profile gds_profile_config node_short cluster date_utc run_id gds_tool_dir gdscheck_bin gdsio_bin
-export gds_run_scratch_dir gds_sequential_target_file gds_random_target_file gds_async_target_file
-export cleanup_gds_targets cleanup_sequential_target cleanup_random_target cleanup_async_target
+export gds_run_scratch_dir gds_functional_target_file gds_sequential_target_file gds_random_target_file gds_async_target_file
+export cleanup_gds_targets cleanup_functional_target cleanup_sequential_target cleanup_random_target cleanup_async_target
 export notes_str submitted_at_utc launched_at_utc completed_at_utc
 export partition job_id node_count gpu_count raw_rel parsed_rel summary_txt_rel inventory_rel gpu_inventory_rel gpu_topology_rel
 export summary_json_rel status_rel cufile_log_rel cufile_log_abs cufile_log_exists baseline_rel baseline_id AICR_GDS_SCRATCH_DIR
@@ -795,11 +808,13 @@ with open(phase_status_abs, "r", encoding="utf-8") as fh:
         if relpath:
             canonical_paths.append(relpath)
 
-primary_read_phase = "sequential-read" if "sequential-read" in phases else "custom"
-primary_write_phase = "sequential-write" if "sequential-write" in phases else "custom"
+primary_read_phase = "sequential-read" if "sequential-read" in phases else "functional-read"
+primary_write_phase = "sequential-write" if "sequential-write" in phases else "functional-write"
 
 legacy_profiles = {
     "platform": phases.get("platform", {"status": "Not run"}),
+    "functional-write": phases.get("functional-write", {"status": "Not run"}),
+    "functional-read": phases.get("functional-read", {"status": "Not run"}),
     "throughput-read": phases.get(primary_read_phase, {"status": "Not run"}),
     "throughput-write": phases.get(primary_write_phase, {"status": "Not run"}),
 }
@@ -817,17 +832,19 @@ summary = {
     "gdsio_bin": os.environ["gdsio_bin"],
     "gds_scratch_dir": os.environ["AICR_GDS_SCRATCH_DIR"],
     "gds_run_scratch_dir": os.environ["gds_run_scratch_dir"],
-    "gds_target_file": os.environ["gds_sequential_target_file"],
-    "gds_read_target_file": os.environ["gds_sequential_target_file"],
+    "gds_target_file": os.environ["gds_functional_target_file"],
+    "gds_read_target_file": os.environ["gds_functional_target_file"],
     "gds_write_target_file": os.environ["gds_sequential_target_file"],
+    "gds_functional_target_file": os.environ["gds_functional_target_file"],
     "gds_sequential_target_file": os.environ["gds_sequential_target_file"],
     "gds_random_target_file": os.environ["gds_random_target_file"],
     "gds_async_target_file": os.environ["gds_async_target_file"],
     "cufile_log_file": os.environ["cufile_log_abs"],
     "cufile_log_exists": os.environ["cufile_log_exists"] == "1",
     "cleanup_gds_targets": os.environ["cleanup_gds_targets"] == "1",
-    "cleanup_read_target": os.environ["cleanup_sequential_target"] == "1",
+    "cleanup_read_target": os.environ["cleanup_functional_target"] == "1",
     "cleanup_write_target": os.environ["cleanup_sequential_target"] == "1",
+    "cleanup_functional_target": os.environ["cleanup_functional_target"] == "1",
     "cleanup_sequential_target": os.environ["cleanup_sequential_target"] == "1",
     "cleanup_random_target": os.environ["cleanup_random_target"] == "1",
     "cleanup_async_target": os.environ["cleanup_async_target"] == "1",
@@ -840,12 +857,15 @@ summary = {
     "primary_read_phase": primary_read_phase,
     "primary_write_phase": primary_write_phase,
     "platform_status": (phases.get("platform") or {}).get("status") or "Not run",
+    "functional_status": combined_status(phase_statuses(phases, ["functional-write", "functional-read"])),
     "throughput_status": combined_status(phase_statuses(phases, [primary_write_phase, primary_read_phase])),
     "phases": phases,
     "profiles": legacy_profiles,
     "notes": os.environ["notes_str"],
 }
 
+phase_to_prefix(summary, "functional_write", "functional-write")
+phase_to_prefix(summary, "functional_read", "functional-read")
 phase_to_prefix(summary, "throughput_read", primary_read_phase)
 phase_to_prefix(summary, "throughput_write", primary_write_phase)
 phase_to_prefix(summary, "read", primary_read_phase)
@@ -911,6 +931,7 @@ summary_lines = [
     f"gdsio_bin={summary['gdsio_bin']}",
     f"gds_scratch_dir={summary['gds_scratch_dir']}",
     f"gds_run_scratch_dir={summary['gds_run_scratch_dir']}",
+    f"gds_functional_target_file={summary['gds_functional_target_file']}",
     f"gds_sequential_target_file={summary['gds_sequential_target_file']}",
     f"gds_random_target_file={summary['gds_random_target_file']}",
     f"gds_async_target_file={summary['gds_async_target_file']}",
@@ -924,6 +945,7 @@ summary_lines = [
     f"primary_read_phase={primary_read_phase}",
     f"primary_write_phase={primary_write_phase}",
     f"platform_status={summary['platform_status']}",
+    f"functional_status={summary['functional_status']}",
     f"throughput_status={summary['throughput_status']}",
     f"overall_status={summary['status']}",
 ]
@@ -935,7 +957,7 @@ for phase in phase_order:
     for field in ("throughput_gib_s", "avg_latency_usecs", "ops", "total_time_s"):
         if field in item:
             summary_lines.append(f"{safe}_{field}={item.get(field) if item.get(field) is not None else ''}")
-for prefix in ("throughput_read", "throughput_write", "read", "write"):
+for prefix in ("functional_write", "functional_read", "throughput_read", "throughput_write", "read", "write"):
     summary_lines.append(f"{prefix}_status={summary.get(prefix + '_status')}")
     summary_lines.append(f"{prefix}_throughput_gib_s={summary.get(prefix + '_throughput_gib_s') if summary.get(prefix + '_throughput_gib_s') is not None else ''}")
     summary_lines.append(f"{prefix}_avg_latency_usecs={summary.get(prefix + '_avg_latency_usecs') if summary.get(prefix + '_avg_latency_usecs') is not None else ''}")

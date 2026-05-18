@@ -58,7 +58,7 @@ Common GDS shapes:
 
 ```bash
 make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001
-make verify-gds CLUSTER=b200 PROFILE=medium NODELIST=b0001 APPLY=1
+make verify-gds CLUSTER=b200 PROFILE=smoke NODELIST=<node> APPLY=1
 make verify-gds CLUSTER=b200 PROFILE=custom NODELIST=b0001 AICR_GDS_CUSTOM_GDSIO_ARGS="-x 0 -I 0 -d 0 -w 1 -m 0 -s 1G -i 1M"
 make render-gds-ascii CLUSTER=b200 DATE=today
 ```
@@ -160,7 +160,7 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 
 | Variable | Meaning |
 | --- | --- |
-| `GDS_SUBMIT_STAGGER_SECONDS` | Delay between GDS fleet submissions. Default: `60`. Use `benchmark` for dependency-chain submission with one selected GDS job running at a time. |
+| `GDS_SUBMIT_STAGGER_SECONDS` | Delay between GDS fleet submissions. Default: `15`. Use `benchmark` for dependency-chain submission with one selected GDS job running at a time. |
 | `AICR_GDS_CUSTOM_GDSIO_ARGS` | Custom `gdsio` argument string for `PROFILE=custom`. |
 
 ### NCCL Variables

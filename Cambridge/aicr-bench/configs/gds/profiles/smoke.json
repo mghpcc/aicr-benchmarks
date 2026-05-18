@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "profile": "small",
+  "profile": "smoke",
   "phases": [
     {
       "name": "platform",
@@ -13,10 +13,10 @@
       "xfer_type": 0,
       "io_type": 1,
       "gpu_id": 0,
-      "threads": 4,
+      "threads": 1,
       "memory_type": 0,
-      "size": "16G",
-      "io_size": "16M",
+      "size": "8M",
+      "io_size": "4M",
       "env_overrides": [
         "AICR_GDS_FUNCTIONAL_WRITE_CMD",
         "AICR_GDS_FUNCTIONAL_CMD"
@@ -30,10 +30,10 @@
       "xfer_type": 0,
       "io_type": 0,
       "gpu_id": 0,
-      "threads": 4,
+      "threads": 1,
       "memory_type": 0,
-      "size": "16G",
-      "io_size": "16M",
+      "size": "8M",
+      "io_size": "4M",
       "env_overrides": [
         "AICR_GDS_FUNCTIONAL_READ_CMD"
       ]
