@@ -7,79 +7,32 @@ source "${DIR}/_common.sh"
 
 usage() {
   cat >&2 <<'EOF'
-Usage: scripts/verify/run-nccl-suite.sh --scope <local|rdma|survey> [options]
-       scripts/verify/run-nccl-suite.sh --profile <small|medium|large> --inspect-profile
+Usage: scripts/verify/run-nccl-suite.sh --scope <local|rdma|scale> [options]
 
 Run the fully instrumented NCCL suite inside an existing Slurm allocation.
 
 Options:
-  --scope <local|rdma|survey>
+  --scope <local|rdma|scale>
                             Suite scope
   --cluster <name>          b200 or rtxpro6000 (default: detected/env)
-  --profile <name>          small, medium, or large (default: small)
+  --profile <name>          smoke, small, medium, or large (default: small)
   --suite-class <name>      Optional local suite class filter
   --nodes-per-job <n>       Multi-node node count metadata (default: Slurm nodelist count)
-  --inspect-profile         Print the selected profile without running NCCL
   -h, --help                Show this help
 
 Environment overrides:
   HPCBENCH_IMAGE
   NCCL_SUITE_RUN_ID
-  NCCL_SUITE_OPS
-  NCCL_DEBUG_FILE
+  NCCL_SUITE_FAIL_ON_DMESG
 EOF
-}
-
-print_profile() {
-  local selected="$1"
-  local min_bytes max_bytes step_factor warmup_iters iters requested_check_iters
-  case "${selected}" in
-    small)
-      min_bytes="8"
-      max_bytes="1G"
-      step_factor="2"
-      warmup_iters="5"
-      iters="20"
-      requested_check_iters="0"
-      ;;
-    medium)
-      min_bytes="1M"
-      max_bytes="4G"
-      step_factor="2"
-      warmup_iters="20"
-      iters="100"
-      requested_check_iters="0"
-      ;;
-    large)
-      min_bytes="1M"
-      max_bytes="8G"
-      step_factor="2"
-      warmup_iters="40"
-      iters="200"
-      requested_check_iters="0"
-      ;;
-    *)
-      echo "ERROR: unsupported --profile: ${selected}" >&2
-      echo "Expected one of: small, medium, large" >&2
-      exit 2
-      ;;
-  esac
-  printf 'profile=%s\n' "${selected}"
-  printf 'min_bytes=%s\n' "${min_bytes}"
-  printf 'max_bytes=%s\n' "${max_bytes}"
-  printf 'step_factor=%s\n' "${step_factor}"
-  printf 'warmup_iters=%s\n' "${warmup_iters}"
-  printf 'iters=%s\n' "${iters}"
-  printf 'requested_check_iters=%s\n' "${requested_check_iters}"
 }
 
 scope=""
 cluster="${AICR_CLUSTER_NAME:-}"
-profile="${PROFILE:-small}"
+profile="${PROFILE:-${NCCL_SUITE_PROFILE:-small}}"
 suite_class_filter="${NCCL_SUITE_CLASS:-}"
 nodes_per_job=""
-suite_ops_filter="${NCCL_SUITE_OPS:-}"
-inspect_profile=0
+fail_on_dmesg="${NCCL_SUITE_FAIL_ON_DMESG:-1}"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -103,10 +56,6 @@ while [[ $# -gt 0 ]]; do
       nodes_per_job="${2:?missing value for --nodes-per-job}"
       shift 2
       ;;
-    --inspect-profile)
-      inspect_profile=1
-      shift
-      ;;
     -h|--help)
       usage
       exit 0
@@ -119,7 +68,38 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+[[ -n "${scope}" ]] || { echo "ERROR: --scope is required" >&2; usage; exit 2; }
+case "${scope}" in
+  local|rdma|scale) ;;
+  *) echo "ERROR: --scope must be local, rdma, or scale" >&2; exit 2 ;;
+esac
+
+cluster="${cluster:-$(aicr_cluster_name)}"
+aicr_assert_supported_cluster "${cluster}"
+
+if [[ -n "${suite_class_filter}" ]]; then
+  if [[ "${scope}" != "local" ]]; then
+    echo "ERROR: --suite-class is supported only with --scope local" >&2
+    exit 2
+  fi
+  case "${cluster}:${suite_class_filter}" in
+    b200:b200_1proc_8g|b200:b200_8rank_1g|b200:b200_2rank_socket_4g|rtxpro6000:rtx_8rank_1g|rtxpro6000:rtx_pair_policy) ;;
+    *)
+      echo "ERROR: unsupported --suite-class ${suite_class_filter} for ${cluster}" >&2
+      exit 2
+      ;;
+  esac
+fi
+
 case "${profile}" in
+  smoke)
+    min_bytes="8"
+    max_bytes="8"
+    step_factor="2"
+    warmup_iters="0"
+    iters="1"
+    requested_check_iters="1"
+    ;;
   small)
     min_bytes="8"
     max_bytes="1G"
@@ -146,37 +126,10 @@ case "${profile}" in
     ;;
   *)
     echo "ERROR: unsupported --profile: ${profile}" >&2
-    echo "Expected one of: small, medium, large" >&2
+    echo "Expected one of: smoke, small, medium, large" >&2
     exit 2
     ;;
 esac
-if [[ "${inspect_profile}" == "1" ]]; then
-  print_profile "${profile}"
-  exit 0
-fi
-
-[[ -n "${scope}" ]] || { echo "ERROR: --scope is required" >&2; usage; exit 2; }
-case "${scope}" in
-  local|rdma|survey) ;;
-  *) echo "ERROR: --scope must be local, rdma, or survey" >&2; exit 2 ;;
-esac
-
-cluster="${cluster:-$(aicr_cluster_name)}"
-aicr_assert_supported_cluster "${cluster}"
-
-if [[ -n "${suite_class_filter}" ]]; then
-  if [[ "${scope}" != "local" ]]; then
-    echo "ERROR: --suite-class is supported only with --scope local" >&2
-    exit 2
-  fi
-  case "${cluster}:${suite_class_filter}" in
-    b200:b200_1proc_8g|b200:b200_8rank_1g|b200:b200_2rank_socket_4g|rtxpro6000:rtx_8rank_1g|rtxpro6000:rtx_pair_policy) ;;
-    *)
-      echo "ERROR: unsupported --suite-class ${suite_class_filter} for ${cluster}" >&2
-      exit 2
-      ;;
-  esac
-fi
 
 aicr_require_repo_root
 aicr_mkdirs
@@ -222,6 +175,8 @@ capabilities_rel="${raw_rel}/canonical/nccl-suite-capabilities.json"
 cap_stdout_rel="${raw_rel}/canonical/nccl-suite-capability-probe-stdout.txt"
 cap_stderr_rel="${raw_rel}/canonical/nccl-suite-capability-probe-stderr.txt"
 gpu_preflight_rel="${raw_rel}/canonical/gpu-preflight.txt"
+dmesg_pre_rel="${raw_rel}/canonical/dmesg-pre.txt"
+dmesg_post_rel="${raw_rel}/canonical/dmesg-post.txt"
 summary_json_rel="${parsed_rel}/summary.json"
 status_json_rel="${parsed_rel}/status.json"
 
@@ -232,6 +187,8 @@ capabilities_abs="${AICR_BMARK_DIR}/${capabilities_rel}"
 cap_stdout_abs="${AICR_BMARK_DIR}/${cap_stdout_rel}"
 cap_stderr_abs="${AICR_BMARK_DIR}/${cap_stderr_rel}"
 gpu_preflight_abs="${AICR_BMARK_DIR}/${gpu_preflight_rel}"
+dmesg_pre_abs="${AICR_BMARK_DIR}/${dmesg_pre_rel}"
+dmesg_post_abs="${AICR_BMARK_DIR}/${dmesg_post_rel}"
 summary_json_abs="${AICR_BMARK_DIR}/${summary_json_rel}"
 status_json_abs="${AICR_BMARK_DIR}/${status_json_rel}"
 record_abs="${AICR_BMARK_DIR}/${record_rel}"
@@ -240,7 +197,11 @@ record_abs="${AICR_BMARK_DIR}/${record_rel}"
 : >"${records_abs}"
 
 if [[ -z "${NCCL_DEBUG+x}" ]]; then
-  export NCCL_DEBUG="INFO"
+  if [[ "${profile}" == "smoke" ]]; then
+    export NCCL_DEBUG="WARN"
+  else
+    export NCCL_DEBUG="INFO"
+  fi
 else
   export NCCL_DEBUG
 fi
@@ -281,10 +242,9 @@ step_factor=${step_factor}
 warmup_iters=${warmup_iters}
 iters=${iters}
 requested_check_iters=${requested_check_iters}
-suite_ops_filter=${suite_ops_filter}
+fail_on_dmesg=${fail_on_dmesg}
 NCCL_DEBUG=${NCCL_DEBUG}
 NCCL_DEBUG_SUBSYS=${NCCL_DEBUG_SUBSYS}
-NCCL_DEBUG_FILE=${NCCL_DEBUG_FILE:-}
 CUDA_DEVICE_MAX_CONNECTIONS=${CUDA_DEVICE_MAX_CONNECTIONS}
 NCCL_IB_DISABLE=${NCCL_IB_DISABLE}
 OMPI_MCA_pml=${OMPI_MCA_pml}
@@ -296,10 +256,25 @@ OMPI_MCA_coll_ucc_enable=${OMPI_MCA_coll_ucc_enable}
 PMIX_MCA_gds=${PMIX_MCA_gds}
 EOT
 
+run_dmesg_capture() {
+  local path="$1"
+  if [[ "${scope}" != "local" ]]; then
+    # shellcheck disable=SC2016
+    srun --mpi=pmix --ntasks="${node_count}" --ntasks-per-node=1 bash -lc \
+      'echo "## $(hostname -s)"; dmesg -T 2>/dev/null | grep -Ei "NVRM|Xid|fallen|AER|pcie|mlx5|NVML" | tail -200 || true' \
+      >"${path}" 2>&1 || true
+  else
+    {
+      echo "## ${node_short}"
+      dmesg -T 2>/dev/null | grep -Ei 'NVRM|Xid|fallen|AER|pcie|mlx5|NVML' | tail -200 || true
+    } >"${path}" 2>&1
+  fi
+}
+
 run_gpu_preflight() {
   if [[ "${scope}" != "local" ]]; then
     # shellcheck disable=SC2016
-    srun --mpi=pmix --ntasks="${node_count}" --ntasks-per-node=1 bash --noprofile --norc -lc \
+    srun --mpi=pmix --ntasks="${node_count}" --ntasks-per-node=1 bash -lc \
       'found="$(nvidia-smi -L 2>/dev/null | grep -c "^GPU " || true)"; printf "%s %s\n" "$(hostname -s)" "${found}"' \
       >"${gpu_preflight_abs}" 2>&1 || return 1
   else
@@ -312,6 +287,7 @@ import sys
 from pathlib import Path
 expected_nodes = int(sys.argv[2])
 seen = {}
+bad_noise = False
 for line in Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace").splitlines():
     parts = line.split()
     if len(parts) == 2:
@@ -320,7 +296,9 @@ for line in Path(sys.argv[1]).read_text(encoding="utf-8", errors="replace").spli
             continue
         except ValueError:
             pass
-ok = len(seen) == expected_nodes and all(count == 8 for count in seen.values())
+    if line.strip() and not line.startswith("srun: warning:"):
+        bad_noise = True
+ok = len(seen) == expected_nodes and all(count == 8 for count in seen.values()) and not bad_noise
 sys.exit(0 if ok else 1)
 PY
 }
@@ -334,7 +312,7 @@ run_capability_probe() {
   else
     set +e
     # shellcheck disable=SC2016
-    apptainer exec "${apptainer_opt_args[@]}" "${image}" bash --noprofile --norc -lc '
+    apptainer exec "${apptainer_opt_args[@]}" "${image}" bash -lc '
 set +e
 echo "AICR_WRAPPER_HELP_BEGIN"
 /workspace/microbenchmarks/nccl_tests.sh 2>&1
@@ -525,9 +503,6 @@ run_suite_item() {
     "AICR_NCCL_TEST_PARAMS=${test_params}"
     "AICR_NCCL_LOCAL_RANK_BIND=${bind_local_rank}"
   )
-  if [[ -n "${NCCL_DEBUG_FILE:-}" ]]; then
-    env_args+=("NCCL_DEBUG_FILE=${NCCL_DEBUG_FILE}")
-  fi
   if [[ -n "${OMPI_MCA_btl_tcp_if_include}" ]]; then
     env_args+=("OMPI_MCA_btl_tcp_if_include=${OMPI_MCA_btl_tcp_if_include}")
   fi
@@ -601,23 +576,23 @@ echo "AICR_SOCKET_SPLIT_LOCALID=${SLURM_LOCALID}"
 echo "AICR_SOCKET_SPLIT_CPU_SET=${cpu_set}"
 echo "AICR_SOCKET_SPLIT_CUDA_VISIBLE_DEVICES=${cuda_visible}"
 if command -v numactl >/dev/null 2>&1; then
-  exec numactl --physcpubind="${cpu_set}" apptainer exec "$@" bash --noprofile --norc -lc "${container_cmd}"
+  exec numactl --physcpubind="${cpu_set}" apptainer exec "$@" bash -lc "${container_cmd}"
 elif command -v taskset >/dev/null 2>&1; then
-  exec taskset -c "${cpu_set}" apptainer exec "$@" bash --noprofile --norc -lc "${container_cmd}"
+  exec taskset -c "${cpu_set}" apptainer exec "$@" bash -lc "${container_cmd}"
 else
   echo "WARNING: numactl/taskset unavailable; running B200 socket split without CPU pinning" >&2
-  exec apptainer exec "$@" bash --noprofile --norc -lc "${container_cmd}"
+  exec apptainer exec "$@" bash -lc "${container_cmd}"
 fi
 '
 
   {
     echo "# ${suite_class} ${op}"
     if [[ "${launch_mode}" == "srun" ]]; then
-      printf '%q ' env "${env_args[@]}" srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=8 apptainer exec "${apptainer_opt_args[@]}" "${image}" bash --noprofile --norc -lc "${container_cmd}"
+      printf '%q ' env "${env_args[@]}" srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=8 apptainer exec "${apptainer_opt_args[@]}" "${image}" bash -lc "${container_cmd}"
     elif [[ "${launch_mode}" == "socket-srun" ]]; then
-      printf '%q ' env "${env_args[@]}" srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=2 --cpus-per-task=64 bash --noprofile --norc -lc "${socket_launcher}" socket-launch "${apptainer_opt_args[@]}" "${image}" "${container_cmd}"
+      printf '%q ' env "${env_args[@]}" srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=2 --cpus-per-task=64 bash -lc "${socket_launcher}" socket-launch "${apptainer_opt_args[@]}" "${image}" "${container_cmd}"
     else
-      printf '%q ' env "${env_args[@]}" apptainer exec "${apptainer_opt_args[@]}" "${image}" bash --noprofile --norc -lc "${container_cmd}"
+      printf '%q ' env "${env_args[@]}" apptainer exec "${apptainer_opt_args[@]}" "${image}" bash -lc "${container_cmd}"
     fi
     echo
   } >>"${cmd_abs}"
@@ -632,18 +607,18 @@ fi
     if [[ "${launch_mode}" == "srun" ]]; then
       env "${env_args[@]}" \
         srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=8 \
-        apptainer exec "${apptainer_opt_args[@]}" "${image}" bash --noprofile --norc -lc "${container_cmd}" \
+        apptainer exec "${apptainer_opt_args[@]}" "${image}" bash -lc "${container_cmd}" \
         >"${stdout_abs}" 2>"${stderr_abs}"
       return_code=$?
     elif [[ "${launch_mode}" == "socket-srun" ]]; then
       env "${env_args[@]}" \
         srun --mpi=pmix --cpu-bind=none --ntasks="${ranks}" --ntasks-per-node=2 --cpus-per-task=64 \
-        bash --noprofile --norc -lc "${socket_launcher}" socket-launch "${apptainer_opt_args[@]}" "${image}" "${container_cmd}" \
+        bash -lc "${socket_launcher}" socket-launch "${apptainer_opt_args[@]}" "${image}" "${container_cmd}" \
         >"${stdout_abs}" 2>"${stderr_abs}"
       return_code=$?
     else
       env "${env_args[@]}" \
-        apptainer exec "${apptainer_opt_args[@]}" "${image}" bash --noprofile --norc -lc "${container_cmd}" \
+        apptainer exec "${apptainer_opt_args[@]}" "${image}" bash -lc "${container_cmd}" \
         >"${stdout_abs}" 2>"${stderr_abs}"
       return_code=$?
     fi
@@ -671,9 +646,6 @@ run_ops_for_class() {
   fi
   local op
   for op in "$@"; do
-    if ! suite_op_enabled "${op}"; then
-      continue
-    fi
     if [[ "$(capability_value "${op}")" != "1" ]]; then
       echo "ERROR: HPC Benchmarks wrapper does not advertise op ${op}" >&2
       continue
@@ -682,18 +654,7 @@ run_ops_for_class() {
   done
 }
 
-suite_op_enabled() {
-  local op="$1"
-  local item
-  [[ -n "${suite_ops_filter}" ]] || return 0
-  for item in ${suite_ops_filter//,/ }; do
-    if [[ "${item}" == "${op}" ]]; then
-      return 0
-    fi
-  done
-  return 1
-}
-
+run_dmesg_capture "${dmesg_pre_abs}"
 run_capability_probe
 check_supported="$(capability_value check)"
 effective_check_iters="0"
@@ -748,16 +709,38 @@ if [[ "${preflight_status}" == "passed" ]]; then
       allreduce allgather reduce_scatter alltoall
   else
     total_ranks=$(( node_count * 8 ))
-    run_ops_for_class "${cluster}_survey_${node_count}n_8rank_1g" "" 1 "${total_ranks}" "8rank_1g_per_node" "survey" "srun" 1 \
+    run_ops_for_class "${cluster}_scale_${node_count}n_8rank_1g" "" 1 "${total_ranks}" "8rank_1g_per_node" "scale" "srun" 1 \
       allreduce allgather reduce_scatter alltoall
   fi
 fi
+
+run_dmesg_capture "${dmesg_post_abs}"
+
+dmesg_counts="$(
+  aicr_python - "$dmesg_pre_abs" "$dmesg_post_abs" <<'PY'
+import re
+import sys
+from pathlib import Path
+patterns = [r"Xid", r"fallen off", r"GPU has fallen", r"PCIe Bus Error", r"AER.*(Fatal|Uncorrected)", r"NVRM:.*error", r"NVML.*error"]
+
+def count(path):
+    text = Path(path).read_text(encoding="utf-8", errors="replace") if Path(path).exists() else ""
+    return sum(len(re.findall(pattern, text, flags=re.I)) for pattern in patterns)
+
+pre = count(sys.argv[1])
+post = count(sys.argv[2])
+new = max(post - pre, 0)
+print(f"{pre} {post} {new}")
+PY
+)"
+read -r dmesg_pre_stop_hits dmesg_post_stop_hits dmesg_stop_hits <<<"${dmesg_counts}"
 
 aicr_python - \
   "$records_abs" "$summary_json_abs" "$status_json_abs" "$summary_abs" \
   "$cluster" "$scope" "$mode" "$run_id" "$profile" "$image" "$wrapper" \
   "$capabilities_abs" "$preflight_status" "$preflight_note" "$effective_check_iters" \
-  "$node_short" "$peer_nodes_csv" "$node_count" <<'PY'
+  "$dmesg_stop_hits" "$dmesg_pre_stop_hits" "$dmesg_post_stop_hits" \
+  "$fail_on_dmesg" "$node_short" "$peer_nodes_csv" "$node_count" <<'PY'
 import json
 import math
 import re
@@ -781,6 +764,10 @@ from pathlib import Path
     preflight_status,
     preflight_note,
     effective_check_iters,
+    dmesg_stop_hits,
+    dmesg_pre_stop_hits,
+    dmesg_post_stop_hits,
+    fail_on_dmesg,
     host,
     peer_nodes_csv,
     node_count,
@@ -828,6 +815,27 @@ def count(pattern, *texts):
     return sum(len(re.findall(pattern, text, flags=re.I)) for text in texts)
 
 
+BENIGN_FATAL_PATTERNS = (
+    r"UCX\s+ERROR\s+open\(file_name=/proc/[0-9]+/fd/[0-9]+ flags=0x0\) failed: Permission denied",
+)
+
+
+def fatal_signature_hits(*texts):
+    hits = 0
+    fatal_pattern = re.compile(
+        r"NCCL WARN|(^|[^A-Z])ERROR([^A-Z]|$)|unknown error|Test CUDA failure|NVML.*error|CUDA.*error|Xid|fallen off|PCIe Bus Error|AER.*(Fatal|Uncorrected)",
+        flags=re.I,
+    )
+    benign_patterns = [re.compile(pattern, flags=re.I) for pattern in BENIGN_FATAL_PATTERNS]
+    for text in texts:
+        for line in text.splitlines():
+            if any(pattern.search(line) for pattern in benign_patterns):
+                continue
+            if fatal_pattern.search(line):
+                hits += 1
+    return hits
+
+
 records = []
 if Path(records_path).exists():
     for line in Path(records_path).read_text(encoding="utf-8").splitlines():
@@ -840,6 +848,7 @@ for record in records:
     stderr_text = Path(record["stderr_abs"]).read_text(encoding="utf-8", errors="replace") if Path(record["stderr_abs"]).exists() else ""
     wrong_count = sum(row["wrong"] for row in rows)
     largest = max(rows, key=lambda row: row["bytes"]) if rows else {}
+    fatal_hits = fatal_signature_hits(stdout_text, stderr_text)
     hints = []
     if count(r"Channel .* via P2P|via P2P/direct pointer", stdout_text):
         hints.append("P2P")
@@ -859,6 +868,9 @@ for record in records:
     elif wrong_count > 0:
         status = "failed"
         notes = f"wrong_count={wrong_count}"
+    elif fatal_hits > 0:
+        status = "failed"
+        notes = f"fatal_signature_hits={fatal_hits}"
     elif not rows:
         status = "degraded"
         notes = "no parsed nccl-tests rows"
@@ -868,6 +880,7 @@ for record in records:
         "notes": notes,
         "row_count": len(rows),
         "wrong_count": wrong_count,
+        "fatal_signature_hits": fatal_hits,
         "max_algbw": max((row["algbw"] for row in rows), default=None),
         "max_busbw": max((row["busbw"] for row in rows), default=None),
         "largest_message_bytes": largest.get("bytes"),
@@ -888,9 +901,10 @@ elif any(item["status"] == "failed" for item in items):
 elif any(item["status"] == "degraded" for item in items):
     overall = "degraded"
     notes.append("one or more NCCL suite items were degraded")
-elif not items:
+
+if fail_on_dmesg == "1" and int(dmesg_stop_hits or 0) > 0:
     overall = "failed"
-    notes.append("no NCCL suite items ran")
+    notes.append(f"dmesg_stop_hits={dmesg_stop_hits}")
 
 capabilities = json.loads(Path(capabilities_path).read_text(encoding="utf-8")) if Path(capabilities_path).exists() else {}
 summary = {
@@ -910,6 +924,9 @@ summary = {
     "capabilities": capabilities,
     "gpu_preflight_status": preflight_status,
     "gpu_preflight_note": preflight_note,
+    "dmesg_stop_hits": int(dmesg_stop_hits or 0),
+    "dmesg_pre_stop_hits": int(dmesg_pre_stop_hits or 0),
+    "dmesg_post_stop_hits": int(dmesg_post_stop_hits or 0),
     "status": overall,
     "notes": "; ".join(notes),
     "items": items,
@@ -931,14 +948,15 @@ lines = [
     f"- run_id: `{run_id}`",
     f"- image: `{image}`",
     f"- effective check iters: `{effective_check_iters}`",
+    f"- dmesg stop hits: `{dmesg_stop_hits}`",
+    f"- dmesg pre stop hits: `{dmesg_pre_stop_hits}`",
+    f"- dmesg post stop hits: `{dmesg_post_stop_hits}`",
 ]
 if notes:
     lines.append(f"- notes: `{'; '.join(notes)}`")
 lines.extend([
     "",
-    "Bandwidth values are `nccl-tests` `busbw` in GB/s.",
-    "",
-    "| Class | Op | GPU set | Ranks | -g | Status | Largest busbw (GB/s) | Max busbw (GB/s) | Wrong | Hints |",
+    "| Class | Op | GPU set | Ranks | -g | Status | Largest busbw | Max busbw | Wrong | Hints |",
     "| --- | --- | --- | ---: | ---: | --- | ---: | ---: | ---: | --- |",
 ])
 for item in items:
@@ -982,6 +1000,8 @@ canonical_paths=(
   "${cap_stdout_rel}"
   "${cap_stderr_rel}"
   "${gpu_preflight_rel}"
+  "${dmesg_pre_rel}"
+  "${dmesg_post_rel}"
 )
 while IFS= read -r record_line; do
   [[ -n "${record_line}" ]] || continue

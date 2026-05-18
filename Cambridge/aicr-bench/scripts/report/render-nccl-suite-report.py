@@ -2,14 +2,13 @@
 import argparse
 import datetime as dt
 import json
-import os
 import statistics
 from collections import defaultdict
 from pathlib import Path
 
 from repeat_aggregation import aggregate_values, normalize_repeat_aggregation
 
-EXPECTED_SURVEY_OPS = ("allreduce", "allgather", "reduce_scatter", "alltoall")
+EXPECTED_SCALE_OPS = ("allreduce", "allgather", "reduce_scatter", "alltoall")
 OP_TABLE_ORDER = ("allreduce", "reduce_scatter", "allgather", "alltoall")
 OP_LABELS = {
     "allreduce": "AR",
@@ -26,32 +25,16 @@ STATUS_RANK = {
     "passed": 1,
     "skipped": 0,
 }
-STATS_DOCS_PATH = "docs/stats-explained.md"
-
-
-def repo_root():
-    return Path(__file__).resolve().parents[2]
-
-
-def stats_docs_link(output_path=None):
-    if not output_path:
-        return STATS_DOCS_PATH
-    base = Path(output_path)
-    base_dir = base.parent if base.suffix else base
-    try:
-        return os.path.relpath(repo_root() / STATS_DOCS_PATH, base_dir.resolve()).replace(os.sep, "/")
-    except OSError:
-        return STATS_DOCS_PATH
+REPORT_STATS_LINK = "../../../docs/stats-explained.md"
 
 
 def build_parser():
-    p = argparse.ArgumentParser(description="Render NCCL suite local/RDMA/survey summaries.")
+    p = argparse.ArgumentParser(description="Render NCCL suite local/RDMA/scale summaries.")
     p.add_argument("--date", default="today")
     p.add_argument("--cluster", required=True, choices=["b200", "rtxpro6000"])
-    p.add_argument("--scope", required=True, choices=["local", "rdma", "survey"])
+    p.add_argument("--scope", required=True, choices=["local", "rdma", "scale"])
     p.add_argument("--results-root", default="results")
     p.add_argument("--nodes-per-job", type=int)
-    p.add_argument("--repeat-aggregation", default="standard", choices=["standard", "olympic"])
     p.add_argument("--fleet-manifest", default="")
     p.add_argument("--output", default="")
     return p
@@ -73,15 +56,6 @@ def fmt(value):
         return "-"
     try:
         return f"{float(value):.3f}"
-    except (TypeError, ValueError):
-        return str(value)
-
-
-def fmt_pct(value):
-    if value is None:
-        return "-"
-    try:
-        return f"{float(value):.1f}%"
     except (TypeError, ValueError):
         return str(value)
 
@@ -258,14 +232,6 @@ def uncode(value):
     return str(value or "").strip().strip("`").strip()
 
 
-def first_value(item, *keys):
-    for key in keys:
-        value = item.get(key)
-        if value not in (None, ""):
-            return value
-    return None
-
-
 def rows_from_existing_report(path):
     if not path.exists():
         return []
@@ -277,7 +243,7 @@ def rows_from_existing_report(path):
         run_id = uncode(item.get("Run"))
         rows.append({
             "entity": uncode(item.get("Entity")) or "-",
-            "scale": uncode(first_value(item, "Survey size", "Node count", "Scale")) or "-",
+            "scale": uncode(item.get("Scale")) or "-",
             "run_id": run_id,
             "profile": uncode(item.get("Profile")),
             "suite_class": uncode(item.get("Class")),
@@ -287,8 +253,8 @@ def rows_from_existing_report(path):
             "ranks": uncode(item.get("Ranks")),
             "gpus_arg": uncode(item.get("-g")),
             "status": uncode(item.get("Status")),
-            "largest_busbw": numeric_or_none(uncode(first_value(item, "Largest busbw", "Largest busbw (GB/s)"))),
-            "max_busbw": numeric_or_none(uncode(first_value(item, "Max busbw", "Max busbw (GB/s)"))),
+            "largest_busbw": numeric_or_none(uncode(item.get("Largest busbw"))),
+            "max_busbw": numeric_or_none(uncode(item.get("Max busbw"))),
             "wrong": uncode(item.get("Wrong")) or "-",
             "return_code": uncode(item.get("RC")) or "-",
             "hints": uncode(item.get("Hints")) or "-",
@@ -301,7 +267,7 @@ def rows_from_existing_report(path):
     return rows
 
 
-def summary_refs_from_manifest(root, date_value, cluster, manifest, check, nodes_per_job=None):
+def summary_refs_from_manifest(root, date_value, cluster, manifest):
     if not manifest:
         return []
     jobs = [item for item in manifest.get("submitted_jobs", []) if item.get("job_id")]
@@ -322,20 +288,13 @@ def summary_refs_from_manifest(root, date_value, cluster, manifest, check, nodes
         job_id = str(row.get("job_id") or "")
         if job_id not in job_ids:
             continue
-        if row.get("cluster") != cluster or row.get("check") != check:
+        if row.get("cluster") != cluster or row.get("check") != "nccl-suite-scale":
             continue
-        if nodes_per_job is not None:
-            try:
-                if int(row.get("node_count")) != int(nodes_per_job):
-                    continue
-            except (TypeError, ValueError):
-                pass
         for artifact in row.get("parsed_artifact_paths") or []:
             if artifact.endswith("/summary.json"):
                 summary_path = resolve_artifact_path(root, artifact)
                 if summary_path.exists():
                     summaries_by_job[job_id] = summary_path
-                    break
     return [
         {"job": job, "job_id": str(job.get("job_id")), "path": summaries_by_job[str(job.get("job_id"))]}
         for job in jobs
@@ -349,7 +308,7 @@ def path_refs(paths):
 
 def unique_summary_items(items, node_count=None):
     if node_count:
-        scale_marker = f"_survey_{node_count}n_"
+        scale_marker = f"_scale_{node_count}n_"
         matching_scale = [item for item in items if scale_marker in str(item.get("suite_class", ""))]
         if matching_scale:
             items = matching_scale
@@ -443,19 +402,19 @@ def manifest_jobs(manifest):
     return list((manifest or {}).get("submitted_jobs") or [])
 
 
-def expected_jobs_by_survey_size(manifest):
+def expected_jobs_by_scale(manifest):
     counts = defaultdict(int)
     jobs = manifest_jobs(manifest)
     if jobs:
         for job in jobs:
-            scale = job.get("survey_size", job.get("scale"))
+            scale = job.get("scale")
             if scale is not None:
                 counts[f"{scale}n"] += 1
         return dict(counts)
 
     repeat_count = int_or_none((manifest or {}).get("repeat_count")) or 1
     for group in (manifest or {}).get("selected_groups") or []:
-        scale = group.get("survey_size", group.get("scale"))
+        scale = group.get("scale")
         if scale is not None:
             counts[f"{scale}n"] += repeat_count
     return dict(counts)
@@ -464,7 +423,7 @@ def expected_jobs_by_survey_size(manifest):
 def expected_jobs_by_group(manifest):
     counts = defaultdict(int)
     for job in manifest_jobs(manifest):
-        scale = job.get("survey_size", job.get("scale"))
+        scale = job.get("scale")
         if scale is None:
             continue
         group = job.get("group") or ",".join(job.get("nodes") or [])
@@ -485,17 +444,17 @@ def missing_rows_from_manifest(manifest, rows):
         job_id = str(job.get("job_id") or "")
         if not job_id or job_id in completed_job_ids:
             continue
-        scale = f"{job.get('survey_size', job.get('scale'))}n"
+        scale = f"{job.get('scale')}n"
         node_count = int(job.get("node_count") or len(job.get("nodes") or []) or 0)
         gpu_count = int(job.get("gpu_count") or node_count * 8 or 0)
         entity = job.get("group") or ",".join(job.get("nodes") or []) or "-"
-        for op in expected_survey_ops(manifest):
+        for op in EXPECTED_SCALE_OPS:
             missing.append({
                 "entity": entity,
                 "scale": scale,
                 "run_id": f"job-{job_id}",
                 "profile": (manifest or {}).get("profile", ""),
-                "suite_class": f"{(manifest or {}).get('cluster', 'cluster')}_survey_{scale}_8rank_1g",
+                "suite_class": f"{(manifest or {}).get('cluster', 'cluster')}_scale_{scale}_8rank_1g",
                 "op": op,
                 "gpu_set": "all",
                 "rank_shape": "8rank_1g_per_node",
@@ -516,7 +475,7 @@ def missing_rows_from_manifest(manifest, rows):
     return missing
 
 
-def survey_sort_key(scale):
+def scale_sort_key(scale):
     value = str(scale)
     if value.endswith("n"):
         try:
@@ -526,10 +485,10 @@ def survey_sort_key(scale):
     return (1, value)
 
 
-def all_survey_sizes(rows, manifest):
+def all_scales(rows, manifest):
     scales = {row.get("scale") for row in rows if row.get("scale")}
-    scales.update(expected_jobs_by_survey_size(manifest).keys())
-    return sorted(scales, key=survey_sort_key)
+    scales.update(expected_jobs_by_scale(manifest).keys())
+    return sorted(scales, key=scale_sort_key)
 
 
 def row_status_counts(rows):
@@ -551,7 +510,7 @@ def issue_rows(rows):
     return issues
 
 
-def centers_by_survey_op(rows, manifest):
+def centers_by_scale_op(rows, manifest):
     aggregation = manifest_repeat_aggregation(manifest)
     grouped = defaultdict(list)
     for row in rows:
@@ -564,10 +523,6 @@ def centers_by_survey_op(rows, manifest):
     }
 
 
-def render_scaling_calculations(rows, manifest, cluster):
-    return []
-
-
 def worst_status(statuses):
     normalized = [status_value(status) for status in statuses if status]
     if not normalized:
@@ -575,7 +530,7 @@ def worst_status(statuses):
     return max(normalized, key=lambda value: STATUS_RANK.get(value, -1))
 
 
-def survey_status(scale_rows, expected_rows=None):
+def scale_status(scale_rows, expected_rows=None):
     if not scale_rows:
         return "missing"
     statuses = [status_value(row.get("status")) for row in scale_rows]
@@ -608,16 +563,11 @@ def completed_job_count(rows):
 def expected_row_count(manifest, rows):
     submitted = submitted_job_count(manifest)
     if submitted:
-        return submitted * len(expected_survey_ops(manifest))
+        return submitted * len(EXPECTED_SCALE_OPS)
     return len(rows)
 
 
-def expected_survey_ops(manifest):
-    ops = (manifest or {}).get("suite_ops") or EXPECTED_SURVEY_OPS
-    return tuple(str(op) for op in ops if str(op))
-
-
-def survey_page_name(output_path, cluster, scale):
+def scale_page_name(output_path, cluster, scale):
     if output_path:
         path = Path(output_path)
         return f"{path.stem}-{scale}{path.suffix}"
@@ -629,7 +579,7 @@ def render_run_overview(rows, manifest):
     passed = status_counts.get("passed", 0)
     status_summary = ", ".join(f"{name}={count}" for name, count in sorted(status_counts.items())) or "none"
     expected_rows = expected_row_count(manifest, rows)
-    scales = ",".join(str(item) for item in (manifest or {}).get("selected_survey_sizes") or (manifest or {}).get("selected_scales") or []) or ",".join(all_survey_sizes(rows, manifest)) or "-"
+    scales = ",".join(str(item) for item in (manifest or {}).get("selected_scales") or []) or ",".join(all_scales(rows, manifest)) or "-"
     gpu_preflight = manifest or {}
     excluded = gpu_preflight.get("gpu_preflight_excluded_nodes") or []
     lines = [
@@ -638,8 +588,7 @@ def render_run_overview(rows, manifest):
         "| Field | Value |",
         "| --- | --- |",
         f"| Profile | {code((manifest or {}).get('profile', '-'))} |",
-        f"| Suite ops | {code(','.join(expected_survey_ops(manifest)))} |",
-        f"| Survey sizes | {code(scales)} |",
+        f"| Scales | {code(scales)} |",
         f"| Repeat aggregation | {code(manifest_repeat_aggregation(manifest))} |",
         f"| GPU preflight filter | {code('enabled' if gpu_preflight.get('gpu_preflight_filter_enabled') else 'disabled')} |",
         f"| Submitted jobs | {submitted_job_count(manifest)} |",
@@ -669,24 +618,24 @@ def render_skipped_nodes(manifest):
     return lines + [""]
 
 
-def render_survey_coverage(rows, manifest, output_path, cluster):
-    expected_jobs = expected_jobs_by_survey_size(manifest)
+def render_scale_coverage(rows, manifest, output_path, cluster):
+    expected_jobs = expected_jobs_by_scale(manifest)
     lines = [
         "",
-        "## Survey Coverage",
+        "## Scale Coverage",
         "",
-        "| Survey size | Jobs | Completed | Rows | Passes | Status | Drilldown |",
+        "| Scale | Jobs | Completed | Rows | Passes | Status | Drilldown |",
         "| --- | ---: | ---: | ---: | ---: | --- | --- |",
     ]
-    for scale in all_survey_sizes(rows, manifest):
+    for scale in all_scales(rows, manifest):
         scale_rows = [row for row in rows if row.get("scale") == scale]
         expected_job_count = expected_jobs.get(scale, completed_job_count(scale_rows))
-        expected_rows = expected_job_count * len(expected_survey_ops(manifest)) if expected_job_count else len(scale_rows)
+        expected_rows = expected_job_count * len(EXPECTED_SCALE_OPS) if expected_job_count else len(scale_rows)
         completed_jobs = completed_job_count(scale_rows)
         completed_rows = sum(1 for row in scale_rows if not row.get("synthetic"))
         passed = sum(1 for row in scale_rows if status_value(row.get("status")) == "passed")
-        status = survey_status(scale_rows, expected_rows)
-        drilldown = f"[{scale}](./{survey_page_name(output_path, cluster, scale)})"
+        status = scale_status(scale_rows, expected_rows)
+        drilldown = f"[{scale}](./{scale_page_name(output_path, cluster, scale)})"
         lines.append(
             f"| {code(scale)} | {expected_job_count} | {completed_jobs}/{expected_job_count} | "
             f"{completed_rows}/{expected_rows} | {passed}/{len(scale_rows)} | {code(status)} | {drilldown} |"
@@ -696,17 +645,17 @@ def render_survey_coverage(rows, manifest, output_path, cluster):
     return lines
 
 
-def render_fleet_medians(rows, manifest, stats_link):
-    centers = centers_by_survey_op(rows, manifest)
+def render_fleet_medians(rows, manifest):
+    centers = centers_by_scale_op(rows, manifest)
     center_label = aggregation_center_label(manifest)
     lines = [
         "",
         f"## Fleet {center_label}s",
         "",
-        f"| Survey size | AR {center_label} (GB/s) | RS {center_label} (GB/s) | AG {center_label} (GB/s) | A2A {center_label} (GB/s) |",
+        f"| Scale | AR {center_label} | RS {center_label} | AG {center_label} | A2A {center_label} |",
         "| --- | ---: | ---: | ---: | ---: |",
     ]
-    for scale in sorted({key[0] for key in centers}, key=survey_sort_key):
+    for scale in sorted({key[0] for key in centers}, key=scale_sort_key):
         values = {op: centers.get((scale, op)) for op in OP_TABLE_ORDER}
         lines.append(
             f"| {code(scale)} | "
@@ -717,7 +666,7 @@ def render_fleet_medians(rows, manifest, stats_link):
         lines.append("| - | - | - | - | - |")
     lines.append("")
     lines.append("Bandwidth columns are largest-message `busbw` in GB/s.")
-    lines.append(f"See [Stats Explained]({stats_link}) for repeat aggregation definitions.")
+    lines.append(f"See [Stats Explained]({REPORT_STATS_LINK}) for repeat aggregation definitions.")
     return lines
 
 
@@ -732,7 +681,7 @@ def render_issue_table(rows, heading="Rows Needing Review"):
         lines.append("- None")
         return lines
     lines.extend([
-        "| Survey size | Entity | Op | Run | Job | Status | Wrong | RC | Hints | Notes |",
+        "| Scale | Entity | Op | Run | Job | Status | Wrong | RC | Hints | Notes |",
         "| --- | --- | --- | --- | --- | --- | ---: | ---: | --- | --- |",
     ])
     for row in issues:
@@ -789,14 +738,14 @@ def sample_status(sample_rows):
     return "passed"
 
 
-def group_summary_rows(rows, manifest, survey_size):
+def group_summary_rows(rows, manifest, scale):
     expected = expected_jobs_by_group(manifest)
-    groups = {row.get("entity") for row in rows if row.get("scale") == survey_size}
-    groups.update(group for group_scale, group in expected if group_scale == survey_size)
+    groups = {row.get("entity") for row in rows if row.get("scale") == scale}
+    groups.update(group for group_scale, group in expected if group_scale == scale)
     summaries = []
     for group in sorted(groups):
-        group_rows = [row for row in rows if row.get("scale") == survey_size and row.get("entity") == group]
-        expected_samples = expected.get((survey_size, group), len({row.get("sample_id") for row in group_rows if row.get("sample_id")}) or 1)
+        group_rows = [row for row in rows if row.get("scale") == scale and row.get("entity") == group]
+        expected_samples = expected.get((scale, group), len({row.get("sample_id") for row in group_rows if row.get("sample_id")}) or 1)
         sample_ids = sorted({row.get("sample_id") for row in group_rows if row.get("sample_id")})
         completed = len({row.get("sample_id") for row in group_rows if row.get("sample_id") and not row.get("synthetic")})
         sample_statuses = [
@@ -841,8 +790,8 @@ def group_summary_rows(rows, manifest, survey_size):
     return summaries
 
 
-def render_group_rows(rows, manifest, survey_size, stats_link):
-    summaries = group_summary_rows(rows, manifest, survey_size)
+def render_group_rows(rows, manifest, scale):
+    summaries = group_summary_rows(rows, manifest, scale)
     aggregation = manifest_repeat_aggregation(manifest)
     center_label = aggregation_center_label(manifest)
     lines = [
@@ -852,12 +801,12 @@ def render_group_rows(rows, manifest, survey_size, stats_link):
     ]
     if aggregation == "olympic":
         lines.extend([
-            f"| Node Group | Nodes | GPUs | Samples | Passes | Status | AR {center_label} (GB/s) | AR min..max (GB/s) | AR drop min/max (GB/s) | RS {center_label} (GB/s) | RS min..max (GB/s) | RS drop min/max (GB/s) | AG {center_label} (GB/s) | AG min..max (GB/s) | AG drop min/max (GB/s) | A2A {center_label} (GB/s) | A2A min..max (GB/s) | A2A drop min/max (GB/s) | Wrong | Aggregation | Jobs |",
+            f"| Node Group | Nodes | GPUs | Samples | Passes | Status | AR {center_label} | AR min..max | AR drop min/max | RS {center_label} | RS min..max | RS drop min/max | AG {center_label} | AG min..max | AG drop min/max | A2A {center_label} | A2A min..max | A2A drop min/max | Wrong | Aggregation | Jobs |",
             "| --- | ---: | ---: | ---: | ---: | --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- | ---: | --- | --- |",
         ])
     else:
         lines.extend([
-            "| Node Group | Nodes | GPUs | Samples | Passes | Status | AR med (GB/s) | AR min..max (GB/s) | RS med (GB/s) | RS min..max (GB/s) | AG med (GB/s) | AG min..max (GB/s) | A2A med (GB/s) | A2A min..max (GB/s) | Wrong | Jobs |",
+            "| Node Group | Nodes | GPUs | Samples | Passes | Status | AR med | AR min..max | RS med | RS min..max | AG med | AG min..max | A2A med | A2A min..max | Wrong | Jobs |",
             "| --- | ---: | ---: | ---: | ---: | --- | ---: | --- | ---: | --- | ---: | --- | ---: | --- | ---: | --- |",
         ])
     for item in summaries:
@@ -891,12 +840,12 @@ def render_group_rows(rows, manifest, survey_size, stats_link):
     lines.extend([
         "",
         "Bandwidth columns are largest-message `busbw` in GB/s.",
-        f"{center_label} columns aggregate passed samples for each node group. See [Stats Explained]({stats_link}) for repeat aggregation and min/max definitions.",
+        f"{center_label} columns aggregate passed samples for each node group. See [Stats Explained]({REPORT_STATS_LINK}) for repeat aggregation and min/max definitions.",
     ])
     return lines
 
 
-def render_survey_statistics(rows, scale, manifest, stats_link):
+def render_scale_statistics(rows, scale, manifest):
     scale_rows = [row for row in rows if row.get("scale") == scale]
     aggregation = manifest_repeat_aggregation(manifest)
     center_label = aggregation_center_label(manifest)
@@ -904,7 +853,7 @@ def render_survey_statistics(rows, scale, manifest, stats_link):
         "",
         "## Per-Op Statistics",
         "",
-        f"Only passed rows with numeric largest-message `busbw` values are included. All bandwidth values in this section are GB/s. See [Stats Explained]({stats_link}) for repeat aggregation and min/max definitions.",
+        f"Only passed rows with numeric largest-message `busbw` values are included. See [Stats Explained]({REPORT_STATS_LINK}) for repeat aggregation and min/max definitions.",
         "",
     ]
     if aggregation == "olympic":
@@ -930,23 +879,23 @@ def render_survey_statistics(rows, scale, manifest, stats_link):
             summary = aggregate_values(values, aggregation, standard_center="median")
             if aggregation == "olympic":
                 lines.append(
-                    f"| {label} busbw (GB/s) | {len(values)} | {fmt(summary.get('center'))} | {fmt(min(values))} | {fmt(max(values))} | "
+                    f"| {label} busbw | {len(values)} | {fmt(summary.get('center'))} | {fmt(min(values))} | {fmt(max(values))} | "
                     f"{fmt_dropped(summary)} | {md(aggregation_note(summary))} |"
                 )
             else:
-                lines.append(f"| {label} busbw (GB/s) | {len(values)} | {fmt(summary.get('center'))} | {fmt(min(values))} | {fmt(max(values))} |")
+                lines.append(f"| {label} busbw | {len(values)} | {fmt(summary.get('center'))} | {fmt(min(values))} | {fmt(max(values))} |")
         else:
             if aggregation == "olympic":
-                lines.append(f"| {label} busbw (GB/s) | 0 | - | - | - | - | - |")
+                lines.append(f"| {label} busbw | 0 | - | - | - | - | - |")
             else:
-                lines.append(f"| {label} busbw (GB/s) | 0 | - | - | - |")
+                lines.append(f"| {label} busbw | 0 | - | - | - |")
     return lines
 
 
-def render_bandwidth_anomalies(rows, survey_size, manifest, stats_link):
+def render_bandwidth_anomalies(rows, scale, manifest):
     aggregation = manifest_repeat_aggregation(manifest)
     center_label = aggregation_center_label(manifest)
-    group_rows = group_summary_rows(rows, manifest, survey_size)
+    group_rows = group_summary_rows(rows, manifest, scale)
     anomalies = []
     for op in OP_TABLE_ORDER:
         values_by_group = []
@@ -970,14 +919,14 @@ def render_bandwidth_anomalies(rows, survey_size, manifest, stats_link):
         "",
         "## Bandwidth Anomalies",
         "",
-        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. Bandwidth values are GB/s. See [Stats Explained]({stats_link}) for `Delta` and anomaly-label definitions.",
+        f"Anomalies are report evidence only and do not change canonical `status.json` pass/fail. See [Stats Explained]({REPORT_STATS_LINK}) for `Delta` and anomaly-label definitions.",
         "",
     ]
     if not anomalies:
         lines.append("(none)")
         return lines
     lines.extend([
-        "| Severity | Node Group | Metric | Value (GB/s) | Median (GB/s) | Delta |",
+        "| Severity | Node Group | Metric | Value | Median | Delta |",
         "| --- | --- | --- | ---: | ---: | ---: |",
     ])
     for group, op, value, median_value, delta in anomalies:
@@ -995,9 +944,7 @@ def render_detailed_rows(rows):
         "",
         "## Detailed Rows",
         "",
-        "Bandwidth values are `nccl-tests` `busbw` in GB/s.",
-        "",
-        "| Entity | Survey size | Run | Profile | Class | Op | GPU set | Rank shape | Ranks | -g | Status | Largest busbw (GB/s) | Max busbw (GB/s) | Wrong | RC | Hints | Notes |",
+        "| Entity | Scale | Run | Profile | Class | Op | GPU set | Rank shape | Ranks | -g | Status | Largest busbw | Max busbw | Wrong | RC | Hints | Notes |",
         "| --- | --- | --- | --- | --- | --- | --- | --- | ---: | ---: | --- | ---: | ---: | ---: | ---: | --- | --- |",
     ]
     for row in rows:
@@ -1014,65 +961,57 @@ def render_detailed_rows(rows):
     return lines
 
 
-def render_survey_index(date_value, cluster, rows, manifest, output_path=None):
-    stats_link = stats_docs_link(output_path)
+def render_scale_index(date_value, cluster, rows, manifest, output_path=None):
     lines = [
-        f"# NCCL Survey {cluster} {date_value}",
+        f"# NCCL System Verification {cluster} {date_value}",
         "",
-        "This dashboard summarizes rank-per-GPU node survey work. Use the per-size drilldowns for job-shape detail and the by-node dashboard for candidate selection.",
+        "This dashboard is an operator index for rank-per-GPU system verification. Use the per-scale drilldowns for job-shape detail and the by-node dashboard for benchmark candidate selection.",
         "",
     ]
     lines.extend(render_run_overview(rows, manifest))
     lines.extend(render_skipped_nodes(manifest))
-    lines.extend(render_survey_coverage(rows, manifest, output_path, cluster))
-    lines.extend(render_fleet_medians(rows, manifest, stats_link))
-    lines.extend(render_scaling_calculations(rows, manifest, cluster))
+    lines.extend(render_scale_coverage(rows, manifest, output_path, cluster))
+    lines.extend(render_fleet_medians(rows, manifest))
     lines.extend(render_issue_table(rows))
     lines.extend(render_node_selection_notes(rows))
     lines.extend(render_detailed_rows(rows))
     return "\n".join(lines) + "\n"
 
 
-def render_survey_page(date_value, cluster, scale, rows, manifest, index_name, output_path=None):
-    stats_link = stats_docs_link(output_path)
+def render_scale_page(date_value, cluster, scale, rows, manifest, index_name):
     scale_rows = [row for row in rows if row.get("scale") == scale]
-    expected_jobs = expected_jobs_by_survey_size(manifest).get(scale, completed_job_count(scale_rows))
-    expected_rows = expected_jobs * len(expected_survey_ops(manifest)) if expected_jobs else len(scale_rows)
+    expected_jobs = expected_jobs_by_scale(manifest).get(scale, completed_job_count(scale_rows))
+    expected_rows = expected_jobs * len(EXPECTED_SCALE_OPS) if expected_jobs else len(scale_rows)
     completed_rows = sum(1 for row in scale_rows if not row.get("synthetic"))
     passed = sum(1 for row in scale_rows if status_value(row.get("status")) == "passed")
     lines = [
-        f"# NCCL Survey {cluster} {date_value} {scale}",
+        f"# NCCL System Verification {cluster} {date_value} {scale}",
         "",
         f"- Index: [{index_name}](./{index_name})",
         f"- Profile: {code((manifest or {}).get('profile', '-'))}",
-        f"- Survey size: {code(scale)}",
+        f"- Scale: {code(scale)}",
         f"- Submitted jobs: {expected_jobs}",
         f"- Completed jobs: {completed_job_count(scale_rows)}/{expected_jobs}",
         f"- Detailed rows: {completed_rows}/{expected_rows}",
         f"- Passed rows: {passed}/{len(scale_rows)}",
-        f"- Status: {code(survey_status(scale_rows, expected_rows))}",
+        f"- Status: {code(scale_status(scale_rows, expected_rows))}",
         f"- Shape: {code('8 MPI ranks per node, 1 GPU per rank, 16 CPU cores per rank')}",
     ]
-    lines.extend(render_group_rows(rows, manifest, scale, stats_link))
-    lines.extend(render_survey_statistics(rows, scale, manifest, stats_link))
-    lines.extend(render_bandwidth_anomalies(rows, scale, manifest, stats_link))
+    lines.extend(render_group_rows(rows, manifest, scale))
+    lines.extend(render_scale_statistics(rows, scale, manifest))
+    lines.extend(render_bandwidth_anomalies(rows, scale, manifest))
     lines.extend(render_issue_table(scale_rows))
     lines.extend(render_detailed_rows(scale_rows))
     return "\n".join(lines) + "\n"
 
 
-def render_generic(date_value, cluster, scope, rows, manifest, output_path=None):
-    stats_link = stats_docs_link(output_path)
+def render_generic(date_value, cluster, scope, rows):
     title = "NCCL Suite Local" if scope == "local" else "NCCL Suite RDMA"
     lines = [
         f"# {title} {cluster} {date_value}",
         "",
     ]
     lines.extend(render_issue_table(rows))
-    if scope == "rdma":
-        for scale in all_survey_sizes(rows, manifest):
-            lines.extend(render_group_rows(rows, manifest, scale, stats_link))
-        lines.extend(render_scaling_calculations(rows, manifest, cluster))
     lines.extend(render_detailed_rows(rows))
     return "\n".join(lines) + "\n"
 
@@ -1080,79 +1019,52 @@ def render_generic(date_value, cluster, scope, rows, manifest, output_path=None)
 def write_outputs(output_path, date_value, cluster, rows, manifest):
     out = Path(output_path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(render_survey_index(date_value, cluster, rows, manifest, out), encoding="utf-8")
+    out.write_text(render_scale_index(date_value, cluster, rows, manifest, out), encoding="utf-8")
     index_name = out.name
-    for scale in all_survey_sizes(rows, manifest):
-        scale_path = out.with_name(survey_page_name(out, cluster, scale))
-        scale_path.write_text(render_survey_page(date_value, cluster, scale, rows, manifest, index_name, scale_path), encoding="utf-8")
+    for scale in all_scales(rows, manifest):
+        scale_path = out.with_name(scale_page_name(out, cluster, scale))
+        scale_path.write_text(render_scale_page(date_value, cluster, scale, rows, manifest, index_name), encoding="utf-8")
 
 
 def rows_for_args(args, results_root, date_value, manifest):
     if args.scope == "local":
-        refs = summary_refs_from_manifest(results_root, date_value, args.cluster, manifest, "nccl-suite-local")
-        if refs:
-            return collect_rows(refs)
         return collect_rows(path_refs(latest_local_summaries(results_root, date_value, args.cluster)))
-    if args.scope == "survey":
-        refs = summary_refs_from_manifest(results_root, date_value, args.cluster, manifest, "nccl-suite-survey")
+    if args.scope == "scale":
+        refs = summary_refs_from_manifest(results_root, date_value, args.cluster, manifest)
         if refs:
             rows = collect_rows(refs)
             rows.extend(missing_rows_from_manifest(manifest, rows))
             return rows
-        paths = multi_node_summaries(results_root, date_value, args.cluster, "nccl-suite-survey", args.nodes_per_job)
+        paths = multi_node_summaries(results_root, date_value, args.cluster, "nccl-suite-scale", args.nodes_per_job)
         rows = collect_rows(path_refs(paths))
         if not rows:
-            existing = results_root / "reports" / date_value / f"nccl-suite-survey-{args.cluster}.md"
+            existing = results_root / "reports" / date_value / f"nccl-suite-{args.cluster}.md"
             rows = rows_from_existing_report(existing)
         if not rows:
             rows.extend(missing_rows_from_manifest(manifest, rows))
         return rows
-    refs = summary_refs_from_manifest(
-        results_root,
-        date_value,
-        args.cluster,
-        manifest,
-        "nccl-suite-rdma",
-        nodes_per_job=args.nodes_per_job,
-    )
-    if refs:
-        return collect_rows(refs)
     paths = multi_node_summaries(results_root, date_value, args.cluster, "nccl-suite-rdma", args.nodes_per_job)
     return collect_rows(path_refs(paths))
-
-
-def latest_survey_manifest(results_root, date_value, cluster):
-    base = results_root / "reports" / date_value / "nccl-suite-survey"
-    if not base.exists():
-        return None
-    matches = sorted(base.glob(f"*-nccl-suite-survey-{cluster}.json"))
-    return matches[-1] if matches else None
 
 
 def main():
     args = build_parser().parse_args()
     date_value = resolve_date(args.date)
     results_root = Path(args.results_root)
-    manifest_path = Path(args.fleet_manifest) if args.fleet_manifest else None
-    if args.scope == "survey" and manifest_path is None:
-        manifest_path = latest_survey_manifest(results_root, date_value, args.cluster)
-    manifest = load_json(manifest_path) if manifest_path else None
-    if manifest is None and args.scope in {"local", "rdma"}:
-        manifest = {"repeat_aggregation": args.repeat_aggregation}
+    manifest = load_json(Path(args.fleet_manifest)) if args.fleet_manifest else None
     rows = rows_for_args(args, results_root, date_value, manifest)
-    if args.scope == "survey":
+    if args.scope == "scale":
         if args.output:
             write_outputs(args.output, date_value, args.cluster, rows, manifest)
         else:
-            print(render_survey_index(date_value, args.cluster, rows, manifest), end="")
+            print(render_scale_index(date_value, args.cluster, rows, manifest), end="")
     else:
+        output = render_generic(date_value, args.cluster, args.scope, rows)
         if args.output:
             out = Path(args.output)
             out.parent.mkdir(parents=True, exist_ok=True)
-            output = render_generic(date_value, args.cluster, args.scope, rows, manifest, out)
             out.write_text(output, encoding="utf-8")
         else:
-            output = render_generic(date_value, args.cluster, args.scope, rows, manifest)
             print(output, end="")
 
 

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-#SBATCH --job-name=rtx-nccl-suite-local
-#SBATCH --partition=GPU1
+#SBATCH --job-name=b200-nccl-suite-scale
+#SBATCH --partition=GPU2
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:rtxpro6000:8
-#SBATCH --time=00:45:00
+#SBATCH --gres=gpu:b200:8
+#SBATCH --time=02:30:00
 #SBATCH --output=results/slurm/%x-%j.out
 #SBATCH --error=results/slurm/%x-%j.err
 set -euo pipefail
@@ -21,5 +21,7 @@ fi
 
 # shellcheck disable=SC1091
 source benchmark-settings.env
-export AICR_CLUSTER_NAME=rtxpro6000
-exec bash ./scripts/verify/run-nccl-suite.sh --scope local --cluster rtxpro6000 "$@"
+export AICR_CLUSTER_NAME=b200
+PEER_NODES_CSV="$(scontrol show hostnames "$SLURM_JOB_NODELIST" | paste -sd, -)"
+export PEER_NODES_CSV
+exec bash ./scripts/verify/run-nccl-suite.sh --scope scale --cluster b200 "$@"
