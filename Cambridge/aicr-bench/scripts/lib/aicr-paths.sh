@@ -37,15 +37,16 @@ AICR_CHECK_CONTAINER_COMPAT="container-compat"
 AICR_CHECK_PYTHON_RUNTIME_SLURM="python-runtime-slurm"
 AICR_CHECK_PYTORCH_SMOKE="pytorch-smoke"
 AICR_CHECK_HPC_BENCHMARKS_SMOKE="hpc-benchmarks-smoke"
+AICR_CHECK_ELBENCHO_SMOKE="elbencho-smoke"
 AICR_CHECK_GPU_TOPOLOGY="gpu-topology"
 AICR_CHECK_NCCL_LOCAL="nccl-local"
 AICR_CHECK_NCCL_RDMA="nccl-rdma"
 AICR_CHECK_NCCL_SUITE_LOCAL="nccl-suite-local"
 AICR_CHECK_NCCL_SUITE_RDMA="nccl-suite-rdma"
-AICR_CHECK_NCCL_SUITE_SURVEY="nccl-suite-survey"
+AICR_CHECK_NCCL_SUITE_SCALE="nccl-suite-scale"
 AICR_CHECK_GDS="gds"
-AICR_CHECK_NODE_DEBUG="node-debug"
 AICR_CHECK_DATALOADER="dataloader"
+AICR_CHECK_ELBENCHO="elbencho"
 AICR_CHECK_HPL_MXP="hpl-mxp"
 
 export \
@@ -71,15 +72,16 @@ export \
   AICR_CHECK_PYTHON_RUNTIME_SLURM \
   AICR_CHECK_PYTORCH_SMOKE \
   AICR_CHECK_HPC_BENCHMARKS_SMOKE \
+  AICR_CHECK_ELBENCHO_SMOKE \
   AICR_CHECK_GPU_TOPOLOGY \
   AICR_CHECK_NCCL_LOCAL \
   AICR_CHECK_NCCL_RDMA \
   AICR_CHECK_NCCL_SUITE_LOCAL \
   AICR_CHECK_NCCL_SUITE_RDMA \
-  AICR_CHECK_NCCL_SUITE_SURVEY \
+  AICR_CHECK_NCCL_SUITE_SCALE \
   AICR_CHECK_GDS \
-  AICR_CHECK_NODE_DEBUG \
   AICR_CHECK_DATALOADER \
+  AICR_CHECK_ELBENCHO \
   AICR_CHECK_HPL_MXP
 
 aicr_die() {
@@ -117,6 +119,8 @@ aicr_export_defaults() {
   : "${AICR_GDS_SCRATCH_DIR:=${AICR_SCRATCH_DIR}/gds}"
   : "${AICR_RUNTIME_ROOT:=/work/aicr/commissioning/benchmarks/runtime}"
   : "${AICR_APPTAINER_IMAGE_DIR:=${AICR_RUNTIME_ROOT}/apptainer/images}"
+  : "${AICR_ELBENCHO_TAG:=master-ubuntu-cuda-multiarch}"
+  : "${AICR_ELBENCHO_IMAGE:=${AICR_APPTAINER_IMAGE_DIR}/elbencho-${AICR_ELBENCHO_TAG}.sif}"
   : "${AICR_RESULTS_DIR:=${AICR_BMARK_DIR}/results}"
   : "${AICR_RESULTS_SETUP_DIR:=${AICR_RESULTS_DIR}/setup}"
   : "${AICR_RESULTS_BY_DATE_DIR:=${AICR_RESULTS_DIR}/by-date}"
@@ -149,6 +153,8 @@ aicr_export_defaults() {
     AICR_GDS_SCRATCH_DIR \
     AICR_RUNTIME_ROOT \
     AICR_APPTAINER_IMAGE_DIR \
+    AICR_ELBENCHO_TAG \
+    AICR_ELBENCHO_IMAGE \
     AICR_RESULTS_DIR \
     AICR_RESULTS_SETUP_DIR \
     AICR_RESULTS_BY_DATE_DIR \
@@ -225,6 +231,9 @@ aicr_repo_local_apptainer_image_dir() {
 aicr_runtime_required_image_paths() {
   printf '%s/pytorch-25.10-py3.sif\n' "$AICR_APPTAINER_IMAGE_DIR"
   printf '%s/hpc-benchmarks-26.02.sif\n' "$AICR_APPTAINER_IMAGE_DIR"
+  if [[ "${AICR_REQUIRE_ELBENCHO_IMAGE:-0}" == "1" ]]; then
+    printf '%s\n' "$AICR_ELBENCHO_IMAGE"
+  fi
   if [[ "${ENABLE_PYTORCH_PROBE:-0}" == "1" ]]; then
     printf '%s/pytorch-26.03-py3.sif\n' "$AICR_APPTAINER_IMAGE_DIR"
   fi
@@ -234,7 +243,7 @@ aicr_print_runtime_rebuild_hint() {
   cat >&2 <<EOF
 Rebuild canonical runtime assets with:
   make setup-python-local
-  make install-containers CONTAINER_REFRESH=1
+  make rebuild-runtime APPLY=1
 
 Runtime root:
   ${AICR_RUNTIME_ROOT}

@@ -20,6 +20,7 @@ COMMENT_RE = re.compile(r"<!--\s*aicr-test\s*\n(?P<body>.*?)\n-->", re.DOTALL)
 FENCE_RE = re.compile(r"```(?P<lang>[A-Za-z0-9_-]+)?[^\n]*\n(?P<body>.*?)\n```", re.DOTALL)
 
 DEFAULT_DOCS = (
+    "docs/modules/gpu-topology",
     "docs/modules/gds",
     "docs/modules/nccl",
     "docs/modules/dataloader",

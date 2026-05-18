@@ -36,6 +36,7 @@ REQUIRED_FIXTURE_METADATA = {
     "fixture_type",
     "purpose",
 }
+NODE_TOKEN_RE = re.compile(r"\b([a-z]+)([0-9]{4})\b")
 
 
 def repo_root() -> Path:
@@ -43,7 +44,7 @@ def repo_root() -> Path:
 
 
 def markdown_files(root: Path) -> list[Path]:
-    skip_dirs = {".git", "graphify-out", "results"}
+    skip_dirs = {".git", "results"}
     paths: list[Path] = []
     for path in root.rglob("*.md"):
         parts = set(path.relative_to(root).parts)
@@ -64,6 +65,28 @@ def check_public_docs(root: Path) -> list[str]:
                     failures.append(f"{rel}:{line_number}: {message}")
     failures.extend(check_study_statuses(root))
     failures.extend(check_fixture_hygiene(root))
+    failures.extend(check_node_name_examples(root))
+    return failures
+
+
+def check_node_name_examples(root: Path) -> list[str]:
+    failures: list[str] = []
+    for path in markdown_files(root):
+        rel = path.relative_to(root)
+        for line_number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), start=1):
+            for match in NODE_TOKEN_RE.finditer(line):
+                prefix = match.group(1)
+                number = int(match.group(2))
+                token = match.group(0)
+                if len(prefix) > 3:
+                    continue
+                if prefix == "a" and 1 <= number <= 19:
+                    continue
+                if prefix == "b" and 1 <= number <= 31:
+                    continue
+                failures.append(
+                    f"{rel}:{line_number}: node examples must use a0001-a0019 or b0001-b0031, found {token}"
+                )
     return failures
 
 

@@ -39,7 +39,7 @@ def strip_inline_code_and_links(line: str) -> str:
 
 
 def markdown_files(root: Path) -> list[Path]:
-    skip_dirs = {"graphify-out", ".git", "results"}
+    skip_dirs = {".git", "results"}
     files: list[Path] = []
     for path in root.rglob("*.md"):
         rel_parts = set(path.relative_to(root).parts)

@@ -16,6 +16,7 @@ Each public module directory provides:
 - `make.md`: curated Make interface.
 - `examples.md`: Slurm primitive example, representative Make commands, and produced artifact lists.
 - `studies.md`: recommended studies, collection roadmaps, or curated reports.
+- `test-plan.md`: executable coverage, HPC replay steps, known gaps, and acceptance criteria for documented commands.
 
 ## Script Roles
 
@@ -23,7 +24,7 @@ Use these roles consistently:
 
 - `render-*`: report or dashboard renderer that reads existing parsed artifacts.
 - `run-*`: allocation-side runner used inside sbatch script or on a compute node directly.
-- `run-*-workload.py`: internal workload engine called by the shell runner, not a top-level public primitive.
+- `run-*-workload.py`: low-level workload engine called by the shell runner, not a top-level public primitive.
 - `submit-*`: host-side Slurm submitter that prints or submits one job or job family.
 - `sweep-*`: host-side matrix submitter for parameter sweeps.
 
@@ -39,9 +40,9 @@ snippets should stay literal and are the only exception.
 ## Fleet Boundary
 
 Explicit fleet submitters are verification-module primitives. GDS uses
-[submit-gds-fleet.sh](../../man/submit-gds-fleet.md), and NCCL uses
-[submit-nccl-fleet.sh](../../man/submit-nccl-fleet.md) for local, RDMA, and
-survey job families. DataLoader and DDP use explicit one-job submitters,
+[run-gds-fleet.sh](../../man/run-gds-fleet.md), and NCCL uses
+[submit-nccl-suite.sh](../../man/submit-nccl-suite.md) for local, RDMA, and
+scale job families. DataLoader and DDP use explicit one-job submitters,
 DataLoader sweeps, and Make campaign shapes instead of standalone fleet
 submitters.
 
