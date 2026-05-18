@@ -25,8 +25,10 @@ each collective, then averages the retained ten samples.
 
 The 31-node run used the B200 RDMA Slurm wrapper with one MPI rank per GPU.
 
+[submit-nccl-suite.sh](../../../../man/submit-nccl-suite.md):
+
 ```bash
-scripts/verify/submit-nccl-fleet.sh \
+scripts/verify/submit-nccl-suite.sh \
   --scope rdma \
   --cluster b200 \
   --profile medium \

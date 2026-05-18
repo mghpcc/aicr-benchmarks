@@ -23,12 +23,12 @@ each node group and collective, then averages the retained ten samples.
 
 ## Command Run
 
-The campaign used `scripts/verify/submit-nccl-fleet.sh` from the
-checkout. Each node group was submitted as a fixed-node RDMA job with one MPI
-rank per GPU.
+Replay the campaign with [submit-nccl-suite.sh](../../../../man/submit-nccl-suite.md)
+from the checkout. Each node group is submitted as a fixed-node RDMA job with
+one MPI rank per GPU.
 
 ```bash
-scripts/verify/submit-nccl-fleet.sh \
+scripts/verify/submit-nccl-suite.sh \
   --scope rdma \
   --cluster rtxpro6000 \
   --profile medium \

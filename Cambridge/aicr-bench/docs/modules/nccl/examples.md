@@ -54,10 +54,10 @@ already spelled out.
 - [slurm-nccl.sbatch](slurm-nccl.sbatch)
 - [b200-nccl-suite-local-1n-8g.sbatch](../../../slurm/verify/b200-nccl-suite-local-1n-8g.sbatch)
 - [b200-nccl-suite-rdma.sbatch](../../../slurm/verify/b200-nccl-suite-rdma.sbatch)
-- [b200-nccl-suite-survey.sbatch](../../../slurm/verify/b200-nccl-suite-survey.sbatch)
+- [b200-nccl-suite-scale.sbatch](../../../slurm/verify/b200-nccl-suite-scale.sbatch)
 - [rtxpro6000-nccl-suite-local-1n-8g.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-local-1n-8g.sbatch)
 - [rtxpro6000-nccl-suite-rdma.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-rdma.sbatch)
-- [rtxpro6000-nccl-suite-survey.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-survey.sbatch)
+- [rtxpro6000-nccl-suite-scale.sbatch](../../../slurm/verify/rtxpro6000-nccl-suite-scale.sbatch)
 
 ## Using the Make Interface
 
@@ -76,7 +76,7 @@ expect:
     - "Dry run"
 -->
 ```bash
-make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0001
+make verify-nccl-suite NCCL_SCOPE=local CLUSTER=b200 PROFILE=small NODELIST=b0002
 ```
 
 Artifacts produced after `APPLY=1`:
@@ -88,8 +88,21 @@ Artifacts produced after `APPLY=1`:
 
 ### RDMA Group Preview
 
+<!-- aicr-test
+id: nccl-example-rdma-preview
+suite: nccl
+kind: slurm-dry-run
+safety: dry-run
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "scope=rdma"
+    - "rtxpro6000"
+    - "--nodes=4"
+-->
 ```bash
-make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001,a0002,a0003,a0004 NCCL_NODES_PER_JOB=4
+make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0002,a0003,a0004,a0005 NCCL_NODES_PER_JOB=4
 ```
 
 Artifacts produced after `APPLY=1`:

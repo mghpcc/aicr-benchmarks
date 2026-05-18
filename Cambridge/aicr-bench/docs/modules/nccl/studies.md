@@ -3,7 +3,10 @@
 Purpose: list NCCL studies and their artifact bundles.
 
 One-node communication checks use local mode. RDMA studies compare explicit
-multi-node groups.
+multi-node groups. The May 12 RDMA ladder pages are reviewed historical study
+outputs from an earlier fixed-group workflow; the current standard public
+submitter is [submit-nccl-suite.sh](../../../man/submit-nccl-suite.md), with
+scale campaign replay documented in [Test plan](test-plan.md).
 
 ## B200 Studies
 
