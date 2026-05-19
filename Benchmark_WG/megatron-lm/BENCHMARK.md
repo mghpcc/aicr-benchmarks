@@ -18,6 +18,33 @@ bash submit.sh
 
 This submits the full benchmark matrix: 1–16 GPUs (1–2 nodes) on both RTX-6000 (GPU1 partition) and B200 (GPU2 partition).
 
+## Per-node sweep
+
+To sweep every node in `nodes.rtx6000` and/or `nodes.b200`, use `submit_loop.sh` (it calls `job_all.sh`, the universal job script that fixes the 2-node sub-allocation hang).
+
+**Arguments**
+
+| Position | Name            | Required | Default  | Description                                          |
+|----------|-----------------|----------|----------|------------------------------------------------------|
+| `$1`     | `gpu_type`      | no       | `all`    | `rtx6000`, `b200`, or `all` (submit to one or both)  |
+| `$2`     | `gpus_per_node` | no       | `8`      | GPUs per node for every submitted job                |
+| `$3`     | `output_dir`    | no       | `output` | Directory for sbatch stdout (`out.<hostname>-<jobid>`) |
+
+GBS scales automatically: `128 × gpus_per_node` for 1-node jobs, `128 × 2 × gpus_per_node` for 2-node jobs.
+
+**Usage**
+
+```bash
+bash submit_loop.sh                          # both GPU types, 8 GPUs/node, logs to ./output/
+bash submit_loop.sh rtx6000                  # RTX-6000 only, 8 GPUs/node
+bash submit_loop.sh b200 4                   # B200 only, 4 GPUs/node
+bash submit_loop.sh all 8 output-all         # both, 8 GPUs/node, logs to ./output-all/
+```
+
+The script reads node lists from `/home/shaohao_mit/benchmarks/nodes.rtx6000` and `/home/shaohao_mit/benchmarks/nodes.b200` and submits, per selected GPU type:
+- one `1 node × N GPUs` job pinned to each node (`-w <node>`), and
+- one `2 nodes × N GPUs/node` job per non-overlapping pair (`-w <n1>,<n2>`).
+
 ## Submitting a single job
 
 ```bash

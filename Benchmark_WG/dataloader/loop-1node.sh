@@ -1,7 +1,8 @@
 FLAGS="-N 1 --mem-per-cpu=4G --exclusive"
 
 for mode in read write; do
-   for ncpus in 1 8 32 64 96; do
+   #for ncpus in 1 8 32 64 96; do
+   for ncpus in 128; do
        for part in GPU1 GPU2; do
           TAG="1node_${ncpus}cpu_${part}"
           mkdir -p "output/$TAG"
