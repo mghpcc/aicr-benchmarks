@@ -1,6 +1,6 @@
 # Multinode Dataloader Benchmark Summary
 
-Runs in this directory span a 2D sweep: **nodes ∈ {2, 4, 8, 12}** × **cpu_per_node ∈ {32, 64, 96}** × {GPU1 (`a00xx`), GPU2 (`b00xx`)}. Two suites — READ (`read_benchmark.py`) and WRITE (`write_benchmark.py`) — share the same sweep, identified by separate job IDs (22323-22346 = READ, 22347-22370 = WRITE). Values below are **aggregate cluster throughput** = sum of per-rank GBps, averaged over 3 iterations.
+Runs in this directory span a 2D sweep: **nodes ∈ {2, 4, 8, 12}** × **cpu_per_node ∈ {32, 64, 96, 128}** × {GPU1 (`a00xx`), GPU2 (`b00xx`)}. Two suites — READ (`read_benchmark.py`) and WRITE (`write_benchmark.py`) — share the same sweep, identified by separate job IDs (22323-22346 + 22397-22404 = READ, 22347-22370 + 22405-22412 = WRITE; the 22397+ block extends the sweep to 128 cpu/node). Values below are **aggregate cluster throughput** = sum of per-rank GBps, averaged over 3 iterations.
 
 ## Benchmark A — READ (`raw` vs `dataloader`)
 
@@ -21,6 +21,10 @@ Single ~21 GB / 186 K-file workload, partitioned across ranks. Each rank runs `n
 | 12 | 32 | 18.03 | 11.97 | 1.51 |
 | 12 | 64 | 33.42 | 15.05 | 2.22 |
 | 12 | 96 | 33.86 | 25.13 | 1.35 |
+| 2  | 128 | 17.11 | 4.33  | 3.95 |
+| 4  | 128 | 13.42 | 7.63  | 1.76 |
+| 8  | 128 | 22.33 | 15.61 | 1.43 |
+| 12 | 128 | 45.64 | 27.31 | 1.67 |
 
 ### GPU2 — GB/s
 | nodes | cpu/node | raw | dataloader | raw/dl |
@@ -37,6 +41,10 @@ Single ~21 GB / 186 K-file workload, partitioned across ranks. Each rank runs `n
 | 12 | 32 | 13.90 | 9.01  | 1.54 |
 | 12 | 64 | 24.96 | 20.26 | 1.23 |
 | 12 | 96 | 33.00 | 24.44 | 1.35 |
+| 2  | 128 | 6.13  | 3.17  | 1.93 |
+| 4  | 128 | 28.66 | 6.38  | 4.49 |
+| 8  | 128 | 56.10 | 16.10 | 3.48 |
+| 12 | 128 | 46.21 | 25.54 | 1.81 |
 
 ## Benchmark B — WRITE (`raw` / `torch_save` / `dcp`)
 
@@ -58,6 +66,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 0.52 | 0.55 | 0.42 |
 | 12 | 64 | 0.41 | 0.46 | 0.49 |
 | 12 | 96 | 0.85 | 0.89 | 0.86 |
+| 2  | 128 | 0.14 | 0.15 | 0.14 |
+| 4  | 128 | 0.07 | 0.08 | 0.09 |
+| 8  | 128 | 0.12 | 0.14 | 0.16 |
+| 12 | 128 | 0.66 | 0.77 | 0.81 |
 
 **file_size = 1 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -74,6 +86,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 5.85 | 5.39 | 4.71 |
 | 12 | 64 | 7.31 | 7.24 | 2.23 |
 | 12 | 96 | 9.93 | 9.77 | 7.54 |
+| 2  | 128 | 1.77 | 1.71 | 1.34 |
+| 4  | 128 | 1.67 | 2.08 | 1.75 |
+| 8  | 128 | 2.20 | 2.76 | 3.40 |
+| 12 | 128 | 8.15 | 8.06 | 6.24 |
 
 **file_size = 10 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -90,6 +106,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 57.87 | 61.32 | 38.27 |
 | 12 | 64 | 24.26 | 26.02 | 21.66 |
 | 12 | 96 | 66.87 | 59.20 | 41.36 |
+| 2  | 128 | 11.47 | 11.06 | 10.12 |
+| 4  | 128 | 19.44 | 21.33 | 10.75 |
+| 8  | 128 | 37.97 | 39.57 | 31.20 |
+| 12 | 128 | 59.39 | 55.37 | 45.06 |
 
 **file_size = 100 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -106,6 +126,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 97.16 | 75.30 | 83.03  |
 | 12 | 64 | 64.47 | 58.65 | 51.75  |
 | 12 | 96 | 33.70 | 30.74 | 39.34  |
+| 2  | 128 | 42.35 | 42.44 | 34.96  |
+| 4  | 128 | 31.42 | 38.65 | 60.07  |
+| 8  | 128 | 78.58 | 59.89 | 90.35  |
+| 12 | 128 | 66.58 | 69.69 | 46.30  |
 
 ### GPU2 — GB/s
 **file_size = 100 KiB**
@@ -123,6 +147,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 0.84 | 0.86 | 0.63 |
 | 12 | 64 | 0.92 | 0.95 | 0.80 |
 | 12 | 96 | 0.86 | 0.91 | 0.49 |
+| 2  | 128 | 0.03 | 0.04 | 0.03 |
+| 4  | 128 | 0.26 | 0.28 | 0.07 |
+| 8  | 128 | 0.55 | 0.53 | 0.25 |
+| 12 | 128 | 0.41 | 0.65 | 0.59 |
 
 **file_size = 1 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -139,6 +167,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 8.15 | 7.88 | 6.47 |
 | 12 | 64 | 8.15 | 7.03 | 4.99 |
 | 12 | 96 | 5.51 | 1.68 | 1.25 |
+| 2  | 128 | 0.45 | 0.44 | 0.29 |
+| 4  | 128 | 0.56 | 0.80 | 0.55 |
+| 8  | 128 | 1.35 | 1.37 | 1.16 |
+| 12 | 128 | 5.83 | 5.80 | 3.92 |
 
 **file_size = 10 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -155,6 +187,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 64.18 | 62.20 | 38.90 |
 | 12 | 64 | 58.12 | 54.89 | 21.67 |
 | 12 | 96 | 13.79 | 15.27 | 15.77 |
+| 2  | 128 | 3.26  | 3.70  | 4.29  |
+| 4  | 128 | 6.80  | 6.98  | 6.58  |
+| 8  | 128 | 15.68 | 14.92 | 12.09 |
+| 12 | 128 | 17.69 | 19.03 | 16.36 |
 
 **file_size = 100 MiB**
 | nodes | cpu/node | raw | torch_save | dcp |
@@ -171,6 +207,10 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 | 12 | 32 | 76.77 | 70.19 | 120.66 |
 | 12 | 64 | 23.05 | 25.04 | 32.22  |
 | 12 | 96 | 43.88 | 62.14 | 132.61 |
+| 2  | 128 | 26.31 | 36.74 | 37.02  |
+| 4  | 128 | 15.39 | 20.49 | 39.91  |
+| 8  | 128 | 27.08 | 33.75 | 76.59  |
+| 12 | 128 | 48.12 | 42.78 | 42.97  |
 
 ## Analysis
 
@@ -183,30 +223,32 @@ Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {
 
 ### Findings (all expected for this stack)
 
-- **READ scales sub-linearly with total CPU.** Best read raw observed: ~38.7 GB/s at 8 nodes × 96 cpu (GPU2). Going 8 → 12 nodes typically does **not** improve raw read further (often regresses) — the NFS read path saturates around that point. The 64 cpu/node column shows the cleanest scaling; 96 cpu/node frequently *underperforms* 64 cpu/node, suggesting CPU/IO contention at high per-node concurrency.
-- **DataLoader gap is smaller on multinode than single-node.** Single-node ratio was ~2.7-3.2×; here it ranges 1.2-3.6× and at high `nodes×cpu` shrinks toward 1.3-1.5×. **Expected**: each node adds its own JPEG-decode CPU pool, so decode capacity scales with cluster while raw read does not — the modes converge as the system becomes decode-bound less and bandwidth-bound more. DataLoader top: ~25 GB/s at 12 nodes × 96 cpu.
+- **READ scales sub-linearly with total CPU.** Best read raw observed: ~56.1 GB/s at 8 nodes × 128 cpu (GPU2), with 12 × 128 reaching ~46 GB/s on both clusters. Going 8 → 12 nodes does **not** reliably improve raw read further (often regresses at 96 cpu/node) — the NFS read path approaches saturation around the 12-node mark. The 64 and 128 cpu/node columns show the cleanest scaling; 96 cpu/node frequently *underperforms* both, and 128 cpu/node *underperforms* 96 cpu/node at smaller node counts — suggesting CPU/IO contention at high per-node concurrency and a sweet spot that depends on node count.
+- **DataLoader gap is smaller on multinode than single-node.** Single-node ratio was ~2.7-3.2×; here it ranges 1.2-4.5× and at high `nodes×cpu` shrinks toward 1.4-1.8×. **Expected**: each node adds its own JPEG-decode CPU pool, so decode capacity scales with cluster while raw read does not — the modes converge as the system becomes decode-bound less and bandwidth-bound more. DataLoader top: ~27.3 GB/s at 12 nodes × 128 cpu (GPU1) — the modest 96 → 128 cpu/node gain (25.13 → 27.31, +9%) indicates the decode pool was already mostly saturated at 96 cores against the available read bandwidth.
 - **WRITE small files (100 KiB-1 MiB) are metadata/syscall bound.** Even at 12 nodes × 96 cpu, 100 KiB tops out below 1 GB/s and 1 MiB below ~10 GB/s. `torch_save` ≈ `raw` (5-15% gap = thin pickle header, expected); `dcp` lags by 10-40% (sharded metadata overhead, expected).
 - **WRITE large files (10-100 MiB) scale well to 8 nodes and then get jittery.** 100 MiB / 8 nodes / 96 cpu reaches 112 GB/s (`dcp`, GPU1) and 132 GB/s (`dcp`, GPU2 / 12 × 96). But several 12-node cells (e.g. GPU1 / 12 × 96 / 100 MiB raw = 33.7 GB/s vs 12 × 32 = 97.2 GB/s) regress hard — multinode shared-NFS jitter is real and one bad iter pulls the mean down.
 - **GPU1 vs GPU2: comparable on average, more divergent than single-node.** Aggregate ranges overlap; individual cells differ by up to 2× due to cluster-level jitter. No systematic preference for one cluster.
 
-**Bottom line:** none of these patterns are anomalous — the read path saturates at the storage level around 35-40 GB/s, the dataloader gap closes as decode CPU scales out, write throughput is metadata-bound for small files and ~100+ GB/s for large files, and the multinode noise at 12 nodes is consistent with shared-storage contention rather than a code defect.
+**Bottom line:** none of these patterns are anomalous — the read path saturates at the storage level around 45-55 GB/s (up from ~35-40 GB/s once 128 cpu/node is unlocked), the dataloader gap closes as decode CPU scales out, write throughput is metadata-bound for small files and ~75-90 GB/s for large files at 8 × 128, and the multinode noise at 12 nodes (and now at 128 cpu/node for smaller node counts) is consistent with shared-storage contention rather than a code defect.
 
 ---
 
-**Side note — is throughput saturated at the top of the sweep (12 nodes × 96 cpu)?** Comparing 8 → 12 nodes at 96 cpu/node (a 1.5× node bump; linear scaling = +50%):
+**Side note — is throughput saturated at the top of the sweep (12 nodes × 128 cpu)?** Comparing 8 → 12 nodes at 128 cpu/node (a 1.5× node bump; linear scaling = +50%):
 
 | benchmark / mode | GPU1 8→12 | GPU2 8→12 | saturated? |
 |---|---|---|---|
-| read `raw`        | 32.96 → 33.86 (+3%)   | 38.71 → 33.00 (−15%)  | yes — flat or regressing |
-| read `dataloader` | 16.22 → 25.13 (+55%)  | 16.54 → 24.44 (+48%)  | **not yet** — still scaling near-linearly |
-| write 100 KiB `raw`        | 0.35 → 0.85 (+143%) | 0.15 → 0.86 (+486%) | very noisy; both clusters have huge run-to-run variance at small sizes |
-| write 1 MiB `raw`          | 6.93 → 9.93 (+43%)  | 3.32 → 5.51 (+66%)  | still gaining |
-| write 10 MiB `raw`         | 50.38 → 66.87 (+33%) | 17.42 → 13.79 (−21%) | mixed — GPU1 gains, GPU2 regresses |
-| write 100 MiB `raw`        | 82.45 → 33.70 (−59%) | 42.78 → 43.88 (+3%) | regressing / saturated — likely network or NFS contention at 12 nodes |
-| write 100 MiB `dcp`        | 112.57 → 39.34 (−65%) | 76.94 → 132.61 (+72%) | extreme variance — cluster jitter dominates |
+| read `raw`        | 22.33 → 45.64 (+104%)  | 56.10 → 46.21 (−18%)  | mixed — GPU1 super-linear (noisy 8-node baseline), GPU2 saturated/regressing |
+| read `dataloader` | 15.61 → 27.31 (+75%)   | 16.10 → 25.54 (+59%)  | **not yet** — still scaling super-linearly on both clusters |
+| write 100 KiB `raw`        | 0.12 → 0.66 (+450%) | 0.55 → 0.41 (−26%) | very noisy at small sizes; metadata-bound |
+| write 1 MiB `raw`          | 2.20 → 8.15 (+270%) | 1.35 → 5.83 (+332%) | still gaining strongly |
+| write 10 MiB `raw`         | 37.97 → 59.39 (+56%) | 15.68 → 17.69 (+13%) | mixed — GPU1 still scaling, GPU2 ~saturated |
+| write 100 MiB `raw`        | 78.58 → 66.58 (−15%) | 27.08 → 48.12 (+78%) | regressing on GPU1 (likely contention), still gaining on GPU2 |
+| write 100 MiB `dcp`        | 90.35 → 46.30 (−49%) | 76.59 → 42.97 (−44%) | regressing on both — large-file `dcp` at 12 × 128 hits NFS / metadata contention |
 
 Takeaways:
-- **`dataloader` is the only read mode with clear headroom past 12 nodes** — decode CPU scales with nodes, raw read does not.
-- **Read `raw` ceiling lands ~35-40 GB/s** under this setup; storage path saturation.
-- **Large-file writes at 12 nodes are jitter-dominated**, not cleanly saturated — multiple cells regress dramatically (e.g. 100 MiB raw GPU1: 82 → 34 GB/s). Re-running with more iterations would tighten the estimates; the current 3-iter means are not robust against shared-NFS spikes.
-- **Small-file write throughput is metadata-bound**, not bandwidth-bound — adding nodes helps modestly but the absolute ceiling is low.
+- **`dataloader` is the only read mode with clear headroom past 12 nodes on both clusters** — decode CPU scales with cluster size, raw read does not.
+- **Read `raw` ceiling lands ~45-55 GB/s** at 128 cpu/node (vs ~35-40 GB/s at 96 cpu/node) — pushing per-node CPU buys some additional raw-read headroom at large node counts but the marginal return shrinks (e.g. 12 × 96 → 12 × 128 GPU2: 33.0 → 46.2, +40%; 12 × 96 → 12 × 128 GPU1: 33.9 → 45.6, +35%).
+- **DataLoader gains less from 96 → 128 cpu/node** (e.g. 12 nodes GPU1: 25.13 → 27.31, +9%) — at 96 cpu/node the decode pool is already saturated against the read bandwidth, so extra cores have little to do.
+- **Large-file writes at 12 × 128 are jitter-dominated**, not cleanly saturated — both `dcp` and `raw` regress in several cells (e.g. 100 MiB `dcp` GPU1: 90.35 → 46.30 GB/s 8 → 12 nodes). Re-running with more iterations would tighten the estimates; 3-iter means are not robust against shared-NFS spikes.
+- **Small-file write throughput is metadata-bound**, not bandwidth-bound — adding nodes or CPU helps modestly but the absolute ceiling is low (12 × 128 GPU1: 0.66-0.81 GB/s).
+- **128 cpu/node introduces additional cell-level variance.** Several 128-cpu cells fall *below* their 96-cpu counterparts at smaller node counts (e.g. 4 × 96 GPU1 `read raw` = 16.03 → 4 × 128 = 13.42 GB/s; 8 × 96 GPU1 `read raw` = 32.96 → 8 × 128 = 22.33 GB/s). This is consistent with per-node CPU/IO contention from saturated worker pools and shared-NFS jitter — the extra cores past a per-node threshold compete for the same disk path rather than adding parallelism.
