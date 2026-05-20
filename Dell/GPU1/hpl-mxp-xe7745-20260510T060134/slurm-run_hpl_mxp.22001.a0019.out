@@ -1,0 +1,626 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-05-18T12:59:31
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-05-18T12:59:31
++++ scontrol show hostname
+++ echo a0019
++ echo 'Running on hosts: a0019'
+Running on hosts: a0019
++ echo 2026-05-18T12:59:31
+2026-05-18T12:59:31
++ export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ export NCCL_BUFFSIZE=4194304
++ NCCL_BUFFSIZE=4194304
++ export NCCL_P2P_DISABLE=1
++ NCCL_P2P_DISABLE=1
++ export CUDA_P2P_LEVEL=0
++ CUDA_P2P_LEVEL=0
++ export UCX_TLS=self,shm,cuda_copy
++ UCX_TLS=self,shm,cuda_copy
++ N_SIZE=430080
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurm/slurmd /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 430080 --nb 2048 --nporder row --nprow 4 --npcol 2
+[a0019:51723] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51628] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51635] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51726] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51578] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51588] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51700] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[a0019:51703] PMIX ERROR: ERROR in file gds_ds12_lock_pthread.c at line 168
+[1779123575.916351] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.916373] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.916592] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916604] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916697] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916707] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916773] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916782] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916848] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916857] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916922] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916931] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916990] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.916999] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931278] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931300] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931493] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931504] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931572] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.931582] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.931628] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.931637] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.931684] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931693] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931737] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931747] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931789] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.931798] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935275] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935297] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935361] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935383] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935418] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935440] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935475] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935500] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935510] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935521] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935593] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935604] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935605] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935616] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935661] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935669] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935672] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935678] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935696] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935705] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935710] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935720] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935741] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935751] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935763] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935772] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935786] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935797] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935805] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935812] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935815] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935825] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935835] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935847] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935869] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935878] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935879] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935886] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935887] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935897] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935915] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935924] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935953] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935957] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935966] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.935963] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935979] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.935989] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.936046] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.936044] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.936057] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.936056] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.936125] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.936132] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.936135] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.936142] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.937939] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.937960] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.937955] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.937978] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938182] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938193] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938199] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938209] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938273] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938283] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938301] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938311] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938343] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938353] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938378] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938387] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938415] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938424] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938453] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938462] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938491] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938500] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938533] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938542] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938559] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938568] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/51 flags=0x0) failed: Permission denied
+[1779123575.938606] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123575.938616] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/54 flags=0x0) failed: Permission denied
+[1779123576.074088] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074095] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074102] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074090] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074098] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074094] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074102] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074092] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074100] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074107] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074111] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074097] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074104] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074111] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074114] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074117] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074106] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074108] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074121] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074095] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074103] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074110] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074113] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074117] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074099] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074107] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074116] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074120] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074124] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074106] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074111] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074115] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074128] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074109] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074114] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074118] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074132] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074116] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074129] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074134] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074140] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074146] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074148] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074151] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074129] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074131] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074136] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.074162] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568771] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568781] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568786] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568790] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568793] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.568812] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569487] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569496] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569502] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569505] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569508] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.569527] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570828] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570839] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570845] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570848] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570852] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570871] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570919] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570923] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570927] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570929] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570932] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570942] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570971] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570981] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570987] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570989] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.570994] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571015] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571168] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571172] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571177] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571179] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571181] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571191] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+
+================================================================================
+HPL-MxP-NVIDIA 25.9.0  -- NVIDIA accelerated HPL-MxP benchmark benchmark -- NVIDIA
+================================================================================
+
+ ****** HPL MxP Settings ****** 
+
+   --nprow =  4 
+   --npcol =  2 
+   --order = row 
+   --n     = 430080 
+   --nb    = 2048 
+   --tolerance                        = 1.000000e-12 
+   --test-loop                        = 1 
+   --preset-gemm-kernel               = 120 
+   --u-panel-chunk-nbs                = 8 
+   --call-dgemv-with-multiple-threads = 0 
+   --prioritize-trsm                  = 0 
+   --prioritize-factorization         = 0 
+   --use-separate-stream-for-gemm     = 1 
+   --use-mpi-panel-broadcast          = 50 
+   --mpi-use-host-threads             = 1 
+   --sloppy-type                      = FP16 
+   --Anq-device                       = 0 
+   --cuda-host-register-step          = 2048 
+   --mpi-use-mpi                      = 0 
+   --use-host-mpi                     = 0 
+   --fill-device                      = 0 
+   --fill-device-buffer-size          = 3048 
+   --fp4-scaling-factor-a             = 1.000000e-05 
+
+
+
+ ****** Monitor GPU Settings ****** 
+
+   --monitor-gpu                      = 0 
+
+
+[1779123576.571215] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571224] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571229] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571231] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571234] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571252] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571395] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571399] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571403] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571406] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571410] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571420] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571446] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571449] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571445] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571448] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571452] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571455] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571454] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571457] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571459] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571447] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571457] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571463] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571465] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571459] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571468] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571468] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571470] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571488] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571520] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571530] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571534] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571537] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571533] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571537] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571543] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571538] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571540] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571544] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571542] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571545] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571547] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571547] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571550] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571557] [a0019:51700:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571560] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571564] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51578/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571610] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571613] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571618] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571620] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571623] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571632] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571650] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571659] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571664] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571667] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571665] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571667] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571670] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571664] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571666] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571670] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571672] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571671] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571673] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571675] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571674] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571683] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571684] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571688] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571734] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571737] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571733] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571736] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571740] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571741] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571743] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571742] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571745] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571746] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571757] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.571754] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572223] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572228] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572232] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572223] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572228] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572232] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572234] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572237] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572226] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572231] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572235] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572237] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572240] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572235] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572238] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572248] [a0019:51578:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51700/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572247] [a0019:51588:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51703/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572230] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572235] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572240] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572243] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572245] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572255] [a0019:51628:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51723/fd/60 flags=0x0) failed: Permission denied
+[1779123576.572250] [a0019:51635:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51726/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891544] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891558] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891563] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891565] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891567] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+[1779123590.891586] [a0019:51726:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51635/fd/60 flags=0x0) failed: Permission denied
+
+ ****** test 1 of 1 starts ****** 
+
+   n      = 430080
+   nb     = 2048
+   nprow  = 4
+   npcol  = 2
+
+Device info:
+	Peak clock frequency 2430 MHz
+	SM 120
+	Number of SMs 188
+	Total memory available 94.97 GB
+
+---------------------------------------------------------------------------------------------
+[34m Per process host memory consumption MAX = 173.912 GB, available MIN = 278.484 GB[0m
+---------------------------------------------------------------------------------------------
+
+---------------------------------------------------------------------------------------------
+[34m Per process device memory consumption MAX = 92.776 GB, available MIN = 94.221 GB[0m
+---------------------------------------------------------------------------------------------
+
+Constructor seconds: AVG = 0.04, MAX = 0.04 (1->a0019), MIN = 0.04 (2->a0019)
+
+
+ ****** Testing HPL MxP components ****** 
+
+GEMM seconds: AVG = 13.44, MAX = 13.65 (0->a0019), MIN = 13.21 (4->a0019)
+
+GEMM GFLOPS: AVG = 352266.62, MAX = 355100.43 (4->a0019), MIN = 350150.68 (0->a0019)
+
+[1779123590.892131] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.892143] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.892149] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.892151] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.892154] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.892173] [a0019:51723:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51628/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908556] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908570] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908576] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908579] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908583] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+[1779123590.908606] [a0019:51703:0]        mm_posix.c:238  UCX  ERROR   open(file_name=/proc/51588/fd/60 flags=0x0) failed: Permission denied
+MPI U broadcast seconds: AVG = 0.31, MAX = 0.32 (2->a0019), MIN = 0.30 (7->a0019)
+
+MPI U broadcast GFLOPS: AVG = 21.80, MAX = 22.15 (7->a0019), MIN = 20.87 (2->a0019)
+
+MPI U broadcast seconds: AVG = 0.21, MAX = 0.22 (0->a0019), MIN = 0.21 (1->a0019)
+
+MPI U broadcast GFLOPS: AVG = 31.23, MAX = 31.56 (1->a0019), MIN = 30.91 (0->a0019)
+
+NCCL U broadcast seconds: AVG = 0.23, MAX = 0.23 (0->a0019), MIN = 0.23 (3->a0019)
+
+NCCL U broadcast GFLOPS: AVG = 28.86, MAX = 28.95 (3->a0019), MIN = 28.76 (0->a0019)
+
+MPI U Sendrecv seconds: AVG = 0.21, MAX = 0.22 (6->a0019), MIN = 0.21 (5->a0019)
+
+MPI U Sendrecv GFLOPS: AVG = 31.25, MAX = 31.55 (5->a0019), MIN = 30.96 (6->a0019)
+
+MPI L2 broadcast seconds: AVG = 2.35, MAX = 2.38 (1->a0019), MIN = 2.31 (4->a0019)
+
+MPI L2 broadcast GFLOPS: AVG = 37.49, MAX = 37.80 (4->a0019), MIN = 37.32 (1->a0019)
+
+NCCL L2 broadcast seconds: AVG = 1.28, MAX = 1.31 (0->a0019), MIN = 1.24 (7->a0019)
+
+NCCL L2 broadcast GFLOPS: AVG = 34.46, MAX = 35.29 (7->a0019), MIN = 34.00 (4->a0019)
+
+MPI L2 Sendrecv seconds: AVG = 2.35, MAX = 2.38 (1->a0019), MIN = 2.31 (4->a0019)
+
+MPI L2 Sendrecv GFLOPS: AVG = 37.46, MAX = 37.80 (4->a0019), MIN = 37.29 (1->a0019)
+
+pdgemv seconds: AVG = 2.09, MAX = 2.22 (7->a0019), MIN = 1.91 (2->a0019)
+
+pdgemv GFLOPS: AVG = 22.18, MAX = 24.44 (2->a0019), MIN = 20.65 (7->a0019)
+
+
+ ****** Matrix Generation ****** 
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 277.886 GB, device = 1.369 GB[0m
+---------------------------------------------------------------------------------------------
+
+RNG seconds: AVG = 93.18, MAX = 96.51 (2->a0019), MIN = 86.68 (4->a0019)
+
+Set Diagonal seconds: AVG = 0.00, MAX = 0.00 (7->a0019), MIN = 0.00 (6->a0019)
+
+Get Anorm seconds: AVG = 0.04, MAX = 0.05 (4->a0019), MIN = 0.04 (3->a0019)
+
+---------------------------------------------------------------------------------------------
+[34m Per process memory available MIN system = 105.649 GB, device = 1.369 GB[0m
+---------------------------------------------------------------------------------------------
+
+Sp seconds: AVG = 16.31, MAX = 16.31 (5->a0019), MIN = 16.31 (7->a0019)
+
+matgen seconds: AVG = 112.88, MAX = 112.88 (0->a0019), MIN = 112.88 (7->a0019)
+
+
+ ****** test loop 1 of 1 starts ****** 
+
+2026-05-18 17:01:53.425
+[0;31m Prog=   4.22% N_left=   423936 Time=     0.90 Time_left=      20.44 iTF=    2484.99 TF=  2484.99 iTF_per=   310.62 TF_per=   310.62[0m
+[0;31m Prog=   5.61% N_left=   421888 Time=     1.16 Time_left=      19.61 iTF=    2784.79 TF=  2552.70 iTF_per=   348.10 TF_per=   319.09[0m
+[0;31m Prog=   6.97% N_left=   419840 Time=     1.42 Time_left=      18.98 iTF=    2807.69 TF=  2599.00 iTF_per=   350.96 TF_per=   324.88[0m
+[0;31m Prog=   8.33% N_left=   417792 Time=     1.67 Time_left=      18.43 iTF=    2860.71 TF=  2638.26 iTF_per=   357.59 TF_per=   329.78[0m
+[0;31m Prog=   9.67% N_left=   415744 Time=     1.92 Time_left=      17.92 iTF=    2917.04 TF=  2673.71 iTF_per=   364.63 TF_per=   334.21[0m
+[0;31m Prog=  11.00% N_left=   413696 Time=     2.18 Time_left=      17.61 iTF=    2725.50 TF=  2679.86 iTF_per=   340.69 TF_per=   334.98[0m
+[0;31m Prog=  12.31% N_left=   411648 Time=     2.44 Time_left=      17.37 iTF=    2661.99 TF=  2677.94 iTF_per=   332.75 TF_per=   334.74[0m
+[0;31m Prog=  13.62% N_left=   409600 Time=     2.66 Time_left=      16.90 iTF=    3067.18 TF=  2710.84 iTF_per=   383.40 TF_per=   338.85[0m
+[0;31m Prog=  14.91% N_left=   407552 Time=     2.92 Time_left=      16.69 iTF=    2629.02 TF=  2703.56 iTF_per=   328.63 TF_per=   337.95[0m
+[0;31m Prog=  16.18% N_left=   405504 Time=     3.18 Time_left=      16.47 iTF=    2653.33 TF=  2699.53 iTF_per=   331.67 TF_per=   337.44[0m
+[0;31m Prog=  17.45% N_left=   403456 Time=     3.40 Time_left=      16.10 iTF=    3002.12 TF=  2719.38 iTF_per=   375.27 TF_per=   339.92[0m
+[0;31m Prog=  18.70% N_left=   401408 Time=     3.64 Time_left=      15.81 iTF=    2830.58 TF=  2726.55 iTF_per=   353.82 TF_per=   340.82[0m
+[0;31m Prog=  19.93% N_left=   399360 Time=     3.86 Time_left=      15.52 iTF=    2885.41 TF=  2735.90 iTF_per=   360.68 TF_per=   341.99[0m
+[0;31m Prog=  21.16% N_left=   397312 Time=     4.11 Time_left=      15.31 iTF=    2659.73 TF=  2731.37 iTF_per=   332.47 TF_per=   341.42[0m
+[0;31m Prog=  22.37% N_left=   395264 Time=     4.33 Time_left=      15.02 iTF=    2920.65 TF=  2741.00 iTF_per=   365.08 TF_per=   342.63[0m
+[0;31m Prog=  23.57% N_left=   393216 Time=     4.55 Time_left=      14.77 iTF=    2816.70 TF=  2744.76 iTF_per=   352.09 TF_per=   343.10[0m
+[0;31m Prog=  24.76% N_left=   391168 Time=     4.77 Time_left=      14.50 iTF=    2882.08 TF=  2751.05 iTF_per=   360.26 TF_per=   343.88[0m
+[0;31m Prog=  25.94% N_left=   389120 Time=     5.01 Time_left=      14.30 iTF=    2650.86 TF=  2746.34 iTF_per=   331.36 TF_per=   343.29[0m
+[0;31m Prog=  27.10% N_left=   387072 Time=     5.22 Time_left=      14.04 iTF=    2916.30 TF=  2753.23 iTF_per=   364.54 TF_per=   344.15[0m
+[0;31m Prog=  29.39% N_left=   382976 Time=     5.65 Time_left=      13.57 iTF=    2845.46 TF=  2760.20 iTF_per=   355.68 TF_per=   345.03[0m
+[0;31m Prog=  30.52% N_left=   380928 Time=     5.87 Time_left=      13.37 iTF=    2643.88 TF=  2755.73 iTF_per=   330.49 TF_per=   344.47[0m
+[0;31m Prog=  31.63% N_left=   378880 Time=     6.08 Time_left=      13.13 iTF=    2913.45 TF=  2760.99 iTF_per=   364.18 TF_per=   345.12[0m
+[0;31m Prog=  32.73% N_left=   376832 Time=     6.28 Time_left=      12.91 iTF=    2807.13 TF=  2762.52 iTF_per=   350.89 TF_per=   345.32[0m
+[0;31m Prog=  33.82% N_left=   374784 Time=     6.49 Time_left=      12.69 iTF=    2878.37 TF=  2766.11 iTF_per=   359.80 TF_per=   345.76[0m
+[0;31m Prog=  34.90% N_left=   372736 Time=     6.70 Time_left=      12.50 iTF=    2639.16 TF=  2762.01 iTF_per=   329.89 TF_per=   345.25[0m
+[0;31m Prog=  35.97% N_left=   370688 Time=     6.90 Time_left=      12.28 iTF=    2909.56 TF=  2766.17 iTF_per=   363.69 TF_per=   345.77[0m
+[0;31m Prog=  37.03% N_left=   368640 Time=     7.10 Time_left=      12.07 iTF=    2805.32 TF=  2767.27 iTF_per=   350.66 TF_per=   345.91[0m
+[0;31m Prog=  38.07% N_left=   366592 Time=     7.29 Time_left=      11.86 iTF=    2874.85 TF=  2770.11 iTF_per=   359.36 TF_per=   346.26[0m
+[0;31m Prog=  39.10% N_left=   364544 Time=     7.50 Time_left=      11.68 iTF=    2627.22 TF=  2766.14 iTF_per=   328.40 TF_per=   345.77[0m
+[0;31m Prog=  40.12% N_left=   362496 Time=     7.68 Time_left=      11.47 iTF=    2907.84 TF=  2769.57 iTF_per=   363.48 TF_per=   346.20[0m
+[0;31m Prog=  41.13% N_left=   360448 Time=     7.87 Time_left=      11.27 iTF=    2798.20 TF=  2770.27 iTF_per=   349.78 TF_per=   346.28[0m
+[0;31m Prog=  42.13% N_left=   358400 Time=     8.06 Time_left=      11.07 iTF=    2870.94 TF=  2772.57 iTF_per=   358.87 TF_per=   346.57[0m
+[0;31m Prog=  43.12% N_left=   356352 Time=     8.26 Time_left=      10.90 iTF=    2618.61 TF=  2768.85 iTF_per=   327.33 TF_per=   346.11[0m
+[0;31m Prog=  44.09% N_left=   354304 Time=     8.44 Time_left=      10.70 iTF=    2908.35 TF=  2771.79 iTF_per=   363.54 TF_per=   346.47[0m
+[0;31m Prog=  45.06% N_left=   352256 Time=     8.62 Time_left=      10.51 iTF=    2797.46 TF=  2772.33 iTF_per=   349.68 TF_per=   346.54[0m
+[0;31m Prog=  46.01% N_left=   350208 Time=     8.80 Time_left=      10.32 iTF=    2870.24 TF=  2774.29 iTF_per=   358.78 TF_per=   346.79[0m
+[0;31m Prog=  46.95% N_left=   348160 Time=     8.99 Time_left=      10.15 iTF=    2611.49 TF=  2770.83 iTF_per=   326.44 TF_per=   346.35[0m
+[0;31m Prog=  47.88% N_left=   346112 Time=     9.16 Time_left=       9.97 iTF=    2911.01 TF=  2773.42 iTF_per=   363.88 TF_per=   346.68[0m
+[0;31m Prog=  48.80% N_left=   344064 Time=     9.33 Time_left=       9.79 iTF=    2792.79 TF=  2773.78 iTF_per=   349.10 TF_per=   346.72[0m
+[0;31m Prog=  50.61% N_left=   339968 Time=     9.68 Time_left=       9.45 iTF=    2730.65 TF=  2772.22 iTF_per=   341.33 TF_per=   346.53[0m
+[0;31m Prog=  51.49% N_left=   337920 Time=     9.85 Time_left=       9.27 iTF=    2855.10 TF=  2773.61 iTF_per=   356.89 TF_per=   346.70[0m
+[0;31m Prog=  52.37% N_left=   335872 Time=    10.01 Time_left=       9.11 iTF=    2796.37 TF=  2773.99 iTF_per=   349.55 TF_per=   346.75[0m
+[0;31m Prog=  53.24% N_left=   333824 Time=    10.18 Time_left=       8.94 iTF=    2796.23 TF=  2774.35 iTF_per=   349.53 TF_per=   346.79[0m
+[0;31m Prog=  54.09% N_left=   331776 Time=    10.35 Time_left=       8.78 iTF=    2692.82 TF=  2773.02 iTF_per=   336.60 TF_per=   346.63[0m
+[0;31m Prog=  54.94% N_left=   329728 Time=    10.51 Time_left=       8.62 iTF=    2641.58 TF=  2770.90 iTF_per=   330.20 TF_per=   346.36[0m
+[0;31m Prog=  55.77% N_left=   327680 Time=    10.67 Time_left=       8.46 iTF=    2791.40 TF=  2771.20 iTF_per=   348.93 TF_per=   346.40[0m
+[0;31m Prog=  56.60% N_left=   325632 Time=    10.83 Time_left=       8.30 iTF=    2817.57 TF=  2771.87 iTF_per=   352.20 TF_per=   346.48[0m
+[0;31m Prog=  57.41% N_left=   323584 Time=    10.99 Time_left=       8.15 iTF=    2721.96 TF=  2771.15 iTF_per=   340.25 TF_per=   346.39[0m
+[0;31m Prog=  58.21% N_left=   321536 Time=    11.15 Time_left=       8.00 iTF=    2588.92 TF=  2768.46 iTF_per=   323.61 TF_per=   346.06[0m
+[0;31m Prog=  59.01% N_left=   319488 Time=    11.30 Time_left=       7.85 iTF=    2798.21 TF=  2768.85 iTF_per=   349.78 TF_per=   346.11[0m
+[0;31m Prog=  59.79% N_left=   317440 Time=    11.45 Time_left=       7.70 iTF=    2796.79 TF=  2769.21 iTF_per=   349.60 TF_per=   346.15[0m
+[0;31m Prog=  60.56% N_left=   315392 Time=    11.60 Time_left=       7.55 iTF=    2730.46 TF=  2768.71 iTF_per=   341.31 TF_per=   346.09[0m
+[0;31m Prog=  61.33% N_left=   313344 Time=    11.76 Time_left=       7.42 iTF=    2566.63 TF=  2766.00 iTF_per=   320.83 TF_per=   345.75[0m
+[0;31m Prog=  62.08% N_left=   311296 Time=    11.90 Time_left=       7.27 iTF=    2789.03 TF=  2766.28 iTF_per=   348.63 TF_per=   345.78[0m
+[0;31m Prog=  62.82% N_left=   309248 Time=    12.04 Time_left=       7.13 iTF=    2792.91 TF=  2766.59 iTF_per=   349.11 TF_per=   345.82[0m
+[0;31m Prog=  63.56% N_left=   307200 Time=    12.18 Time_left=       6.99 iTF=    2748.56 TF=  2766.38 iTF_per=   343.57 TF_per=   345.80[0m
+[0;31m Prog=  64.28% N_left=   305152 Time=    12.34 Time_left=       6.85 iTF=    2545.76 TF=  2763.68 iTF_per=   318.22 TF_per=   345.46[0m
+[0;31m Prog=  65.00% N_left=   303104 Time=    12.47 Time_left=       6.72 iTF=    2776.87 TF=  2763.83 iTF_per=   347.11 TF_per=   345.48[0m
+[0;31m Prog=  65.70% N_left=   301056 Time=    12.61 Time_left=       6.58 iTF=    2794.58 TF=  2764.15 iTF_per=   349.32 TF_per=   345.52[0m
+[0;31m Prog=  67.08% N_left=   296960 Time=    12.88 Time_left=       6.32 iTF=    2633.11 TF=  2761.33 iTF_per=   329.14 TF_per=   345.17[0m
+[0;31m Prog=  67.76% N_left=   294912 Time=    13.01 Time_left=       6.19 iTF=    2788.98 TF=  2761.60 iTF_per=   348.62 TF_per=   345.20[0m
+[0;31m Prog=  68.42% N_left=   292864 Time=    13.14 Time_left=       6.06 iTF=    2797.68 TF=  2761.95 iTF_per=   349.71 TF_per=   345.24[0m
+[0;31m Prog=  69.08% N_left=   290816 Time=    13.27 Time_left=       5.94 iTF=    2733.88 TF=  2761.68 iTF_per=   341.74 TF_per=   345.21[0m
+[0;31m Prog=  69.73% N_left=   288768 Time=    13.40 Time_left=       5.82 iTF=    2542.25 TF=  2759.46 iTF_per=   317.78 TF_per=   344.93[0m
+[0;31m Prog=  70.37% N_left=   286720 Time=    13.52 Time_left=       5.69 iTF=    2783.51 TF=  2759.68 iTF_per=   347.94 TF_per=   344.96[0m
+[0;31m Prog=  71.00% N_left=   284672 Time=    13.64 Time_left=       5.57 iTF=    2790.66 TF=  2759.95 iTF_per=   348.83 TF_per=   344.99[0m
+[0;31m Prog=  71.62% N_left=   282624 Time=    13.77 Time_left=       5.45 iTF=    2701.34 TF=  2759.43 iTF_per=   337.67 TF_per=   344.93[0m
+[0;31m Prog=  72.23% N_left=   280576 Time=    13.89 Time_left=       5.34 iTF=    2544.76 TF=  2757.46 iTF_per=   318.09 TF_per=   344.68[0m
+[0;31m Prog=  72.84% N_left=   278528 Time=    14.01 Time_left=       5.22 iTF=    2771.32 TF=  2757.57 iTF_per=   346.41 TF_per=   344.70[0m
+[0;31m Prog=  73.43% N_left=   276480 Time=    14.12 Time_left=       5.11 iTF=    2788.29 TF=  2757.82 iTF_per=   348.54 TF_per=   344.73[0m
+[0;31m Prog=  74.02% N_left=   274432 Time=    14.24 Time_left=       5.00 iTF=    2696.72 TF=  2757.32 iTF_per=   337.09 TF_per=   344.67[0m
+[0;31m Prog=  74.60% N_left=   272384 Time=    14.36 Time_left=       4.89 iTF=    2522.51 TF=  2755.34 iTF_per=   315.31 TF_per=   344.42[0m
+[0;31m Prog=  75.17% N_left=   270336 Time=    14.47 Time_left=       4.78 iTF=    2775.04 TF=  2755.49 iTF_per=   346.88 TF_per=   344.44[0m
+[0;31m Prog=  75.73% N_left=   268288 Time=    14.57 Time_left=       4.67 iTF=    2779.35 TF=  2755.66 iTF_per=   347.42 TF_per=   344.46[0m
+[0;31m Prog=  76.28% N_left=   266240 Time=    14.68 Time_left=       4.57 iTF=    2708.26 TF=  2755.31 iTF_per=   338.53 TF_per=   344.41[0m
+[0;31m Prog=  76.82% N_left=   264192 Time=    14.80 Time_left=       4.46 iTF=    2504.58 TF=  2753.36 iTF_per=   313.07 TF_per=   344.17[0m
+[0;31m Prog=  77.36% N_left=   262144 Time=    14.90 Time_left=       4.36 iTF=    2773.25 TF=  2753.50 iTF_per=   346.66 TF_per=   344.19[0m
+[0;31m Prog=  77.88% N_left=   260096 Time=    15.00 Time_left=       4.26 iTF=    2774.05 TF=  2753.64 iTF_per=   346.76 TF_per=   344.20[0m
+[0;31m Prog=  78.40% N_left=   258048 Time=    15.10 Time_left=       4.16 iTF=    2692.22 TF=  2753.22 iTF_per=   336.53 TF_per=   344.15[0m
+[0;31m Prog=  79.41% N_left=   253952 Time=    15.31 Time_left=       3.97 iTF=    2630.61 TF=  2751.59 iTF_per=   328.83 TF_per=   343.95[0m
+[0;31m Prog=  79.91% N_left=   251904 Time=    15.40 Time_left=       3.87 iTF=    2769.18 TF=  2751.70 iTF_per=   346.15 TF_per=   343.96[0m
+[0;31m Prog=  80.39% N_left=   249856 Time=    15.50 Time_left=       3.78 iTF=    2673.74 TF=  2751.21 iTF_per=   334.22 TF_per=   343.90[0m
+[0;31m Prog=  80.87% N_left=   247808 Time=    15.60 Time_left=       3.69 iTF=    2500.71 TF=  2749.58 iTF_per=   312.59 TF_per=   343.70[0m
+[0;31m Prog=  81.34% N_left=   245760 Time=    15.69 Time_left=       3.60 iTF=    2762.28 TF=  2749.66 iTF_per=   345.29 TF_per=   343.71[0m
+[0;31m Prog=  81.80% N_left=   243712 Time=    15.78 Time_left=       3.51 iTF=    2774.61 TF=  2749.80 iTF_per=   346.83 TF_per=   343.72[0m
+[0;31m Prog=  82.26% N_left=   241664 Time=    15.87 Time_left=       3.42 iTF=    2679.60 TF=  2749.40 iTF_per=   334.95 TF_per=   343.67[0m
+[0;31m Prog=  82.71% N_left=   239616 Time=    15.96 Time_left=       3.34 iTF=    2453.82 TF=  2747.61 iTF_per=   306.73 TF_per=   343.45[0m
+[0;31m Prog=  83.15% N_left=   237568 Time=    16.05 Time_left=       3.25 iTF=    2755.27 TF=  2747.65 iTF_per=   344.41 TF_per=   343.46[0m
+[0;31m Prog=  83.58% N_left=   235520 Time=    16.13 Time_left=       3.17 iTF=    2775.77 TF=  2747.79 iTF_per=   346.97 TF_per=   343.47[0m
+[0;31m Prog=  84.00% N_left=   233472 Time=    16.22 Time_left=       3.09 iTF=    2659.71 TF=  2747.33 iTF_per=   332.46 TF_per=   343.42[0m
+[0;31m Prog=  84.42% N_left=   231424 Time=    16.31 Time_left=       3.01 iTF=    2445.57 TF=  2745.66 iTF_per=   305.70 TF_per=   343.21[0m
+[0;31m Prog=  84.83% N_left=   229376 Time=    16.39 Time_left=       2.93 iTF=    2759.56 TF=  2745.72 iTF_per=   344.94 TF_per=   343.22[0m
+[0;31m Prog=  85.23% N_left=   227328 Time=    16.46 Time_left=       2.85 iTF=    2779.54 TF=  2745.88 iTF_per=   347.44 TF_per=   343.24[0m
+[0;31m Prog=  85.63% N_left=   225280 Time=    16.54 Time_left=       2.78 iTF=    2628.69 TF=  2745.32 iTF_per=   328.59 TF_per=   343.16[0m
+[0;31m Prog=  86.02% N_left=   223232 Time=    16.63 Time_left=       2.70 iTF=    2458.45 TF=  2743.87 iTF_per=   307.31 TF_per=   342.98[0m
+[0;31m Prog=  86.40% N_left=   221184 Time=    16.70 Time_left=       2.63 iTF=    2751.45 TF=  2743.90 iTF_per=   343.93 TF_per=   342.99[0m
+[0;31m Prog=  86.77% N_left=   219136 Time=    16.77 Time_left=       2.56 iTF=    2780.18 TF=  2744.06 iTF_per=   347.52 TF_per=   343.01[0m
+[0;31m Prog=  87.14% N_left=   217088 Time=    16.84 Time_left=       2.49 iTF=    2634.59 TF=  2743.58 iTF_per=   329.32 TF_per=   342.95[0m
+[0;31m Prog=  87.50% N_left=   215040 Time=    16.91 Time_left=       2.42 iTF=    2992.45 TF=  2744.52 iTF_per=   374.06 TF_per=   343.06[0m
+[0;31m Prog=  89.20% N_left=   204800 Time=    17.26 Time_left=       2.09 iTF=    2587.78 TF=  2741.35 iTF_per=   323.47 TF_per=   342.67[0m
+[0;31m Prog=  90.45% N_left=   196608 Time=    17.51 Time_left=       1.85 iTF=    2614.74 TF=  2739.52 iTF_per=   326.84 TF_per=   342.44[0m
+[0;31m Prog=  91.59% N_left=   188416 Time=    17.74 Time_left=       1.63 iTF=    2604.01 TF=  2737.74 iTF_per=   325.50 TF_per=   342.22[0m
+[0;31m Prog=  92.64% N_left=   180224 Time=    17.96 Time_left=       1.43 iTF=    2581.96 TF=  2735.87 iTF_per=   322.75 TF_per=   341.98[0m
+[0;31m Prog=  93.60% N_left=   172032 Time=    18.16 Time_left=       1.24 iTF=    2545.62 TF=  2733.78 iTF_per=   318.20 TF_per=   341.72[0m
+[0;31m Prog=  94.68% N_left=   161792 Time=    18.38 Time_left=       1.03 iTF=    2615.25 TF=  2732.37 iTF_per=   326.91 TF_per=   341.55[0m
+[0;31m Prog=  95.44% N_left=   153600 Time=    18.54 Time_left=       0.88 iTF=    2529.36 TF=  2730.61 iTF_per=   316.17 TF_per=   341.33[0m
+[0;31m Prog=  96.14% N_left=   145408 Time=    18.68 Time_left=       0.75 iTF=    2512.21 TF=  2728.90 iTF_per=   314.03 TF_per=   341.11[0m
+[0;31m Prog=  96.75% N_left=   137216 Time=    18.82 Time_left=       0.63 iTF=    2476.05 TF=  2727.13 iTF_per=   309.51 TF_per=   340.89[0m
+[0;31m Prog=  97.30% N_left=   129024 Time=    18.93 Time_left=       0.53 iTF=    2454.86 TF=  2725.43 iTF_per=   306.86 TF_per=   340.68[0m
+[0;31m Prog=  99.20% N_left=    86016 Time=    19.40 Time_left=       0.16 iTF=    2154.14 TF=  2711.65 iTF_per=   269.27 TF_per=   338.96[0m
+[0;31m Prog=  99.90% N_left=    43008 Time=    19.71 Time_left=       0.02 iTF=    1206.70 TF=  2688.16 iTF_per=   150.84 TF_per=   336.02[0m
+2026-05-18 17:02:13.409
+LU seconds: AVG = 19.98, MAX = 19.98 (1->a0019), MIN = 19.98 (0->a0019)
+
+Solver iteration  0, L-infinite residual = 4.87685453e-04
+Solver iteration  1, L-infinite residual = 7.48736184e-10
+Solver iteration  2, L-infinite residual = 1.14686038e-13
+Iterative Solver seconds: AVG = 19.92, MAX = 19.92 (7->a0019), MIN = 19.92 (0->a0019)
+
+2026-05-18 17:02:33.328
+
+ ****** HPL MxP Result    ****** 
+
+    EPS           . . . . . . . . . . . . . . . . .          =    2.000000E-16
+    Threshold     . . . . . . . . . . . . . . . . .          =    1.600000E+01
+  ||Ax-b||_oo     . . . . . . . . . . . . . . . . .          =    1.146860E-13
+  ||A   ||_oo     . . . . . . . . . . . . . . . . .          =    4.319350E+05
+  ||x   ||_oo     . . . . . . . . . . . . . . . . .          =    4.666754E-06
+  ||b   ||_oo     . . . . . . . . . . . . . . . . .          =    9.999950E-01
+  ||Ax-b||_oo / (EPS * (||A||_oo * ||x||_oo + ||b||_oo) * N) =    4.421188E-04 ...... PASSED
+
+    N = 430080, NB = 2048, NPROW = 4, NPCOL = 2, SLOPPY-TYPE = FP16
+[0;31m       GFLOPS = 1.3291e+06, per GPU =  166138.47[0m[0;34m ------ The HPL-MxP performance to report[0m
+    LU GFLOPS = 2.6538e+06, per GPU =  331726.30[0;34m ------ The performance excluding the iterative solver part[0m
+
+ ****** HPL MxP Result    ****** 
+
+
+ ****** test loop 1 of 1 done   ****** 
+
+
+ ****** test 1 of 1 done   ****** 
+
++ echo Done
+Done
++ echo 2026-05-18T12:59:31
+2026-05-18T12:59:31

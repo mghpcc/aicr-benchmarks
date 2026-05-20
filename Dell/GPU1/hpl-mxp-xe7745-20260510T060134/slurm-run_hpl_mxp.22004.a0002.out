@@ -1,0 +1,102 @@
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-05-18T13:02:04
++ SIF=/home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif
+++ date +%Y-%m-%dT%H:%M:%S
++ DATESTRING=2026-05-18T13:02:04
++++ scontrol show hostname
+++ echo a0002
++ echo 'Running on hosts: a0002'
+Running on hosts: a0002
++ echo 2026-05-18T13:02:04
+2026-05-18T13:02:04
++ export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
++ export NCCL_BUFFSIZE=4194304
++ NCCL_BUFFSIZE=4194304
++ export NCCL_P2P_DISABLE=1
++ NCCL_P2P_DISABLE=1
++ export CUDA_P2P_LEVEL=0
++ CUDA_P2P_LEVEL=0
++ export UCX_TLS=self,shm,cuda_copy
++ UCX_TLS=self,shm,cuda_copy
++ export UCX_POSIX_USE_PROC_LINK=n
++ UCX_POSIX_USE_PROC_LINK=n
++ N_SIZE=430080
++ srun -N1 --ntasks-per-node=8 --exclusive --mpi=pmix apptainer exec --nv --no-mount /etc/localtime --bind /var/spool/slurmd ' '
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Error for command "exec": requires at least 2 arg(s), only received 1
+
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+Usage:
+  apptainer [global options...] exec [exec options...] <container> <command>
+
+Run 'apptainer --help' for more detailed usage information.
+srun: error: a0002: tasks 0-7: Exited with exit code 1
++ /home/knevins/aicr-benchmarks/hpc-benchmarks_25.09.sif /workspace/hpl-mxp.sh --gpu-affinity 0:1:2:3:4:5:6:7 --n 430080 --nb 2048 --nporder row --nprow 4 --npcol 2
+
+=========================================================
+================= NVIDIA HPC Benchmarks =================
+=========================================================
+NVIDIA Release 25.09
+Copyright (c) 2023, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
+
+Various files include modifications (c) NVIDIA CORPORATION & AFFILIATES.  All rights reserved.
+
+GOVERNING TERMS: The software and materials are governed by the NVIDIA Software License Agreement
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/nvidia-software-license-agreement/)
+and the Product-Specific Terms for NVIDIA AI Products
+(found at https://www.nvidia.com/en-us/agreements/enterprise-software/product-specific-terms-for-ai-products/).
+
+ERROR: The NVIDIA Driver is present, but CUDA failed to initialize.  GPU functionality will not be available.
+   [[ Unable to initialize CUDA driver (error ???) ]]
+
+Failed to detect NVIDIA driver version.
+
+NOTE: Mellanox network driver detected, but NVIDIA peer memory driver not
+      detected.  Multi-node communication performance may be reduced.
+
+/workspace/hpl-mxp-linux-x86_64/xhpl_mxp: error while loading shared libraries: libnvidia-ml.so.1: cannot open shared object file: No such file or directory
++ echo Done
+Done
++ echo 2026-05-18T13:02:04
+2026-05-18T13:02:04
