@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "check": "gpu-topology",
+  "cluster": "b200",
+  "partition": "GPU2",
+  "discovered_at_utc": "2026-05-16T13:00:07Z",
+  "mode": "apply",
+  "idle_nodes": [
+    "b0002",
+    "b0003",
+    "b0004",
+    "b0005",
+    "b0006",
+    "b0007",
+    "b0008",
+    "b0009",
+    "b0010",
+    "b0011",
+    "b0012",
+    "b0013",
+    "b0014",
+    "b0015",
+    "b0016",
+    "b0017",
+    "b0018",
+    "b0019",
+    "b0020",
+    "b0021",
+    "b0022",
+    "b0023",
+    "b0024",
+    "b0025",
+    "b0026",
+    "b0027",
+    "b0028",
+    "b0029",
+    "b0030",
+    "b0031"
+  ],
+  "submitted_jobs": [
+    {
+      "node": "b0002",
+      "job_id": "20503"
+    },
+    {
+      "node": "b0003",
+      "job_id": "20505"
+    },
+    {
+      "node": "b0004",
+      "job_id": "20507"
+    },
+    {
+      "node": "b0005",
+      "job_id": "20509"
+    },
+    {
+      "node": "b0006",
+      "job_id": "20511"
+    },
+    {
+      "node": "b0007",
+      "job_id": "20513"
+    },
+    {
+      "node": "b0008",
+      "job_id": "20515"
+    },
+    {
+      "node": "b0009",
+      "job_id": "20517"
+    },
+    {
+      "node": "b0010",
+      "job_id": "20519"
+    },
+    {
+      "node": "b0011",
+      "job_id": "20521"
+    },
+    {
+      "node": "b0012",
+      "job_id": "20523"
+    },
+    {
+      "node": "b0013",
+      "job_id": "20525"
+    },
+    {
+      "node": "b0014",
+      "job_id": "20527"
+    },
+    {
+      "node": "b0015",
+      "job_id": "20530"
+    },
+    {
+      "node": "b0016",
+      "job_id": "20532"
+    },
+    {
+      "node": "b0017",
+      "job_id": "20534"
+    },
+    {
+      "node": "b0018",
+      "job_id": "20535"
+    },
+    {
+      "node": "b0019",
+      "job_id": "20536"
+    },
+    {
+      "node": "b0020",
+      "job_id": "20537"
+    },
+    {
+      "node": "b0021",
+      "job_id": "20538"
+    },
+    {
+      "node": "b0022",
+      "job_id": "20539"
+    },
+    {
+      "node": "b0023",
+      "job_id": "20540"
+    },
+    {
+      "node": "b0024",
+      "job_id": "20541"
+    },
+    {
+      "node": "b0025",
+      "job_id": "20542"
+    },
+    {
+      "node": "b0026",
+      "job_id": "20544"
+    },
+    {
+      "node": "b0027",
+      "job_id": "20545"
+    },
+    {
+      "node": "b0028",
+      "job_id": "20546"
+    },
+    {
+      "node": "b0029",
+      "job_id": "20547"
+    },
+    {
+      "node": "b0030",
+      "job_id": "20548"
+    },
+    {
+      "node": "b0031",
+      "job_id": "20549"
+    }
+  ],
+  "skipped_nodes_by_state": {},
+  "wait_result": "completed",
+  "submit_stagger_seconds": 2,
+  "report_paths": {
+    "markdown": "results/reports/2026-05-16/verification/gpu-topology/gpu-topology-b200.md"
+  }
+}

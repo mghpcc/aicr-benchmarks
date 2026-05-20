@@ -1,0 +1,2981 @@
+{
+  "schema_version": 1,
+  "check": "nccl-suite",
+  "scope": "scale",
+  "cluster": "rtxpro6000",
+  "partition": "GPU1",
+  "profile": "small",
+  "discovered_at_utc": "2026-05-16T13:26:21Z",
+  "mode": "apply",
+  "repeat_count": 5,
+  "repeat_aggregation": "olympic",
+  "gpu_preflight_filter_enabled": true,
+  "gpu_preflight_expected_count": 8,
+  "gpu_preflight_source": "latest same-day gpu-topology parsed summaries",
+  "gpu_preflight_excluded_nodes": [],
+  "selected_scales": [
+    1,
+    2,
+    4
+  ],
+  "idle_nodes": [
+    "a0002",
+    "a0003",
+    "a0004",
+    "a0005",
+    "a0006",
+    "a0007",
+    "a0008",
+    "a0009",
+    "a0010",
+    "a0011",
+    "a0012",
+    "a0013",
+    "a0014",
+    "a0015",
+    "a0016",
+    "a0019"
+  ],
+  "selected_groups": [
+    {
+      "scale": 1,
+      "group": "a0002",
+      "nodes": [
+        "a0002"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0003",
+      "nodes": [
+        "a0003"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0004",
+      "nodes": [
+        "a0004"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0005",
+      "nodes": [
+        "a0005"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0006",
+      "nodes": [
+        "a0006"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0007",
+      "nodes": [
+        "a0007"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0008",
+      "nodes": [
+        "a0008"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0009",
+      "nodes": [
+        "a0009"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0010",
+      "nodes": [
+        "a0010"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0011",
+      "nodes": [
+        "a0011"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0012",
+      "nodes": [
+        "a0012"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0013",
+      "nodes": [
+        "a0013"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0014",
+      "nodes": [
+        "a0014"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0015",
+      "nodes": [
+        "a0015"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0016",
+      "nodes": [
+        "a0016"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 1,
+      "group": "a0019",
+      "nodes": [
+        "a0019"
+      ],
+      "node_count": 1,
+      "gpu_count": 8
+    },
+    {
+      "scale": 2,
+      "group": "a0002,a0003",
+      "nodes": [
+        "a0002",
+        "a0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0004,a0005",
+      "nodes": [
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0006,a0007",
+      "nodes": [
+        "a0006",
+        "a0007"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0008,a0009",
+      "nodes": [
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0010,a0011",
+      "nodes": [
+        "a0010",
+        "a0011"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0012,a0013",
+      "nodes": [
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0014,a0015",
+      "nodes": [
+        "a0014",
+        "a0015"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 2,
+      "group": "a0016,a0019",
+      "nodes": [
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    },
+    {
+      "scale": 4,
+      "group": "a0002,a0003,a0004,a0005",
+      "nodes": [
+        "a0002",
+        "a0003",
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 4,
+      "gpu_count": 32
+    },
+    {
+      "scale": 4,
+      "group": "a0006,a0007,a0008,a0009",
+      "nodes": [
+        "a0006",
+        "a0007",
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 4,
+      "gpu_count": 32
+    },
+    {
+      "scale": 4,
+      "group": "a0010,a0011,a0012,a0013",
+      "nodes": [
+        "a0010",
+        "a0011",
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 4,
+      "gpu_count": 32
+    },
+    {
+      "scale": 4,
+      "group": "a0014,a0015,a0016,a0019",
+      "nodes": [
+        "a0014",
+        "a0015",
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 4,
+      "gpu_count": 32
+    }
+  ],
+  "submitted_jobs": [
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0002",
+      "nodes": [
+        "a0002"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20723"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0003",
+      "nodes": [
+        "a0003"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20724"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0004",
+      "nodes": [
+        "a0004"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20726"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0005",
+      "nodes": [
+        "a0005"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20727"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0006",
+      "nodes": [
+        "a0006"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20728"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0007",
+      "nodes": [
+        "a0007"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20730"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0008",
+      "nodes": [
+        "a0008"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20731"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0009",
+      "nodes": [
+        "a0009"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20732"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0010",
+      "nodes": [
+        "a0010"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20733"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0011",
+      "nodes": [
+        "a0011"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20734"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0012",
+      "nodes": [
+        "a0012"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20735"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0013",
+      "nodes": [
+        "a0013"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20736"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0014",
+      "nodes": [
+        "a0014"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20737"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0015",
+      "nodes": [
+        "a0015"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20738"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0016",
+      "nodes": [
+        "a0016"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20739"
+    },
+    {
+      "round": 1,
+      "scale": 1,
+      "group": "a0019",
+      "nodes": [
+        "a0019"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20740"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0002,a0003",
+      "nodes": [
+        "a0002",
+        "a0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20745"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0004,a0005",
+      "nodes": [
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20747"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0006,a0007",
+      "nodes": [
+        "a0006",
+        "a0007"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20748"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0008,a0009",
+      "nodes": [
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20749"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0010,a0011",
+      "nodes": [
+        "a0010",
+        "a0011"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20751"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0012,a0013",
+      "nodes": [
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20752"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0014,a0015",
+      "nodes": [
+        "a0014",
+        "a0015"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20753"
+    },
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "a0016,a0019",
+      "nodes": [
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20755"
+    },
+    {
+      "round": 1,
+      "scale": 4,
+      "group": "a0002,a0003,a0004,a0005",
+      "nodes": [
+        "a0002",
+        "a0003",
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20763"
+    },
+    {
+      "round": 1,
+      "scale": 4,
+      "group": "a0006,a0007,a0008,a0009",
+      "nodes": [
+        "a0006",
+        "a0007",
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20765"
+    },
+    {
+      "round": 1,
+      "scale": 4,
+      "group": "a0010,a0011,a0012,a0013",
+      "nodes": [
+        "a0010",
+        "a0011",
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20766"
+    },
+    {
+      "round": 1,
+      "scale": 4,
+      "group": "a0014,a0015,a0016,a0019",
+      "nodes": [
+        "a0014",
+        "a0015",
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20767"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0002",
+      "nodes": [
+        "a0002"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20779"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0003",
+      "nodes": [
+        "a0003"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20781"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0004",
+      "nodes": [
+        "a0004"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20782"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0005",
+      "nodes": [
+        "a0005"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20783"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0006",
+      "nodes": [
+        "a0006"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20785"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0007",
+      "nodes": [
+        "a0007"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20786"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0008",
+      "nodes": [
+        "a0008"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20787"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0009",
+      "nodes": [
+        "a0009"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20789"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0010",
+      "nodes": [
+        "a0010"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20790"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0011",
+      "nodes": [
+        "a0011"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20791"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0012",
+      "nodes": [
+        "a0012"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20793"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0013",
+      "nodes": [
+        "a0013"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20794"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0014",
+      "nodes": [
+        "a0014"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20795"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0015",
+      "nodes": [
+        "a0015"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20796"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0016",
+      "nodes": [
+        "a0016"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20797"
+    },
+    {
+      "round": 2,
+      "scale": 1,
+      "group": "a0019",
+      "nodes": [
+        "a0019"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20798"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0002,a0003",
+      "nodes": [
+        "a0002",
+        "a0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20802"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0004,a0005",
+      "nodes": [
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20803"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0006,a0007",
+      "nodes": [
+        "a0006",
+        "a0007"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20804"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0008,a0009",
+      "nodes": [
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20806"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0010,a0011",
+      "nodes": [
+        "a0010",
+        "a0011"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20807"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0012,a0013",
+      "nodes": [
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20808"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0014,a0015",
+      "nodes": [
+        "a0014",
+        "a0015"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20810"
+    },
+    {
+      "round": 2,
+      "scale": 2,
+      "group": "a0016,a0019",
+      "nodes": [
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20811"
+    },
+    {
+      "round": 2,
+      "scale": 4,
+      "group": "a0002,a0003,a0004,a0005",
+      "nodes": [
+        "a0002",
+        "a0003",
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20820"
+    },
+    {
+      "round": 2,
+      "scale": 4,
+      "group": "a0006,a0007,a0008,a0009",
+      "nodes": [
+        "a0006",
+        "a0007",
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20821"
+    },
+    {
+      "round": 2,
+      "scale": 4,
+      "group": "a0010,a0011,a0012,a0013",
+      "nodes": [
+        "a0010",
+        "a0011",
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20822"
+    },
+    {
+      "round": 2,
+      "scale": 4,
+      "group": "a0014,a0015,a0016,a0019",
+      "nodes": [
+        "a0014",
+        "a0015",
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20824"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0002",
+      "nodes": [
+        "a0002"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20836"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0003",
+      "nodes": [
+        "a0003"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20837"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0004",
+      "nodes": [
+        "a0004"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20838"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0005",
+      "nodes": [
+        "a0005"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20840"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0006",
+      "nodes": [
+        "a0006"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20841"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0007",
+      "nodes": [
+        "a0007"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20842"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0008",
+      "nodes": [
+        "a0008"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20844"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0009",
+      "nodes": [
+        "a0009"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20845"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0010",
+      "nodes": [
+        "a0010"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20846"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0011",
+      "nodes": [
+        "a0011"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20848"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0012",
+      "nodes": [
+        "a0012"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20849"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0013",
+      "nodes": [
+        "a0013"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20850"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0014",
+      "nodes": [
+        "a0014"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20852"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0015",
+      "nodes": [
+        "a0015"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20853"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0016",
+      "nodes": [
+        "a0016"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20854"
+    },
+    {
+      "round": 3,
+      "scale": 1,
+      "group": "a0019",
+      "nodes": [
+        "a0019"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20856"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0002,a0003",
+      "nodes": [
+        "a0002",
+        "a0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20871"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0004,a0005",
+      "nodes": [
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20873"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0006,a0007",
+      "nodes": [
+        "a0006",
+        "a0007"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20875"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0008,a0009",
+      "nodes": [
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20877"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0010,a0011",
+      "nodes": [
+        "a0010",
+        "a0011"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20879"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0012,a0013",
+      "nodes": [
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20881"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0014,a0015",
+      "nodes": [
+        "a0014",
+        "a0015"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20883"
+    },
+    {
+      "round": 3,
+      "scale": 2,
+      "group": "a0016,a0019",
+      "nodes": [
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20885"
+    },
+    {
+      "round": 3,
+      "scale": 4,
+      "group": "a0002,a0003,a0004,a0005",
+      "nodes": [
+        "a0002",
+        "a0003",
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20895"
+    },
+    {
+      "round": 3,
+      "scale": 4,
+      "group": "a0006,a0007,a0008,a0009",
+      "nodes": [
+        "a0006",
+        "a0007",
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20896"
+    },
+    {
+      "round": 3,
+      "scale": 4,
+      "group": "a0010,a0011,a0012,a0013",
+      "nodes": [
+        "a0010",
+        "a0011",
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20897"
+    },
+    {
+      "round": 3,
+      "scale": 4,
+      "group": "a0014,a0015,a0016,a0019",
+      "nodes": [
+        "a0014",
+        "a0015",
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20898"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0002",
+      "nodes": [
+        "a0002"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20899"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0003",
+      "nodes": [
+        "a0003"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20900"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0004",
+      "nodes": [
+        "a0004"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20901"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0005",
+      "nodes": [
+        "a0005"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20902"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0006",
+      "nodes": [
+        "a0006"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20903"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0007",
+      "nodes": [
+        "a0007"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20904"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0008",
+      "nodes": [
+        "a0008"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20906"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0009",
+      "nodes": [
+        "a0009"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20908"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0010",
+      "nodes": [
+        "a0010"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20910"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0011",
+      "nodes": [
+        "a0011"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20912"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0012",
+      "nodes": [
+        "a0012"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20914"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0013",
+      "nodes": [
+        "a0013"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20916"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0014",
+      "nodes": [
+        "a0014"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20918"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0015",
+      "nodes": [
+        "a0015"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20920"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0016",
+      "nodes": [
+        "a0016"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20922"
+    },
+    {
+      "round": 4,
+      "scale": 1,
+      "group": "a0019",
+      "nodes": [
+        "a0019"
+      ],
+      "node_count": 1,
+      "gpu_count": 8,
+      "job_id": "20924"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0002,a0003",
+      "nodes": [
+        "a0002",
+        "a0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20930"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0004,a0005",
+      "nodes": [
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20931"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0006,a0007",
+      "nodes": [
+        "a0006",
+        "a0007"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20932"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0008,a0009",
+      "nodes": [
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20933"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0010,a0011",
+      "nodes": [
+        "a0010",
+        "a0011"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20934"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0012,a0013",
+      "nodes": [
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20935"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0014,a0015",
+      "nodes": [
+        "a0014",
+        "a0015"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20936"
+    },
+    {
+      "round": 4,
+      "scale": 2,
+      "group": "a0016,a0019",
+      "nodes": [
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20937"
+    },
+    {
+      "round": 4,
+      "scale": 4,
+      "group": "a0002,a0003,a0004,a0005",
+      "nodes": [
+        "a0002",
+        "a0003",
+        "a0004",
+        "a0005"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20938"
+    },
+    {
+      "round": 4,
+      "scale": 4,
+      "group": "a0006,a0007,a0008,a0009",
+      "nodes": [
+        "a0006",
+        "a0007",
+        "a0008",
+        "a0009"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20939"
+    },
+    {
+      "round": 4,
+      "scale": 4,
+      "group": "a0010,a0011,a0012,a0013",
+      "nodes": [
+        "a0010",
+        "a0011",
+        "a0012",
+        "a0013"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20940"
+    },
+    {
+      "round": 4,
+      "scale": 4,
+      "group": "a0014,a0015,a0016,a0019",
+      "nodes": [
+        "a0014",
+        "a0015",
+        "a0016",
+        "a0019"
+      ],
+      "node_count": 4,
+      "gpu_count": 32,
+      "job_id": "20941"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "submitted_jobs": [
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0002",
+          "nodes": [
+            "a0002"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20723"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0003",
+          "nodes": [
+            "a0003"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20724"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0004",
+          "nodes": [
+            "a0004"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20726"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0005",
+          "nodes": [
+            "a0005"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20727"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0006",
+          "nodes": [
+            "a0006"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20728"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0007",
+          "nodes": [
+            "a0007"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20730"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0008",
+          "nodes": [
+            "a0008"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20731"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0009",
+          "nodes": [
+            "a0009"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20732"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0010",
+          "nodes": [
+            "a0010"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20733"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0011",
+          "nodes": [
+            "a0011"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20734"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0012",
+          "nodes": [
+            "a0012"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20735"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0013",
+          "nodes": [
+            "a0013"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20736"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0014",
+          "nodes": [
+            "a0014"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20737"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0015",
+          "nodes": [
+            "a0015"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20738"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0016",
+          "nodes": [
+            "a0016"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20739"
+        },
+        {
+          "round": 1,
+          "scale": 1,
+          "group": "a0019",
+          "nodes": [
+            "a0019"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20740"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0002,a0003",
+          "nodes": [
+            "a0002",
+            "a0003"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20745"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0004,a0005",
+          "nodes": [
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20747"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0006,a0007",
+          "nodes": [
+            "a0006",
+            "a0007"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20748"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0008,a0009",
+          "nodes": [
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20749"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0010,a0011",
+          "nodes": [
+            "a0010",
+            "a0011"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20751"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0012,a0013",
+          "nodes": [
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20752"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0014,a0015",
+          "nodes": [
+            "a0014",
+            "a0015"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20753"
+        },
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "a0016,a0019",
+          "nodes": [
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20755"
+        },
+        {
+          "round": 1,
+          "scale": 4,
+          "group": "a0002,a0003,a0004,a0005",
+          "nodes": [
+            "a0002",
+            "a0003",
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20763"
+        },
+        {
+          "round": 1,
+          "scale": 4,
+          "group": "a0006,a0007,a0008,a0009",
+          "nodes": [
+            "a0006",
+            "a0007",
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20765"
+        },
+        {
+          "round": 1,
+          "scale": 4,
+          "group": "a0010,a0011,a0012,a0013",
+          "nodes": [
+            "a0010",
+            "a0011",
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20766"
+        },
+        {
+          "round": 1,
+          "scale": 4,
+          "group": "a0014,a0015,a0016,a0019",
+          "nodes": [
+            "a0014",
+            "a0015",
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20767"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "submitted_jobs": [
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0002",
+          "nodes": [
+            "a0002"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20779"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0003",
+          "nodes": [
+            "a0003"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20781"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0004",
+          "nodes": [
+            "a0004"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20782"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0005",
+          "nodes": [
+            "a0005"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20783"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0006",
+          "nodes": [
+            "a0006"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20785"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0007",
+          "nodes": [
+            "a0007"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20786"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0008",
+          "nodes": [
+            "a0008"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20787"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0009",
+          "nodes": [
+            "a0009"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20789"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0010",
+          "nodes": [
+            "a0010"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20790"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0011",
+          "nodes": [
+            "a0011"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20791"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0012",
+          "nodes": [
+            "a0012"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20793"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0013",
+          "nodes": [
+            "a0013"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20794"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0014",
+          "nodes": [
+            "a0014"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20795"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0015",
+          "nodes": [
+            "a0015"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20796"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0016",
+          "nodes": [
+            "a0016"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20797"
+        },
+        {
+          "round": 2,
+          "scale": 1,
+          "group": "a0019",
+          "nodes": [
+            "a0019"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20798"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0002,a0003",
+          "nodes": [
+            "a0002",
+            "a0003"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20802"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0004,a0005",
+          "nodes": [
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20803"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0006,a0007",
+          "nodes": [
+            "a0006",
+            "a0007"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20804"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0008,a0009",
+          "nodes": [
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20806"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0010,a0011",
+          "nodes": [
+            "a0010",
+            "a0011"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20807"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0012,a0013",
+          "nodes": [
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20808"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0014,a0015",
+          "nodes": [
+            "a0014",
+            "a0015"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20810"
+        },
+        {
+          "round": 2,
+          "scale": 2,
+          "group": "a0016,a0019",
+          "nodes": [
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20811"
+        },
+        {
+          "round": 2,
+          "scale": 4,
+          "group": "a0002,a0003,a0004,a0005",
+          "nodes": [
+            "a0002",
+            "a0003",
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20820"
+        },
+        {
+          "round": 2,
+          "scale": 4,
+          "group": "a0006,a0007,a0008,a0009",
+          "nodes": [
+            "a0006",
+            "a0007",
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20821"
+        },
+        {
+          "round": 2,
+          "scale": 4,
+          "group": "a0010,a0011,a0012,a0013",
+          "nodes": [
+            "a0010",
+            "a0011",
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20822"
+        },
+        {
+          "round": 2,
+          "scale": 4,
+          "group": "a0014,a0015,a0016,a0019",
+          "nodes": [
+            "a0014",
+            "a0015",
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20824"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "submitted_jobs": [
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0002",
+          "nodes": [
+            "a0002"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20836"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0003",
+          "nodes": [
+            "a0003"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20837"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0004",
+          "nodes": [
+            "a0004"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20838"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0005",
+          "nodes": [
+            "a0005"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20840"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0006",
+          "nodes": [
+            "a0006"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20841"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0007",
+          "nodes": [
+            "a0007"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20842"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0008",
+          "nodes": [
+            "a0008"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20844"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0009",
+          "nodes": [
+            "a0009"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20845"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0010",
+          "nodes": [
+            "a0010"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20846"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0011",
+          "nodes": [
+            "a0011"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20848"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0012",
+          "nodes": [
+            "a0012"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20849"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0013",
+          "nodes": [
+            "a0013"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20850"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0014",
+          "nodes": [
+            "a0014"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20852"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0015",
+          "nodes": [
+            "a0015"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20853"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0016",
+          "nodes": [
+            "a0016"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20854"
+        },
+        {
+          "round": 3,
+          "scale": 1,
+          "group": "a0019",
+          "nodes": [
+            "a0019"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20856"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0002,a0003",
+          "nodes": [
+            "a0002",
+            "a0003"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20871"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0004,a0005",
+          "nodes": [
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20873"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0006,a0007",
+          "nodes": [
+            "a0006",
+            "a0007"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20875"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0008,a0009",
+          "nodes": [
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20877"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0010,a0011",
+          "nodes": [
+            "a0010",
+            "a0011"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20879"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0012,a0013",
+          "nodes": [
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20881"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0014,a0015",
+          "nodes": [
+            "a0014",
+            "a0015"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20883"
+        },
+        {
+          "round": 3,
+          "scale": 2,
+          "group": "a0016,a0019",
+          "nodes": [
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20885"
+        },
+        {
+          "round": 3,
+          "scale": 4,
+          "group": "a0002,a0003,a0004,a0005",
+          "nodes": [
+            "a0002",
+            "a0003",
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20895"
+        },
+        {
+          "round": 3,
+          "scale": 4,
+          "group": "a0006,a0007,a0008,a0009",
+          "nodes": [
+            "a0006",
+            "a0007",
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20896"
+        },
+        {
+          "round": 3,
+          "scale": 4,
+          "group": "a0010,a0011,a0012,a0013",
+          "nodes": [
+            "a0010",
+            "a0011",
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20897"
+        },
+        {
+          "round": 3,
+          "scale": 4,
+          "group": "a0014,a0015,a0016,a0019",
+          "nodes": [
+            "a0014",
+            "a0015",
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20898"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "submitted_jobs": [
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0002",
+          "nodes": [
+            "a0002"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20899"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0003",
+          "nodes": [
+            "a0003"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20900"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0004",
+          "nodes": [
+            "a0004"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20901"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0005",
+          "nodes": [
+            "a0005"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20902"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0006",
+          "nodes": [
+            "a0006"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20903"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0007",
+          "nodes": [
+            "a0007"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20904"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0008",
+          "nodes": [
+            "a0008"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20906"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0009",
+          "nodes": [
+            "a0009"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20908"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0010",
+          "nodes": [
+            "a0010"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20910"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0011",
+          "nodes": [
+            "a0011"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20912"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0012",
+          "nodes": [
+            "a0012"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20914"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0013",
+          "nodes": [
+            "a0013"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20916"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0014",
+          "nodes": [
+            "a0014"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20918"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0015",
+          "nodes": [
+            "a0015"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20920"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0016",
+          "nodes": [
+            "a0016"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20922"
+        },
+        {
+          "round": 4,
+          "scale": 1,
+          "group": "a0019",
+          "nodes": [
+            "a0019"
+          ],
+          "node_count": 1,
+          "gpu_count": 8,
+          "job_id": "20924"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0002,a0003",
+          "nodes": [
+            "a0002",
+            "a0003"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20930"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0004,a0005",
+          "nodes": [
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20931"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0006,a0007",
+          "nodes": [
+            "a0006",
+            "a0007"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20932"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0008,a0009",
+          "nodes": [
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20933"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0010,a0011",
+          "nodes": [
+            "a0010",
+            "a0011"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20934"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0012,a0013",
+          "nodes": [
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20935"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0014,a0015",
+          "nodes": [
+            "a0014",
+            "a0015"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20936"
+        },
+        {
+          "round": 4,
+          "scale": 2,
+          "group": "a0016,a0019",
+          "nodes": [
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20937"
+        },
+        {
+          "round": 4,
+          "scale": 4,
+          "group": "a0002,a0003,a0004,a0005",
+          "nodes": [
+            "a0002",
+            "a0003",
+            "a0004",
+            "a0005"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20938"
+        },
+        {
+          "round": 4,
+          "scale": 4,
+          "group": "a0006,a0007,a0008,a0009",
+          "nodes": [
+            "a0006",
+            "a0007",
+            "a0008",
+            "a0009"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20939"
+        },
+        {
+          "round": 4,
+          "scale": 4,
+          "group": "a0010,a0011,a0012,a0013",
+          "nodes": [
+            "a0010",
+            "a0011",
+            "a0012",
+            "a0013"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20940"
+        },
+        {
+          "round": 4,
+          "scale": 4,
+          "group": "a0014,a0015,a0016,a0019",
+          "nodes": [
+            "a0014",
+            "a0015",
+            "a0016",
+            "a0019"
+          ],
+          "node_count": 4,
+          "gpu_count": 32,
+          "job_id": "20941"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "submitted_jobs": []
+    }
+  ],
+  "scale_submission_policy": "sequential-wait",
+  "skipped_nodes_by_state": {
+    "drained*": [
+      "a0017"
+    ],
+    "mixed": [
+      "a0018"
+    ]
+  },
+  "wait_result": "submitted",
+  "submit_stagger_seconds": 5,
+  "scale_stagger_seconds": 0,
+  "round_stagger_seconds": 60,
+  "report_paths": {
+    "markdown": null
+  }
+}

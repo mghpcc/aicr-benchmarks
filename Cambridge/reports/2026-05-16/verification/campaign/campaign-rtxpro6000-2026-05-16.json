@@ -1,0 +1,97 @@
+{
+  "schema_version": 1,
+  "campaign_id": "rtxpro6000-verification-2026-05-16",
+  "campaign_type": "verification",
+  "cluster": "rtxpro6000",
+  "date": "2026-05-16",
+  "generated_at_utc": "2026-05-16T15:03:39Z",
+  "status": "passed",
+  "coverage": {
+    "expected": 4,
+    "present": 4,
+    "passed": 4,
+    "degraded": 0,
+    "failed": 0,
+    "skipped": 0,
+    "missing": 0,
+    "unknown": 0
+  },
+  "archive": {
+    "status": "present",
+    "checksum_manifest_path": "results/archives/2026-05-16/aicr-results-2026-05-16-rtxpro6000-verify.json",
+    "compression": "zstd",
+    "byte_size": 84640108,
+    "sha256": "de7b6ad9fb31e107993f6a7e73274d6527a39b2733c6090366ab18923d4a7a6f"
+  },
+  "node_debug_followup": {
+    "supported": true,
+    "required": false,
+    "closeout_status": "not-required",
+    "suspect_nodes": [],
+    "summary_markdown_path": null,
+    "summary_json_path": null,
+    "compare_markdown_paths": [],
+    "archive_manifest_path": null,
+    "missing_compare_suspects": [],
+    "suspect_profiles": {},
+    "suspect_top_peers": {}
+  },
+  "checks": [
+    {
+      "check_id": "gpu-topology",
+      "label": "GPU topology",
+      "status": "passed",
+      "expected": true,
+      "dashboard_path": "results/reports/2026-05-16/verification/gpu-topology/gpu-topology-rtxpro6000.md",
+      "manifest_path": "results/reports/2026-05-16/verification/gpu-topology/130007Z-gpu-topology-rtxpro6000.json",
+      "samples": "1",
+      "passes": "1/1",
+      "headline": "16 idle RTX PRO 6000 nodes captured",
+      "findings": []
+    },
+    {
+      "check_id": "gds",
+      "label": "GDS",
+      "status": "passed",
+      "expected": true,
+      "dashboard_path": "results/reports/2026-05-16/verification/gds/gds-rtxpro6000.md",
+      "manifest_path": "results/reports/2026-05-16/verification/gds/130055Z-gds-rtxpro6000.json",
+      "samples": "5",
+      "passes": "5/5",
+      "headline": "repeated GDS complete",
+      "findings": [
+        "GDS retained 4 low-tail anomaly finding(s)."
+      ]
+    },
+    {
+      "check_id": "nccl-suite",
+      "label": "NCCL suite",
+      "status": "passed",
+      "expected": true,
+      "dashboard_path": "results/reports/2026-05-16/verification/nccl-suite/nccl-suite-rtxpro6000.md",
+      "manifest_path": "results/reports/2026-05-16/verification/nccl-suite/141024Z-nccl-suite-rtxpro6000.json",
+      "samples": "5",
+      "passes": "5/5",
+      "headline": "NCCL rank-per-GPU scale suite complete (1n, 2n, 4n)",
+      "findings": []
+    },
+    {
+      "check_id": "archive-manifest",
+      "label": "Archive manifest",
+      "status": "passed",
+      "expected": true,
+      "dashboard_path": null,
+      "manifest_path": "results/archives/2026-05-16/aicr-results-2026-05-16-rtxpro6000-verify.json",
+      "samples": "1",
+      "passes": "1/1",
+      "headline": "checksum manifest present",
+      "findings": []
+    }
+  ],
+  "findings": [
+    "GDS retained 4 low-tail anomaly finding(s)."
+  ],
+  "next_actions": [
+    "Use the archive checksum manifest to retrieve full raw/parsed evidence from VAST if needed."
+  ]
+}

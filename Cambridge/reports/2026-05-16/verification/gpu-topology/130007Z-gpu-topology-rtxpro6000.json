@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "check": "gpu-topology",
+  "cluster": "rtxpro6000",
+  "partition": "GPU1",
+  "discovered_at_utc": "2026-05-16T13:00:07Z",
+  "mode": "apply",
+  "idle_nodes": [
+    "a0002",
+    "a0003",
+    "a0004",
+    "a0005",
+    "a0006",
+    "a0007",
+    "a0008",
+    "a0009",
+    "a0010",
+    "a0011",
+    "a0012",
+    "a0013",
+    "a0014",
+    "a0015",
+    "a0016",
+    "a0019"
+  ],
+  "submitted_jobs": [
+    {
+      "node": "a0002",
+      "job_id": "20504"
+    },
+    {
+      "node": "a0003",
+      "job_id": "20506"
+    },
+    {
+      "node": "a0004",
+      "job_id": "20508"
+    },
+    {
+      "node": "a0005",
+      "job_id": "20510"
+    },
+    {
+      "node": "a0006",
+      "job_id": "20512"
+    },
+    {
+      "node": "a0007",
+      "job_id": "20514"
+    },
+    {
+      "node": "a0008",
+      "job_id": "20516"
+    },
+    {
+      "node": "a0009",
+      "job_id": "20518"
+    },
+    {
+      "node": "a0010",
+      "job_id": "20520"
+    },
+    {
+      "node": "a0011",
+      "job_id": "20522"
+    },
+    {
+      "node": "a0012",
+      "job_id": "20524"
+    },
+    {
+      "node": "a0013",
+      "job_id": "20526"
+    },
+    {
+      "node": "a0014",
+      "job_id": "20528"
+    },
+    {
+      "node": "a0015",
+      "job_id": "20529"
+    },
+    {
+      "node": "a0016",
+      "job_id": "20531"
+    },
+    {
+      "node": "a0019",
+      "job_id": "20533"
+    }
+  ],
+  "skipped_nodes_by_state": {
+    "drained*": [
+      "a0017"
+    ],
+    "mixed": [
+      "a0018"
+    ]
+  },
+  "wait_result": "completed",
+  "submit_stagger_seconds": 2,
+  "report_paths": {
+    "markdown": "results/reports/2026-05-16/verification/gpu-topology/gpu-topology-rtxpro6000.md"
+  }
+}

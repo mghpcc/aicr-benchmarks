@@ -1,0 +1,1434 @@
+{
+  "schema_version": 1,
+  "check": "gds",
+  "cluster": "b200",
+  "profile": "small",
+  "partition": "GPU2",
+  "time_limit": "00:25:00",
+  "discovered_at_utc": "2026-05-16T13:01:23Z",
+  "mode": "apply",
+  "repeat_count": 5,
+  "repeat_aggregation": "olympic",
+  "gpu_preflight_filter_enabled": false,
+  "gpu_preflight_expected_count": 8,
+  "gpu_preflight_source": "latest same-day gpu-topology parsed summaries",
+  "gpu_preflight_excluded_nodes": [],
+  "idle_nodes": [
+    "b0002",
+    "b0003",
+    "b0004",
+    "b0005",
+    "b0006",
+    "b0007",
+    "b0008",
+    "b0009",
+    "b0010",
+    "b0011",
+    "b0012",
+    "b0013",
+    "b0014",
+    "b0015",
+    "b0016",
+    "b0017",
+    "b0018",
+    "b0019",
+    "b0020",
+    "b0021",
+    "b0022",
+    "b0023",
+    "b0024",
+    "b0025",
+    "b0026",
+    "b0027",
+    "b0028",
+    "b0029",
+    "b0030",
+    "b0031"
+  ],
+  "submitted_jobs": [
+    {
+      "round": 1,
+      "node": "b0002",
+      "job_id": "20551"
+    },
+    {
+      "round": 1,
+      "node": "b0003",
+      "job_id": "20553"
+    },
+    {
+      "round": 1,
+      "node": "b0004",
+      "job_id": "20555"
+    },
+    {
+      "round": 1,
+      "node": "b0005",
+      "job_id": "20557"
+    },
+    {
+      "round": 1,
+      "node": "b0006",
+      "job_id": "20559"
+    },
+    {
+      "round": 1,
+      "node": "b0007",
+      "job_id": "20561"
+    },
+    {
+      "round": 1,
+      "node": "b0008",
+      "job_id": "20563"
+    },
+    {
+      "round": 1,
+      "node": "b0009",
+      "job_id": "20565"
+    },
+    {
+      "round": 1,
+      "node": "b0010",
+      "job_id": "20567"
+    },
+    {
+      "round": 1,
+      "node": "b0011",
+      "job_id": "20572"
+    },
+    {
+      "round": 1,
+      "node": "b0012",
+      "job_id": "20577"
+    },
+    {
+      "round": 1,
+      "node": "b0013",
+      "job_id": "20579"
+    },
+    {
+      "round": 1,
+      "node": "b0014",
+      "job_id": "20581"
+    },
+    {
+      "round": 1,
+      "node": "b0015",
+      "job_id": "20583"
+    },
+    {
+      "round": 1,
+      "node": "b0016",
+      "job_id": "20585"
+    },
+    {
+      "round": 1,
+      "node": "b0017",
+      "job_id": "20586"
+    },
+    {
+      "round": 1,
+      "node": "b0018",
+      "job_id": "20587"
+    },
+    {
+      "round": 1,
+      "node": "b0019",
+      "job_id": "20588"
+    },
+    {
+      "round": 1,
+      "node": "b0020",
+      "job_id": "20589"
+    },
+    {
+      "round": 1,
+      "node": "b0021",
+      "job_id": "20590"
+    },
+    {
+      "round": 1,
+      "node": "b0022",
+      "job_id": "20592"
+    },
+    {
+      "round": 1,
+      "node": "b0023",
+      "job_id": "20594"
+    },
+    {
+      "round": 1,
+      "node": "b0024",
+      "job_id": "20596"
+    },
+    {
+      "round": 1,
+      "node": "b0025",
+      "job_id": "20598"
+    },
+    {
+      "round": 1,
+      "node": "b0026",
+      "job_id": "20600"
+    },
+    {
+      "round": 1,
+      "node": "b0027",
+      "job_id": "20602"
+    },
+    {
+      "round": 1,
+      "node": "b0028",
+      "job_id": "20604"
+    },
+    {
+      "round": 1,
+      "node": "b0029",
+      "job_id": "20606"
+    },
+    {
+      "round": 1,
+      "node": "b0030",
+      "job_id": "20608"
+    },
+    {
+      "round": 1,
+      "node": "b0031",
+      "job_id": "20610"
+    },
+    {
+      "round": 2,
+      "node": "b0002",
+      "job_id": "20617"
+    },
+    {
+      "round": 2,
+      "node": "b0003",
+      "job_id": "20618"
+    },
+    {
+      "round": 2,
+      "node": "b0004",
+      "job_id": "20619"
+    },
+    {
+      "round": 2,
+      "node": "b0005",
+      "job_id": "20620"
+    },
+    {
+      "round": 2,
+      "node": "b0006",
+      "job_id": "20621"
+    },
+    {
+      "round": 2,
+      "node": "b0007",
+      "job_id": "20623"
+    },
+    {
+      "round": 2,
+      "node": "b0008",
+      "job_id": "20625"
+    },
+    {
+      "round": 2,
+      "node": "b0009",
+      "job_id": "20627"
+    },
+    {
+      "round": 2,
+      "node": "b0010",
+      "job_id": "20629"
+    },
+    {
+      "round": 2,
+      "node": "b0011",
+      "job_id": "20631"
+    },
+    {
+      "round": 2,
+      "node": "b0012",
+      "job_id": "20633"
+    },
+    {
+      "round": 2,
+      "node": "b0013",
+      "job_id": "20635"
+    },
+    {
+      "round": 2,
+      "node": "b0014",
+      "job_id": "20637"
+    },
+    {
+      "round": 2,
+      "node": "b0015",
+      "job_id": "20639"
+    },
+    {
+      "round": 2,
+      "node": "b0016",
+      "job_id": "20641"
+    },
+    {
+      "round": 2,
+      "node": "b0017",
+      "job_id": "20643"
+    },
+    {
+      "round": 2,
+      "node": "b0018",
+      "job_id": "20645"
+    },
+    {
+      "round": 2,
+      "node": "b0019",
+      "job_id": "20647"
+    },
+    {
+      "round": 2,
+      "node": "b0020",
+      "job_id": "20649"
+    },
+    {
+      "round": 2,
+      "node": "b0021",
+      "job_id": "20651"
+    },
+    {
+      "round": 2,
+      "node": "b0022",
+      "job_id": "20653"
+    },
+    {
+      "round": 2,
+      "node": "b0023",
+      "job_id": "20654"
+    },
+    {
+      "round": 2,
+      "node": "b0024",
+      "job_id": "20655"
+    },
+    {
+      "round": 2,
+      "node": "b0025",
+      "job_id": "20656"
+    },
+    {
+      "round": 2,
+      "node": "b0026",
+      "job_id": "20657"
+    },
+    {
+      "round": 2,
+      "node": "b0027",
+      "job_id": "20658"
+    },
+    {
+      "round": 2,
+      "node": "b0028",
+      "job_id": "20660"
+    },
+    {
+      "round": 2,
+      "node": "b0029",
+      "job_id": "20662"
+    },
+    {
+      "round": 2,
+      "node": "b0030",
+      "job_id": "20664"
+    },
+    {
+      "round": 2,
+      "node": "b0031",
+      "job_id": "20666"
+    },
+    {
+      "round": 3,
+      "node": "b0002",
+      "job_id": "20674"
+    },
+    {
+      "round": 3,
+      "node": "b0003",
+      "job_id": "20676"
+    },
+    {
+      "round": 3,
+      "node": "b0004",
+      "job_id": "20678"
+    },
+    {
+      "round": 3,
+      "node": "b0005",
+      "job_id": "20680"
+    },
+    {
+      "round": 3,
+      "node": "b0006",
+      "job_id": "20682"
+    },
+    {
+      "round": 3,
+      "node": "b0007",
+      "job_id": "20684"
+    },
+    {
+      "round": 3,
+      "node": "b0008",
+      "job_id": "20685"
+    },
+    {
+      "round": 3,
+      "node": "b0009",
+      "job_id": "20686"
+    },
+    {
+      "round": 3,
+      "node": "b0010",
+      "job_id": "20687"
+    },
+    {
+      "round": 3,
+      "node": "b0011",
+      "job_id": "20688"
+    },
+    {
+      "round": 3,
+      "node": "b0012",
+      "job_id": "20689"
+    },
+    {
+      "round": 3,
+      "node": "b0013",
+      "job_id": "20691"
+    },
+    {
+      "round": 3,
+      "node": "b0014",
+      "job_id": "20693"
+    },
+    {
+      "round": 3,
+      "node": "b0015",
+      "job_id": "20695"
+    },
+    {
+      "round": 3,
+      "node": "b0016",
+      "job_id": "20697"
+    },
+    {
+      "round": 3,
+      "node": "b0017",
+      "job_id": "20699"
+    },
+    {
+      "round": 3,
+      "node": "b0018",
+      "job_id": "20701"
+    },
+    {
+      "round": 3,
+      "node": "b0019",
+      "job_id": "20703"
+    },
+    {
+      "round": 3,
+      "node": "b0020",
+      "job_id": "20705"
+    },
+    {
+      "round": 3,
+      "node": "b0021",
+      "job_id": "20707"
+    },
+    {
+      "round": 3,
+      "node": "b0022",
+      "job_id": "20709"
+    },
+    {
+      "round": 3,
+      "node": "b0023",
+      "job_id": "20711"
+    },
+    {
+      "round": 3,
+      "node": "b0024",
+      "job_id": "20713"
+    },
+    {
+      "round": 3,
+      "node": "b0025",
+      "job_id": "20715"
+    },
+    {
+      "round": 3,
+      "node": "b0026",
+      "job_id": "20717"
+    },
+    {
+      "round": 3,
+      "node": "b0027",
+      "job_id": "20719"
+    },
+    {
+      "round": 3,
+      "node": "b0028",
+      "job_id": "20721"
+    },
+    {
+      "round": 3,
+      "node": "b0029",
+      "job_id": "20722"
+    },
+    {
+      "round": 3,
+      "node": "b0030",
+      "job_id": "20725"
+    },
+    {
+      "round": 3,
+      "node": "b0031",
+      "job_id": "20729"
+    },
+    {
+      "round": 4,
+      "node": "b0002",
+      "job_id": "20741"
+    },
+    {
+      "round": 4,
+      "node": "b0003",
+      "job_id": "20742"
+    },
+    {
+      "round": 4,
+      "node": "b0004",
+      "job_id": "20743"
+    },
+    {
+      "round": 4,
+      "node": "b0005",
+      "job_id": "20744"
+    },
+    {
+      "round": 4,
+      "node": "b0006",
+      "job_id": "20746"
+    },
+    {
+      "round": 4,
+      "node": "b0007",
+      "job_id": "20750"
+    },
+    {
+      "round": 4,
+      "node": "b0008",
+      "job_id": "20754"
+    },
+    {
+      "round": 4,
+      "node": "b0009",
+      "job_id": "20756"
+    },
+    {
+      "round": 4,
+      "node": "b0010",
+      "job_id": "20757"
+    },
+    {
+      "round": 4,
+      "node": "b0011",
+      "job_id": "20758"
+    },
+    {
+      "round": 4,
+      "node": "b0012",
+      "job_id": "20759"
+    },
+    {
+      "round": 4,
+      "node": "b0013",
+      "job_id": "20760"
+    },
+    {
+      "round": 4,
+      "node": "b0014",
+      "job_id": "20761"
+    },
+    {
+      "round": 4,
+      "node": "b0015",
+      "job_id": "20762"
+    },
+    {
+      "round": 4,
+      "node": "b0016",
+      "job_id": "20764"
+    },
+    {
+      "round": 4,
+      "node": "b0017",
+      "job_id": "20768"
+    },
+    {
+      "round": 4,
+      "node": "b0018",
+      "job_id": "20769"
+    },
+    {
+      "round": 4,
+      "node": "b0019",
+      "job_id": "20770"
+    },
+    {
+      "round": 4,
+      "node": "b0020",
+      "job_id": "20771"
+    },
+    {
+      "round": 4,
+      "node": "b0021",
+      "job_id": "20772"
+    },
+    {
+      "round": 4,
+      "node": "b0022",
+      "job_id": "20773"
+    },
+    {
+      "round": 4,
+      "node": "b0023",
+      "job_id": "20774"
+    },
+    {
+      "round": 4,
+      "node": "b0024",
+      "job_id": "20775"
+    },
+    {
+      "round": 4,
+      "node": "b0025",
+      "job_id": "20776"
+    },
+    {
+      "round": 4,
+      "node": "b0026",
+      "job_id": "20777"
+    },
+    {
+      "round": 4,
+      "node": "b0027",
+      "job_id": "20778"
+    },
+    {
+      "round": 4,
+      "node": "b0028",
+      "job_id": "20780"
+    },
+    {
+      "round": 4,
+      "node": "b0029",
+      "job_id": "20784"
+    },
+    {
+      "round": 4,
+      "node": "b0030",
+      "job_id": "20788"
+    },
+    {
+      "round": 4,
+      "node": "b0031",
+      "job_id": "20792"
+    },
+    {
+      "round": 5,
+      "node": "b0002",
+      "job_id": "20799"
+    },
+    {
+      "round": 5,
+      "node": "b0003",
+      "job_id": "20800"
+    },
+    {
+      "round": 5,
+      "node": "b0004",
+      "job_id": "20801"
+    },
+    {
+      "round": 5,
+      "node": "b0005",
+      "job_id": "20805"
+    },
+    {
+      "round": 5,
+      "node": "b0006",
+      "job_id": "20809"
+    },
+    {
+      "round": 5,
+      "node": "b0007",
+      "job_id": "20812"
+    },
+    {
+      "round": 5,
+      "node": "b0008",
+      "job_id": "20813"
+    },
+    {
+      "round": 5,
+      "node": "b0009",
+      "job_id": "20814"
+    },
+    {
+      "round": 5,
+      "node": "b0010",
+      "job_id": "20815"
+    },
+    {
+      "round": 5,
+      "node": "b0011",
+      "job_id": "20816"
+    },
+    {
+      "round": 5,
+      "node": "b0012",
+      "job_id": "20817"
+    },
+    {
+      "round": 5,
+      "node": "b0013",
+      "job_id": "20818"
+    },
+    {
+      "round": 5,
+      "node": "b0014",
+      "job_id": "20819"
+    },
+    {
+      "round": 5,
+      "node": "b0015",
+      "job_id": "20823"
+    },
+    {
+      "round": 5,
+      "node": "b0016",
+      "job_id": "20825"
+    },
+    {
+      "round": 5,
+      "node": "b0017",
+      "job_id": "20826"
+    },
+    {
+      "round": 5,
+      "node": "b0018",
+      "job_id": "20827"
+    },
+    {
+      "round": 5,
+      "node": "b0019",
+      "job_id": "20828"
+    },
+    {
+      "round": 5,
+      "node": "b0020",
+      "job_id": "20829"
+    },
+    {
+      "round": 5,
+      "node": "b0021",
+      "job_id": "20830"
+    },
+    {
+      "round": 5,
+      "node": "b0022",
+      "job_id": "20831"
+    },
+    {
+      "round": 5,
+      "node": "b0023",
+      "job_id": "20832"
+    },
+    {
+      "round": 5,
+      "node": "b0024",
+      "job_id": "20833"
+    },
+    {
+      "round": 5,
+      "node": "b0025",
+      "job_id": "20834"
+    },
+    {
+      "round": 5,
+      "node": "b0026",
+      "job_id": "20835"
+    },
+    {
+      "round": 5,
+      "node": "b0027",
+      "job_id": "20839"
+    },
+    {
+      "round": 5,
+      "node": "b0028",
+      "job_id": "20843"
+    },
+    {
+      "round": 5,
+      "node": "b0029",
+      "job_id": "20847"
+    },
+    {
+      "round": 5,
+      "node": "b0030",
+      "job_id": "20851"
+    },
+    {
+      "round": 5,
+      "node": "b0031",
+      "job_id": "20855"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "submitted_jobs": [
+        {
+          "node": "b0002",
+          "job_id": "20551"
+        },
+        {
+          "node": "b0003",
+          "job_id": "20553"
+        },
+        {
+          "node": "b0004",
+          "job_id": "20555"
+        },
+        {
+          "node": "b0005",
+          "job_id": "20557"
+        },
+        {
+          "node": "b0006",
+          "job_id": "20559"
+        },
+        {
+          "node": "b0007",
+          "job_id": "20561"
+        },
+        {
+          "node": "b0008",
+          "job_id": "20563"
+        },
+        {
+          "node": "b0009",
+          "job_id": "20565"
+        },
+        {
+          "node": "b0010",
+          "job_id": "20567"
+        },
+        {
+          "node": "b0011",
+          "job_id": "20572"
+        },
+        {
+          "node": "b0012",
+          "job_id": "20577"
+        },
+        {
+          "node": "b0013",
+          "job_id": "20579"
+        },
+        {
+          "node": "b0014",
+          "job_id": "20581"
+        },
+        {
+          "node": "b0015",
+          "job_id": "20583"
+        },
+        {
+          "node": "b0016",
+          "job_id": "20585"
+        },
+        {
+          "node": "b0017",
+          "job_id": "20586"
+        },
+        {
+          "node": "b0018",
+          "job_id": "20587"
+        },
+        {
+          "node": "b0019",
+          "job_id": "20588"
+        },
+        {
+          "node": "b0020",
+          "job_id": "20589"
+        },
+        {
+          "node": "b0021",
+          "job_id": "20590"
+        },
+        {
+          "node": "b0022",
+          "job_id": "20592"
+        },
+        {
+          "node": "b0023",
+          "job_id": "20594"
+        },
+        {
+          "node": "b0024",
+          "job_id": "20596"
+        },
+        {
+          "node": "b0025",
+          "job_id": "20598"
+        },
+        {
+          "node": "b0026",
+          "job_id": "20600"
+        },
+        {
+          "node": "b0027",
+          "job_id": "20602"
+        },
+        {
+          "node": "b0028",
+          "job_id": "20604"
+        },
+        {
+          "node": "b0029",
+          "job_id": "20606"
+        },
+        {
+          "node": "b0030",
+          "job_id": "20608"
+        },
+        {
+          "node": "b0031",
+          "job_id": "20610"
+        }
+      ]
+    },
+    {
+      "round": 2,
+      "submitted_jobs": [
+        {
+          "node": "b0002",
+          "job_id": "20617"
+        },
+        {
+          "node": "b0003",
+          "job_id": "20618"
+        },
+        {
+          "node": "b0004",
+          "job_id": "20619"
+        },
+        {
+          "node": "b0005",
+          "job_id": "20620"
+        },
+        {
+          "node": "b0006",
+          "job_id": "20621"
+        },
+        {
+          "node": "b0007",
+          "job_id": "20623"
+        },
+        {
+          "node": "b0008",
+          "job_id": "20625"
+        },
+        {
+          "node": "b0009",
+          "job_id": "20627"
+        },
+        {
+          "node": "b0010",
+          "job_id": "20629"
+        },
+        {
+          "node": "b0011",
+          "job_id": "20631"
+        },
+        {
+          "node": "b0012",
+          "job_id": "20633"
+        },
+        {
+          "node": "b0013",
+          "job_id": "20635"
+        },
+        {
+          "node": "b0014",
+          "job_id": "20637"
+        },
+        {
+          "node": "b0015",
+          "job_id": "20639"
+        },
+        {
+          "node": "b0016",
+          "job_id": "20641"
+        },
+        {
+          "node": "b0017",
+          "job_id": "20643"
+        },
+        {
+          "node": "b0018",
+          "job_id": "20645"
+        },
+        {
+          "node": "b0019",
+          "job_id": "20647"
+        },
+        {
+          "node": "b0020",
+          "job_id": "20649"
+        },
+        {
+          "node": "b0021",
+          "job_id": "20651"
+        },
+        {
+          "node": "b0022",
+          "job_id": "20653"
+        },
+        {
+          "node": "b0023",
+          "job_id": "20654"
+        },
+        {
+          "node": "b0024",
+          "job_id": "20655"
+        },
+        {
+          "node": "b0025",
+          "job_id": "20656"
+        },
+        {
+          "node": "b0026",
+          "job_id": "20657"
+        },
+        {
+          "node": "b0027",
+          "job_id": "20658"
+        },
+        {
+          "node": "b0028",
+          "job_id": "20660"
+        },
+        {
+          "node": "b0029",
+          "job_id": "20662"
+        },
+        {
+          "node": "b0030",
+          "job_id": "20664"
+        },
+        {
+          "node": "b0031",
+          "job_id": "20666"
+        }
+      ]
+    },
+    {
+      "round": 3,
+      "submitted_jobs": [
+        {
+          "node": "b0002",
+          "job_id": "20674"
+        },
+        {
+          "node": "b0003",
+          "job_id": "20676"
+        },
+        {
+          "node": "b0004",
+          "job_id": "20678"
+        },
+        {
+          "node": "b0005",
+          "job_id": "20680"
+        },
+        {
+          "node": "b0006",
+          "job_id": "20682"
+        },
+        {
+          "node": "b0007",
+          "job_id": "20684"
+        },
+        {
+          "node": "b0008",
+          "job_id": "20685"
+        },
+        {
+          "node": "b0009",
+          "job_id": "20686"
+        },
+        {
+          "node": "b0010",
+          "job_id": "20687"
+        },
+        {
+          "node": "b0011",
+          "job_id": "20688"
+        },
+        {
+          "node": "b0012",
+          "job_id": "20689"
+        },
+        {
+          "node": "b0013",
+          "job_id": "20691"
+        },
+        {
+          "node": "b0014",
+          "job_id": "20693"
+        },
+        {
+          "node": "b0015",
+          "job_id": "20695"
+        },
+        {
+          "node": "b0016",
+          "job_id": "20697"
+        },
+        {
+          "node": "b0017",
+          "job_id": "20699"
+        },
+        {
+          "node": "b0018",
+          "job_id": "20701"
+        },
+        {
+          "node": "b0019",
+          "job_id": "20703"
+        },
+        {
+          "node": "b0020",
+          "job_id": "20705"
+        },
+        {
+          "node": "b0021",
+          "job_id": "20707"
+        },
+        {
+          "node": "b0022",
+          "job_id": "20709"
+        },
+        {
+          "node": "b0023",
+          "job_id": "20711"
+        },
+        {
+          "node": "b0024",
+          "job_id": "20713"
+        },
+        {
+          "node": "b0025",
+          "job_id": "20715"
+        },
+        {
+          "node": "b0026",
+          "job_id": "20717"
+        },
+        {
+          "node": "b0027",
+          "job_id": "20719"
+        },
+        {
+          "node": "b0028",
+          "job_id": "20721"
+        },
+        {
+          "node": "b0029",
+          "job_id": "20722"
+        },
+        {
+          "node": "b0030",
+          "job_id": "20725"
+        },
+        {
+          "node": "b0031",
+          "job_id": "20729"
+        }
+      ]
+    },
+    {
+      "round": 4,
+      "submitted_jobs": [
+        {
+          "node": "b0002",
+          "job_id": "20741"
+        },
+        {
+          "node": "b0003",
+          "job_id": "20742"
+        },
+        {
+          "node": "b0004",
+          "job_id": "20743"
+        },
+        {
+          "node": "b0005",
+          "job_id": "20744"
+        },
+        {
+          "node": "b0006",
+          "job_id": "20746"
+        },
+        {
+          "node": "b0007",
+          "job_id": "20750"
+        },
+        {
+          "node": "b0008",
+          "job_id": "20754"
+        },
+        {
+          "node": "b0009",
+          "job_id": "20756"
+        },
+        {
+          "node": "b0010",
+          "job_id": "20757"
+        },
+        {
+          "node": "b0011",
+          "job_id": "20758"
+        },
+        {
+          "node": "b0012",
+          "job_id": "20759"
+        },
+        {
+          "node": "b0013",
+          "job_id": "20760"
+        },
+        {
+          "node": "b0014",
+          "job_id": "20761"
+        },
+        {
+          "node": "b0015",
+          "job_id": "20762"
+        },
+        {
+          "node": "b0016",
+          "job_id": "20764"
+        },
+        {
+          "node": "b0017",
+          "job_id": "20768"
+        },
+        {
+          "node": "b0018",
+          "job_id": "20769"
+        },
+        {
+          "node": "b0019",
+          "job_id": "20770"
+        },
+        {
+          "node": "b0020",
+          "job_id": "20771"
+        },
+        {
+          "node": "b0021",
+          "job_id": "20772"
+        },
+        {
+          "node": "b0022",
+          "job_id": "20773"
+        },
+        {
+          "node": "b0023",
+          "job_id": "20774"
+        },
+        {
+          "node": "b0024",
+          "job_id": "20775"
+        },
+        {
+          "node": "b0025",
+          "job_id": "20776"
+        },
+        {
+          "node": "b0026",
+          "job_id": "20777"
+        },
+        {
+          "node": "b0027",
+          "job_id": "20778"
+        },
+        {
+          "node": "b0028",
+          "job_id": "20780"
+        },
+        {
+          "node": "b0029",
+          "job_id": "20784"
+        },
+        {
+          "node": "b0030",
+          "job_id": "20788"
+        },
+        {
+          "node": "b0031",
+          "job_id": "20792"
+        }
+      ]
+    },
+    {
+      "round": 5,
+      "submitted_jobs": [
+        {
+          "node": "b0002",
+          "job_id": "20799"
+        },
+        {
+          "node": "b0003",
+          "job_id": "20800"
+        },
+        {
+          "node": "b0004",
+          "job_id": "20801"
+        },
+        {
+          "node": "b0005",
+          "job_id": "20805"
+        },
+        {
+          "node": "b0006",
+          "job_id": "20809"
+        },
+        {
+          "node": "b0007",
+          "job_id": "20812"
+        },
+        {
+          "node": "b0008",
+          "job_id": "20813"
+        },
+        {
+          "node": "b0009",
+          "job_id": "20814"
+        },
+        {
+          "node": "b0010",
+          "job_id": "20815"
+        },
+        {
+          "node": "b0011",
+          "job_id": "20816"
+        },
+        {
+          "node": "b0012",
+          "job_id": "20817"
+        },
+        {
+          "node": "b0013",
+          "job_id": "20818"
+        },
+        {
+          "node": "b0014",
+          "job_id": "20819"
+        },
+        {
+          "node": "b0015",
+          "job_id": "20823"
+        },
+        {
+          "node": "b0016",
+          "job_id": "20825"
+        },
+        {
+          "node": "b0017",
+          "job_id": "20826"
+        },
+        {
+          "node": "b0018",
+          "job_id": "20827"
+        },
+        {
+          "node": "b0019",
+          "job_id": "20828"
+        },
+        {
+          "node": "b0020",
+          "job_id": "20829"
+        },
+        {
+          "node": "b0021",
+          "job_id": "20830"
+        },
+        {
+          "node": "b0022",
+          "job_id": "20831"
+        },
+        {
+          "node": "b0023",
+          "job_id": "20832"
+        },
+        {
+          "node": "b0024",
+          "job_id": "20833"
+        },
+        {
+          "node": "b0025",
+          "job_id": "20834"
+        },
+        {
+          "node": "b0026",
+          "job_id": "20835"
+        },
+        {
+          "node": "b0027",
+          "job_id": "20839"
+        },
+        {
+          "node": "b0028",
+          "job_id": "20843"
+        },
+        {
+          "node": "b0029",
+          "job_id": "20847"
+        },
+        {
+          "node": "b0030",
+          "job_id": "20851"
+        },
+        {
+          "node": "b0031",
+          "job_id": "20855"
+        }
+      ]
+    }
+  ],
+  "skipped_nodes_by_state": {},
+  "wait_result": "completed",
+  "submit_stagger_seconds": 15,
+  "round_stagger_seconds": 60,
+  "report_paths": {
+    "markdown": "results/reports/2026-05-16/verification/gds/gds-b200.md"
+  }
+}

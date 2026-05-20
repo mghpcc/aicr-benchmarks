@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "aicr-results-archive",
+  "date": "2026-05-16",
+  "cluster": "rtxpro6000",
+  "scope": "verify",
+  "created_at_utc": "2026-05-16T15:03:18Z",
+  "archive_path": "/work/aicr/commissioning/benchmarks/results-archive/2026-05-16/aicr-results-2026-05-16-rtxpro6000-verify.tar.zst",
+  "archive_relpath": "/work/aicr/commissioning/benchmarks/results-archive/2026-05-16/aicr-results-2026-05-16-rtxpro6000-verify.tar.zst",
+  "compression": "zstd",
+  "sha256": "de7b6ad9fb31e107993f6a7e73274d6527a39b2733c6090366ab18923d4a7a6f",
+  "byte_size": 84640108,
+  "repo_commit": "75d7da29995e917782fd1a71001b16b531e57335",
+  "repo_dirty": false,
+  "source_paths": [
+    "results/setup/rtxpro6000",
+    "results/by-date/2026-05-16",
+    "results/by-node/rtxpro6000",
+    "results/reports/2026-05-16"
+  ],
+  "missing_source_paths": []
+}

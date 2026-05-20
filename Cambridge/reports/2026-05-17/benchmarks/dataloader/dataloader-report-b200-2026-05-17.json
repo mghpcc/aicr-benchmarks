@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "date": "2026-05-17",
+  "cluster": "b200",
+  "include_smoke": false,
+  "include_untrusted": false,
+  "repeat_aggregation": "olympic",
+  "raw_row_count": 42,
+  "row_count": 42,
+  "excluded_smoke_count": 0,
+  "plot_row_count": 42,
+  "warnings": [],
+  "outputs": {
+    "csv": "results/reports/2026-05-17/dataloader/dataloader-summary-b200-2026-05-17.csv",
+    "markdown": "results/reports/2026-05-17/dataloader/dataloader-b200-2026-05-17.md",
+    "throughput_plot": "results/reports/2026-05-17/dataloader/dataloader-throughput-b200-2026-05-17.png",
+    "rank_imbalance_plot": "results/reports/2026-05-17/dataloader/dataloader-rank-imbalance-b200-2026-05-17.png"
+  }
+}

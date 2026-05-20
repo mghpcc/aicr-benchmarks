@@ -1,0 +1,77 @@
+{
+  "schema_version": 1,
+  "check": "nccl-suite",
+  "scope": "scale",
+  "cluster": "b200",
+  "partition": "GPU2",
+  "profile": "small",
+  "discovered_at_utc": "2026-05-16T14:02:44Z",
+  "mode": "apply",
+  "repeat_count": 1,
+  "repeat_aggregation": "olympic",
+  "gpu_preflight_filter_enabled": false,
+  "gpu_preflight_expected_count": 8,
+  "gpu_preflight_source": "latest same-day gpu-topology parsed summaries",
+  "gpu_preflight_excluded_nodes": [],
+  "selected_scales": [
+    2
+  ],
+  "idle_nodes": [
+    "b0002",
+    "b0003"
+  ],
+  "selected_groups": [
+    {
+      "scale": 2,
+      "group": "b0002,b0003",
+      "nodes": [
+        "b0002",
+        "b0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16
+    }
+  ],
+  "submitted_jobs": [
+    {
+      "round": 1,
+      "scale": 2,
+      "group": "b0002,b0003",
+      "nodes": [
+        "b0002",
+        "b0003"
+      ],
+      "node_count": 2,
+      "gpu_count": 16,
+      "job_id": "20950"
+    }
+  ],
+  "rounds": [
+    {
+      "round": 1,
+      "submitted_jobs": [
+        {
+          "round": 1,
+          "scale": 2,
+          "group": "b0002,b0003",
+          "nodes": [
+            "b0002",
+            "b0003"
+          ],
+          "node_count": 2,
+          "gpu_count": 16,
+          "job_id": "20950"
+        }
+      ]
+    }
+  ],
+  "scale_submission_policy": "sequential-wait",
+  "skipped_nodes_by_state": {},
+  "wait_result": "completed",
+  "submit_stagger_seconds": 5,
+  "scale_stagger_seconds": 0,
+  "round_stagger_seconds": 0,
+  "report_paths": {
+    "markdown": "results/reports/2026-05-16/verification/nccl-suite/nccl-suite-b200.md"
+  }
+}

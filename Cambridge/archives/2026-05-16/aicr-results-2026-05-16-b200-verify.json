@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "kind": "aicr-results-archive",
+  "date": "2026-05-16",
+  "cluster": "b200",
+  "scope": "verify",
+  "created_at_utc": "2026-05-16T17:49:48Z",
+  "archive_path": "/work/aicr/commissioning/benchmarks/results-archive/2026-05-16/aicr-results-2026-05-16-b200-verify.tar.zst",
+  "archive_relpath": "/work/aicr/commissioning/benchmarks/results-archive/2026-05-16/aicr-results-2026-05-16-b200-verify.tar.zst",
+  "compression": "zstd",
+  "sha256": "70f1bbed481e5ed4646787dba0de94305ab83b786a3c308f830affd0a29fa8a2",
+  "byte_size": 260053977,
+  "repo_commit": "75d7da29995e917782fd1a71001b16b531e57335",
+  "repo_dirty": false,
+  "source_paths": [
+    "results/setup/b200",
+    "results/by-date/2026-05-16",
+    "results/by-node/b200",
+    "results/reports/2026-05-16"
+  ],
+  "missing_source_paths": []
+}
