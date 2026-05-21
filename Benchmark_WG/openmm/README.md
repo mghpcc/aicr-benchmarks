@@ -1,11 +1,10 @@
 # OpenMM Benchmark
-Aya Nawano, Yale University
 
 ## OpenMM installation
 [OpenMM](https://openmm.org/) is a high-performance molecular simulation toolset that is highly optimized for GPUs. At Yale, we install this software as a module using [EasyBuild](https://easybuild.io/), but it can also be installed with conda(`conda install -c conda-forge openmm`) or pip (`pip install openmm`). For this benchmark, we installed it as a module using OpenMM v8.4.0 with the 2024a toolchain and CUDA 12.8.0.
 
 ## System and Expected Performance
-The benchmark suite is provided with the software (`examples/benchmarks`). There are several systems available for benchmarking. For this benchmark, I chose Apolipoprotein A1 (ApoA1) with the Particle Mesh Ewald (PME) method to calculate the effect of solvent. More details of the system can be found [here](https://openmm.org/benchmarks). The official benchmark results are `948.02 ns/day` for the RTX Pro 6000 and `875.937 ns/day` for the B200.
+The benchmark suite is provided with the software (`examples/benchmarks`). If you installed OpenMM with conda, it's located in `$$CONDA_PREFIX/share/openmm/examples/benchmarks`. There are several systems available for benchmarking. For this benchmark, I chose Apolipoprotein A1 (ApoA1) with the Particle Mesh Ewald (PME) method to calculate the effect of solvent. More details of the system can be found [here](https://openmm.org/benchmarks). The official benchmark results are `948.02 ns/day` for the RTX Pro 6000 and `875.937 ns/day` for the B200.
 
 ## Benchmark Details
 `openmm.sh` is the main submission script. Each simulation runs on 1 GPU for 200 seconds. 
