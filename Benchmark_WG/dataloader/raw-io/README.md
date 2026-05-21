@@ -121,7 +121,7 @@ grep -h 'addr=' output-peak/*_a<ARRAY_ID>_t*.out | grep -oE 'addr=[0-9.]+' | sor
 
 A healthy distribution shows many distinct addresses; if all addresses are the same, the VIP pool isn't rotating and you've bottlenecked on one CBOX.
 
-## Pushing toward 400+ GB/s
+## Pushing toward cluster limit
 
 **The 462 GB/s Vast spec is not reachable from this cluster with stock NFS.** Each NFS-over-RDMA mount caps at ~5 GB/s (even with `nconnect=16`), and the cluster's available compute nodes (b200 + rtx + cpu + devel ≈ 55 nodes max) give a realistic ceiling of **~270 GB/s**. The observed 42-node run reached **206 GB/s = 42 × 4.9 GB/s/node** — essentially the per-client cap times the node count, not a tuning miss. To genuinely exceed 270 GB/s you need either many more client nodes than this cluster has, or **Vast's proprietary DPC (Data Path Client)** which multiplexes a single host across all CBOXes and bypasses the per-mount cap. Ask the Vast / cluster team whether DPC is available here. Full diagnostic data, per-client-cap derivation, and DPC notes in [`pushing-to-400gbps.md`](pushing-to-400gbps.md).
 
