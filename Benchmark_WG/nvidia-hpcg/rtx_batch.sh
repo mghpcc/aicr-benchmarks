@@ -2,7 +2,7 @@
 
 # RTX Pro 6000 
 GPU=rtx
-for n in 1 2 3 4 ; do
+for n in 1 2 4 ; do
     sbatch \
         --partition=${GPU}-batch \
         --gpus=${n} \
