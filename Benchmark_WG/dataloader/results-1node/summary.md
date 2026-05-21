@@ -2,6 +2,8 @@
 
 The `results/` directory contains 24 runs covering two benchmark suites, each swept across 6 process counts (1, 8, 32, 64, 96, 128) and two GPU clusters (GPU1 = `a00xx` hosts, GPU2 = `b00xx` hosts). Each (config, mode) cell is the mean of 3 iterations.
 
+**All GB/s numbers below are total throughput across all processes, not per-process.** The workload is split among the N processes and the GB/s is `total_bytes / wall_clock_time` for the whole job.
+
 ## Benchmark A — READ: `raw` vs `dataloader` (jobs 22284-22293, 22393-22394)
 
 From `read_benchmark.py`. Single large workload (~21 GB, 186 060 files). `raw` = direct read via `os.read` (optional `O_DIRECT`); `dataloader` = PyTorch DataLoader read path.

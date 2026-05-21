@@ -1,0 +1,38 @@
+=== Wed May 20 14:30:49 EDT 2026 mode=read nodes=4 npernode=32 ===
+[a0003 r1] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0005 r3] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0003 r1] 1281167 files
+[a0002 r0] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0002 r0] 1281167 files
+[a0005 r3] 1281167 files
+[a0003 r1] avg ~112.1 KB/file, num_files/iter = 187015
+[a0002 r0] avg ~112.7 KB/file, num_files/iter = 186060
+[a0005 r3] avg ~112.2 KB/file, num_files/iter = 186957
+[a0004 r2] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0004 r2] 1281167 files
+[a0004 r2] avg ~110.0 KB/file, num_files/iter = 190599
+[a0003 r1] mode=raw iter=0 files=187015 bytes=21469430582 t=6.56s 3.050 GB/s
+[a0002 r0] mode=raw iter=0 files=186060 bytes=21358543163 t=6.48s 3.069 GB/s
+[a0005 r3] mode=raw iter=0 files=186957 bytes=21362563583 t=6.58s 3.025 GB/s
+[a0004 r2] mode=raw iter=0 files=190599 bytes=21867626321 t=8.12s 2.507 GB/s
+[a0002 r0] mode=raw iter=1 files=186060 bytes=21294004584 t=6.52s 3.043 GB/s
+[a0003 r1] mode=raw iter=1 files=187015 bytes=21485709197 t=6.60s 3.030 GB/s
+[a0005 r3] mode=raw iter=1 files=186957 bytes=21529161074 t=6.56s 3.057 GB/s
+[a0002 r0] mode=raw iter=2 files=186060 bytes=21290456544 t=6.49s 3.057 GB/s
+[a0003 r1] mode=raw iter=2 files=187015 bytes=21449514626 t=6.57s 3.040 GB/s
+[a0005 r3] mode=raw iter=2 files=186957 bytes=21502124947 t=6.54s 3.062 GB/s
+[a0004 r2] mode=raw iter=1 files=190599 bytes=21824477459 t=7.97s 2.551 GB/s
+[a0004 r2] mode=raw iter=2 files=190599 bytes=21781488742 t=7.86s 2.580 GB/s
+[a0002 r0] mode=dataloader iter=0 files=186060 bytes=21332216153 t=18.96s 1.048 GB/s
+[a0003 r1] mode=dataloader iter=0 files=187015 bytes=21432352802 t=19.13s 1.043 GB/s
+[a0005 r3] mode=dataloader iter=0 files=186957 bytes=21466640069 t=19.41s 1.030 GB/s
+[a0004 r2] mode=dataloader iter=0 files=190599 bytes=21863460021 t=21.00s 0.970 GB/s
+[a0002 r0] mode=dataloader iter=1 files=186060 bytes=21335717403 t=18.93s 1.050 GB/s
+[a0003 r1] mode=dataloader iter=1 files=187015 bytes=21335336786 t=18.94s 1.049 GB/s
+[a0005 r3] mode=dataloader iter=1 files=186957 bytes=21392105767 t=19.30s 1.032 GB/s
+[a0004 r2] mode=dataloader iter=1 files=190599 bytes=21930539841 t=21.34s 0.957 GB/s
+[a0002 r0] mode=dataloader iter=2 files=186060 bytes=21358355576 t=19.29s 1.031 GB/s
+[a0003 r1] mode=dataloader iter=2 files=187015 bytes=21493203835 t=19.38s 1.033 GB/s
+[a0005 r3] mode=dataloader iter=2 files=186957 bytes=21352874331 t=19.30s 1.031 GB/s
+[a0004 r2] mode=dataloader iter=2 files=190599 bytes=21827708865 t=20.73s 0.981 GB/s
+Done. Results: results/4node_32cpu_rtx-batch_25741/all.csv

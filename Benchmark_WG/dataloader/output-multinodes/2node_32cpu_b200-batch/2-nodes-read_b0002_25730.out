@@ -1,0 +1,20 @@
+=== Wed May 20 14:21:39 EDT 2026 mode=read nodes=2 npernode=32 ===
+[b0002 r0] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[b0002 r0] 1281167 files
+[b0003 r1] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[b0003 r1] 1281167 files
+[b0002 r0] avg ~112.7 KB/file, num_files/iter = 186060
+[b0003 r1] avg ~112.1 KB/file, num_files/iter = 187015
+[b0002 r0] mode=raw iter=0 files=186060 bytes=21358543163 t=6.49s 3.064 GB/s
+[b0003 r1] mode=raw iter=0 files=187015 bytes=21469430582 t=6.60s 3.031 GB/s
+[b0002 r0] mode=raw iter=1 files=186060 bytes=21294004584 t=6.46s 3.068 GB/s
+[b0003 r1] mode=raw iter=1 files=187015 bytes=21485709197 t=7.28s 2.747 GB/s
+[b0002 r0] mode=raw iter=2 files=186060 bytes=21290456544 t=6.40s 3.099 GB/s
+[b0003 r1] mode=raw iter=2 files=187015 bytes=21449514626 t=6.46s 3.093 GB/s
+[b0002 r0] mode=dataloader iter=0 files=186060 bytes=21332216153 t=19.13s 1.038 GB/s
+[b0003 r1] mode=dataloader iter=0 files=187015 bytes=21432352802 t=19.39s 1.029 GB/s
+[b0002 r0] mode=dataloader iter=1 files=186060 bytes=21335717403 t=18.99s 1.047 GB/s
+[b0003 r1] mode=dataloader iter=1 files=187015 bytes=21335336786 t=19.13s 1.038 GB/s
+[b0002 r0] mode=dataloader iter=2 files=186060 bytes=21358355576 t=18.98s 1.048 GB/s
+[b0003 r1] mode=dataloader iter=2 files=187015 bytes=21493203835 t=19.37s 1.033 GB/s
+Done. Results: results/2node_32cpu_b200-batch_25730/all.csv

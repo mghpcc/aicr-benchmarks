@@ -150,6 +150,7 @@ Three scripts live in the project root:
 | `job.sh` | One sbatch job — reads or writes against the storage on the allocated nodes. |
 | `loop-1node.sh` | Submits a sweep of 1-node `job.sh` jobs across `nproc ∈ {1, 8, 32, 64, 96}` and partitions `{GPU1, GPU2}` for both `read` and `write`. |
 | `loop-multinode.sh` | Submits a sweep of multinode `job.sh` jobs across `Nnodes ∈ {2, 4, 8, 12}`, `nproc ∈ {32, 64, 96}`, partitions `{GPU1, GPU2}`, for both `read` and `write`. |
+| `squential-loop-multinode.sh` | Same sweep as `loop-multinode.sh`, but submits every job with a shared `--job-name` and `--dependency=singleton` so SLURM runs them strictly one-at-a-time (no two ever in RUNNING state simultaneously). |
 
 ### Submit a single job
 
@@ -178,6 +179,28 @@ argument used as a result-dir prefix.
 Each loop iteration computes a tag like `1node_96cpu_GPU2` or `4node_64cpu_GPU1`
 and passes it to `job.sh`. To customize the sweep ranges, edit the `for` lists
 at the top of the script.
+
+### Submit a sequential sweep
+
+`squential-loop-multinode.sh` submits every job in the sweep with a shared
+`--job-name` (default `dataloader-sweep`) and `--dependency=singleton`. SLURM
+then enforces that only one job with that name runs at a time — all others
+sit in the queue and start in submission order as the running one finishes.
+
+```bash
+./squential-loop-multinode.sh
+```
+
+The script returns as soon as all jobs are queued, so logout is irrelevant —
+SLURM holds the dependency chain. Inspect with:
+
+```bash
+squeue -u $USER -n dataloader-sweep   # all queued/running sweep jobs
+```
+
+Each job's actual tag (`<Nnodes>node_<ncpus>cpu_<partition>`) lives in the
+output path `output/<tag>/` and the result dir `results/<tag>_<jobid>/`, since
+the SLURM job name is shared across the sweep.
 
 ### What each job does
 

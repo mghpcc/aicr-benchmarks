@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p GPU2
+#SBATCH -p b200-batch
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=96
 #SBATCH --mem-per-cpu=2G

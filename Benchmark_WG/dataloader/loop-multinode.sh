@@ -1,10 +1,9 @@
 FLAGS="--mem-per-cpu=4G --exclusive"
 
 for mode in read write; do
-   for Nnodes in 2 4 8 12; do
-      #for ncpus in 32 64 96; do
-      for ncpus in 128; do
-         for part in GPU1 GPU2; do
+   for Nnodes in 2 4 8 12 16; do
+      for ncpus in 32 64 96 128; do
+         for part in rtx-batch b200-batch; do
             TAG="${Nnodes}node_${ncpus}cpu_${part}"
             mkdir -p "output/$TAG"
             sbatch $FLAGS -J "$Nnodes-nodes-$mode" -o "output/$TAG/%x_%N_%j.out" -N $Nnodes --ntasks-per-node=$ncpus -p $part job.sh $mode $TAG

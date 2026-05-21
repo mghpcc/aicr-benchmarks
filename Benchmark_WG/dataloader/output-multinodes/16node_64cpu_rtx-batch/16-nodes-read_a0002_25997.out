@@ -1,0 +1,146 @@
+=== Wed May 20 16:52:27 EDT 2026 mode=read nodes=16 npernode=64 ===
+[a0002 r0] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0002 r0] 1281167 files
+[a0016 r14] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0009 r7] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0008 r6] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0012 r10] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0004 r2] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0014 r12] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0017 r15] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0005 r3] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0006 r4] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0003 r1] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0013 r11] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0015 r13] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0007 r5] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0011 r9] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0010 r8] indexing /work/mit/datasets/imagenet/images_complete/ilsvrc/train ...
+[a0016 r14] 1281167 files
+[a0009 r7] 1281167 files
+[a0012 r10] 1281167 files
+[a0014 r12] 1281167 files
+[a0017 r15] 1281167 files
+[a0008 r6] 1281167 files
+[a0004 r2] 1281167 files
+[a0005 r3] 1281167 files
+[a0006 r4] 1281167 files
+[a0003 r1] 1281167 files
+[a0013 r11] 1281167 files
+[a0015 r13] 1281167 files
+[a0007 r5] 1281167 files
+[a0011 r9] 1281167 files
+[a0010 r8] 1281167 files
+[a0002 r0] avg ~112.7 KB/file, num_files/iter = 186060
+[a0016 r14] avg ~114.2 KB/file, num_files/iter = 183571
+[a0017 r15] avg ~115.0 KB/file, num_files/iter = 182366
+[a0012 r10] avg ~123.0 KB/file, num_files/iter = 170493
+[a0014 r12] avg ~99.0 KB/file, num_files/iter = 211829
+[a0008 r6] avg ~109.9 KB/file, num_files/iter = 190873
+[a0009 r7] avg ~195.8 KB/file, num_files/iter = 107086
+[a0013 r11] avg ~100.0 KB/file, num_files/iter = 209703
+[a0006 r4] avg ~114.9 KB/file, num_files/iter = 182566
+[a0004 r2] avg ~110.0 KB/file, num_files/iter = 190599
+[a0003 r1] avg ~112.1 KB/file, num_files/iter = 187015
+[a0015 r13] avg ~110.3 KB/file, num_files/iter = 190054
+[a0005 r3] avg ~112.2 KB/file, num_files/iter = 186957
+[a0011 r9] avg ~109.8 KB/file, num_files/iter = 191029
+[a0007 r5] avg ~98.3 KB/file, num_files/iter = 213391
+[a0010 r8] avg ~125.4 KB/file, num_files/iter = 167175
+[a0009 r7] mode=raw iter=0 files=107086 bytes=12278293976 t=3.48s 3.286 GB/s
+[a0010 r8] mode=raw iter=0 files=167175 bytes=19325571693 t=4.92s 3.662 GB/s
+[a0002 r0] mode=raw iter=0 files=186060 bytes=21358543163 t=5.36s 3.710 GB/s
+[a0006 r4] mode=raw iter=0 files=182566 bytes=21014857055 t=5.12s 3.826 GB/s
+[a0005 r3] mode=raw iter=0 files=186957 bytes=21362563583 t=5.21s 3.821 GB/s
+[a0011 r9] mode=raw iter=0 files=191029 bytes=21902606394 t=5.21s 3.919 GB/s
+[a0012 r10] mode=raw iter=0 files=170493 bytes=19630240805 t=5.26s 3.474 GB/s
+[a0016 r14] mode=raw iter=0 files=183571 bytes=21146390864 t=5.42s 3.636 GB/s
+[a0015 r13] mode=raw iter=0 files=190054 bytes=21741447513 t=5.46s 3.707 GB/s
+[a0008 r6] mode=raw iter=0 files=190873 bytes=21898199892 t=5.48s 3.719 GB/s
+[a0017 r15] mode=raw iter=0 files=182366 bytes=20952127368 t=5.65s 3.456 GB/s
+[a0003 r1] mode=raw iter=0 files=187015 bytes=21469430582 t=5.77s 3.466 GB/s
+[a0004 r2] mode=raw iter=0 files=190599 bytes=21867626321 t=5.84s 3.487 GB/s
+[a0014 r12] mode=raw iter=0 files=211829 bytes=24328957226 t=6.16s 3.679 GB/s
+[a0007 r5] mode=raw iter=0 files=213391 bytes=24591089229 t=6.26s 3.660 GB/s
+[a0013 r11] mode=raw iter=0 files=209703 bytes=24122198496 t=6.44s 3.489 GB/s
+[a0009 r7] mode=raw iter=1 files=107086 bytes=12230476073 t=3.14s 3.630 GB/s
+[a0010 r8] mode=raw iter=1 files=167175 bytes=19197361683 t=4.47s 3.996 GB/s
+[a0009 r7] mode=raw iter=2 files=107086 bytes=12269405579 t=3.28s 3.483 GB/s
+[a0006 r4] mode=raw iter=1 files=182566 bytes=20916883444 t=4.84s 4.026 GB/s
+[a0012 r10] mode=raw iter=1 files=170493 bytes=19674513416 t=4.81s 3.808 GB/s
+[a0002 r0] mode=raw iter=1 files=186060 bytes=21294004584 t=5.05s 3.929 GB/s
+[a0005 r3] mode=raw iter=1 files=186957 bytes=21529161074 t=4.92s 4.071 GB/s
+[a0011 r9] mode=raw iter=1 files=191029 bytes=21883997252 t=5.02s 4.056 GB/s
+[a0016 r14] mode=raw iter=1 files=183571 bytes=20890634592 t=4.97s 3.916 GB/s
+[a0008 r6] mode=raw iter=1 files=190873 bytes=21887688845 t=5.08s 4.012 GB/s
+[a0015 r13] mode=raw iter=1 files=190054 bytes=21846010919 t=5.10s 3.991 GB/s
+[a0017 r15] mode=raw iter=1 files=182366 bytes=21022669220 t=5.27s 3.717 GB/s
+[a0003 r1] mode=raw iter=1 files=187015 bytes=21485709197 t=5.30s 3.773 GB/s
+[a0004 r2] mode=raw iter=1 files=190599 bytes=21824477459 t=5.35s 3.797 GB/s
+[a0014 r12] mode=raw iter=1 files=211829 bytes=24229961722 t=5.75s 3.921 GB/s
+[a0007 r5] mode=raw iter=1 files=213391 bytes=24562303491 t=5.92s 3.863 GB/s
+[a0013 r11] mode=raw iter=1 files=209703 bytes=24014546461 t=6.00s 3.728 GB/s
+[a0010 r8] mode=raw iter=2 files=167175 bytes=19065287448 t=4.37s 4.063 GB/s
+[a0006 r4] mode=raw iter=2 files=182566 bytes=20959393363 t=4.65s 4.196 GB/s
+[a0012 r10] mode=raw iter=2 files=170493 bytes=19571458729 t=4.63s 3.936 GB/s
+[a0005 r3] mode=raw iter=2 files=186957 bytes=21502124947 t=4.76s 4.207 GB/s
+[a0002 r0] mode=raw iter=2 files=186060 bytes=21290456544 t=4.88s 4.061 GB/s
+[a0016 r14] mode=raw iter=2 files=183571 bytes=21038208791 t=4.79s 4.092 GB/s
+[a0011 r9] mode=raw iter=2 files=191029 bytes=21957912812 t=4.90s 4.176 GB/s
+[a0015 r13] mode=raw iter=2 files=190054 bytes=21728597104 t=4.90s 4.126 GB/s
+[a0008 r6] mode=raw iter=2 files=190873 bytes=21939036476 t=4.94s 4.132 GB/s
+[a0017 r15] mode=raw iter=2 files=182366 bytes=20929783598 t=5.12s 3.810 GB/s
+[a0003 r1] mode=raw iter=2 files=187015 bytes=21449514626 t=4.99s 4.004 GB/s
+[a0004 r2] mode=raw iter=2 files=190599 bytes=21781488742 t=4.99s 4.066 GB/s
+[a0009 r7] mode=dataloader iter=0 files=107086 bytes=12295820565 t=6.76s 1.693 GB/s
+[a0014 r12] mode=raw iter=2 files=211829 bytes=24269018836 t=5.24s 4.315 GB/s
+[a0007 r5] mode=raw iter=2 files=213391 bytes=24500194208 t=5.16s 4.421 GB/s
+[a0013 r11] mode=raw iter=2 files=209703 bytes=23984892134 t=5.27s 4.236 GB/s
+[a0009 r7] mode=dataloader iter=1 files=107086 bytes=12321624053 t=6.35s 1.808 GB/s
+[a0010 r8] mode=dataloader iter=0 files=167175 bytes=19207148933 t=9.79s 1.826 GB/s
+[a0012 r10] mode=dataloader iter=0 files=170493 bytes=19467143358 t=9.65s 1.879 GB/s
+[a0006 r4] mode=dataloader iter=0 files=182566 bytes=20876899444 t=10.53s 1.847 GB/s
+[a0016 r14] mode=dataloader iter=0 files=183571 bytes=21024951573 t=10.22s 1.915 GB/s
+[a0002 r0] mode=dataloader iter=0 files=186060 bytes=21332216153 t=10.65s 1.865 GB/s
+[a0011 r9] mode=dataloader iter=0 files=191029 bytes=21865972141 t=10.73s 1.898 GB/s
+[a0005 r3] mode=dataloader iter=0 files=186957 bytes=21466640069 t=11.33s 1.764 GB/s
+[a0008 r6] mode=dataloader iter=0 files=190873 bytes=21848170607 t=10.89s 1.869 GB/s
+[a0015 r13] mode=dataloader iter=0 files=190054 bytes=21737414239 t=10.93s 1.852 GB/s
+[a0017 r15] mode=dataloader iter=0 files=182366 bytes=20955551193 t=10.42s 1.874 GB/s
+[a0003 r1] mode=dataloader iter=0 files=187015 bytes=21432352802 t=10.80s 1.847 GB/s
+[a0004 r2] mode=dataloader iter=0 files=190599 bytes=21863460021 t=11.19s 1.820 GB/s
+[a0014 r12] mode=dataloader iter=0 files=211829 bytes=24315694899 t=11.91s 1.902 GB/s
+[a0009 r7] mode=dataloader iter=2 files=107086 bytes=12291320523 t=6.26s 1.829 GB/s
+[a0007 r5] mode=dataloader iter=0 files=213391 bytes=24403550388 t=12.04s 1.888 GB/s
+[a0013 r11] mode=dataloader iter=0 files=209703 bytes=24088704281 t=11.78s 1.905 GB/s
+[a0010 r8] mode=dataloader iter=1 files=167175 bytes=19199808744 t=9.57s 1.868 GB/s
+[a0012 r10] mode=dataloader iter=1 files=170493 bytes=19541665385 t=9.57s 1.902 GB/s
+[a0006 r4] mode=dataloader iter=1 files=182566 bytes=20892091958 t=10.28s 1.893 GB/s
+[a0016 r14] mode=dataloader iter=1 files=183571 bytes=21038667689 t=10.29s 1.904 GB/s
+[a0002 r0] mode=dataloader iter=1 files=186060 bytes=21335717403 t=10.40s 1.910 GB/s
+[a0011 r9] mode=dataloader iter=1 files=191029 bytes=21909797479 t=10.64s 1.917 GB/s
+[a0017 r15] mode=dataloader iter=1 files=182366 bytes=20839729480 t=10.34s 1.877 GB/s
+[a0008 r6] mode=dataloader iter=1 files=190873 bytes=21870445814 t=10.81s 1.884 GB/s
+[a0015 r13] mode=dataloader iter=1 files=190054 bytes=21773879782 t=10.95s 1.852 GB/s
+[a0005 r3] mode=dataloader iter=1 files=186957 bytes=21392105767 t=11.12s 1.791 GB/s
+[a0003 r1] mode=dataloader iter=1 files=187015 bytes=21335336786 t=10.70s 1.857 GB/s
+[a0004 r2] mode=dataloader iter=1 files=190599 bytes=21930539841 t=11.08s 1.843 GB/s
+[a0014 r12] mode=dataloader iter=1 files=211829 bytes=24374486817 t=11.87s 1.912 GB/s
+[a0013 r11] mode=dataloader iter=1 files=209703 bytes=24032643387 t=11.86s 1.888 GB/s
+[a0007 r5] mode=dataloader iter=1 files=213391 bytes=24343416468 t=12.04s 1.883 GB/s
+[a0010 r8] mode=dataloader iter=2 files=167175 bytes=19143262467 t=9.58s 1.861 GB/s
+[a0012 r10] mode=dataloader iter=2 files=170493 bytes=19511475055 t=9.66s 1.882 GB/s
+[a0006 r4] mode=dataloader iter=2 files=182566 bytes=20974736560 t=10.44s 1.871 GB/s
+[a0016 r14] mode=dataloader iter=2 files=183571 bytes=21086964955 t=10.48s 1.873 GB/s
+[a0002 r0] mode=dataloader iter=2 files=186060 bytes=21358355576 t=10.62s 1.874 GB/s
+[a0017 r15] mode=dataloader iter=2 files=182366 bytes=20868329782 t=10.42s 1.865 GB/s
+[a0011 r9] mode=dataloader iter=2 files=191029 bytes=21955949515 t=10.88s 1.879 GB/s
+[a0005 r3] mode=dataloader iter=2 files=186957 bytes=21352874331 t=10.85s 1.832 GB/s
+[a0008 r6] mode=dataloader iter=2 files=190873 bytes=21868015986 t=11.04s 1.844 GB/s
+[a0003 r1] mode=dataloader iter=2 files=187015 bytes=21493203835 t=10.67s 1.876 GB/s
+[a0015 r13] mode=dataloader iter=2 files=190054 bytes=21850368149 t=10.96s 1.856 GB/s
+[a0004 r2] mode=dataloader iter=2 files=190599 bytes=21827708865 t=10.89s 1.867 GB/s
+[a0014 r12] mode=dataloader iter=2 files=211829 bytes=24233735382 t=11.62s 1.942 GB/s
+[a0013 r11] mode=dataloader iter=2 files=209703 bytes=24065539982 t=11.76s 1.905 GB/s
+[a0007 r5] mode=dataloader iter=2 files=213391 bytes=24412426647 t=12.06s 1.885 GB/s
+Done. Results: results/16node_64cpu_rtx-batch_25997/all.csv
