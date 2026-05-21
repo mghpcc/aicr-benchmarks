@@ -1,0 +1,49 @@
+===== lfscratch Disk Benchmark =====
+Job:     lfscratch_benchmark (26114)
+Host:    a0002
+Started: 2026-05-20T20:52:51
+
+--- RAID Health ---
+mdadm: must be super-user to perform this action
+
+--- Disk Layout ---
+nvme6n1     894.2G disk  
+├─nvme6n1p1   200M part  
+└─nvme6n1p2     2G part  
+nvme0n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme3n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme4n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme2n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme5n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme1n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme8n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+nvme7n1       3.5T disk  
+└─md0        27.9T raid0 /lfscratch
+
+--- /lfscratch Usage ---
+Filesystem      Size  Used Avail Use% Mounted on
+/dev/md0         28T  200G   28T   1% /lfscratch
+
+--- Sequential Write (1M blocks, QD=8, 30s) ---
+/var/spool/slurmd/job26114/slurm_script: line 34: fio: command not found
+
+--- Sequential Read (1M blocks, QD=8, 30s) ---
+/var/spool/slurmd/job26114/slurm_script: line 49: fio: command not found
+
+--- Random 4K Read (QD=32, 30s) ---
+/var/spool/slurmd/job26114/slurm_script: line 64: fio: command not found
+
+--- Random 4K Write (QD=32, 30s) ---
+/var/spool/slurmd/job26114/slurm_script: line 79: fio: command not found
+
+--- Cleanup ---
+Test file removed.
+
+Finished: 2026-05-20T20:52:51
