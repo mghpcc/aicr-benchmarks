@@ -1,0 +1,168 @@
+hostname: b0001
+timestamp: 2026-05-19T19:40:35.038409+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 505453
+elapsed_time: 199.916592
+ns_per_day: 873.7871882089706
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:37.427526+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 503491
+elapsed_time: 199.990408
+ns_per_day: 870.0741767575171
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:35.713804+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 502270
+elapsed_time: 200.14773
+ns_per_day: 867.2819421933985
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:34.456400+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 503403
+elapsed_time: 200.133724
+ns_per_day: 869.2991532001871
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:33.347798+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 502875
+elapsed_time: 200.233318
+ns_per_day: 867.9554518494268
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:36.505206+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 503494
+elapsed_time: 200.152062
+ns_per_day: 869.3766362496929
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:33.968253+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 502838
+elapsed_time: 200.159919
+ns_per_day: 868.2098477467907
+
+hostname: b0001
+timestamp: 2026-05-19T19:40:33.582736+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA B200
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA B200', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 502762
+elapsed_time: 200.420747
+ns_per_day: 866.9489052448245
+

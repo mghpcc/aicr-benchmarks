@@ -1,0 +1,168 @@
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.447530+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 541585
+elapsed_time: 186.920284
+ns_per_day: 1001.34545055581
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:25.968107+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 543996
+elapsed_time: 188.334302
+ns_per_day: 998.2515962493117
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.560271+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 546644
+elapsed_time: 189.029055
+ns_per_day: 999.4239583962367
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.673521+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 546506
+elapsed_time: 189.296441
+ns_per_day: 997.7602991489944
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.338042+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 549897
+elapsed_time: 189.978939
+ns_per_day: 1000.3445866175721
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:25.994212+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 550853
+elapsed_time: 190.340842
+ns_per_day: 1000.1783894598929
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.223316+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 551727
+elapsed_time: 190.47797
+ns_per_day: 1001.044116545341
+
+hostname: a0014
+timestamp: 2026-05-19T18:46:26.108468+00:00
+openmm_version: 8.4.0.dev-Unknown
+cpuinfo: AMD EPYC 9575F 64-Core Processor
+cpuarch: x86_64
+system: Linux
+nvidia_driver: 580.105.08
+gpu: NVIDIA RTX PRO 6000 Blackwell Server Edition
+test: apoa1pme
+constraints: HBonds
+hydrogen_mass: 1.5
+cutoff: 0.9
+ensemble: NVT
+precision: single
+timestep_in_fs: 4.0
+platform: CUDA
+platform_properties: {'DeviceIndex': '0', 'DeviceName': 'NVIDIA RTX PRO 6000 Blackwell Server Edition', 'UseBlockingSync': 'false', 'Precision': 'single', 'UseCpuPme': 'false', 'CudaCompiler': '', 'TempDirectory': '/tmp', 'CudaHostCompiler': '', 'DisablePmeStream': 'false', 'DeterministicForces': 'false'}
+steps: 554206
+elapsed_time: 191.297504
+ns_per_day: 1001.2341488783876
+
