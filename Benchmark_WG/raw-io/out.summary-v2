@@ -1,0 +1,22 @@
+Run dir: results-peak/combo_1779386158
+Per-rank CSVs: 42, total raw-read rows: 210
+Tasks: 21
+
+iter   cluster_sum_GBps   conservative_GBps   vs_462_spec   ranks
+----  -----------------  ------------------  ------------  ------
+   0             110.32               74.20         23.9%      42
+   1             115.52               83.73         25.0%      42
+   2             119.37               90.06         25.8%      42
+   3             134.48              120.01         29.1%      42
+   4             206.18              149.28         44.6%      42
+
+mean cluster_sum_GBps (sum-of-rank-rates) :   137.17 GB/s  =>  29.7% of Vast Max Read (462 GB/s)
+mean conservative_GBps (bytes/max_elapsed):   103.46 GB/s  =>  22.4% of Vast Max Read (462 GB/s)
+
+Notes:
+- sum-of-rank-rates matches the convention in summary.md (overestimates when
+  ranks/tasks finish at different times).
+- conservative bound is the right number to compare to a true wall-clock
+  cluster aggregate; if it is well below sum-of-rank-rates, the array tasks
+  did not overlap enough — shrink TOTAL_SIZE or increase ITERS so all tasks
+  overlap during the measurement window.
