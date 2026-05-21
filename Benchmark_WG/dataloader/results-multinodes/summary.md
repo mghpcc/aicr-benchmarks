@@ -330,7 +330,46 @@ Per-node-count breakdown for 100 MiB `dcp / raw` (fraction of cells where `dcp >
 
 ---
 
-**Side note — is throughput saturated at 128 cpu/node?** Comparing 96 → 128 cpu/node *at 16 nodes* (a 1.33× cpu bump; linear scaling = +33%):
+### Comparison to Vast spec
+
+Reference numbers from the AICR Vast Data Proposal (Vast Cluster 16x7 Gen5 / Ceres 1350): cluster **Max Read = 462 GB/s**, **Max Write = 165 GB/s**, **Sustained Write = 87.5 GB/s**. Per-DBOX: Max Read (1MB) 52 GB/s, Max Write (1MB) 34 GB/s.
+
+#### Max Write vs Sustained Write — what's the difference, and which one matters?
+
+- **Max Write (165 GB/s)** is the *burst* rate. Vast has a fast NVMe/SCM write-buffer tier in front of the bulk storage. While that buffer has room, the cluster accepts writes at the buffer's speed.
+- **Sustained Write (87.5 GB/s)** is the *steady-state* rate. Once the write buffer fills, new writes have to wait for the back-end (QLC) tier to absorb data at its real speed. That's about half of Max — normal for a two-tier system.
+
+Which to compare against depends on the workload:
+- **For this benchmark (short bursts):** Max Write is the right reference. Each iteration writes only ~hundreds of GB and finishes in 2-3 seconds, so the write buffer never fills. The 100 MiB `dcp` peak (183 GB/s) vs Max Write (165 GB/s) is the apples-to-apples comparison; the slight overshoot is measurement methodology (sum-of-per-rank GBps).
+- **For real training checkpointing (long-running):** Sustained Write is the right reference. A real workload checkpoints repeatedly over hours, so the buffer stays full and the back-end rate is what you actually see. The `raw`/`torch_save` 100 MiB peaks (~90-100 GB/s) sit right at the 87.5 GB/s Sustained line — that's what to expect in production.
+
+#### Peak vs spec
+
+| benchmark / mode (top cell)     | peak GB/s | % of Max Read (462) | % of Max Write (165) | % of Sustained Write (87.5) |
+|---|---|---|---|---|
+| READ `raw`               (GPU1 / 16 × 128) | **81.1**  | 17.6% | — | — |
+| READ `dataloader`        (GPU2 / 16 × 96)  | **33.9**  | 7.3%  | — | — |
+| WRITE 100 KiB `raw`      (GPU1 / 16 × 32)  | **1.20**  | — | 0.7%  | 1.4%   |
+| WRITE 1 MiB `raw`        (GPU1 / 16 × 32)  | **12.97** | — | 7.9%  | 14.8%  |
+| WRITE 10 MiB `raw`       (GPU2 / 16 × 32)  | **81.4**  | — | 49.3% | 93.0%  |
+| WRITE 100 MiB `raw`      (GPU1 / 12 × 96)  | **90.5**  | — | 54.9% | 103.5% |
+| WRITE 100 MiB `torch_save` (GPU2 / 12 × 64) | **100.9** | — | 61.2% | 115.3% |
+| WRITE 100 MiB `dcp`      (GPU1 / 16 × 128) | **183.1** | — | **110.9%** | **209.2%** |
+
+Takeaways:
+- **Reads are leaving most of the cluster on the table.** Peak read `raw` (81 GB/s) reaches only ~18% of the 462 GB/s cluster maximum and is roughly equivalent to fully loading ~1.5 of the 7 DBOXes' Max Read (52 GB/s each). With 16 client nodes we are client-bound, not array-bound — the Vast cluster has substantially more read bandwidth than this benchmark exercises. Just adding more nodes likely won't close the gap: per-node read drops from 8.6 GB/s at 2 nodes to 5.1 GB/s at 16 nodes (−41%), so the trend would plateau well below 462 GB/s. Reaching the spec would also need NFS `nconnect` (multi-connection mounts) and spreading clients across all 16 CBOXes, not just more clients.
+- **DataLoader is decode-bound and uses only ~7% of cluster read capacity.** Even at 16 × 128 cpu the JPEG-decode + transform pipeline caps us at ~34 GB/s — adding more clients (and decode CPUs) would help long before we ran out of array bandwidth.
+- **Large-file writes track the Vast spec well.** `raw` and `torch_save` peak at ~90-100 GB/s — right around the **87.5 GB/s Sustained Write** rating, suggesting our measurement honestly reflects the array's steady-state write ceiling.
+- **`dcp` 100 MiB exceeds the advertised Max Write (165 GB/s).** Two likely contributors: (1) **measurement methodology** — we report sum-of-per-rank GBps (= total_bytes / per-rank-elapsed, summed), which overestimates the cluster aggregate when ranks finish at different times relative to the true cluster wall-clock; (2) **write coalescing / cache** — bursts may be partially absorbed by page cache before being flushed to the array. The true sustained `dcp` ceiling is almost certainly closer to the 165 GB/s Max Write spec; the 183 GB/s peak is a burst, not steady state.
+- **Small-file writes (100 KiB-1 MiB) sit at 1-15% of the write spec** because they are IOPS-bound, not bandwidth-bound. The Vast spec advertises **825k Write IOPS**, which our small-file sweep does not approach (sweep is ~2-4k files total per iteration, spread across all ranks). To exercise the IOPS ceiling, the workload would need many more files per rank, not larger files.
+
+---
+
+### Is throughput saturated?
+
+#### At 128 cpu/node?
+
+Comparing 96 → 128 cpu/node *at 16 nodes* (a 1.33× cpu bump; linear scaling = +33%):
 
 | benchmark / mode      | GPU1 96→128 cpu       | GPU2 96→128 cpu       | saturated? |
 |---|---|---|---|
@@ -347,9 +386,9 @@ Takeaways:
 - **`dataloader` no longer benefits from > 96 cpu/node at 16 nodes** — read bandwidth is the constraint, not decode CPU.
 - **Across smaller node counts, 128 cpu/node still helps** (e.g. GPU1 read raw at 4 nodes: 27.5 → 31.6, +15%), so the 96-core plateau is specifically a 16-node phenomenon driven by storage-path saturation.
 
----
+#### At 16 nodes?
 
-**Side note — is throughput saturated at 16 nodes?** Comparing 12 → 16 nodes *at 128 cpu/node* (a 1.33× node bump; linear scaling = +33%):
+Comparing 12 → 16 nodes *at 128 cpu/node* (a 1.33× node bump; linear scaling = +33%):
 
 | benchmark / mode      | GPU1 12→16 nodes        | GPU2 12→16 nodes        | saturated? |
 |---|---|---|---|
@@ -367,24 +406,3 @@ Takeaways:
 - **Large-file `dcp` is the only write mode that benefits unambiguously from going to 16 nodes** (+27% on GPU1 at 128 cpu, modest on GPU2). All other 100 MiB write modes are flat-or-regressing past 8-12 nodes.
 - **Small-file write throughput is metadata-bound** and still scaling near-linearly with node count — not saturated at 16 × 128, but the absolute ceiling is low (1.16 GB/s for 100 KiB raw).
 
----
-
-**Side note — how do these peaks compare to the Vast spec?** Reference numbers from the AICR Vast Data Proposal (Vast Cluster 16x7 Gen5 / Ceres 1350): cluster **Max Read = 462 GB/s**, **Max Write = 165 GB/s**, **Sustained Write = 87.5 GB/s**. Per-DBOX: Max Read (1MB) 52 GB/s, Max Write (1MB) 34 GB/s.
-
-| benchmark / mode (top cell)     | peak GB/s | % of Max Read (462) | % of Max Write (165) | % of Sustained Write (87.5) |
-|---|---|---|---|---|
-| READ `raw`               (GPU1 / 16 × 128) | **81.1**  | 17.6% | — | — |
-| READ `dataloader`        (GPU2 / 16 × 96)  | **33.9**  | 7.3%  | — | — |
-| WRITE 100 KiB `raw`      (GPU1 / 16 × 32)  | **1.20**  | — | 0.7%  | 1.4%   |
-| WRITE 1 MiB `raw`        (GPU1 / 16 × 32)  | **12.97** | — | 7.9%  | 14.8%  |
-| WRITE 10 MiB `raw`       (GPU2 / 16 × 32)  | **81.4**  | — | 49.3% | 93.0%  |
-| WRITE 100 MiB `raw`      (GPU1 / 12 × 96)  | **90.5**  | — | 54.9% | 103.5% |
-| WRITE 100 MiB `torch_save` (GPU2 / 12 × 64) | **100.9** | — | 61.2% | 115.3% |
-| WRITE 100 MiB `dcp`      (GPU1 / 16 × 128) | **183.1** | — | **110.9%** | **209.2%** |
-
-Takeaways:
-- **Reads are leaving most of the cluster on the table.** Peak read `raw` (81 GB/s) reaches only ~18% of the 462 GB/s cluster maximum and is roughly equivalent to fully loading ~1.5 of the 7 DBOXes' Max Read (52 GB/s each). With 16 client nodes we are client-bound, not array-bound — the Vast cluster has substantially more read bandwidth than this benchmark exercises.
-- **DataLoader is decode-bound and uses only ~7% of cluster read capacity.** Even at 16 × 128 cpu the JPEG-decode + transform pipeline caps us at ~34 GB/s — adding more clients (and decode CPUs) would help long before we ran out of array bandwidth.
-- **Large-file writes track the Vast spec well.** `raw` and `torch_save` peak at ~90-100 GB/s — right around the **87.5 GB/s Sustained Write** rating, suggesting our measurement honestly reflects the array's steady-state write ceiling.
-- **`dcp` 100 MiB exceeds the advertised Max Write (165 GB/s).** Two likely contributors: (1) **measurement methodology** — we report sum-of-per-rank GBps (= total_bytes / per-rank-elapsed, summed), which overestimates the cluster aggregate when ranks finish at different times relative to the true cluster wall-clock; (2) **write coalescing / cache** — bursts may be partially absorbed by page cache before being flushed to the array. The true sustained `dcp` ceiling is almost certainly closer to the 165 GB/s Max Write spec; the 183 GB/s peak is a burst, not steady state.
-- **Small-file writes (100 KiB-1 MiB) sit at 1-15% of the write spec** because they are IOPS-bound, not bandwidth-bound. The Vast spec advertises **825k Write IOPS**, which our small-file sweep does not approach (sweep is ~2-4k files total per iteration, spread across all ranks). To exercise the IOPS ceiling, the workload would need many more files per rank, not larger files.
