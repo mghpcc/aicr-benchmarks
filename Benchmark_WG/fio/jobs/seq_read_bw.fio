@@ -1,0 +1,38 @@
+; Peak sequential read bandwidth.
+;
+; Picks 1 MiB block size (matches NFS rsize=1048576 on /work) and many parallel
+; jobs with deep iodepth so every nconnect=16 channel stays busy. Files are
+; pre-laid-out by fio on first invocation; subsequent runs reuse them (use
+; --create-only beforehand to pre-fill, or just let the first iter warm up
+; and ignore it).
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
+;                    IODEPTH, IOENGINE, CPUS_ALLOWED
+
+[global]
+ioengine=${IOENGINE}
+direct=1
+bs=1M
+rw=read
+size=${SIZE_PER_JOB}
+iodepth=${IODEPTH}
+numjobs=${NUMJOBS}
+group_reporting=1
+time_based=1
+runtime=${RUNTIME}
+ramp_time=${RAMP_TIME}
+directory=${DATA_DIR}
+; one private file per (host,job) so concurrent ranks never share a file
+filename_format=fio.$jobname.$jobnum
+fallocate=none
+invalidate=1
+randrepeat=0
+end_fsync=0
+thread=1
+; pin each numjob to a disjoint slice of the allowed CPU set so 32+ jobs
+; per node don't fight the scheduler when driving 100s of in-flight ops
+cpus_allowed=${CPUS_ALLOWED}
+cpus_allowed_policy=split
+
+[seq_read]
+stonewall

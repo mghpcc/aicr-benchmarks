@@ -1,0 +1,38 @@
+; Peak random read IOPS.
+;
+; 4 KiB blocks, deep queue, many parallel jobs. Files must be pre-populated
+; (random read of a sparse/missing region returns zeros and won't exercise
+; the storage). The wrapper script handles pre-fill via --create-only on the
+; matching seq_write job.
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
+;                    IODEPTH, IOENGINE, CPUS_ALLOWED
+
+[global]
+ioengine=${IOENGINE}
+direct=1
+bs=4k
+rw=randread
+size=${SIZE_PER_JOB}
+iodepth=${IODEPTH}
+; batch submit/complete cuts io_uring syscall overhead when each op is only
+; 4 KiB. No-op on posixaio but doesn't hurt.
+iodepth_batch_submit=8
+iodepth_batch_complete=8
+numjobs=${NUMJOBS}
+group_reporting=1
+time_based=1
+runtime=${RUNTIME}
+ramp_time=${RAMP_TIME}
+directory=${DATA_DIR}
+filename_format=fio.$jobname.$jobnum
+fallocate=none
+invalidate=1
+randrepeat=0
+norandommap=1
+thread=1
+cpus_allowed=${CPUS_ALLOWED}
+cpus_allowed_policy=split
+
+[rand_read]
+stonewall

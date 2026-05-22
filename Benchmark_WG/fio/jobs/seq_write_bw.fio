@@ -1,0 +1,33 @@
+; Peak sequential write bandwidth.
+;
+; 1 MiB blocks (matches NFS wsize=1048576), high iodepth, multi-job.
+; end_fsync=1 makes the result honest by waiting for the server-side commit
+; before stopping the clock — without it, libaio + buffered NFS can ack
+; before the storage actually has the data.
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
+;                    IODEPTH, IOENGINE, CPUS_ALLOWED
+
+[global]
+ioengine=${IOENGINE}
+direct=1
+bs=1M
+rw=write
+size=${SIZE_PER_JOB}
+iodepth=${IODEPTH}
+numjobs=${NUMJOBS}
+group_reporting=1
+time_based=1
+runtime=${RUNTIME}
+ramp_time=${RAMP_TIME}
+directory=${DATA_DIR}
+filename_format=fio.$jobname.$jobnum
+fallocate=none
+end_fsync=1
+randrepeat=0
+thread=1
+cpus_allowed=${CPUS_ALLOWED}
+cpus_allowed_policy=split
+
+[seq_write]
+stonewall

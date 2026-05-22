@@ -1,0 +1,35 @@
+Run dir: results-peak/fio_1779399220
+Tasks:        21
+JSON files:   168
+Workloads:    ['rand_read', 'rand_write', 'seq_read', 'seq_write']
+
+=== seq_read  (BW)  [42 fio processes] ===
+  cluster_sum   (sum of per-process rates):    472.79 GB/s
+  conservative  (total_bytes / max_runtime):   432.91 GB/s
+  vs Vast spec  (462 GB/s):  sum=102.3%   conservative= 93.7%
+  per-process distribution: min=    3.40 GB/s  median=   10.39 GB/s  max=   30.94 GB/s
+
+=== seq_write  (BW)  [42 fio processes] ===
+  cluster_sum   (sum of per-process rates):     66.46 GB/s
+  conservative  (total_bytes / max_runtime):    65.54 GB/s
+  vs Vast spec  (165 GB/s):  sum= 40.3%   conservative= 39.7%
+  per-process distribution: min=    1.23 GB/s  median=    1.40 GB/s  max=    5.42 GB/s
+
+=== rand_read  (IOPS)  [42 fio processes] ===
+  cluster_sum   (sum of per-process rates):    778.83 kIOPS
+  conservative  (total_bytes / max_runtime):   775.38 kIOPS
+  per-process distribution: min=   13.13 kIOPS  median=   17.03 kIOPS  max=   50.20 kIOPS
+
+=== rand_write  (IOPS)  [42 fio processes] ===
+  cluster_sum   (sum of per-process rates):    446.62 kIOPS
+  conservative  (total_bytes / max_runtime):   433.58 kIOPS
+  per-process distribution: min=    5.17 kIOPS  median=   10.99 kIOPS  max=   18.13 kIOPS
+
+Notes:
+- cluster_sum matches the convention in ../raw-io/peak_aggregate_summary.py
+  (sum of per-process bandwidths). Overestimates when nodes finish at
+  different times.
+- conservative is the honest wall-clock aggregate. If it is well below
+  cluster_sum, tasks did not overlap enough — raise RUNTIME or lower
+  SIZE_PER_JOB so all tasks are still running through the measurement
+  window.

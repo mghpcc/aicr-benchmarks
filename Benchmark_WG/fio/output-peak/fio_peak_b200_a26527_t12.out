@@ -1,0 +1,19 @@
+=== NFS mount addrs on b0025 ===
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=rdma,nconnect=16,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.23.11.10,mountvers=3,mountproto=tcp,local_lock=none,remoteports=dns,addr=172.23.11.46
+ Flags:	ro,relatime,vers=4.2,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=tcp,timeo=600,retrans=2,sec=sys,clientaddr=172.21.102.25,local_lock=none,addr=172.21.1.100
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=rdma,nconnect=16,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.23.11.55,mountvers=3,mountproto=tcp,local_lock=none,remoteports=dns,addr=172.23.11.20
+/work from storage0001.nfs:/work
+=== task=12/21 nodes=2 jobs/node=32 iodepth=64 size=16G runtime=60s workload=all ===
+DATA_ROOT=/work/mit/datasets/test/fio
+TASK_DATA_DIR=/work/mit/datasets/test/fio/fio_1779399220/task_12
+RESULTS=results-peak/fio_1779399220/task_12
+--- running fio seq_write on b0025 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0025.seq_write.json ---
+--- running fio seq_write on b0026 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0026.seq_write.json ---
+--- running fio seq_read on b0026 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0026.seq_read.json ---
+--- running fio seq_read on b0025 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0025.seq_read.json ---
+--- running fio rand_write on b0026 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0026.rand_write.json ---
+--- running fio rand_write on b0025 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0025.rand_write.json ---
+--- running fio rand_read on b0025 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0025.rand_read.json ---
+--- running fio rand_read on b0026 engine=posixaio cpus=0-95 -> results-peak/fio_1779399220/task_12/b0026.rand_read.json ---
+Done. Task results: results-peak/fio_1779399220/task_12
+--- cleanup: rm -rf /work/mit/datasets/test/fio/fio_1779399220/task_12 (exit rc=0) ---
