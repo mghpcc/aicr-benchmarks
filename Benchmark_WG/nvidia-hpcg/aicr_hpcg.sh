@@ -17,7 +17,10 @@ export LD_LIBRARY_PATH=${NVHPC_HOME}/comm_libs/nccl/lib:$LD_LIBRARY_PATH
 
 run_script=./bin/hpcg.sh
 
-srun $run_script --p2p 2 --ucx-tls "rc,cuda_copy,cuda_ipc,sm"  --b 1 --dat ./config.dat 
+#srun $run_script --p2p 2 --ucx-tls "rc,cuda_copy,cuda_ipc,sm"  --b 1 --dat ./config.dat 
+# Run using CUDA-aware MPI
+srun $run_script --p2p 2  --b 1 --dat ./config.dat 
+
  
 
 echo "Done"

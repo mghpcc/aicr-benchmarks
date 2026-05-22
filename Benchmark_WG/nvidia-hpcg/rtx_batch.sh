@@ -2,7 +2,7 @@
 
 # RTX Pro 6000 
 GPU=rtx
-for n in 1 2 4 ; do
+for n in 1 2 4 8 ; do
     sbatch \
         --partition=${GPU}-batch \
         --gpus=${n} \
@@ -14,5 +14,5 @@ for n in 1 2 4 ; do
         --gpu-bind=closest \
         --output=logs/hpcg_1_node_${n}_gpu_${GPU}_%j.out \
         --error=logs/hpcg_1_node_${n}_gpu_${GPU}_%j.err \
-        --job-name=hpcg_${n}gpu ./aicr_hpcg_rtx.sh
+        --job-name=hpcg_${n}_gpu_${GPU}  ./aicr_hpcg.sh
 done

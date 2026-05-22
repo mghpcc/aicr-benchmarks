@@ -19,6 +19,14 @@ SCRIPT_DIR=$( cd -- "$( dirname -- "$( readlink -f "${BASH_SOURCE[0]}" )" )" &> 
 XHPCG="$SCRIPT_DIR/xhpcg"
 
 export UCX_IB_PATH_MTU=4096
+export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_11:1,mlx5_12:1
+export UCX_TLS=rc,rc_mlx5,cuda_copy,cuda_ipc,sm,self
+
+if nvidia-smi --query-gpu=name --format=csv,noheader | grep -q "B200"; then
+    export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_11:1,mlx5_12:1
+else
+    export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
+fi
 
 if [[ -r "$SCRIPT_DIR/../hpc-benchmarks-gpu-env.sh" ]]; then
   source "$SCRIPT_DIR/../hpc-benchmarks-gpu-env.sh"
