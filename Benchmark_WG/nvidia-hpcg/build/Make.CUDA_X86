@@ -166,7 +166,7 @@ HPCG_DEFS     = $(HPCG_OPTS) $(HPCG_INCLUDES)
 # - Compilers / linkers - Optimization flags ---------------------------
 # ----------------------------------------------------------------------
 #
-CUDA_ARCH = -gencode=arch=compute_80,code=sm_80 -gencode=arch=compute_90,code=sm_90
+CUDA_ARCH = 
 ifeq ($(BUILD_B100), 1)
 CUDA_ARCH += --generate-code arch=compute_100,code=sm_100 --generate-code arch=compute_120,code=sm_120
 endif

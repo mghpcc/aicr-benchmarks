@@ -105,8 +105,6 @@ make -j 16 \
     HPCG_COMMIT_HASH=xyz \
     HPCG_VER_MAJOR=26 \
     HPCG_VER_MINOR=02 \
-    BUILD_B100=${BUILD_B100} \
-    USE_INT64=1
+    BUILD_B100=${BUILD_B100} 
 
 #Move build/bin/xhpcg to bin/xhpcg
-#make install

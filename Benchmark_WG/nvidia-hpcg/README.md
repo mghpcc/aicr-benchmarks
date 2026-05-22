@@ -11,20 +11,84 @@ tar xf nvidia_hpc_benchmarks_openmpi-linux-x86_64-26.02.02-archive.tar.xz
 
 nx=ny=nz=256
 
-The time limit is set to 300s. This uses 14,964 MB of RAM per GPU. Increasing the size is 
-in principle possible, provided the size is divisible by 16, but the program tends to throw
-out-of-memory errors.
+This uses 14,964 MB of RAM per GPU. Increasing the size is in principle possible, provided 
+the size is divisible by 16, but the program tends to throw out-of-memory errors. HPCG can
+be compiled with 64-bit integer array indexing if the problem size is to be increased to 
+fill the RAM on one of the GPUs. 
 
-## Single node
+The runtime was set to a limit of 60 seconds.
 
-Testing was done on single nodes with GPU counts of 1-8.
+## Compiling
+
+The HPCG benchmark had to be compiled as the binary provided by Nvidia was not compatible
+with the RTX Pro 6000. 
+
+```bash
+git clone https://github.com/NVIDIA/nvidia-hpcg.git
+cd nvidia-hpcg
+git checkout 26.02
+# setup/Make.CUDA_X86 was adjusted to compile in support for 
+# compute capability 10.0 (B200) and 12.0 (RTX). 
+# A build_aicr.sh script was used to compile using the nvhpc/26.3 module.
+./build_aicr.sh
+# The xhpcg executable and a modified run scrip, hpcg.sh, are placed
+# into the benchmark bin/ directory.
+```
+
+## UCX settings
+
+As discussed on the aicr-benchmarking Slack channel, in order to correctly run on 8 GPUs some
+environment variables for the UCX library (which is used by OpenMPI) needed to be set. This 
+value is set for both types of GPU:
+
+```bash
+export UCX_TLS=rc_mlx5,cuda_copy,cuda_ipc,sm,self
+```
+
+For the B200 the `UCX_NET_DEVICES` variable is set to:
+
+```bash
+export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_11:1,mlx5_12:1
+```
+
+For the RTX this is set to:
+
+```bash
+export UCX_NET_DEVICES=mlx5_0:1,mlx5_3:1
+```
+
+This worked correctly on the b200-devel and rtx-devel partitions with 1, 2, 4, or 8 GPUs. 
+
+## Single node testing
+
+Testing was done on single nodes with GPU counts of 1-8. While there were no execution
+errors on the RTX nodes the 2 and 8 GPU runs on the B200s failed with a UCX library error.
+The log files are in the `logs` directory.
 
 
+| GPU  | num | Success? | Host  | Notes                                          |
+|------|-----|----------|-------|------------------------------------------------|
+| B200 | 1   |     Y    | b0016 | -                                              |
+| B200 | 2   |     N    | b0016 | Transport retry count exceeded on mlx5_12:1/IB |
+| B200 | 4   |     Y    | b0016 | -                                              |
+| B200 | 8   |     N    | b0015 | Transport retry count exceeded on mlx5_5:1/IB  |
+| RTX  | 1   |     Y    | a0004 | -                                              |
+| RTX  | 2   |     Y    | a0004 | -                                              |
+| RTX  | 4   |     Y    | a0004 | -                                              |
+| RTX  | 8   |     Y    | a0004 | -                                              |
 
-## Multi-node
-Selecting more than 4 GPUs per node caused errors in the UCX library, so this was performed
-with 4 GPUs with 1-8 nodes. 
+
+### RTX Performance
+
+| GPUs | GFLOP/s | Efficiency vs. Linear |
+|---|---|---|
+| 1 | 287.985 | 100.0% |
+| 2 | 573.885 | 99.6% |
+| 4 | 1101.36 | 95.6% |
+| 8 | 2193.38 | 95.3% |
 
 
+### B200 Performance
 
+TBD
 
