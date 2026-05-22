@@ -1,0 +1,21 @@
+#!/bin/bash -l
+
+
+SCRIPT_DIR="$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+ 
+
+# Use OpenMP threading. Is this the right variable?
+export APPTAINERENV_OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
+export APPTAINERENV_CUDA_VISIBLE_DEVICES=$CUDA_VISIBLE_DEVICES
+export APPTAINERENV_DISPLAY=$DISPLAY
+export APPTAINERENV_TMPDIR=$TMPDIR
+export APPTAINERENV_USER=$USER
+
+
+singularity exec --nv \
+    -B $SCRIPT_DIR/cache:/cache \
+    $SCRIPT_DIR/colabfold_1.6.0-cuda12.sif \
+    colabfold_batch \
+       "$@"
+
