@@ -1,0 +1,9 @@
+ggml_cuda_init: found 1 CUDA devices:
+  Device 0: NVIDIA B200, compute capability 10.0, VMM: yes
+| model                          |       size |     params | backend    | ngl | threads |            test |                  t/s |
+| ------------------------------ | ---------: | ---------: | ---------- | --: | ------: | --------------: | -------------------: |
+| llama 70B Q4_K - Medium        |  39.59 GiB |    70.55 B | CUDA       |  99 |      16 |           pp512 |       1246.11 ± 0.67 |
+| llama 70B Q4_K - Medium        |  39.59 GiB |    70.55 B | CUDA       |  99 |      16 |           tg128 |         42.67 ± 0.01 |
+| llama 70B Q4_K - Medium        |  39.59 GiB |    70.55 B | CUDA       |  99 |      16 |     pp512+tg128 |        165.56 ± 0.01 |
+
+build: unknown (0)
