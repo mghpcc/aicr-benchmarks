@@ -92,3 +92,10 @@ The log files are in the `logs` directory.
 
 TBD
 
+The error files are in `logs/hpcg_1_node_2_gpu_b200_27007.err` and 
+`logs/hpcg_1_node_8_gpu_b200_27009.err`. The errors are essentially the same in each:
+
+```
+[b0016:481792:0:481792] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_12:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[b0016:481792:0:481792] ib_mlx5_log.c:179  RC QP 0xc82d wqe[0]: RDMA_READ s-- [rva 0x555e73f rkey 0x204c00] [va 0x470c5bf len 65 lkey 0x206a00] [rqpn 0xc45e dlid=206 sl=0 port=1 src_path_bits=0]
+```
