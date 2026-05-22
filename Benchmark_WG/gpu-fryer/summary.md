@@ -142,3 +142,15 @@ No throttling (HW, Thermal SW, or Thermal HW) on any GPU in any precision run.
 | #7 | **PASS** — 1.9–3% below peers, 7°C hotter | **PASS** — best FP32/BF16 |
 
 **Recommendation:** B200 GPUs #2, #6, #7 are in chassis positions with reduced airflow — they consistently run hotter and slightly slower across **every** precision. Not a failure (no throttling, within 3% of peers), but worth tracking. If the gap widens over time or any of these begins throttling, inspect the chassis airflow/cold-aisle for those slot positions. RTX PRO 6000 system shows no concerns of any kind.
+
+---
+
+## Side note: What is "dense peak"?
+
+**Dense peak** is the vendor-published theoretical maximum Tensor-Core throughput for a given precision, with no sparsity. It is a hardware ceiling derived from silicon spec, not a measurement:
+
+```
+peak_FLOPS = (#Tensor Cores) × (ops per Tensor Core per cycle for that precision) × (boost clock)
+```
+
+"Ops per cycle" already encodes the precision — lower-precision formats pack more multiply-accumulates per cycle (on Blackwell, FP8 ≈ 2× BF16 ≈ 2× TF32). The published number uses the **boost clock**, so it is an upper bound rarely sustained in practice; the "sparse peak" sometimes quoted in marketing is 2× this, assuming 2:4 structured sparsity.

@@ -18,6 +18,30 @@ Do NOT use it for:
 - LLM-style transformer workloads (different communication patterns)
 - Model accuracy or convergence testing
 
+## Summary of results
+
+The benchmark validates PyTorch DDP scaling on both B200 and RTX Pro 6000 nodes. No major issues found; the cluster behaves as expected for DDP workloads.
+
+![B200 ResNet-152 scaling](b200/resnet152/plots/scaling_overview.png)
+*B200 ResNet-152 strong-scaling efficiency drops to 56-70% at 16 GPUs depending on global batch size. Larger batches recover efficiency by giving more compute to hide allreduce behind.*
+
+![RTX Pro 6000 ResNet-152 scaling](rtx_pro_6000/resnet152/plots/scaling_overview.png)
+*RTX Pro 6000 ResNet-152 reaches near-100% strong-scaling efficiency at batch 1024, drops to ~69% at batch 512. Slower compute relative to B200 means the communication-bound regime appears only at smaller per-GPU batches.*
+
+Key findings:
+- Weak scaling is healthy on both node types: per-GPU throughput stays stable from 1 to 16 GPUs
+- Strong scaling shows expected degradation at the multi-node boundary, recoverable with larger global batches
+- RTX Pro 6000 reaches near-100% strong-scaling efficiency at moderate batch sizes
+- B200 reaches 70-77% strong-scaling efficiency at moderate batch sizes; the lower number reflects faster compute making the same NCCL allreduce a larger fraction of step time, not a defect
+- GPU activity stays at 90%+ across all configurations, confirming GPUs are compute-loaded rather than idle on communication
+- One bad node (a0016) was identified with persistent CUDA init failures; reported to admins
+- Thermal issues on some B200 nodes were identified during validation and resolved; published numbers verified unchanged at matched configurations
+
+Practical guidance for users:
+- Use the largest feasible global batch for distributed training, especially on B200
+- See "Reference results" below for specific efficiency numbers per model and configuration
+- Full plots available in `plots/` subdirectory
+
 ## Quick start
 
 Assuming you have a working conda env with PyTorch (matching your target GPU's compute capability):
