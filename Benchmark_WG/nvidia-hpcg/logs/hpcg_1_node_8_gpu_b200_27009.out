@@ -1,0 +1,70 @@
+Running on hosts: b0015
+2026-05-22T12:01:04
+HPCG-NVIDIA 26.02.0  -- NVIDIA accelerated HPCG benchmark -- NVIDIA
+Build v0.6.0 
+
+Start of application (GPU-Only) ...
+Initial Residual = 11304.4
+Iteration = 1   Scaled Residual = 0.186679
+Iteration = 2   Scaled Residual = 0.102562
+Iteration = 3   Scaled Residual = 0.0708169
+Iteration = 4   Scaled Residual = 0.0541091
+Iteration = 5   Scaled Residual = 0.0437576
+Iteration = 6   Scaled Residual = 0.0367107
+Iteration = 7   Scaled Residual = 0.0316121
+Iteration = 8   Scaled Residual = 0.0277661
+Iteration = 9   Scaled Residual = 0.0247719
+Iteration = 10   Scaled Residual = 0.0223765
+Iteration = 11   Scaled Residual = 0.0204105
+Iteration = 12   Scaled Residual = 0.0187576
+Iteration = 13   Scaled Residual = 0.0173375
+Iteration = 14   Scaled Residual = 0.0160995
+Iteration = 15   Scaled Residual = 0.0150126
+Iteration = 16   Scaled Residual = 0.0140567
+Iteration = 17   Scaled Residual = 0.0132171
+Iteration = 18   Scaled Residual = 0.0124801
+Iteration = 19   Scaled Residual = 0.01183
+Iteration = 20   Scaled Residual = 0.0112505
+Iteration = 21   Scaled Residual = 0.0107262
+Iteration = 22   Scaled Residual = 0.010244
+Iteration = 23   Scaled Residual = 0.00979711
+Iteration = 24   Scaled Residual = 0.00938376
+Iteration = 25   Scaled Residual = 0.00900528
+Iteration = 26   Scaled Residual = 0.00866434
+Iteration = 27   Scaled Residual = 0.00836168
+Iteration = 28   Scaled Residual = 0.00809436
+Iteration = 29   Scaled Residual = 0.00785625
+Iteration = 30   Scaled Residual = 0.00763841
+Iteration = 31   Scaled Residual = 0.00743172
+Iteration = 32   Scaled Residual = 0.00723063
+Iteration = 33   Scaled Residual = 0.00703311
+Iteration = 34   Scaled Residual = 0.00683943
+Iteration = 35   Scaled Residual = 0.00664959
+Iteration = 36   Scaled Residual = 0.00646027
+Iteration = 37   Scaled Residual = 0.00626613
+Iteration = 38   Scaled Residual = 0.00606467
+Iteration = 39   Scaled Residual = 0.00585985
+Iteration = 40   Scaled Residual = 0.00566094
+Iteration = 41   Scaled Residual = 0.00547446
+Iteration = 42   Scaled Residual = 0.00530383
+Iteration = 43   Scaled Residual = 0.00515553
+Iteration = 44   Scaled Residual = 0.0050298
+Iteration = 45   Scaled Residual = 0.00491953
+Iteration = 46   Scaled Residual = 0.00481944
+Iteration = 47   Scaled Residual = 0.00472162
+Iteration = 48   Scaled Residual = 0.00462407
+Iteration = 49   Scaled Residual = 0.0045241
+Iteration = 50   Scaled Residual = 0.00442526
+GPU Rank Info:
+ | cuSPARSE version 12.7
+ | Reference CPU memory = 7491.04 MB
+ | GPU Name: 'NVIDIA B200'
+ | Number of SMs: 148
+ | GPU Memory Use: 14165 MB / 182631 MB
+ | Process Grid: 2x2x2
+ | Local Domain: 256x256x256
+ | Number of CPU Threads: 16
+ | Slice Size: 4096
+WARNING: PERFORMING UNPRECONDITIONED ITERATIONS
+Done
+2026-05-22T12:01:04

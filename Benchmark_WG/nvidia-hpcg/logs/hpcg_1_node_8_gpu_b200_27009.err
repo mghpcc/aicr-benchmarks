@@ -1,0 +1,122 @@
+[b0015:757276:0:757276] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_5:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[b0015:757276:0:757276] ib_mlx5_log.c:179  RC QP 0x13bb5 wqe[0]: RDMA_WRITE s-- [rva 0x7fb8ff8452b0 rkey 0x20c000] [va 0x7ef97fc452b0 len 240976 lkey 0x20ac00] [rqpn 0x13edb dlid=192 sl=0 port=1 src_path_bits=0]
+[b0015:757276] *** Process received signal ***
+[b0015:757276] Signal: Aborted (6)
+[b0015:757276] Signal code:  (-6)
+[b0015:757276] [ 0] /lib64/libc.so.6(+0x3ebf0)[0x7f019f082bf0]
+[b0015:757276] [ 1] /lib64/libc.so.6(+0x8bedc)[0x7f019f0cfedc]
+[b0015:757276] [ 2] /lib64/libc.so.6(raise+0x16)[0x7f019f082b46]
+[b0015:757276] [ 3] /lib64/libc.so.6(abort+0xd3)[0x7f019f06c833]
+[b0015:757276] [ 4] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x31dc7)[0x7f019c54bdc7]
+[b0015:757276] [ 5] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x3667f)[0x7f019c55067f]
+[b0015:757276] [ 6] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(ucs_log_dispatch+0xcc)[0x7f019c55099c]
+[b0015:757276] [ 7] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x50d)[0x7f019c439acd]
+[b0015:757276] [ 8] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x12c)[0x7f019c44f2fc]
+[b0015:757276] [ 9] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x35)[0x7f019c43aa85]
+[b0015:757276] [10] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(+0x2b747)[0x7f019c450747]
+[b0015:757276] [11] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f019c63aa9a]
+[b0015:757276] [12] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/openmpi/mca_pml_ucx.so(mca_pml_ucx_send+0x157)[0x7f019c6e6fe7]
+[b0015:757276] [13] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/libmpi.so.40(PMPI_Send+0x11b)[0x7f01e1e70fbb]
+[b0015:757276] [14] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x43e9fc]
+[b0015:757276] [15] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x430f54]
+[b0015:757276] [16] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x41013d]
+[b0015:757276] [17] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x412259]
+[b0015:757276] [18] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40d1f0]
+[b0015:757276] [19] /lib64/libc.so.6(+0x295d0)[0x7f019f06d5d0]
+[b0015:757276] [20] /lib64/libc.so.6(__libc_start_main+0x80)[0x7f019f06d680]
+[b0015:757276] [21] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40f475]
+[b0015:757276] *** End of error message ***
+[b0015:757271:0:757271] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_0:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[b0015:757271:0:757271] ib_mlx5_log.c:179  RC QP 0x15a5f wqe[0]: RDMA_WRITE s-- [rva 0x7fb8ff4452b0 rkey 0x20c000] [va 0x7f8a7f8452b0 len 240976 lkey 0x20a800] [rqpn 0x13eef dlid=192 sl=0 port=1 src_path_bits=0]
+[b0015:757271] *** Process received signal ***
+[b0015:757271] Signal: Aborted (6)
+[b0015:757271] Signal code:  (-6)
+[b0015:757271] [ 0] /lib64/libc.so.6(+0x3ebf0)[0x7f92a26e2bf0]
+[b0015:757271] [ 1] /lib64/libc.so.6(+0x8bedc)[0x7f92a272fedc]
+[b0015:757271] [ 2] /lib64/libc.so.6(raise+0x16)[0x7f92a26e2b46]
+[b0015:757271] [ 3] /lib64/libc.so.6(abort+0xd3)[0x7f92a26cc833]
+[b0015:757271] [ 4] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x31dc7)[0x7f907d468dc7]
+[b0015:757271] [ 5] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x3667f)[0x7f907d46d67f]
+[b0015:757271] [ 6] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(ucs_log_dispatch+0xcc)[0x7f907d46d99c]
+[b0015:757271] [ 7] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x50d)[0x7f907c3c7acd]
+[b0015:757271] [ 8] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x12c)[0x7f907c3dd2fc]
+[b0015:757271] [ 9] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x35)[0x7f907c3c8a85]
+[b0015:757271] [10] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(+0x2b747)[0x7f907c3de747]
+[b0015:757271] [11] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f907d557a9a]
+[b0015:757271] [12] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/openmpi/mca_pml_ucx.so(mca_pml_ucx_send+0x157)[0x7f907d603fe7]
+[b0015:757271] [13] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/libmpi.so.40(PMPI_Send+0x11b)[0x7f92e54d0fbb]
+[b0015:757271] [14] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x43e9fc]
+[b0015:757271] [15] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x430f54]
+[b0015:757271] [16] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x41013d]
+[b0015:757271] [17] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x412259]
+[b0015:757271] [18] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40d1f0]
+[b0015:757271] [19] /lib64/libc.so.6(+0x295d0)[0x7f92a26cd5d0]
+[b0015:757271] [20] /lib64/libc.so.6(__libc_start_main+0x80)[0x7f92a26cd680]
+[b0015:757271] [21] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40f475]
+[b0015:757271] *** End of error message ***
+[b0015:757275:0:757275] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_4:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[b0015:757275:0:757275] ib_mlx5_log.c:179  RC QP 0x13c24 wqe[0]: RDMA_WRITE s-- [rva 0x7fb8ff0452b0 rkey 0x20c000] [va 0x7ef89fc452b0 len 240976 lkey 0x20b500] [rqpn 0x13ee0 dlid=192 sl=0 port=1 src_path_bits=0]
+[b0015:757275] *** Process received signal ***
+[b0015:757275] Signal: Aborted (6)
+[b0015:757275] Signal code:  (-6)
+[b0015:757275] [ 0] /lib64/libc.so.6(+0x3ebf0)[0x7f00af77cbf0]
+[b0015:757275] [ 1] /lib64/libc.so.6(+0x8bedc)[0x7f00af7c9edc]
+[b0015:757275] [ 2] /lib64/libc.so.6(raise+0x16)[0x7f00af77cb46]
+[b0015:757275] [ 3] /lib64/libc.so.6(abort+0xd3)[0x7f00af766833]
+[b0015:757275] [ 4] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x31dc7)[0x7f00acc45dc7]
+[b0015:757275] [ 5] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x3667f)[0x7f00acc4a67f]
+[b0015:757275] [ 6] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(ucs_log_dispatch+0xcc)[0x7f00acc4a99c]
+[b0015:757275] [ 7] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x50d)[0x7f00acb33acd]
+[b0015:757275] [ 8] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x12c)[0x7f00acb492fc]
+[b0015:757275] [ 9] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x35)[0x7f00acb34a85]
+[b0015:757275] [10] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(+0x2b747)[0x7f00acb4a747]
+[b0015:757275] [11] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7f00acd34a9a]
+[b0015:757275] [12] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/openmpi/mca_pml_ucx.so(mca_pml_ucx_send+0x157)[0x7f00acde0fe7]
+[b0015:757275] [13] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/libmpi.so.40(PMPI_Send+0x11b)[0x7f00f256afbb]
+[b0015:757275] [14] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x43e9fc]
+[b0015:757275] [15] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x430f54]
+[b0015:757275] [16] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x41013d]
+[b0015:757275] [17] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x412259]
+[b0015:757275] [18] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40d1f0]
+[b0015:757275] [19] /lib64/libc.so.6(+0x295d0)[0x7f00af7675d0]
+[b0015:757275] [20] /lib64/libc.so.6(__libc_start_main+0x80)[0x7f00af767680]
+[b0015:757275] [21] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40f475]
+[b0015:757275] *** End of error message ***
+[b0015:757270:0:757270] ib_mlx5_log.c:179  Transport retry count exceeded on mlx5_12:1/IB (synd 0x15 vend 0x81 hw_synd 0/0)
+[b0015:757270:0:757270] ib_mlx5_log.c:179  RC QP 0x13eef wqe[0]: RDMA_WRITE s-- [rva 0x7f8a7fc40000 rkey 0x20a800] [va 0x7fb8ffc40000 len 262144 lkey 0x20c000] [rqpn 0x15a5f dlid=171 sl=0 port=1 src_path_bits=0]
+[b0015:757270] *** Process received signal ***
+[b0015:757270] Signal: Aborted (6)
+[b0015:757270] Signal code:  (-6)
+[b0015:757270] [ 0] /lib64/libc.so.6(+0x3ebf0)[0x7fc123a20bf0]
+[b0015:757270] [ 1] /lib64/libc.so.6(+0x8bedc)[0x7fc123a6dedc]
+[b0015:757270] [ 2] /lib64/libc.so.6(raise+0x16)[0x7fc123a20b46]
+[b0015:757270] [ 3] /lib64/libc.so.6(abort+0xd3)[0x7fc123a0a833]
+[b0015:757270] [ 4] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x31dc7)[0x7fbf067a8dc7]
+[b0015:757270] [ 5] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(+0x3667f)[0x7fbf067ad67f]
+[b0015:757270] [ 6] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucs.so.0(ucs_log_dispatch+0xcc)[0x7fbf067ad99c]
+[b0015:757270] [ 7] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_completion_with_err+0x50d)[0x7fbf05707acd]
+[b0015:757270] [ 8] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_rc_mlx5_iface_handle_failure+0x12c)[0x7fbf0571d2fc]
+[b0015:757270] [ 9] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(uct_ib_mlx5_check_completion+0x35)[0x7fbf05708a85]
+[b0015:757270] [10] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/ucx/libuct_ib_mlx5.so.0(+0x2b747)[0x7fbf0571e747]
+[b0015:757270] [11] /apps/aicr/packages/ucx/1.20.0/uez43nw/lib/libucp.so.0(ucp_worker_progress+0x5a)[0x7fbf06897a9a]
+[b0015:757270] [12] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/openmpi/mca_pml_ucx.so(mca_pml_ucx_send+0x157)[0x7fc12000cfe7]
+[b0015:757270] [13] /apps/aicr/packages/openmpi/4.1.8/hhi5la4/lib/libmpi.so.40(PMPI_Send+0x11b)[0x7fc16680efbb]
+[b0015:757270] [14] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x43e9fc]
+[b0015:757270] [15] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x430f54]
+[b0015:757270] [16] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x41013d]
+[b0015:757270] [17] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x412259]
+[b0015:757270] [18] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40d1f0]
+[b0015:757270] [19] /lib64/libc.so.6(+0x295d0)[0x7fc123a0b5d0]
+[b0015:757270] [20] /lib64/libc.so.6(__libc_start_main+0x80)[0x7fc123a0b680]
+[b0015:757270] [21] /home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/bin/xhpcg[0x40f475]
+[b0015:757270] *** End of error message ***
+/home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/./bin/hpcg.sh: line 392: 757270 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPCG} ${DAT} --gss=${GSS} ${HPCG_CONTROL}
+/home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/./bin/hpcg.sh: line 392: 757276 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPCG} ${DAT} --gss=${GSS} ${HPCG_CONTROL}
+srun: error: b0015: tasks 4-5: Exited with exit code 134
+/home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/./bin/hpcg.sh: line 392: 757271 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPCG} ${DAT} --gss=${GSS} ${HPCG_CONTROL}
+/home/bgregor_bu/aicr-benchmarks/Benchmark_WG/nvidia-hpcg/./bin/hpcg.sh: line 392: 757275 Aborted                 (core dumped) ${NUMCMD} ${CPUBIND} ${MEMBIND} ${XHPCG} ${DAT} --gss=${GSS} ${HPCG_CONTROL}
+srun: error: b0015: tasks 0,6: Exited with exit code 134
+[2026-05-22T12:02:49.516] error:  mpi/pmix_v3: _errhandler: b0015 [0]: pmixp_client_v2.c:225: Error handler invoked: status = -25, source = [slurm.pmix.27009.0:5]
+srun: Job step aborted: Waiting up to 62 seconds for job step to finish.
+[2026-05-22T12:02:49.520] error: *** STEP 27009.0 ON b0015 CANCELLED AT 2026-05-22T12:02:49 DUE to SIGNAL Killed ***
+srun: error: b0015: tasks 1-3,7: Killed
