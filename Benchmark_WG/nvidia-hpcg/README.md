@@ -1,11 +1,7 @@
 # Nvidia HPCG Benchmark
 
-### Get the code
-
-```sh
-wget https://developer.download.nvidia.com/compute/nvidia-hpc-benchmarks/redist/nvidia_hpc_benchmarks_openmpi/linux-x86_64/nvidia_hpc_benchmarks_openmpi-linux-x86_64-26.02.02-archive.tar.xz
-tar xf nvidia_hpc_benchmarks_openmpi-linux-x86_64-26.02.02-archive.tar.xz
-```
+Nvidia's [main page](https://docs.nvidia.com/nvidia-hpc-benchmarks/HPCG_benchmark.html) and 
+[git](https://github.com/NVIDIA/nvidia-hpcg) repo. This is an MPI+CUDA benchmark.
 
 ## Problem Size
 
