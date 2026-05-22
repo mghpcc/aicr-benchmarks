@@ -1,13 +1,21 @@
-; Peak sequential read bandwidth.
+; Peak sequential read bandwidth, single-pass, cache-hostile.
 ;
-; Picks 1 MiB block size (matches NFS rsize=1048576 on /work) and many parallel
-; jobs with deep iodepth so every nconnect=16 channel stays busy. Files are
-; pre-laid-out by fio on first invocation; subsequent runs reuse them (use
-; --create-only beforehand to pre-fill, or just let the first iter warm up
-; and ignore it).
+; bs=1M matches NFS rsize. Many files per job (nrfiles), each of size
+; SIZE_PER_JOB/nrfiles, read once end-to-end (loops=1, no time_based). This
+; defeats the cache loop you get with time_based on small files. Total per
+; job = SIZE_PER_JOB, set by the wrapper so the cluster-wide working set
+; exceeds the aggregate CBOX cache.
 ;
-; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
-;                    IODEPTH, IOENGINE, CPUS_ALLOWED
+; Cache bypass:
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on read pages
+;   loops=1         — single pass, no in-run cycling that would warm cache
+; The server-side CBOX cache cannot be flushed from the client; relying on
+; working_set > aggregate_cache to keep server-cache hits negligible.
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;                    CPUS_ALLOWED, NRFILES, JOBNAME
 
 [global]
 ioengine=${IOENGINE}
@@ -15,24 +23,26 @@ direct=1
 bs=1M
 rw=read
 size=${SIZE_PER_JOB}
+nrfiles=${NRFILES}
+; sequential workload only needs one file open per worker at a time; cap
+; the FD count so nrfiles can be large (up to thousands) without blowing
+; through the per-process file-descriptor limit.
+openfiles=1
 iodepth=${IODEPTH}
 numjobs=${NUMJOBS}
 group_reporting=1
-time_based=1
-runtime=${RUNTIME}
-ramp_time=${RAMP_TIME}
+loops=1
+time_based=0
 directory=${DATA_DIR}
-; one private file per (host,job) so concurrent ranks never share a file
-filename_format=fio.$jobname.$jobnum
+filename_format=fio.$jobname.$jobnum.$filenum
 fallocate=none
 invalidate=1
+fadvise_hint=1
 randrepeat=0
 end_fsync=0
 thread=1
-; pin each numjob to a disjoint slice of the allowed CPU set so 32+ jobs
-; per node don't fight the scheduler when driving 100s of in-flight ops
 cpus_allowed=${CPUS_ALLOWED}
 cpus_allowed_policy=split
 
-[seq_read]
+[${JOBNAME}]
 stonewall

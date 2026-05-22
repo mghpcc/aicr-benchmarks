@@ -1,0 +1,46 @@
+; Peak sequential write bandwidth, single-pass, cache-hostile.
+;
+; bs=1M (matches NFS wsize), many files per job (nrfiles), each of size
+; SIZE_PER_JOB/nrfiles, written once (loops=1, no time_based). end_fsync=1
+; makes the result honest by waiting for server-side commit before stopping
+; the clock — without it, posixaio + buffered NFS can ack before storage
+; actually has the data.
+;
+; Cache bypass:
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on written pages
+;   loops=1         — single pass, no looping over the same file region
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;                    CPUS_ALLOWED, NRFILES, JOBNAME
+
+[global]
+ioengine=pvsync2
+direct=1
+bs=1M
+rw=write
+size=4G
+nrfiles=4096
+; sequential workload only needs one file open per worker at a time; cap
+; the FD count so nrfiles can be large (up to thousands) without blowing
+; through the per-process file-descriptor limit.
+openfiles=1
+iodepth=1
+numjobs=32
+group_reporting=1
+loops=1
+time_based=0
+directory=/work/mit/datasets/test/fio/fio_1779420797/task_14/a0005/seq_write_1M
+filename_format=fio.$jobname.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+end_fsync=1
+randrepeat=0
+thread=1
+cpus_allowed=0-95
+cpus_allowed_policy=split
+
+[seq_write_1M]
+stonewall
