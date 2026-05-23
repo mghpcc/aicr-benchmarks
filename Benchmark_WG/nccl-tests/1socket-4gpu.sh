@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p GPU1  # GPU1
+#SBATCH -p rtx-batch  # GPU1
 #SBATCH -t 100
 #SBATCH -N 1
 #SBATCH --ntasks=1
@@ -8,6 +8,7 @@
 #SBATCH -J nvhpc-26.3
 #SBATCH -o out-1socket/%x-%N-%J
 #SBATCH --exclusive
+#SBATCH -x a0001
 
 job_name=$SLURM_JOB_NAME
 BUILD_DIR=../build-$job_name

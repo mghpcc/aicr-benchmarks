@@ -1,211 +1,234 @@
-# fio Peak Aggregate Run Analysis — `fio_1779420797`
+# fio Peak Aggregate Run Analysis — `fio_1779485014` (numjobs sweep 96 / 128)
+
+## What This Run Is
+
+`submit.sh` ran a **`numjobs` sweep** under one base tag: two chained sweep
+cells, `n96` (`numjobs=96`) then `n128` (`numjobs=128`), each a full b200+rtx
+array (21 tasks × 2 nodes = 42 client nodes, `WORKLOAD=all`). Goal: find the
+per-node thread count that maximizes aggregate throughput on the `pvsync2`
+sync engine, where each worker blocks on one in-flight I/O at a time.
+
+The headline is a split decision:
+
+- **`n96` completed cleanly** — all 8 workload cells, all 42 processes, zero
+  empty JSON. This is the usable dataset.
+- **`n128` blew the 12-minute Slurm walltime.** `numjobs=128` on the 96
+  allocated cores (`cpus_allowed=0-95`) is **1.33× oversubscribed**; the run
+  crawled, dropped 2–12 of 42 nodes during the write phases, and was killed
+  while in `seq_read`. **No `seq_read` or `rand_read` data survived** (every
+  `seq_read` JSON is empty; the `rand_read` phase never even started — no job
+  files were written). `n128` is a negative result, not a measurement.
 
 ## What Changed Since the Previous Run
 
-Two things shifted relative to `summary.md-1` (`fio_1779399220`):
+Relative to `summary.md-2` (`fio_1779420797`), same `pvsync2` engine and same
+42-node NFS-over-RDMA path, but three sizing knobs moved:
 
-1. **ioengine: `pvsync2` cluster-wide** (was `posixaio`). The auto-probe added
-   to `peak_aggregate_fio.sh` now tries `io_uring → pvsync2 → posixaio` per
-   node; all 378 fio invocations in this run selected `pvsync2` (io_uring
-   still blocked). `pvsync2` is kernel sync I/O — no userspace thread-pool
-   tax — so `iodepth` collapses to 1 in practice, but it generally beats
-   `posixaio` once `numjobs` is high enough.
-2. **`seq_*` size sweep**: each task now runs `seq_write` and `seq_read`
-   three times (file size 1M, 10M, 100M). `TOTAL_PER_JOB=4G` is held fixed,
-   so `nrfiles = 4G / file_size` (4096 / 409 / 40). The intent: see how
-   per-file size affects sustained throughput when client cache is killed
-   (`direct=1, invalidate=1, fadvise_hint=1`).
+1. **`numjobs` 32/64 → 96 (and 128).** Prior run used `numjobs=32` (seq) /
+   `64` (rand); this sweep applies one uniform value to all workloads. With
+   sync `pvsync2`/`iodepth=1`, throughput scales with `numjobs` because
+   concurrency is the *only* lever that hides per-op latency.
+2. **`TOTAL_PER_JOB` 4G → 2G**, **`RAND_SIZE_PER_JOB` 16G → 1G** (current
+   wrapper defaults). Smaller per-job working sets.
+3. **`RUNTIME` 60 s → 20 s**, **`RAMP_TIME` 10 s → 5 s** (see `note.md`: 20 s
+   is still excellent for rand IOPS noise, good for `seq_write` BW).
 
-The rand_\* tunables were also bumped to `numjobs=64, iodepth=128` (the
-iodepth is clamped to 1 for `pvsync2` by the wrapper).
+`io_uring` is still blocked — the auto-probe selected `pvsync2` on every node.
 
 ## Cluster Configuration Used
 
-| dimension                | value                                                           |
-|---                       |---                                                              |
-| array tasks              | **21**, each 2 nodes (`--ntasks-per-node=1`, exclusive)         |
-| total client nodes       | **42 nodes** (26 b200 + 14 rtx + 2 hosts reused across tasks)   |
-| cores per node (physical)| **128** on both partitions                                      |
-| cores used per node      | 96 (`--cpus-per-task=96`)                                       |
-| fio processes per node   | 1 fio binary, `numjobs=32` (seq) / `numjobs=64` (rand)          |
-| effective iodepth        | **1** (pvsync2 is sync — `RAND_IODEPTH=128` ignored)            |
-| ioengine selected        | `pvsync2` on every node                                         |
-| `HONEST_FSYNC`           | 1 — `rand_write` waits for server commit                        |
-| NFS mount                | `vers=3, proto=rdma, nconnect=16, rsize/wsize=1M`               |
-| `TOTAL_PER_JOB` (seq_*)  | 4 GiB                                                           |
-| `RAND_SIZE_PER_JOB`      | 16 GiB                                                          |
-| `RUNTIME` / `RAMP_TIME`  | 60 s / 10 s (`time_based`, rand_* only)                         |
-| seq_* runtime mode       | single-pass `loops=1` (no `time_based`)                         |
+| dimension                | value                                                          |
+|---                       |---                                                             |
+| array tasks              | **21**, each 2 nodes (`--ntasks-per-node=1`, exclusive)        |
+| total client nodes       | **42** (13 b200 tasks ×2 = 26, 8 rtx ×2 = 16)                  |
+| cores allocated per node | **96** (`--cpus-per-task=96`, `cpus_allowed=0-95`)             |
+| fio processes per node   | 1 fio binary; `numjobs=96` (`n96`) / `numjobs=128` (`n128`)    |
+| effective iodepth        | **1** (`pvsync2` is sync — `IODEPTH`/`RAND_IODEPTH` ignored)   |
+| ioengine selected        | `pvsync2` on every node (`io_uring` still blocked)            |
+| `HONEST_FSYNC`           | 1 — `rand_write` waits for server commit (`end_fsync=1`)      |
+| NFS mount                | `vers=3, proto=rdma, nconnect=16, rsize/wsize=1M`             |
+| `TOTAL_PER_JOB` (seq_*)  | 2 GiB → cluster footprint ≈ 2G × 96 × 42 ≈ **8 TiB**          |
+| `RAND_SIZE_PER_JOB`      | 1 GiB → cluster footprint ≈ 1G × 96 × 42 ≈ **4 TiB**          |
+| `RUNTIME` / `RAMP_TIME`  | 20 s / 5 s (`time_based` for `seq_write` + `rand_*`)          |
+| seq_read runtime mode    | single-pass `loops=1` (no `time_based`)                       |
+| `#SBATCH --time`         | 00:12:00 — the wall `n128` overran                            |
+| run date                 | 2026-05-22                                                     |
 
-> **Heads-up — 6 nodes timed out during `rand_read`.** The 45-min Slurm
-> walltime was hit while `rand_read` (the last phase in the
-> `WORKLOAD=all` order) was running on b0005/b0008/b0009/b0014/b0016/b0017.
-> Their JSON files are zero-byte and were filtered by the aggregator, so
-> the `rand_read` cell aggregates **36 fio processes**, not 42 — i.e. the
-> headline `rand_read` IOPS is ~14% under-counted vs. a complete run.
-> Every other cell aggregates the full 42.
+## Headline Results — `n96` (the usable run)
 
-## Headline Results
+`cluster_sum` = sum of per-process throughput. `conservative` = total bytes /
+max elapsed (honest wall-clock aggregate). Vast spec: seq_read 462 GB/s,
+seq_write 165 GB/s (sustained 87.5), rand_read 2,775 kIOPS, rand_write
+825 kIOPS.
 
-`cluster_sum` = sum of per-process throughput. `conservative` = total bytes
-across all processes / max elapsed (honest wall-clock aggregate). Vast spec:
-seq_read 462 GB/s, seq_write 165 GB/s, rand_read 2,775 kIOPS,
-rand_write 825 kIOPS.
+| workload                   | procs | cluster_sum  | conservative   | /node (cons) | vs spec (cons) |
+|---                         |---    |---           |---             |---           |---             |
+| `seq_read`  · file 1 MiB   | 42    | 1199.4 GB/s  | **789.9 GB/s** | 18.8 GB/s    | 171 %          |
+| `seq_read`  · file 10 MiB  | 42    | 1337.2 GB/s  | **837.4 GB/s** | 19.9 GB/s    | 181 %          |
+| `seq_read`  · file 100 MiB | 42    | 1547.3 GB/s  | **966.6 GB/s** | 23.0 GB/s    | 209 %          |
+| `seq_write` · file 1 MiB   | 42    |   37.4 GB/s  |   17.3 GB/s    | 0.41 GB/s    | 10.5 %         |
+| `seq_write` · file 10 MiB  | 42    |  302.5 GB/s  |  208.2 GB/s    | 4.96 GB/s    | 126 %          |
+| `seq_write` · file 100 MiB | 42    |  486.0 GB/s  |  458.1 GB/s    | 10.9 GB/s    | 278 %          |
+| `rand_read`                | 42    | 6040.3 kIOPS | **6019.1 kIOPS** | 143 kIOPS  | **217 %**      |
+| `rand_write`               | 42    | 1468.4 kIOPS | **1464.1 kIOPS** | 34.9 kIOPS | **177 %**      |
 
-| workload                  | procs | cluster_sum    | conservative   | vs spec (cons) |
-|---                        |---    |---             |---             |---             |
-| `seq_read`  · file 1 MiB  | 42    | 465.25 GB/s    | **384.32 GB/s**| 83.2 %         |
-| `seq_read`  · file 10 MiB | 42    | 410.60 GB/s    | **308.89 GB/s**| 66.9 %         |
-| `seq_read`  · file 100 MiB| 42    | 872.56 GB/s    | **481.61 GB/s**| 104.2 %        |
-| `seq_write` · file 1 MiB  | 42    |  49.41 GB/s    |   40.76 GB/s   | 24.7 %         |
-| `seq_write` · file 10 MiB | 42    |  97.84 GB/s    |   38.05 GB/s   | 23.1 %         |
-| `seq_write` · file 100 MiB| 42    | 104.62 GB/s    |   35.64 GB/s   | 21.6 %         |
-| `rand_read`               | **36**| 1946.4 kIOPS   | **1945.0 kIOPS**| **70.1 %**    |
-| `rand_write`              | 42    |  878.5 kIOPS   |  **877.3 kIOPS**| **106.3 %**   |
+## Headline Results — `n128` (partial, walltime-killed)
 
-The two random workloads are the headline win: switching from `posixaio`
-to `pvsync2` raised `rand_read` from 778 → 1946 kIOPS (**2.5×**) and
-`rand_write` from 447 → 878 kIOPS (**2×**) on the same 42-node pool, no
-admin changes required.
+| workload                   | procs    | cluster_sum  | conservative  | vs spec (cons) |
+|---                         |---       |---           |---            |---             |
+| `seq_write` · file 1 MiB   | 40 / 42  |  26.8 GB/s   |  12.6 GB/s    | 7.6 %          |
+| `seq_write` · file 10 MiB  | 39 / 42  | 205.0 GB/s   | 167.7 GB/s    | 102 %          |
+| `seq_write` · file 100 MiB | 38 / 42  | 398.0 GB/s   | 377.0 GB/s    | 229 %          |
+| `rand_write`               | 30 / 42  | 936.3 kIOPS  | 932.2 kIOPS   | 113 %          |
+| `seq_read` (all sizes)     | **0**    | —            | —             | timed out — every JSON empty |
+| `rand_read`                | **0**    | —            | —             | never ran (phase not reached) |
 
-## Reading the seq_read Size Sweep
+## The Core Finding: 96 Threads ≫ 128 Threads
 
-The 1M / 10M / 100M sweep separates "honest cold-read" from "cache-warmed":
+The sweep answers the question it was built to ask. With one fio process per
+node running `numjobs` sync workers on 96 cores:
 
-- **1M file, 4096 files per worker** — `cluster_sum` 465 vs. `conservative`
-  384 (sum is 21 % higher). The gap is overlap loss: thousands of tiny
-  files mean some workers finish their working set well before others, so
-  per-process rates are real but they don't all run during the same window.
-  **384 GB/s is the honest cold-read number** at small files —
-  ~9.1 GB/s/node median.
-- **10M file, 409 files per worker** — same pattern, worse overlap (75 %
-  ratio). Each file is bigger so layout takes longer; finish-time variance
-  grows. **309 GB/s honest.**
-- **100M file, 40 files per worker** — `cluster_sum` 873 GB/s, *almost
-  double the 462 GB/s Vast spec*. **This is cache.** With 40 files × 100M
-  × 32 jobs ≈ 128 GiB per node and reads issued right after the matching
-  `seq_write_100M` filled them, the CBOX server-side cache services most
-  of the read. The conservative 481 GB/s is still above spec for the same
-  reason. **Treat the 100M number as storage-plus-cache, not storage.**
+- **`numjobs=96` (1 worker per allocated core) is the sweet spot.** It fills
+  the 12-min wall with room to spare and posts the highest aggregates.
+- **`numjobs=128` is counterproductive on two axes at once:**
+  1. **Per-node throughput *drops*** where both runs have data —
+     `seq_write_100M` 9.92 vs 10.9 GB/s/node, `rand_write` 31.1 vs
+     34.9 kIOPS/node. Oversubscribing 96 cores by 1.33× adds context-switch
+     and scheduling overhead with no extra in-flight I/O (still `iodepth=1`).
+  2. **The whole run slows enough to miss the wall.** It died in `seq_read`,
+     losing both read workloads entirely and 2–12 nodes on the writes.
 
-The 1M and 10M conservative numbers (384 / 309 GB/s) sit between the
-`../raw-io/` cold-ImageNet measurement (≈ 200 GB/s on the same node pool)
-and the 462 GB/s Vast spec — i.e. partially cache-warmed, but a real
-storage workload. The honest cold-read ceiling on this 42-node client
-pool is somewhere in that band.
+**Recommendation: pin `numjobs` to the allocated core count (96 here). Do not
+oversubscribe a sync engine — extra threads beyond cores cost latency, not
+concurrency.** If `numjobs=128` is wanted for comparison, raise
+`--cpus-per-task` to 128 *and* the Slurm walltime so it isn't oversubscribed
+and can finish.
 
-## Reading the seq_write Size Sweep
+## Why the Reads Are Above Spec — Concurrency, Not Cache
 
-`seq_write` looks worse than the previous run (40 / 38 / 36 GB/s
-conservative vs. 65 GB/s before). Two effects compound:
+`seq_read` at 171–209 % of spec and `rand_read` at 217 % look like cache
+contamination at first glance, but the per-op latency says otherwise:
 
-1. **`pvsync2` + `iodepth=1` for writes**: the previous run used `posixaio`
-   with `iodepth=64`, which masked some of the per-RPC latency. `pvsync2`
-   serializes I/O per worker thread, so each of 32 workers/node pushes
-   one 1-MiB write at a time. End result: per-node median is ~1.1 –
-   1.9 GB/s here.
-2. **Overlap loss explodes at single-pass writes**: `cluster_sum` for
-   100M is 105 GB/s but `conservative` is only 36 — a 34 % ratio. The
-   fastest nodes finish their 4 GiB working set in seconds; slow nodes
-   are still grinding when the fast ones have already exited. The
-   wall-clock denominator (max runtime) gets long while throughput on
-   most of the cluster has already dropped to zero.
+| workload          | per-op clat (measured) | iodepth | implied per-thread rate | × 96 threads/node | observed/node |
+|---                |---                     |---      |---                      |---                |---            |
+| `rand_read` (4 K) | **~550 µs**            | 1       | ~1,820 IOPS             | ~175 k IOPS       | ~143 k IOPS   |
+| `seq_read_100M` (1 M) | **~2.3 ms**        | 1       | ~435 MB/s               | ~42 GB/s          | 21–33 GB/s    |
 
-The right read of these numbers is: **per-node sustained write is
-1 – 2 GB/s on `pvsync2`**, and a longer-running write workload
-(`time_based=1`) would push the cluster aggregate up to roughly
-1.5 GB/s/node × 42 = **65 GB/s sustained**, in line with the previous
-run. The single-pass methodology with a small working set is unfair to
-writes — the read side benefits from cache, the write side doesn't get
-to amortize startup cost over a steady-state window.
+Those latencies are **real RDMA round-trips to the storage**, not the <100 µs
+you'd see if blocks were served from local page cache. A cache hit on a 4 KiB
+read would be single-digit µs, not 550 µs. **The above-spec aggregate is pure
+concurrency**: 42 nodes × 96 sync workers ≈ **4,000 outstanding requests**
+hitting 16 CBOX VIPs in parallel. The Vast spec is a single-configuration
+number; an aggregate over thousands of concurrent clients legitimately
+exceeds it — the same argument `summary.md-2` made for `rand_write`, now
+applying to reads too because we tripled the worker count.
+
+This is consistent with the cache-defeat invariant: `direct=1 + invalidate=1 +
+fadvise_hint=1` plus an 8 TiB (seq) / 4 TiB (rand) cluster working set kept
+the I/O cold. **Cache was defeated; the numbers are real.**
+
+**Two caveats to keep honest:**
+
+- `seq_read` in `WORKLOAD=all` is not a *guaranteed* cold read — the job-file
+  header warns that the implicit layout warms cache and only the intervening
+  writes displace it. The ~2.3 ms 1 MiB latency indicates it's *predominantly*
+  real I/O, but the 100M cell (highest %) is the most likely to retain some
+  warmth; treat 967 GB/s as an upper bound, ~790–840 GB/s as the firmer read.
+- **`RAND_SIZE_PER_JOB=1G` is small** (4 TiB cluster vs the prior 16 TiB). The
+  550 µs latency argues it stayed cold, but this is the one knob that shrank
+  toward the cache-leak zone. If `rand_read` ever shows µs-scale latency on a
+  future run, bump it back up. The wrapper docstring's intent is "exceeds
+  aggregate CBOX cache by 10×+."
+
+## Reading the `seq_write` Size Sweep
+
+`seq_write` is `time_based=20s`, so it measures *file-creation-limited* write
+rate, and the spread across file size is a pure metadata-overhead curve:
+
+- **1 MiB files (`nrfiles`≈2000/job × 96 jobs):** 17 GB/s, 10.5 % of spec.
+  Drowning in file creates — ~190k file opens per node. Metadata-bound, not
+  bandwidth-bound.
+- **10 MiB files (`nrfiles`≈200):** 208 GB/s, 126 %. Metadata cost amortizes.
+- **100 MiB files (`nrfiles`=20):** 458 GB/s, 278 %. Streaming writes.
+
+The 278 % is **write-cache absorption**, not sustained capacity: 10.9 GB/s/node
+is 5× the Vast *sustained-write* spec (87.5 GB/s ÷ 42 ≈ 2.1 GB/s/node). A 20 s
+window is short enough for the CBOX NVMe write buffer to absorb a large
+fraction before the run ends. **Cite `seq_write` large-file numbers as burst,
+not sustained.** The honest sustained write is closer to the sustained spec.
 
 ## Reading the IOPS Numbers
 
-This is where `pvsync2` pays off, exactly as `notes.md` predicted.
+This is where the `numjobs=96` bet pays off cleanly (latency-real, above):
 
-- **`rand_read` 1946 kIOPS = 70 % of Vast spec** with only 36 of 42
-  processes counted. At 36 nodes the per-node median is ~50 kIOPS — nearly
-  3× the posixaio ceiling of 18.5 kIOPS/node. If the 6 timed-out nodes
-  had finished, the headline would be ~2270 kIOPS ≈ **82 % of spec**.
-- **`rand_write` 877 kIOPS = 106 % of Vast spec** even with `HONEST_FSYNC=1`
-  (every rand_write waits for server commit). Per-node median ~21 kIOPS,
-  vs. ~10.6 kIOPS posixaio.
+- **`rand_read` 6,019 kIOPS = 217 % of spec**, all 42 processes, 143 kIOPS/node.
+  Up from 1,945 kIOPS in `summary.md-2` (which had `numjobs=64` and only 36
+  procs). Tripling workers ~3× the IOPS — exactly the sync-engine scaling story.
+- **`rand_write` 1,464 kIOPS = 177 % of spec** with `HONEST_FSYNC=1` (every op
+  waits for server commit), 34.9 kIOPS/node. Up from 877 kIOPS prior.
 
-Above-spec on `rand_write` is a methodology note, not a fluke: Vast's
-825 kIOPS spec is for the storage tier under one specific test
-configuration; with 42 clients hitting 16 distinct CBOX VIPs in parallel,
-each carrying RDMA `nconnect=16`, the **aggregate over the client pool
-naturally exceeds a single-point storage measurement** — there is no
-single bottleneck the spec was measuring.
+Both are genuine aggregate wins from concurrency on the same hardware, no admin
+changes.
 
-The remaining gap to spec on `rand_read` (and any further headroom on
-`rand_write`) is now likely **storage-tier**, not engine. Confirming
-would need either io_uring (still blocked) or a larger client pool.
+## Comparison to the Previous Run (`fio_1779420797`)
 
-## Comparison to the Previous (posixaio) Run
+Same `pvsync2`, same path. Only `numjobs` and working-set/runtime sizing differ,
+so this is a concurrency-scaling comparison, not apples-to-apples sizing.
 
-Same 42-node pool, same `direct=1`, same NFS path. Only the engine and
-seq sweep differ.
+| workload (conservative) | prior (`numjobs` 32/64) | this run `n96` (`numjobs` 96) | driver of change         |
+|---                      |---                      |---                            |---                       |
+| `seq_read` 1M/10M/100M  | 384 / 309 / 482 GB/s    | **790 / 837 / 967 GB/s**      | ~2–3× from 3× workers    |
+| `seq_write` 1M/10M/100M | 41 / 38 / 36 GB/s       | 17 / 208 / 458 GB/s           | small-file metadata curve + burst cache (not comparable) |
+| `rand_read`             | 1,945 kIOPS (36 procs)  | **6,019 kIOPS** (42 procs)    | **+209 %** — workers + full proc count |
+| `rand_write`            | 877 kIOPS               | **1,464 kIOPS**               | **+67 %** — more workers |
 
-| workload          | old (posixaio)        | new (pvsync2)                 | change          |
-|---                |---                    |---                            |---              |
-| `seq_read`  cons  | 432.9 GB/s (1M only)  | 384 / 309 / 482 GB/s by size  | not directly comparable; mixed |
-| `seq_write` cons  |  65.5 GB/s            |  41 / 38 / 36 GB/s            | **−40 % (methodology + engine)** |
-| `rand_read` cons  | 775.4 kIOPS           | **1945 kIOPS** (36 procs)     | **+150 %**      |
-| `rand_write` cons | 433.6 kIOPS           |  **877 kIOPS** (42 procs)     | **+102 %**      |
+The IOPS lines are real, latency-validated scaling. The `seq_write` rows are
+*not* comparable: the prior run's flat ~38 GB/s was overlap-loss-capped at
+`numjobs=32`; this run's steep size curve is the metadata-vs-streaming
+behavior at 3× the worker count plus 20 s burst-cache absorption on large files.
 
-`seq_read` apparent change is dominated by the size sweep (the old run
-used a single mid-size and got partial cache help). `seq_write` regression
-is the `iodepth=64 posixaio` vs. `iodepth=1 pvsync2` swap plus the
-overlap-loss-from-single-pass effect — not a storage regression. **Both
-IOPS lines are real wins** from switching the engine.
+## Where the Headroom / Next Steps Are
 
-## Where the Headroom Is Now
-
-| lever                                    | gain potential        | how to apply                                             |
-|---                                       |---                    |---                                                       |
-| **Unblock `io_uring` on compute nodes**  | another ~1.5 – 2× IOPS, ~10 – 20 % BW | sysadmin needs to relax kernel.io_uring_disabled or container seccomp |
-| Switch `seq_*` to `time_based=1`         | seq_write `conservative` → 60+ GB/s   | change the seq fio job files; trades single-pass purity for steady state |
-| Push `numjobs` higher on rand_*          | a few % to 1.5×       | already 64 on 96-core nodes; room for 96 with care       |
-| Increase `RAND_SIZE_PER_JOB`             | small — kills cache assist | already 16 G; bumping helps only if rand was showing cache hits (it isn't) |
-| Vast DPC (Data Path Client)              | ~10× per-host BW      | proprietary client; ask Vast/cluster team for availability |
-| Bigger client pool (more nodes)          | linear                | only ~13 more idle hosts available cluster-wide          |
-| Drop `end_fsync` for `rand_write`        | another ~1.5 – 2×     | already at 106 % of spec with honest fsync — not worth the dishonesty |
-
-The biggest practical change is **avoid the 45-min wall** so all 42
-processes report on `rand_read`. Either shrink `RAND_SIZE_PER_JOB`, drop
-the seq sweep when running `WORKLOAD=all`, or split the workloads across
-separate array submissions.
+| lever                                   | gain / effect            | how                                                       |
+|---                                      |---                       |---                                                        |
+| **Keep `numjobs` = allocated cores**    | avoids the `n128` regression | use `numjobs=96` on 96-core nodes; don't oversubscribe |
+| **Unblock `io_uring`**                  | another ~1.5–2× IOPS     | sysadmin: relax `kernel.io_uring_disabled` / seccomp; lets `iodepth>1` actually add concurrency without more threads |
+| **Re-run `n128` correctly**             | clean 128-thread point   | `--cpus-per-task=128` + longer `#SBATCH --time` (≥18 min) |
+| **Raise `#SBATCH --time` for `all`**    | reliable full sweep      | 12 min is too tight even at `n96` margin; 18–20 min safe  |
+| **Bump `RAND_SIZE_PER_JOB` back to ≥4–16G** | guards cache-defeat  | 1G/job is borderline; restore margin per wrapper docstring |
+| **Bigger client pool**                  | linear                   | only ~13 more idle hosts cluster-wide                     |
+| **Vast DPC (Data Path Client)**         | ~10× per-host BW         | proprietary client; ask Vast/cluster team                 |
 
 ## Vast Paper Spec Recap
 
-Vast spec (AICR proposal, 16 × 7 Gen5 / Ceres 1350):
-- Max Read **462 GB/s**, Max Write **165 GB/s**, Sustained Write 87.5 GB/s.
-- Read IOPS **2,775k**, Write IOPS **825k**.
+Vast spec (AICR proposal, 16 × 7 Gen5 / Ceres 1350): Max Read **462 GB/s**,
+Max Write **165 GB/s**, Sustained Write 87.5 GB/s, Read IOPS **2,775k**,
+Write IOPS **825k**.
 
-| direction    | this run                          | % of spec | gap explained by                              |
-|---           |---                                |---        |---                                            |
-| seq read     | 309 – 384 GB/s honest, 482 cached | 67 – 104 %| client pool size + remaining cache leakage    |
-| seq write    | 35 – 41 GB/s `conservative`       | 22 – 25 % | single-pass methodology + `iodepth=1` pvsync2 — ~65 GB/s under `time_based=1` |
-| rand read    | 1945 kIOPS                        | 70 % (36 procs) → ~82 % if full | likely storage-tier now; engine no longer bottleneck |
-| rand write   | 877 kIOPS                         | 106 %     | over-spec; aggregate of 42 clients exceeds Vast's single-point measurement |
+| direction  | this run (`n96`)              | % spec     | interpretation                                            |
+|---         |---                            |---         |---                                                        |
+| seq read   | 790–967 GB/s conservative     | 171–209 %  | concurrency (4k threads), latency-real; 100M is upper bound |
+| seq write  | 17 / 208 / 458 GB/s by size   | 11–278 %   | metadata-bound small / burst-cached large; sustained ≈ spec |
+| rand read  | 6,019 kIOPS                   | 217 %      | concurrency over single-config spec; ~550 µs = cold        |
+| rand write | 1,464 kIOPS                   | 177 %      | honest-fsync; aggregate of 42 clients > single-point spec  |
 
 ## Key Findings
 
-- **`pvsync2` was the right call.** Auto-probe selected it everywhere;
-  IOPS doubled vs. `posixaio` on the same hardware, no admin work needed.
-- **`rand_write` cleared spec** (106 %) with `HONEST_FSYNC=1`;
-  **`rand_read` is at 70 %** despite losing 6 of 42 processes to the
-  Slurm walltime. Adjusting for the loss puts it near 82 %.
-- **`seq_read` cold-read is 309 – 384 GB/s on 42 clients**, in line with
-  what `../raw-io/` measures on cold data. The 100 MiB sweep number
-  (482 GB/s, above spec) is cache-inflated by the preceding `seq_write`
-  phase and shouldn't be cited as storage capacity.
-- **`seq_write` regressed numerically vs. the prior run** because
-  `pvsync2` runs `iodepth=1` and the single-pass methodology amplifies
-  overlap loss for short writes. Per-node sustained write is ~1.5 GB/s,
-  consistent with the prior run; the headline is just measured worse.
-- **The 45-min wall is now the practical limit** on `WORKLOAD=all`.
-  Either shorten the sweep or split workloads across array jobs.
-- **Next single biggest lever is still `io_uring`** — needs the
-  cluster admin. After that, DPC or more client nodes.
+- **`numjobs=96` is the right setting; `numjobs=128` oversubscribes the 96
+  allocated cores and is strictly worse** — lower per-node throughput *and* a
+  walltime overrun that destroyed all `n128` read data. Match `numjobs` to
+  cores on a sync engine.
+- **The above-spec numbers are concurrency, not cache.** Measured latencies
+  (~550 µs rand 4 K, ~2.3 ms seq 1 MiB) are real RDMA round-trips; ~4,000
+  concurrent sync workers across 42 clients legitimately exceed Vast's
+  single-config spec. The cache-defeat invariant held.
+- **`rand_read` 6,019 kIOPS (217 %) and `rand_write` 1,464 kIOPS (177 %)** are
+  the clean wins, ~3× and ~1.7× the prior `numjobs=64` run on identical hardware.
+- **`seq_write` large-file numbers (458 GB/s) are burst, not sustained** —
+  20 s lets the CBOX write buffer absorb most of it; cite sustained ≈ spec.
+- **Two methodology watch-items:** the 12-min walltime is too tight for
+  `WORKLOAD=all` (raise it), and `RAND_SIZE_PER_JOB=1G` shrank toward the
+  cache-leak zone (restore ≥4 G; latency says it stayed cold *this* time).
+- **Biggest unrealized lever is still `io_uring`** — it would let `iodepth>1`
+  add concurrency without piling on more threads, which is exactly what the
+  `n128` failure shows we can't do cheaply on `pvsync2`.

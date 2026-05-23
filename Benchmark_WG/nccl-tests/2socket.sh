@@ -1,13 +1,14 @@
 #!/bin/bash
-#SBATCH -p GPU1  # GPU1
+#SBATCH -p rtx-batch
 #SBATCH -t 100
 #SBATCH -N 1
 #SBATCH --ntasks=1
-#SBATCH --gres=gpu:8  # allocate all, restrict via CUDA_VISIBLE_DEVICES
+#SBATCH --gres=gpu:8
 #SBATCH --mem=200GB
 #SBATCH -J nvhpc-26.3
-#SBATCH -o out-1socket/%x-%N-%J
+#SBATCH -o out-2socket/%x-%N-%J
 #SBATCH --exclusive
+#SBATCH -x a0001
 
 job_name=$SLURM_JOB_NAME
 BUILD_DIR=../build-$job_name
@@ -18,9 +19,13 @@ export CUDA_HOME="$NVHPC_HOME/cuda"
 export NCCL_HOME="$NVHPC_HOME/comm_libs/nccl"
 export LD_LIBRARY_PATH=$CUDA_HOME/lib64:$NCCL_HOME/lib:$LD_LIBRARY_PATH
 
-# GPUs 0-3: socket 0 (PCIe domain 0000:), GPUs 4-7: socket 1 (domain 0001:)
-# 4 GPUs from socket 0 + 1 GPU from socket 1 to probe cross-socket P2P
-export CUDA_VISIBLE_DEVICES=0,1,2,3,4
+# RTX6000 node: 8 GPUs spanning both sockets (03:00 and 42:00 share one PCIe
+# switch; 8c:00 and c7:00 are on a different PCIe root complex).
+export CUDA_VISIBLE_DEVICES=0,1,2,3,4,5,6,7
+
+# Driver 580 exposes multicast/fabric memory; without nvidia-imex running,
+# ncclMemAlloc's fabric path fails ("unhandled cuda error" at common.cu:915).
+export NCCL_NVLS_ENABLE=0
 
 mpirun hostname
 which mpirun
@@ -30,7 +35,7 @@ echo "Bin dir = $BUILD_DIR"
 MIN_SIZE=1M
 MAX_SIZE=16G
 FACTOR=4
-GPUS_PER_TASK=5
+GPUS_PER_TASK=8
 
 echo "num_cpu = num_mpi_tasks = $SLURM_NTASKS"
 echo "num_gpu_per_task = $GPUS_PER_TASK"

@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p GPU1  # GPU1
+#SBATCH -p rtx-batch  # GPU1
 #SBATCH -t 100
 #SBATCH -N 1
 #SBATCH --ntasks=1

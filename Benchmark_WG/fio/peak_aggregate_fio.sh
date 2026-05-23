@@ -23,21 +23,35 @@
 #
 # Cache strategy:
 #   - All jobs set direct=1, invalidate=1, fadvise_hint=1 (kill client cache).
-#   - seq_* uses loops=1 single-pass with nrfiles to give a per-job working
-#     set of TOTAL_PER_JOB (~4G default). Total cluster footprint at any size
-#     is then numjobs × nodes × TOTAL_PER_JOB (≈5 TB on 42 nodes), well above
-#     aggregate CBOX cache, so server-side cache hits are negligible.
+#   - seq_read uses loops=1 single-pass with nrfiles to give a per-job
+#     working set of TOTAL_PER_JOB (~4G default). Single-pass keeps the read
+#     window honest against the same files seq_write just produced.
+#   - seq_write uses time_based=RUNTIME so steady-state throughput is
+#     measured rather than a single-pass burst; files are rewritten in
+#     place, so on-disk footprint stays at TOTAL_PER_JOB per worker.
+#   - Total cluster footprint at any size is numjobs × nodes ×
+#     TOTAL_PER_JOB (≈5 TB on 42 nodes), well above aggregate CBOX cache,
+#     so server-side cache hits are negligible.
 #   - rand_* keeps time_based with a 16G/job working set (already cache-
 #     hostile by volume).
 #
 # Tunables (override via env or sbatch --export):
 #   ARRAY_SIZE      number of concurrent array tasks (default 16)
 #   NODES_PER       nodes per array task (default 2)
-#   JOBS_PER_NODE   fio numjobs per node for seq_* (default 32)
-#   IODEPTH         fio per-job iodepth for seq_* (default 64)
+#   JOBS_PER_NODE   fio numjobs per node for seq_read (default 32)
+#   SEQ_WRITE_JOBS_PER_NODE  numjobs per node for seq_write (default 128).
+#                   Higher than JOBS_PER_NODE because seq_write runs on
+#                   pvsync2 (sync, iodepth clamped to 1), so the only way
+#                   to get more in-flight writes is more worker threads.
+#                   128 deliberately oversubscribes the 96 allowed CPUs;
+#                   workers are usually blocked on NFS RPC, so extra
+#                   threads keep more writes in flight per RDMA stream
+#                   without hurting CPU efficiency.
+#   IODEPTH         fio per-job iodepth for seq_* (default 64; clamped
+#                   to 1 for sync engines such as pvsync2)
 #   RAND_JOBS_PER_NODE  numjobs per node for rand_* (default 64 — higher
-#                   concurrency than seq_* fits the 96-core nodes and helps
-#                   pvsync2/posixaio scale)
+#                   concurrency than seq_read fits the 96-core nodes and
+#                   helps pvsync2/posixaio scale)
 #   RAND_IODEPTH    per-job iodepth for rand_* (default 128). Ignored when
 #                   the engine is pvsync2 (sync engine, always depth=1) but
 #                   honored by io_uring and posixaio.
@@ -50,16 +64,25 @@
 #   TOTAL_PER_JOB   per-job working set for seq_* (default 4G); nrfiles is
 #                   computed as TOTAL_PER_JOB / size for each sweep step
 #   RAND_SIZE_PER_JOB  per-job file size for rand_* (default 16G)
-#   RUNTIME         seconds per workload, rand_* only (default 60)
-#   RAMP_TIME       seconds to ramp before measurement, rand_* only (default 10)
-#   WORKLOAD        one of: seq_read, seq_write, rand_read, rand_write, all
-#                   (default: seq_read)
+#   RUNTIME         seconds per workload for seq_write and rand_* (default 60)
+#   RAMP_TIME       seconds to ramp before measurement for seq_write and
+#                   rand_* (default 10)
+#   WORKLOAD        one of: seq_read, seq_write, rand_read, rand_write,
+#                   seq_read_layout, all (default: seq_read).
+#                   seq_read_layout pre-creates the seq_read source files
+#                   on disk via fio --create_only=1 (no measurement); use
+#                   it when running seq_read by itself if you want to
+#                   separate the layout write from the read measurement
+#                   so the latter isn't served from CBOX cache. WORKLOAD=all
+#                   wires this layout/scrub flow automatically.
 #   IOENGINE        fio ioengine. Default 'auto' probes a preference chain
-#                   on each compute node: io_uring → pvsync2 → posixaio.
-#                   io_uring is best when available; pvsync2 avoids the
-#                   userspace thread-pool tax that caps posixaio at ~10–20k
-#                   IOPS/node. Set explicitly (io_uring, pvsync2, posixaio)
-#                   to skip the probe.
+#                   on each compute node: io_uring → libaio → pvsync2 →
+#                   posixaio. io_uring is best when available; libaio is
+#                   the next-best async option (kernel AIO, real iodepth)
+#                   and is often available when io_uring is seccomp-blocked;
+#                   pvsync2 avoids the userspace thread-pool tax that caps
+#                   posixaio at ~10–20k IOPS/node. Set explicitly (io_uring,
+#                   libaio, pvsync2, posixaio) to skip the probe.
 #   DATA_ROOT       base writable directory (default /work/mit/datasets/test/fio)
 #   FIO_BIN         path to fio binary (default $SCRIPT_DIR/install/bin/fio)
 #   TAG             subdir name under results-peak/ (default array job id)
@@ -82,6 +105,10 @@
 #SBATCH -J fio_peak
 #SBATCH -o output-peak/%x_a%A_t%a.out
 #SBATCH --exclusive
+# b200-batch and rtx-batch partitions require explicit GPU declaration
+# (cluster policy: jobs without --gres=gpu:N are rejected with
+# "gpu request mismatch"). This is a pure-I/O fio job — no GPUs needed.
+#SBATCH --gres=gpu:0
 
 set -euo pipefail
 
@@ -94,15 +121,35 @@ fi
 ARRAY_SIZE="${ARRAY_SIZE:-${SLURM_ARRAY_TASK_COUNT:-16}}"
 NODES_PER="${NODES_PER:-${SLURM_NNODES:-2}}"
 JOBS_PER_NODE="${JOBS_PER_NODE:-32}"
+SEQ_WRITE_JOBS_PER_NODE="${SEQ_WRITE_JOBS_PER_NODE:-128}"
 IODEPTH="${IODEPTH:-64}"
 RAND_JOBS_PER_NODE="${RAND_JOBS_PER_NODE:-64}"
 RAND_IODEPTH="${RAND_IODEPTH:-128}"
 HONEST_FSYNC="${HONEST_FSYNC:-1}"
-SIZES="${SIZES:-1M 10M 100M}"
-TOTAL_PER_JOB="${TOTAL_PER_JOB:-4G}"
-RAND_SIZE_PER_JOB="${RAND_SIZE_PER_JOB:-16G}"
-RUNTIME="${RUNTIME:-60}"
-RAMP_TIME="${RAMP_TIME:-10}"
+SIZES="${SIZES:-1M 10M}"
+# TOTAL_PER_JOB / RAND_SIZE_PER_JOB / RUNTIME tuned for HONEST cold-cache
+# reads (the 512M / 12-min-wall variant was faster but produced seq_read
+# numbers >2× the Vast spec, which is the cache-hit signature). Trade-off:
+# longer wall, validated cluster_sum vs spec.
+#
+#   - TOTAL_PER_JOB=2G × numjobs=128 × 42 nodes ≈ 10 TiB seq cluster
+#     footprint per (size, sweep cell). Bigger than likely CBOX cache,
+#     so the intervening seq_write phase pushes seq_read source out of
+#     cache before measurement.
+#   - RAND_SIZE_PER_JOB stays at 512M; random access pattern dilutes
+#     cache hits at 2.7 TiB footprint regardless of absolute size.
+#   - RUNTIME=20 + RAMP_TIME=5: 20 s steady-state window for time_based
+#     workloads. 20 s × ~50 k IOPS/node = 1 M ops/worker (sub-1% IOPS
+#     noise); 20 s × ~2 GB/s/node = ~40 GiB of measured writes per node.
+#   - Per-node single-pass writes are ~0.5 GB/s on small (1M) files
+#     (metadata-bound) and 4–5 GB/s on larger ones. Walltime is sized
+#     so even the slow 1M cell finishes at numjobs=128.
+#   - seq_read single-pass window grows to ~30 s at 2G — stable on both
+#     cluster_sum and conservative.
+TOTAL_PER_JOB="${TOTAL_PER_JOB:-2G}"
+RAND_SIZE_PER_JOB="${RAND_SIZE_PER_JOB:-1G}"
+RUNTIME="${RUNTIME:-20}"
+RAMP_TIME="${RAMP_TIME:-5}"
 WORKLOAD="${WORKLOAD:-seq_read}"
 IOENGINE="${IOENGINE:-auto}"
 DATA_ROOT="${DATA_ROOT:-/work/mit/datasets/test/fio}"
@@ -168,6 +215,7 @@ echo "RESULTS=${TASK_DIR}"
 echo "SIZES (for seq_*): ${SIZES}"
 echo "TOTAL_PER_JOB (for seq_*): ${TOTAL_PER_JOB}"
 echo "RAND_SIZE_PER_JOB: ${RAND_SIZE_PER_JOB}"
+echo "SEQ_WRITE_JOBS_PER_NODE: ${SEQ_WRITE_JOBS_PER_NODE}  (seq_read uses JOBS_PER_NODE=${JOBS_PER_NODE})"
 echo "RAND_JOBS_PER_NODE/RAND_IODEPTH: ${RAND_JOBS_PER_NODE}/${RAND_IODEPTH}"
 echo "HONEST_FSYNC: ${HONEST_FSYNC}  (1=wait for server commit on rand_write; 0=dishonest spec-comparison mode)"
 
@@ -178,11 +226,22 @@ declare -A JOBFILE=(
     [rand_write]="${SCRIPT_DIR}/jobs/rand_write_iops.fio"
 )
 
-# Run order: writes for all sizes first, then reads. Reading after writing
-# the same files would warm CBOX cache; spacing reads after all writes
-# (with working set > aggregate cache) keeps reads predominantly cold.
+# Run order for WORKLOAD=all is shaped to keep seq_read cold:
+#
+#   1. seq_read_layout — pre-create the seq_read source files using
+#      --create_only=1 (no measurement). If this layout pass weren't
+#      explicit, fio's implicit layout would still write the files and
+#      seed CBOX cache with exactly what seq_read is about to read.
+#   2. seq_write — measures writes AND pushes ~10 TB of fresh data into
+#      CBOX cache (60 s × 3 sizes × ~60 GB/s), evicting the seq_read
+#      source files laid out in step 1.
+#   3. rand_write — measures + adds further cache pressure.
+#   4. seq_read — reads the files from step 1, now mostly cold.
+#   5. rand_read — random access pattern is cache-resistant on its own.
+#
+# To override the order or run a single workload, set WORKLOAD explicitly.
 if [[ "${WORKLOAD}" == "all" ]]; then
-    WORKLOADS=(seq_write seq_read rand_write rand_read)
+    WORKLOADS=(seq_read_layout seq_write rand_write seq_read rand_read)
 else
     WORKLOADS=("${WORKLOAD}")
 fi
@@ -190,6 +249,9 @@ fi
 pick_engine() {
     # Pick the best available ioengine on this node by trial. Preference chain:
     #   io_uring  — best throughput; usually blocked by container/kernel policy.
+    #   libaio    — Linux kernel AIO via io_submit/io_getevents. Gives real
+    #               iodepth like io_uring; less commonly blocked by seccomp
+    #               than io_uring on hardened hosts.
     #   pvsync2   — preadv2/pwritev2: kernel-side sync I/O, no userspace
     #               thread-pool tax. With high numjobs often beats posixaio on
     #               4 KiB IOPS workloads.
@@ -201,7 +263,7 @@ pick_engine() {
     fi
     mkdir -p "${probe_dir}"
     local eng
-    for eng in io_uring pvsync2 posixaio; do
+    for eng in io_uring libaio pvsync2 posixaio; do
         local probe_file="${probe_dir}/.engine_probe_${eng}"
         local probe_out
         probe_out=$("${FIO_BIN}" \
@@ -220,7 +282,12 @@ pick_engine() {
 }
 
 # Run one fio invocation.
-# Args: wl, file_size, size_per_job, nrfiles, jobname, jobs_per_node, iodepth, end_fsync
+# Args: wl, file_size, size_per_job, nrfiles, jobname, jobs_per_node, iodepth,
+#       end_fsync, layout_only(=0)
+#
+# layout_only=1 sets fio --create_only=1 (lay out files on disk without
+# running the measured workload) and writes the JSON to /dev/null so the
+# real measurement pass's JSON file isn't pre-empted.
 run_one_fio() {
     local wl="$1"
     local file_size="$2"
@@ -230,6 +297,7 @@ run_one_fio() {
     local jobs_per_node="$6"
     local iodepth="$7"
     local end_fsync="$8"
+    local layout_only="${9:-0}"
 
     local jobfile="${JOBFILE[$wl]:-}"
     if [[ -z "${jobfile}" ]]; then
@@ -257,13 +325,22 @@ run_one_fio() {
     ncpu=$(nproc 2>/dev/null || echo 96)
     local cpus_allowed="0-$((ncpu - 1))"
 
-    local out_json="${TASK_DIR}/$(hostname -s).${jobname}.json"
+    local out_json
+    local -a extra_fio_args=()
+    local mode_tag="measure"
+    if [[ "${layout_only}" == "1" ]]; then
+        out_json="/dev/null"
+        extra_fio_args+=(--create_only=1)
+        mode_tag="layout-only"
+    else
+        out_json="${TASK_DIR}/$(hostname -s).${jobname}.json"
+    fi
     # fio doesn't expand env vars in [section] headers, so render the jobfile
     # via envsubst (whitelisted to wrapper-controlled vars) into a sibling
     # .fio file. fio's own $jobname/$jobnum/$filenum tokens are left intact
     # because envsubst is restricted to the listed names.
     local rendered_fio="${TASK_DIR}/$(hostname -s).${jobname}.fio"
-    echo "--- fio ${jobname} (file=${file_size}, nrfiles=${nrfiles}, size_per_job=${size_per_job}, numjobs=${jobs_per_node}, iodepth=${effective_iodepth}, end_fsync=${end_fsync}) on $(hostname) engine=${engine} -> ${out_json} ---"
+    echo "--- fio ${jobname} [${mode_tag}] (file=${file_size}, nrfiles=${nrfiles}, size_per_job=${size_per_job}, numjobs=${jobs_per_node}, iodepth=${effective_iodepth}, end_fsync=${end_fsync}) on $(hostname) engine=${engine} -> ${out_json} ---"
 
     DATA_DIR="${node_data_dir}" \
     SIZE_PER_JOB="${size_per_job}" \
@@ -279,9 +356,18 @@ run_one_fio() {
         envsubst '${JOBNAME} ${IOENGINE} ${SIZE_PER_JOB} ${NRFILES} ${IODEPTH} ${NUMJOBS} ${RUNTIME} ${RAMP_TIME} ${DATA_DIR} ${CPUS_ALLOWED} ${END_FSYNC}' \
         < "${jobfile}" > "${rendered_fio}"
 
+    # --alloc-size bumps fio's smalloc pool size. Default (16 MiB × 8 pools
+    # = 128 MiB total) is not enough for seq_* at small file sizes with
+    # high numjobs: e.g. numjobs=128 × nrfiles=4096 at 1 MiB = 524k file
+    # structs × ~384 B = 200 MiB just for file metadata, which triggers
+    # "smalloc: OOM" / alloc_new_file assertion failure during layout.
+    # 256 MiB per pool (2 GiB total) covers numjobs up to several hundred.
+    # smalloc grows pools lazily so unused capacity has no RAM cost.
     "${FIO_BIN}" \
+        --alloc-size=262144 \
         --output-format=json \
         --output="${out_json}" \
+        "${extra_fio_args[@]}" \
         "${rendered_fio}"
 }
 
@@ -290,7 +376,23 @@ run_one_fio() {
 run_one_workload() {
     local wl="$1"
     local jobs iodepth end_fsync
-    if [[ "${wl}" == rand_* ]]; then
+    # fio_wl: the real workload that drives JOBFILE lookup and on-disk
+    # filenames. layout_only: 1 ⇒ pass --create_only=1 to fio so files are
+    # laid out without running the measured workload.
+    local fio_wl="${wl}"
+    local layout_only=0
+    if [[ "${wl}" == "seq_read_layout" ]]; then
+        # Pre-create the seq_read source files. The intervening seq_write
+        # and rand_write phases then push them out of CBOX server-side
+        # cache before the real seq_read measurement runs. jobname must
+        # match what the seq_read pass will use ('seq_read_<sz>') so fio
+        # finds the files already on disk and skips its implicit layout.
+        fio_wl="seq_read"
+        layout_only=1
+        jobs="${JOBS_PER_NODE}"
+        iodepth="${IODEPTH}"
+        end_fsync="1"
+    elif [[ "${wl}" == rand_* ]]; then
         jobs="${RAND_JOBS_PER_NODE}"
         iodepth="${RAND_IODEPTH}"
         # HONEST_FSYNC controls rand_write only; rand_read doesn't use fsync.
@@ -299,6 +401,12 @@ run_one_workload() {
         else
             end_fsync="0"
         fi
+    elif [[ "${wl}" == "seq_write" ]]; then
+        # seq_write uses more workers than seq_read: pvsync2 is sync, so
+        # the only knob for more in-flight writes is numjobs.
+        jobs="${SEQ_WRITE_JOBS_PER_NODE}"
+        iodepth="${IODEPTH}"
+        end_fsync="1"
     else
         jobs="${JOBS_PER_NODE}"
         iodepth="${IODEPTH}"
@@ -307,7 +415,7 @@ run_one_workload() {
         end_fsync="1"
     fi
 
-    if [[ "${wl}" == seq_* ]]; then
+    if [[ "${fio_wl}" == seq_* ]]; then
         local total_b
         total_b=$(size_to_bytes "${TOTAL_PER_JOB}")
         for sz in ${SIZES}; do
@@ -317,17 +425,26 @@ run_one_workload() {
             if [[ "${nrfiles}" -lt 1 ]]; then
                 nrfiles=1
             fi
-            run_one_fio "${wl}" "${sz}" "${TOTAL_PER_JOB}" "${nrfiles}" "${wl}_${sz}" "${jobs}" "${iodepth}" "${end_fsync}"
+            # No nrfiles cap: keeping every cell's working set at
+            # TOTAL_PER_JOB so the cluster footprint stays above CBOX
+            # cache (cache-defeat invariant). The cost is a long layout
+            # phase at small file sizes (NFS file-CREATE RPC bottleneck);
+            # the Slurm walltime is sized to absorb this — DO NOT add a
+            # cap to make the 1M cell faster without retracting the
+            # cache-defeat invariant first.
+            run_one_fio "${fio_wl}" "${sz}" "${TOTAL_PER_JOB}" "${nrfiles}" "${fio_wl}_${sz}" "${jobs}" "${iodepth}" "${end_fsync}" "${layout_only}"
         done
     else
-        run_one_fio "${wl}" "${RAND_SIZE_PER_JOB}" "${RAND_SIZE_PER_JOB}" 1 "${wl}" "${jobs}" "${iodepth}" "${end_fsync}"
+        run_one_fio "${fio_wl}" "${RAND_SIZE_PER_JOB}" "${RAND_SIZE_PER_JOB}" 1 "${fio_wl}" "${jobs}" "${iodepth}" "${end_fsync}" "${layout_only}"
     fi
 }
 
 export -f run_one_workload run_one_fio pick_engine size_to_bytes
 export SCRIPT_DIR FIO_BIN TASK_DATA_DIR TASK_DIR JOBS_PER_NODE IODEPTH \
+       SEQ_WRITE_JOBS_PER_NODE \
        RAND_JOBS_PER_NODE RAND_IODEPTH HONEST_FSYNC \
-       SIZES TOTAL_PER_JOB RAND_SIZE_PER_JOB RUNTIME RAMP_TIME IOENGINE
+       SIZES TOTAL_PER_JOB RAND_SIZE_PER_JOB \
+       RUNTIME RAMP_TIME IOENGINE
 export JOBFILE_seq_read="${JOBFILE[seq_read]}"
 export JOBFILE_seq_write="${JOBFILE[seq_write]}"
 export JOBFILE_rand_read="${JOBFILE[rand_read]}"
