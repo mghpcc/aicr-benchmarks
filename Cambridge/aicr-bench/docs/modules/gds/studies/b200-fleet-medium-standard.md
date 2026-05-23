@@ -34,7 +34,7 @@ Copied from `results/reports/2026-05-10/gds/gds-b200-fleet-medium-standard-dashb
 
 - Check: `gds`
 - Cluster: `b200`
-- Partition: `GPU2`
+- Partition: `GPU2` (now `b200-batch`)
 - Discovery time: `2026-05-10T22:17:46Z`
 - Mode: `apply`
 - GDS profile: `medium`

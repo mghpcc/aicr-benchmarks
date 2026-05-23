@@ -55,7 +55,8 @@ rate.
 make verify-gds CLUSTER=b200 PROFILE=small APPLY=1
 ```
 
-Fleet runs should be used only when you intend to run every selected idle node. Use `NODELIST` for targeted support work.
+Fleet runs should be used only when you intend to run every selected idle node.
+Use `NODELIST` for targeted validation on specific nodes.
 
 For promoted benchmark-style GDS studies, use dependency-chain stagger mode.
 This spaces `sbatch` calls by five seconds, then uses Slurm

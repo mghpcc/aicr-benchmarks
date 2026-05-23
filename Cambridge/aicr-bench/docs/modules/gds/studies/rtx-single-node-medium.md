@@ -36,7 +36,7 @@ make verify-gds CLUSTER=rtxpro6000 PROFILE=medium NODELIST=a0001 APPLY=1
 
 - Check: `gds`
 - Cluster: `rtxpro6000`
-- Partition: `GPU1`
+- Partition: `GPU1` (now `rtx-batch`)
 - Discovery time: `2026-05-10T22:53:03Z`
 - Mode: `apply`
 - GDS profile: `medium`

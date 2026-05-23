@@ -145,8 +145,8 @@ scripts/verify/run-gds.sh --custom-gdsio-args '-x 0 -I 0 -d 0 -w 8 -m 0 -s 32G -
 ```
 
 Only use `--allow-custom-target-file` when the target path is itself part of
-the experiment. The target directory must already exist or be created by your
-wrapper, and cleanup is your responsibility:
+the experiment. The target directory must already exist or be created by the
+calling wrapper, and the caller is responsible for cleanup:
 
 ```bash
 custom_target="/path/to/custom/gdsio-target.dat"

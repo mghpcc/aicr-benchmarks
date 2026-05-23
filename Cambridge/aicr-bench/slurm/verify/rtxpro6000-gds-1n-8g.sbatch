@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=rtx-gds-1n-8g
-#SBATCH --partition=GPU1
+#SBATCH --partition=rtx-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1

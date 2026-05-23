@@ -58,7 +58,7 @@ make verify-gds CLUSTER=b200 PROFILE=medium \
 
 - Check: `gds`
 - Cluster: `b200`
-- Partition: `GPU2`
+- Partition: `GPU2` (now `b200-batch`)
 - Discovery time: `2026-05-11T05:29:52Z`
 - Mode: `apply-focused-front-end-serial`
 - GDS profile: `medium`

@@ -9,7 +9,7 @@ This example starts from the script primitive directly. Keep one `exec` line act
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-gds-primitive
-#SBATCH --partition=<GPU1-or-GPU2>
+#SBATCH --partition=<rtx-batch-or-b200-batch>
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
@@ -22,8 +22,8 @@ set -euo pipefail
 
 # Replace the partition and GRES placeholders before submitting.
 # AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=GPU1 and #SBATCH --gres=gpu:rtxpro6000:8
-#   B200: #SBATCH --partition=GPU2 and #SBATCH --gres=gpu:b200:8
+#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtxpro6000:8
+#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -79,6 +79,24 @@ Artifacts produced:
 - GDS phase output and parsed status.
 - GDS dashboard report.
 - Reviewed evidence and downloadable bundles live in [GDS studies](studies.md).
+
+## Render Or Replay Reports
+
+Use the render command to rebuild GDS dashboards from existing verification
+evidence. This report replay does not submit new Slurm jobs.
+
+```bash
+scripts/operator/aicr render gds --date 2026-05-16 --cluster b200 --both
+```
+
+For a terminal-only view through the Make interface:
+
+```bash
+make render-gds-ascii CLUSTER=b200 REPORT_DATE=2026-05-16
+```
+
+Published, curated GDS studies and artifact bundles are linked from
+[GDS studies](studies.md).
 
 ### Custom Dry Run
 

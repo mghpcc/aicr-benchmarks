@@ -34,7 +34,7 @@ Copied from `results/reports/2026-05-10/gds/gds-b200-fleet-medium-olympic-dashbo
 
 - Check: `gds`
 - Cluster: `b200`
-- Partition: `GPU2`
+- Partition: `GPU2` (now `b200-batch`)
 - Discovery time: `2026-05-10T22:37:38Z`
 - Mode: `apply`
 - GDS profile: `medium`

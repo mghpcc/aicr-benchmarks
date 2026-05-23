@@ -21,8 +21,8 @@ EOF
 
 default_partition_for_cluster() {
   case "$1" in
-    b200) printf 'GPU2\n' ;;
-    rtxpro6000) printf 'GPU1\n' ;;
+    b200) printf 'b200-batch\n' ;;
+    rtxpro6000) printf 'rtx-batch\n' ;;
     *) aicr_die "Unsupported cluster: $1" ;;
   esac
 }
@@ -541,6 +541,7 @@ fi
 
 idle_count="$(wc -l <"$idle_nodes_file" | tr -d ' ')"
 skipped_count="$(wc -l <"$skipped_nodes_file" | tr -d ' ')"
+planned_jobs=$((idle_count * repeat_count))
 
 echo "Idle nodes selected: ${idle_count}"
 if [[ "$idle_count" != "0" ]]; then
@@ -554,6 +555,14 @@ if [[ "$skipped_count" != "0" ]]; then
     echo "  ${state}: ${nodes}"
   done
 fi
+echo
+echo "GDS fleet submission summary"
+echo "  Mode        : $([[ "$apply" == "1" ]] && echo apply || echo dry-run)"
+echo "  Jobs        : ${planned_jobs}"
+echo "  Nodes       : ${idle_count}"
+echo "  Cluster     : ${cluster}"
+echo "  Partition   : ${partition}"
+echo "  Profile     : ${profile}"
 echo
 
 if [[ "$apply" == "0" ]]; then
@@ -570,9 +579,9 @@ if [[ "$apply" == "0" ]]; then
         dependency_flag=" --dependency=afterany:${previous_job_label}"
       fi
       if [[ "$profile" == "custom" && -n "$custom_gdsio_args" ]]; then
-        echo "  sbatch --parsable --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS='<args>' --nodelist=${node} ${sbatch_path}"
+        echo "  sbatch --parsable --partition=${partition} --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS='<args>' --nodelist=${node} ${sbatch_path}"
       else
-        echo "  sbatch --parsable --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=${profile},GDS_PROFILE=${profile} --nodelist=${node} ${sbatch_path}"
+        echo "  sbatch --parsable --partition=${partition} --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=${profile},GDS_PROFILE=${profile} --nodelist=${node} ${sbatch_path}"
       fi
       previous_job_label="<previous-gds-job-id>"
     done <"$idle_nodes_file"
@@ -624,9 +633,9 @@ for round in $(seq 1 "$repeat_count"); do
       sleep "$submit_stagger_seconds"
     fi
     if [[ "$profile" == "custom" && -n "$custom_gdsio_args" ]]; then
-      job_id="$(sbatch --parsable --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS="$custom_gdsio_args",AICR_GDS_ALLOW_CUSTOM_TARGET_FILE="$allow_custom_target_file" --nodelist="$node" "$sbatch_path")"
+      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS="$custom_gdsio_args",AICR_GDS_ALLOW_CUSTOM_TARGET_FILE="$allow_custom_target_file" --nodelist="$node" "$sbatch_path")"
     else
-      job_id="$(sbatch --parsable --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE="$profile",GDS_PROFILE="$profile" --nodelist="$node" "$sbatch_path")"
+      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE="$profile",GDS_PROFILE="$profile" --nodelist="$node" "$sbatch_path")"
     fi
     job_id="${job_id%%;*}"
     [[ -n "$job_id" ]] || aicr_die "sbatch did not return a job ID for ${node}"

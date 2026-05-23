@@ -34,7 +34,7 @@ make verify-gds CLUSTER=rtxpro6000 PROFILE=small NODELIST=a0001 APPLY=1
 
 - Check: `gds`
 - Cluster: `rtxpro6000`
-- Partition: `GPU1`
+- Partition: `GPU1` (now `rtx-batch`)
 - Discovery time: `2026-05-10T22:52:31Z`
 - Mode: `apply`
 - GDS profile: `small`

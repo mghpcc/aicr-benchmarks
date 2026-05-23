@@ -34,7 +34,7 @@ make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0002 APPLY=1
 
 - Check: `gds`
 - Cluster: `b200`
-- Partition: `GPU2`
+- Partition: `GPU2` (now `b200-batch`)
 - Discovery time: `2026-05-10T21:46:52Z`
 - Mode: `apply`
 - GDS profile: `small`

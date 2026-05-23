@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-gds-primitive
-#SBATCH --partition=<GPU1-or-GPU2>
+#SBATCH --partition=<rtx-batch-or-b200-batch>
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
@@ -13,8 +13,8 @@ set -euo pipefail
 
 # Replace the partition and GRES placeholders before submitting.
 # AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=GPU1 and #SBATCH --gres=gpu:rtxpro6000:8
-#   B200: #SBATCH --partition=GPU2 and #SBATCH --gres=gpu:b200:8
+#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtxpro6000:8
+#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
 
 looks_like_aicr_bench_root() {
   [[ -n "${1:-}" && -d "$1/scripts" && -f "$1/benchmark-settings.env.example" ]]

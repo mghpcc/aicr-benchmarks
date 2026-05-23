@@ -56,14 +56,14 @@ DOCS_APPLY=1 CLUSTER=<b200|rtxpro6000> NODELIST=<node> make docs-test-gds
 | `man/run-gds-fleet.md` | `scripts/verify/run-gds-fleet.sh --cluster b200 --profile small --nodes <node>` | AICR HPC dry-run replay | Prints a one-node `sbatch` command and writes a dry-run manifest. |
 | `man/run-gds-fleet.md` | `scripts/verify/run-gds-fleet.sh --cluster <cluster> --profile smoke --nodes <node> --apply` | AICR HPC apply replay | Submits one smoke job only after intentional apply mode. |
 | `man/run-gds-fleet.md` | `--repeat-count ... --repeat-aggregation olympic --submit-stagger-seconds benchmark` | AICR HPC dry-run replay | Shows 5-second `sbatch` pacing and `afterany` dependency-chain semantics without submitting storage work. |
-| `man/submit-gds-fleet.md` | `scripts/verify/submit-gds-fleet.sh ...` | Local help plus HPC dry-run | Wrapper behavior is covered by help and direct fleet replay. |
-| `make.md` | `make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001` | AICR HPC dry-run doctest | Prints the one-node GDS dry-run plan. |
+| `man/submit-gds-fleet.md` | `scripts/verify/submit-gds-fleet.sh ...` | Local doctest | Wrapper behavior is covered by help and direct fleet replay. |
+| `make.md` | `make verify-gds CLUSTER=b200 PROFILE=small NODELIST=b0001` | Local dry-run doctest | Prints the one-node GDS dry-run plan. |
 | `make.md` | `make verify-gds CLUSTER={{cluster}} PROFILE=smoke NODELIST={{node}} APPLY=1` | AICR HPC apply doctest | Submits one smoke job and waits for completion. |
-| `make.md` | `make verify-gds ... GDS_SUBMIT_STAGGER_SECONDS=benchmark` | AICR HPC dry-run doctest | Shows benchmark dependency-chain submission shape and 5-second scheduler pacing. |
+| `make.md` | `make verify-gds ... GDS_SUBMIT_STAGGER_SECONDS=benchmark` | Local dry-run doctest | Shows benchmark dependency-chain submission shape and 5-second scheduler pacing. |
 | `make.md` | `make render-gds-ascii CLUSTER=<cluster> DATE=today` | AICR HPC render replay | Reads generated manifests and prints the GDS dashboard. |
 | `examples.md` | Slurm primitive template | Manual/HPC review | One active `exec` line, scheduler placeholders clearly marked. |
-| `examples.md` | module-local `slurm-gds.sbatch` | Manual/HPC replay | Runs after replacing partition/GRES placeholders or passing an install root. |
-| `examples.md` | cluster-specific `slurm/verify/*-gds-1n-8g.sbatch` templates | AICR HPC manual replay | Scheduler resources match one-node, eight-GPU GDS validation on the selected cluster. |
+| `examples.md` | module-local `slurm-gds.sbatch` | Manual/HPC review | Runs after replacing partition/GRES placeholders or passing an install root. |
+| `examples.md` | cluster-specific `slurm/verify/*-gds-1n-8g.sbatch` templates | Manual/HPC review | Scheduler resources match one-node, eight-GPU GDS validation on the selected cluster. |
 | `examples.md` | `make verify-gds CLUSTER={{cluster}} PROFILE=smoke NODELIST={{node}} APPLY=1` | AICR HPC apply doctest | Submits one smoke job only after intentional apply mode and explicit node selection. |
 | `examples.md` | custom `make verify-gds ... PROFILE=custom ... AICR_GDS_CUSTOM_GDSIO_ARGS=...` | Local dry-run doctest | Prints the custom GDS profile shape without submitting work. |
 

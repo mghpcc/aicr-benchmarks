@@ -34,7 +34,7 @@ AICR_GDS_CUSTOM_GDSIO_ARGS="-x 0 -I 1 -d 0 -w 1 -m 0 -s 1G -i 1M" make verify-gd
 
 - Check: `gds`
 - Cluster: `b200`
-- Partition: `GPU2`
+- Partition: `GPU2` (now `b200-batch`)
 - Discovery time: `2026-05-10T22:07:15Z`
 - Mode: `apply`
 - GDS profile: `custom`

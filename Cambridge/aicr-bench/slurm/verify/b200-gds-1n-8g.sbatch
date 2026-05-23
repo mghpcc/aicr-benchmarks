@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=b200-gds-1n-8g
-#SBATCH --partition=GPU2
+#SBATCH --partition=b200-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
