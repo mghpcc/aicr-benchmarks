@@ -8,6 +8,26 @@ outputs from an earlier fixed-group workflow; the current standard public
 submitter is [submit-nccl-suite.sh](../../../man/submit-nccl-suite.md), with
 scale campaign replay documented in [Test plan](test-plan.md).
 
+## Quick Read
+
+Start with the local-mode pages when validating a single node or rank layout.
+Use the RDMA ladder pages when the question is multi-node communication scale.
+Each linked study page owns its artifact bundle, provenance, checksum, and
+retrieve/verify commands; this index only groups studies by communication
+scope.
+
+B200 currently has deeper RDMA scale coverage, including a 31-node clean-prefix
+result. RTX Pro 6000 has local-mode coverage and a `2/4/8`-node RDMA ladder.
+That platform asymmetry is a coverage boundary, not a change in interpretation.
+
+Coverage boundary: an RTX Pro 6000 `16`-node RDMA rung has not yet been
+published. Until that evidence exists, keep B200 and RTX RDMA scale
+conclusions platform-specific.
+
+Artifact traceability: the index keeps bundle filenames short so the tables
+remain readable. Each linked study page includes the full VAST path, OSN HTTPS
+URL, provenance JSON, checksum, and retrieve/verify commands.
+
 ## B200 Studies
 
 ### Local Mode

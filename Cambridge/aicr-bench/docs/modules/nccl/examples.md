@@ -86,6 +86,24 @@ Artifacts produced after `APPLY=1`:
 - Rendered suite report.
 - Reviewed evidence and downloadable bundles live in [NCCL studies](studies.md).
 
+## Render Or Replay Reports
+
+Use the NCCL suite renderer after collection to rebuild the report from
+existing evidence. This is a replay step; it does not submit new Slurm jobs.
+
+```bash
+make render-nccl-suite NCCL_SCOPE=local CLUSTER=b200 REPORT_DATE=2026-05-16
+```
+
+For Markdown output through the render command:
+
+```bash
+scripts/operator/aicr render nccl-suite --date 2026-05-16 --cluster b200 --both --write
+```
+
+Published, curated NCCL studies and artifact bundles are linked from
+[NCCL studies](studies.md).
+
 ### RDMA Group Preview
 
 <!-- aicr-test

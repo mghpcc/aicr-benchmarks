@@ -533,6 +533,7 @@ fi
 
 idle_count="$(wc -l <"${idle_nodes_file}" | tr -d ' ')"
 group_count="$(wc -l <"${selected_groups_file}" | tr -d ' ')"
+planned_jobs=$((group_count * repeat_count))
 
 echo "NCCL suite submitter"
 echo "mode=$([[ "${apply}" == "1" ]] && echo apply || echo dry-run)"
@@ -570,6 +571,14 @@ sed 's/^/  /' "${idle_nodes_file}" || true
 echo
 echo "Selected jobs/groups: ${group_count}"
 sed 's/^/  /' "${selected_groups_file}" || true
+echo
+echo "NCCL suite submission summary"
+echo "  Mode        : $([[ "${apply}" == "1" ]] && echo apply || echo dry-run)"
+echo "  Jobs        : ${planned_jobs}"
+echo "  Groups      : ${group_count}"
+echo "  Nodes       : ${idle_count}"
+echo "  Cluster     : ${cluster}"
+echo "  Partition   : ${partition}"
 echo
 
 if [[ "${group_count}" == "0" ]]; then
