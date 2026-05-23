@@ -46,7 +46,9 @@ scripts/verify/run-gpu-topology-fleet.sh --help
 
 Use [run-gpu-topology.sh](../../../man/run-gpu-topology.md) inside a Slurm allocation. Use [run-gpu-topology-fleet.sh](../../../man/run-gpu-topology-fleet.md) from the install root to dry-run or submit one topology job per selected node.
 
-Topology collection is the diagnostic exception to the RTX visible-GPU preflight rule: unhealthy nodes still need `nvidia-smi -L`, topology, CPU, and NIC evidence.
+Topology collection can still be useful when a node fails visible-GPU preflight:
+the collected `nvidia-smi -L`, topology, CPU, and NIC evidence explains what
+the scheduler-visible node actually exposed.
 
 ## Artifacts
 

@@ -318,6 +318,13 @@ if [[ "$skipped_count" != "0" ]]; then
   done
 fi
 echo
+echo "GPU topology submission summary"
+echo "  Mode        : $([[ "$apply" == "1" ]] && echo apply || echo dry-run)"
+echo "  Jobs        : ${idle_count}"
+echo "  Nodes       : ${idle_count}"
+echo "  Cluster     : ${cluster}"
+echo "  Partition   : ${partition}"
+echo
 
 if [[ "$apply" == "0" ]]; then
   echo "Dry run. Commands that would be submitted:"

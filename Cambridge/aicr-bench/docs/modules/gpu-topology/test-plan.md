@@ -45,14 +45,14 @@ DOCS_APPLY=1 NODELIST=<node> make docs-test-gpu-topology
 | --- | --- | --- | --- |
 | `scripts.md` | `scripts/verify/run-gpu-topology.sh --help` | Local doctest | Exits zero and prints usage plus environment controls. |
 | `scripts.md` | `scripts/verify/run-gpu-topology-fleet.sh --help` | Local doctest | Exits zero and prints cluster/apply options. |
-| `man/run-gpu-topology.md` | `scripts/verify/run-gpu-topology.sh [--help]` | Local doctest through `scripts.md` | Man-page usage matches script help and documents environment-based cluster selection. |
+| `man/run-gpu-topology.md` | `scripts/verify/run-gpu-topology.sh [--help]` | Local doctest | Man-page usage matches script help and documents environment-based cluster selection. |
 | `man/run-gpu-topology.md` | `scripts/verify/run-gpu-topology.sh` | AICR HPC allocation replay | Runs inside a Slurm allocation and writes raw plus parsed node evidence. |
 | `man/run-gpu-topology-fleet.md` | `scripts/verify/run-gpu-topology-fleet.sh --cluster b200` | AICR HPC dry-run replay | Discovers candidate B200 nodes and prints `sbatch` commands without submitting jobs. |
-| `man/run-gpu-topology-fleet.md` | `scripts/verify/run-gpu-topology-fleet.sh --cluster rtxpro6000 --nodes <node> --apply` | AICR HPC apply replay | Submits a node-scoped RTX topology job only after intentional apply mode. |
+| `man/run-gpu-topology-fleet.md` | `scripts/verify/run-gpu-topology-fleet.sh --cluster rtxpro6000 --nodes a0001 --apply` | AICR HPC apply replay | Submits a node-scoped RTX topology job only after intentional apply mode. |
 | `examples.md` | Slurm wrapper template | Manual/HPC review | One active `exec` line, scheduler resources match a one-node topology collection. |
 | `examples.md` | `make verify-topology CLUSTER=b200` | AICR HPC dry-run replay | Discovers candidate nodes and prints `sbatch` commands without submitting jobs. |
 | `examples.md` | `make verify-topology CLUSTER={{cluster}} NODELIST={{node}} APPLY=1` | AICR HPC apply doctest | Submits one topology job only after intentional apply mode and explicit node selection. |
-| `examples.md` | `scripts/operator/aicr render gpu-topology --date <YYYY-MM-DD> --cluster b200 --both` | AICR HPC dashboard replay | Reads the applied-run manifest tree and emits ASCII plus Markdown dashboard output. |
+| `examples.md` | `scripts/operator/aicr render gpu-topology --date <YYYY-MM-DD> --cluster b200 --both` | AICR HPC render replay | Reads the applied-run manifest tree and emits ASCII plus Markdown dashboard output. |
 | `make.md` | `make verify-topology CLUSTER=<b200\|rtxpro6000>` | AICR HPC dry-run replay | Prints the fleet collection plan for the selected cluster. |
 | `make.md` | `make system-verify CLUSTER=<b200\|rtxpro6000> PROFILE=small APPLY=1` | AICR HPC apply replay | Includes topology collection in the combined verification flow. |
 

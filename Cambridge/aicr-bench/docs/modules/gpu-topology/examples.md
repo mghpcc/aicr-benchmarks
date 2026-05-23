@@ -58,9 +58,9 @@ expect:
 make verify-topology CLUSTER={{cluster}} NODELIST={{node}} APPLY=1
 ```
 
-## Render Existing Evidence
+## Render Or Replay Reports
 
-Dashboard re-render is an HPC replay step. It expects the
+Dashboard re-render uses existing topology collection evidence. It expects the
 `results/reports/<date>/gpu-topology/` manifest tree produced by an applied
 topology collection.
 
@@ -73,4 +73,3 @@ Artifacts produced after `APPLY=1`:
 - GPU inventory and topology captures.
 - CPU, NUMA, and mlx5/NIC affinity evidence.
 - Parsed topology status and fleet dashboard.
-- Reviewed evidence lives in [GPU topology studies](studies.md).

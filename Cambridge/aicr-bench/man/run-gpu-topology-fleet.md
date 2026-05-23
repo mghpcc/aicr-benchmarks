@@ -40,5 +40,5 @@ scripts/verify/run-gpu-topology-fleet.sh --cluster b200
 Submit RTX topology collection:
 
 ```bash
-scripts/verify/run-gpu-topology-fleet.sh --cluster rtxpro6000 --nodes <node> --apply
+scripts/verify/run-gpu-topology-fleet.sh --cluster rtxpro6000 --nodes a0001 --apply
 ```

@@ -1,5 +1,7 @@
 # GPU Topology Readiness Dashboard - 2026-05-16
 
+<!-- aicr-study-status: published -->
+
 Purpose: summarize module-local GPU topology readiness evidence for the Cambridge benchmark campaign.
 
 GPU topology is readiness evidence, not a performance study. It records whether
@@ -75,3 +77,28 @@ not rank nodes, tune parameters, or claim a performance result.
 For future collections, use [run-gpu-topology-fleet.sh](../../../../man/run-gpu-topology-fleet.md)
 or `make verify-topology`, then summarize the node counts, skipped nodes,
 majority signature count, and outliers in this same module-local format.
+
+## Artifact Bundle
+
+| Item | Path |
+| --- | --- |
+| VAST bundle | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16.tar.gz` |
+| VAST provenance | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16-provenance.json` |
+| OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16.tar.gz> |
+| OSN provenance | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16-provenance.json> |
+| OSN checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16.sha256> |
+| SHA-256 | `4dc9e0467a264423abca821a04f8e838607e55c509b77dd2fcc062b0edcc57f1` |
+
+The artifact path uses public commit `e116635`; later documentation commits may
+clarify prose while preserving this evidence bundle.
+
+## Retrieve And Verify
+
+```bash
+mkdir -p public-study-artifacts/gpu-topology-readiness-dashboard
+cd public-study-artifacts/gpu-topology-readiness-dashboard
+wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16.tar.gz
+wget https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e116635/gpu-topology/2026-05-16/gpu-topology-readiness-dashboard-2026-05-16.sha256
+sha256sum -c gpu-topology-readiness-dashboard-2026-05-16.sha256
+tar -tzf gpu-topology-readiness-dashboard-2026-05-16.tar.gz | head
+```
