@@ -23,6 +23,10 @@ Default behavior is a dry run.
 - `--no-render`: Skip report rendering after jobs complete.
 - `-h`, `--help`: Print usage.
 
+Without `--apply`, no Slurm jobs are submitted and `--no-render` has no effect.
+With `--apply`, `--no-render` skips only the post-collection dashboard render;
+it does not affect job submission.
+
 ## Outputs
 
 - One Slurm topology job per exactly-idle selected node.

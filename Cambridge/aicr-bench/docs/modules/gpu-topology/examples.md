@@ -10,11 +10,12 @@ active and align scheduler resources with the selected cluster.
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-gpu-topology
-#SBATCH --partition=<GPU1-or-GPU2>
+#SBATCH --partition=<rtx-batch-or-b200-batch>
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
+#SBATCH --mem=0
 #SBATCH --gres=<gpu-type-and-count>
 #SBATCH --time=00:10:00
 #SBATCH --output=%x-%j.out

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=rtx-gpu-topology-1n-8g
-#SBATCH --partition=GPU1
+#SBATCH --partition=rtx-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
+#SBATCH --mem=0
 #SBATCH --gres=gpu:8
 #SBATCH --time=00:10:00
 #SBATCH --output=results/slurm/%x-%j.out

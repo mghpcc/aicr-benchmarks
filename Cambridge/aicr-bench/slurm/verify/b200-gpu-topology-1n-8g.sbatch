@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=b200-gpu-topology-1n-8g
-#SBATCH --partition=GPU2
+#SBATCH --partition=b200-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=4
+#SBATCH --mem=0
 #SBATCH --gres=gpu:b200:8
 #SBATCH --time=00:10:00
 #SBATCH --output=results/slurm/%x-%j.out

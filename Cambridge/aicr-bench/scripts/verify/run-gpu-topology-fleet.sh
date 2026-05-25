@@ -18,8 +18,8 @@ EOF
 
 default_partition_for_cluster() {
   case "$1" in
-    b200) printf 'GPU2\n' ;;
-    rtxpro6000) printf 'GPU1\n' ;;
+    b200) printf 'b200-batch\n' ;;
+    rtxpro6000) printf 'rtx-batch\n' ;;
     *) aicr_die "Unsupported cluster: $1" ;;
   esac
 }
@@ -330,7 +330,7 @@ if [[ "$apply" == "0" ]]; then
   echo "Dry run. Commands that would be submitted:"
   while read -r node; do
     [[ -n "$node" ]] || continue
-    echo "  sbatch --parsable --nodelist=${node} ${sbatch_path}"
+    echo "  sbatch --parsable --mem=0 --nodelist=${node} ${sbatch_path}"
   done <"$idle_nodes_file"
   if [[ "$idle_count" != "0" ]]; then
     echo "  # sleep ${submit_stagger_seconds} between submissions when --apply is used"
@@ -356,7 +356,7 @@ while read -r node; do
   if [[ "$submitted_count" != "0" && "$submit_stagger_seconds" != "0" ]]; then
     sleep "$submit_stagger_seconds"
   fi
-  job_id="$(sbatch --parsable --nodelist="$node" "$sbatch_path")"
+  job_id="$(sbatch --parsable --mem=0 --nodelist="$node" "$sbatch_path")"
   job_id="${job_id%%;*}"
   [[ -n "$job_id" ]] || aicr_die "sbatch did not return a job ID for ${node}"
   printf '%s|%s\n' "$node" "$job_id" >>"$submitted_jobs_file"
