@@ -1,4 +1,4 @@
-# Fair Vast Spec Validation — User Guide
+# Fair Storage Spec Validation — User Guide
 
 Three scripts that measure whether the storage product actually delivers the
 vendor-quoted throughput / IOPS, under a **fair** comparison (cold, sustained,
@@ -120,7 +120,7 @@ for a standalone run).
   that fleet for an apples-to-apples claim; otherwise report explicitly as
   "sustained by N client nodes."
 
-## Vast spec being validated
+## Storage spec being validated
 
 AICR proposal, 16 × 7 Gen5 / Ceres 1350:
 

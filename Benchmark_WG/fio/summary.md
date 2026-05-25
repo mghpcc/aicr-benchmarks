@@ -1,11 +1,11 @@
-# Vast spec validation — scaling sweep (log.specval-c06 → c42)
+# Storage spec validation — scaling sweep (log.specval-c06 → c42)
 
 Source: `specval_1779653518` single-tier runs at 6 / 12 / 24 / 42 client nodes,
 96 fio workers per node (numjobs=96, CPU-pinned, group-reported), cold +
 sustained (conservative wall-clock aggregates).
 Spec constants from `spec_validate_summary.py:33-37`.
 
-## Vast spec (reference)
+## Storage spec (reference)
 
 | Workload | Metric | Max spec | Sustained spec |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Spec constants from `spec_validate_summary.py:33-37`.
 
 ## ⭐ MOST IMPORTANT — fair apples-to-apples comparison
 
-Only the valid cold/sustained numbers below are fair to quote against the Vast
+Only the valid cold/sustained numbers below are fair to quote against the Storage
 spec (cache-tainted reads excluded; writes shown against both spec lines).
 
 | Workload | Fair number | vs spec | Result |
