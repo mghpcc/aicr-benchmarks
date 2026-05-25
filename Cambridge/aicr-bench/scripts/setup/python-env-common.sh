@@ -97,14 +97,25 @@ aicr_bootstrap_uv() {
   local root_prefix="$1"
   local bin_path="${root_prefix}/bin/uv"
   local installer="${root_prefix}/uv-install.sh"
+  local source_uv
 
   mkdir -p "${root_prefix}/bin"
   if aicr_try_load_uv_module; then
-    command -v uv
+    source_uv="$(command -v uv)"
+    if [[ "$source_uv" != "$bin_path" ]]; then
+      cp "$source_uv" "$bin_path"
+      chmod 0755 "$bin_path"
+    fi
+    printf '%s\n' "$bin_path"
     return 0
   fi
   if command -v uv >/dev/null 2>&1; then
-    command -v uv
+    source_uv="$(command -v uv)"
+    if [[ "$source_uv" != "$bin_path" ]]; then
+      cp "$source_uv" "$bin_path"
+      chmod 0755 "$bin_path"
+    fi
+    printf '%s\n' "$bin_path"
     return 0
   fi
   if [[ -x "$bin_path" ]]; then

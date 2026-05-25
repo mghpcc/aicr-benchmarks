@@ -170,15 +170,19 @@ WAIT ?= 0
 RUNTIME_REPLACE_CURRENT ?= 0
 CONTAINER_REFRESH ?= 0
 INSTALL_ELBENCHO_CONTAINER ?= 0
-CONTAINER_PARTITION ?= GPU1
+CONTAINER_PARTITION ?= rtx-devel
 CONTAINER_NODELIST ?=
 CONTAINER_TIME ?= 04:00:00
+CONTAINER_MEM ?= 0
 CONTAINER_WAIT ?= 1
 RUNTIME_PARTITION ?=
+RUNTIME_MEM ?= 0
 PYTHON_DOCTOR_PARTITION ?=
 PYTHON_DOCTOR_TIME ?= 00:05:00
 PYTHON_DOCTOR_CPUS_PER_TASK ?= 2
 PYTHON_DOCTOR_GRES ?=
+PYTHON_DOCTOR_MEM ?= 0
+PYTHON_RUNTIME_SETUP ?= 0
 ARCHIVE_ROTATE ?= 0
 VERIFICATION_CAMPAIGN_PUBLIC_ROOT ?= /work/aicr/commissioning/benchmarks/public-study-artifacts
 VERIFICATION_CAMPAIGN_PRIVATE_ROOT ?= /work/aicr/commissioning/benchmarks/results-archive
@@ -202,6 +206,7 @@ CONTAINER_WAIT_FLAG := $(if $(filter 0,$(CONTAINER_WAIT)),--no-wait,)
 RUNTIME_PARTITION_FLAG := $(if $(strip $(RUNTIME_PARTITION)),--partition $(RUNTIME_PARTITION),)
 PYTHON_DOCTOR_PARTITION_FLAG := $(if $(strip $(PYTHON_DOCTOR_PARTITION)),--partition $(PYTHON_DOCTOR_PARTITION),)
 PYTHON_DOCTOR_GRES_FLAG := $(if $(strip $(PYTHON_DOCTOR_GRES)),--gres $(PYTHON_DOCTOR_GRES),)
+PYTHON_RUNTIME_SETUP_FLAG := $(if $(filter 1,$(PYTHON_RUNTIME_SETUP)),--setup,)
 SETUP_SMOKE_FLAG := $(if $(filter 1,$(APPLY)),--submit-smoke-tests,)
 SETUP_REPLACE_FLAG := $(if $(filter 1,$(SETUP_REPLACE_EXISTING)),--replace-existing,)
 ARCHIVE_ROTATE_FLAG := $(if $(filter 1,$(ARCHIVE_ROTATE)),--rotate,)
@@ -399,6 +404,21 @@ doctor-python-slurm: require-settings
 		--cluster $(CLUSTER) \
 		--time $(PYTHON_DOCTOR_TIME) \
 		--cpus-per-task $(PYTHON_DOCTOR_CPUS_PER_TASK) \
+		--mem $(PYTHON_DOCTOR_MEM) \
+		$(PYTHON_DOCTOR_PARTITION_FLAG) \
+		$(PYTHON_DOCTOR_GRES_FLAG) \
+		$(PYTHON_RUNTIME_SETUP_FLAG) \
+		$(NODELIST_FLAG) \
+		$(APPLY_FLAG) \
+		$(WAIT_FLAG)
+
+setup-python-slurm: require-settings
+	bash scripts/setup/submit-python-runtime-slurm.sh \
+		--cluster $(CLUSTER) \
+		--setup \
+		--time $(PYTHON_DOCTOR_TIME) \
+		--cpus-per-task $(PYTHON_DOCTOR_CPUS_PER_TASK) \
+		--mem $(PYTHON_DOCTOR_MEM) \
 		$(PYTHON_DOCTOR_PARTITION_FLAG) \
 		$(PYTHON_DOCTOR_GRES_FLAG) \
 		$(NODELIST_FLAG) \
@@ -412,12 +432,14 @@ refresh-python-locks:
 	bash scripts/setup/refresh-python-locks.sh
 
 rebuild-runtime: require-settings
-	bash scripts/setup/submit-runtime-rebuild.sh $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG)
+	bash scripts/setup/submit-runtime-rebuild.sh --mem $(RUNTIME_MEM) $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG)
 
 install-containers: require-settings
 	bash scripts/setup/submit-container-install.sh \
 		--partition $(CONTAINER_PARTITION) \
 		--time $(CONTAINER_TIME) \
+		--mem $(CONTAINER_MEM) \
+		$(APPLY_FLAG) \
 		$(CONTAINER_NODELIST_FLAG) \
 		$(CONTAINER_REFRESH_FLAG) \
 		$(INSTALL_ELBENCHO_CONTAINER_FLAG) \
@@ -428,7 +450,7 @@ setup:
 	@if ! bash scripts/setup/check-runtime-assets.sh; then \
 		if [ "$(SETUP_REBUILD_RUNTIME)" = "1" ]; then \
 			echo "Runtime assets are missing or incomplete; rebuilding before setup."; \
-			bash scripts/setup/submit-runtime-rebuild.sh $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG) --wait-complete || exit 1; \
+			bash scripts/setup/submit-runtime-rebuild.sh --mem $(RUNTIME_MEM) $(APPLY_FLAG) $(WAIT_FLAG) $(RUNTIME_PARTITION_FLAG) $(RUNTIME_REPLACE_FLAG) --wait-complete || exit 1; \
 			if [ "$(APPLY)" != "1" ]; then \
 				echo "Dry run only. Re-run with APPLY=1 to rebuild runtime before setup."; \
 				exit 0; \

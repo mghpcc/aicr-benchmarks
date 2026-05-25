@@ -39,7 +39,7 @@ if [[ -z "$python_bin" ]]; then
   echo "ERROR: repo Python is not available." >&2
   echo "Configured env : ${AICR_UV_ENV_PREFIX}" >&2
   echo "Local fallback : $(aicr_repo_local_env_prefix)" >&2
-  echo "Run make setup-python-local." >&2
+  echo "Run make setup-python-local, or make rebuild-runtime APPLY=1 for the shared AICR HPC runtime." >&2
   exit 1
 fi
 
@@ -76,7 +76,7 @@ from pathlib import Path
     lock_sha,
 ) = sys.argv[1:]
 
-required_imports = ["jsonschema", "matplotlib", "pandas", "plotly", "snakemake"]
+required_imports = ["jsonschema", "matplotlib", "pandas", "snakemake"]
 
 def fail(message):
     print(f"ERROR: {message}", file=sys.stderr)

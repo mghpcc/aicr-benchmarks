@@ -142,7 +142,7 @@ aicr_export_defaults() {
   : "${AICR_GDS_THROUGHPUT_FILE:=}"
   : "${AICR_GDS_READ_THROUGHPUT_FILE:=}"
   : "${AICR_GDS_WRITE_THROUGHPUT_FILE:=}"
-  : "${AICR_APPTAINER_COMMON_OPTS:=--no-mount /etc/localtime --bind /work:/work}"
+  : "${AICR_APPTAINER_COMMON_OPTS:=--no-mount /etc/localtime --bind /work:/work --bind /scratch:/scratch}"
 
   export \
     AICR_BMARK_DIR \

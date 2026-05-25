@@ -101,5 +101,10 @@ Installed AICR-Bench to:
 
 Next steps:
   cd ${target}
+  cp benchmark-settings.env.example benchmark-settings.env
   make setup-python-local
+
+On AICR HPC, set a private AICR_RUNTIME_ROOT in benchmark-settings.env and use:
+  make setup-python-slurm CLUSTER=rtxpro6000 NODELIST=<rtx-devel-node> APPLY=1 WAIT=1
+  make install-containers CONTAINER_NODELIST=<rtx-devel-node> APPLY=1
 EOF
