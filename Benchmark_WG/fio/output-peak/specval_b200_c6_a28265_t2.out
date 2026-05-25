@@ -1,0 +1,24 @@
+=== NFS mount addrs on b0009 ===
+/work from storage0001.nfs:/work
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=rdma,nconnect=16,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.23.11.42,mountvers=3,mountproto=tcp,local_lock=none,remoteports=dns,addr=172.23.11.22
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=rdma,nconnect=16,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.23.11.5,mountvers=3,mountproto=tcp,local_lock=none,remoteports=dns,addr=172.23.11.32
+ Flags:	rw,relatime,vers=3,rsize=1048576,wsize=1048576,namlen=255,hard,rdirplus=force,forcerdirplus,proto=rdma,nconnect=16,port=20049,timeo=600,retrans=2,sec=sys,mountaddr=172.23.11.3,mountvers=3,mountproto=tcp,local_lock=none,remoteports=dns,addr=172.23.11.55
+=== SPEC-VALIDATION  task=2/3  workload=all ===
+TOTAL_NODES=6  JOBS_PER_NODE=96  (cluster workers=576)
+DEFEAT_TIB=32  -> per-worker working set=56 GiB, seq nrfiles=56 @ FILE_SIZE=1G
+RUNTIME=900s  RAMP_TIME=60s  HONEST_FSYNC=1
+DATA_ROOT=/work/mit/datasets/test/fio  RESULTS=results-peak/specval_1779653518_c06/task_2
+--- fio seq_read [layout-only] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0009 engine=pvsync2 -> /dev/null ---
+--- fio seq_read [layout-only] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0010 engine=pvsync2 -> /dev/null ---
+--- fio rand_read [layout-only] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=0) on b0009 engine=pvsync2 -> /dev/null ---
+--- fio rand_read [layout-only] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=0) on b0010 engine=pvsync2 -> /dev/null ---
+--- fio seq_write [measure] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0009 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0009.seq_write.json ---
+--- fio seq_write [measure] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0010 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0010.seq_write.json ---
+--- fio rand_write [measure] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0010 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0010.rand_write.json ---
+--- fio rand_write [measure] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0009 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0009.rand_write.json ---
+--- fio seq_read [measure] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0009 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0009.seq_read.json ---
+--- fio seq_read [measure] (nrfiles=56, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=1) on b0010 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0010.seq_read.json ---
+--- fio rand_read [measure] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=0) on b0009 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0009.rand_read.json ---
+--- fio rand_read [measure] (nrfiles=1, size_per_job=61083979321B, numjobs=96, iodepth=1, end_fsync=0) on b0010 engine=pvsync2 -> results-peak/specval_1779653518_c06/task_2/b0010.rand_read.json ---
+Done. Task results: results-peak/specval_1779653518_c06/task_2
+--- cleanup: rm -rf /work/mit/datasets/test/fio/specval_1779653518_c06/task_2 (exit rc=0) ---

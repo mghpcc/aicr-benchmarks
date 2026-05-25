@@ -1,0 +1,45 @@
+; Peak random write IOPS.
+;
+; 4 KiB blocks, deep queue, many parallel jobs.
+;
+; Cache bypass:
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on written pages
+;   end_fsync=1 — 1 = honest (wait for server commit); 0 = let
+;                   buffered NFS ack before commit (inflates IOPS, useful
+;                   only for spec comparison)
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
+;                    IODEPTH, IOENGINE, CPUS_ALLOWED, NRFILES, JOBNAME,
+;                    END_FSYNC
+
+[global]
+ioengine=pvsync2
+direct=1
+bs=4k
+rw=randwrite
+size=8726282761
+nrfiles=1
+iodepth=1
+iodepth_batch_submit=8
+iodepth_batch_complete=8
+numjobs=96
+group_reporting=1
+time_based=1
+runtime=900
+ramp_time=60
+directory=/work/mit/datasets/test/fio/specval_1779653518_c42/task_13/a0002/rand_write
+filename_format=fio.$jobname.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+end_fsync=1
+randrepeat=0
+norandommap=1
+thread=1
+cpus_allowed=0-95
+cpus_allowed_policy=split
+
+[rand_write]
+stonewall

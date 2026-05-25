@@ -14,6 +14,8 @@ Spec constants from `spec_validate_summary.py:33-37`.
 | rand_read | kIOPS | 2775.0 | — |
 | rand_write | kIOPS | 825.0 | — |
 
+**Max** is the short-lived burst ceiling — peak throughput while writes still land in the NVMe/RAM buffer before it drains. **Sustained** is the steady-state rate the system holds once those buffers fill and it runs at the backend drain speed, so it's the fair number for any long, honest-fsync run.
+
 ## ⭐ MOST IMPORTANT — fair apples-to-apples comparison
 
 Only the valid cold/sustained numbers below are fair to quote against the Vast
@@ -26,7 +28,7 @@ spec (cache-tainted reads excluded; writes shown against both spec lines).
 | **rand_write** | 941 kIOPS @ c42 | 825 Max | **114%** ✓ |
 | **rand_read** | 2597 kIOPS @ c42 | 2775 Max | **94%** (client-limited) |
 
-`c06`/`c12`/`c24`/`c42` denote the client-fleet size of each run — 6, 12, 24, and 42 client nodes respectively, each node running fio `numjobs=96` (= allocated cores, CPU-pinned `0-95`, sync engine iodepth=1, so 96 concurrent workers/node → 576/1152/2304/4032 workers total); the "procs" column equals the node count only because `group_reporting` collapses each node's 96 jobs into one report.
+`c06`/`c12`/`c24`/`c42` denote the client-fleet size of each run — 6, 12, 24, and 42 client nodes respectively, each node running fio `numjobs=96` (= allocated cores, CPU-pinned `0-95`, sync engine iodepth=1, so 96 concurrent workers/node → 576/1152/2304/4032 workers total).
 
 - **seq_read** — 460 GB/s at 12 nodes ≈ 100% of the 462 GB/s Max ceiling; this
   is the valid cold tier. The c24/c42 reads (649/912 GB/s) are above the cold
