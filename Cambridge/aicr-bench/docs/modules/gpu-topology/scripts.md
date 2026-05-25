@@ -50,6 +50,10 @@ Topology collection can still be useful when a node fails visible-GPU preflight:
 the collected `nvidia-smi -L`, topology, CPU, and NIC evidence explains what
 the scheduler-visible node actually exposed.
 
+For single-node SVG/HTML rendering from existing parsed evidence, use
+[Topology Map](topology-map.md) or the
+[render-topology-map.py](../../../man/render-topology-map.md) command reference.
+
 ## Artifacts
 
 Direct topology runner and fleet-runner executions write node-level raw captures,

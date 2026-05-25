@@ -10,8 +10,9 @@ topology evidence. It is not a performance study tool.
 
 - Documentation links and man-page links are checked by `make docs-link-check`.
 - Local documentation replay checks the public help surfaces for the allocation-side runner and fleet runner.
+- Local fixture replay checks the report-only Topology Map renderer without Slurm, GPUs, or generated `results/` manifests.
 - Slurm collection and dashboard re-render are AICR HPC replay steps because they require Slurm, compute-node hardware, and generated `results/` manifests.
-- The standalone study page is checked as documentation; it does not link out to the Cambridge verification campaign as its source of truth.
+- Static Topology Map examples are documented with the renderer interface, not as published readiness studies.
 
 ## Replay Entry Points
 
@@ -45,6 +46,9 @@ DOCS_APPLY=1 NODELIST=<node> make docs-test-gpu-topology
 | --- | --- | --- | --- |
 | `scripts.md` | `scripts/verify/run-gpu-topology.sh --help` | Local doctest | Exits zero and prints usage plus environment controls. |
 | `scripts.md` | `scripts/verify/run-gpu-topology-fleet.sh --help` | Local doctest | Exits zero and prints cluster/apply options. |
+| `topology-map.md` | `scripts/report/render-topology-map.py --help` | Local doctest | Exits zero and prints renderer options. |
+| `topology-map.md` | `tests/scripts/check-topology-map-fixture.py` | Local fixture | Renders B200 and RTX fixture HTML/SVG/JSON and checks warning shape. |
+| `man/render-topology-map.md` | `scripts/report/render-topology-map.py --help` | Local doctest | Man-page usage matches renderer help and documents HTML/SVG/JSON outputs. |
 | `man/run-gpu-topology.md` | `scripts/verify/run-gpu-topology.sh [--help]` | Local doctest | Man-page usage matches script help and documents environment-based cluster selection. |
 | `man/run-gpu-topology.md` | `scripts/verify/run-gpu-topology.sh` | AICR HPC allocation replay | Runs inside a Slurm allocation and writes raw plus parsed node evidence. |
 | `man/run-gpu-topology-fleet.md` | `scripts/verify/run-gpu-topology-fleet.sh --cluster b200` | AICR HPC dry-run replay | Discovers candidate B200 nodes and prints `sbatch` commands without submitting jobs. |
@@ -63,7 +67,11 @@ Local replay is intentionally narrow:
 ```bash
 make docs-test-plan-gpu-topology
 make docs-test-gpu-topology
+scripts/lib/run-repo-python.sh tests/scripts/check-topology-map-fixture.py
 ```
+
+Local-safe tests validate examples, fixtures, renderers, and links. Live AICR
+HPC replay requires explicit apply mode and selected nodes.
 
 These checks should pass on a workstation without Slurm, GPUs, or the public
 evidence manifest tree.
@@ -97,5 +105,5 @@ scripts/operator/aicr render gpu-topology --date <YYYY-MM-DD> --cluster rtxpro60
 - Applied topology collection intentionally remains HPC-only.
 - Dashboard re-render is HPC replay because the renderer needs generated
   `results/reports/<date>/gpu-topology/` manifests from applied runs.
-- No committed fixture currently exercises GPU topology dashboard rendering
-  without generated result manifests.
+- The Topology Map fixture covers single-node rendering. The fleet dashboard
+  renderer still depends on generated result manifests for full replay.

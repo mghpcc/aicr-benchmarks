@@ -1,0 +1,9 @@
+ib_device mlx5_0 numa_node=1 local_cpulist=16-31 netdevs=ib0
+ib_device mlx5_1 numa_node=2 local_cpulist=32-47 netdevs=ib1
+ib_device mlx5_2 numa_node=3 local_cpulist=48-63 netdevs=ib2
+ib_device mlx5_3 numa_node=0 local_cpulist=0-15 netdevs=ib3
+ib_device mlx5_4 numa_node=5 local_cpulist=80-95 netdevs=ib4
+ib_device mlx5_5 numa_node=6 local_cpulist=96-111 netdevs=ib5
+ib_device mlx5_6 numa_node=7 local_cpulist=112-127 netdevs=ib6
+ib_device mlx5_11 numa_node=4 local_cpulist=64-79 netdevs=ib11
+

@@ -64,7 +64,7 @@ Representative RTX topology pattern:
 
 ```text
 GPU NUMA: 0:1, 1:2, 2:3, 3:0, 4:5, 5:6, 6:7, 7:4
-Nearest NIC pattern: SYS for GPU0/GPU7, PIX examples on GPU2/GPU3/GPU4
+Nearest NIC pattern on collected nodes: SYS for GPU0/GPU7, PIX examples on GPU2/GPU3/GPU4
 Skipped nodes: a0017, a0018
 ```
 

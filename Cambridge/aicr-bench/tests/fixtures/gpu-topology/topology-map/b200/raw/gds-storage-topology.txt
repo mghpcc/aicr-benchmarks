@@ -1,0 +1,3 @@
+gds_scratch_dir=/work/aicr/commissioning/benchmarks/scratch/gds
+findmnt TARGET="/work" SOURCE="storage0001.nfs:/work" FSTYPE="nfs" OPTIONS="rw"
+

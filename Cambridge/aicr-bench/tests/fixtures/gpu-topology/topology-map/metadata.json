@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "fixture_id": "gpu-topology-map-v1",
+  "fixture_type": "synthetic-parsed-summary",
+  "purpose": "Validate GPU Topology Map graph, SVG, and HTML output shape with compact B200 and RTX topology examples.",
+  "input_summary_glob": "*/parsed/summary.json",
+  "input_policy": "Synthetic parsed summaries and raw captures are used only by tests/scripts/check-topology-map-fixture.py.",
+  "not_benchmark_evidence": true,
+  "cases": [
+    {
+      "cluster": "b200",
+      "summary": "b200/parsed/summary.json",
+      "expected_warnings": []
+    },
+    {
+      "cluster": "rtxpro6000",
+      "summary": "rtxpro6000/parsed/summary.json",
+      "expected_svg_absent": [
+        "NIC2",
+        "mlx5_bond_0"
+      ],
+      "expected_warnings": [
+        "NIC2 was not resolved"
+      ]
+    }
+  ]
+}

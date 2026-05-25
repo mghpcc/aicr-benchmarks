@@ -1,0 +1,96 @@
+{
+  "status": "passed",
+  "host": "afixture",
+  "cluster": "rtxpro6000",
+  "date": "2026-05-24",
+  "run_id": "fixture-rtx",
+  "gpu_count": 8,
+  "expected_gpu_count": 8,
+  "gpu_model_summary": "NVIDIA RTX PRO 6000 Blackwell",
+  "gpu_models": [
+    "NVIDIA RTX PRO 6000 Blackwell"
+  ],
+  "topology_profile_status": "Pass",
+  "topology_profile_notes": "",
+  "topology_signature": "fixture-rtx-signature",
+  "nvidia_smi_l_file": "../raw/nvidia-smi-L.txt",
+  "nvidia_smi_topo_file": "../raw/nvidia-smi-topo-m.txt",
+  "lscpu_file": "../raw/lscpu.txt",
+  "mlx5_topology_file": "../raw/mlx5-topology.txt",
+  "storage_topology_file": "",
+  "gpu_cpu_affinity": {
+    "GPU0": "16-31",
+    "GPU1": "32-47",
+    "GPU2": "48-63",
+    "GPU3": "0-15",
+    "GPU4": "80-95",
+    "GPU5": "96-111",
+    "GPU6": "112-127",
+    "GPU7": "64-79"
+  },
+  "gpu_numa_affinity": {
+    "GPU0": "1",
+    "GPU1": "2",
+    "GPU2": "3",
+    "GPU3": "0",
+    "GPU4": "5",
+    "GPU5": "6",
+    "GPU6": "7",
+    "GPU7": "4"
+  },
+  "gpu_pix_nics": {
+    "GPU0": [],
+    "GPU1": [],
+    "GPU2": ["mlx5_0"],
+    "GPU3": ["NIC2"],
+    "GPU4": ["mlx5_3"],
+    "GPU5": [],
+    "GPU6": [],
+    "GPU7": []
+  },
+  "gpu_nearest_nics": {
+    "GPU0": {"link": "SYS", "nics": ["mlx5_0", "NIC2", "mlx5_3"]},
+    "GPU1": {"link": "SYS", "nics": ["mlx5_0", "NIC2", "mlx5_3"]},
+    "GPU2": {"link": "PIX", "nics": ["mlx5_0"]},
+    "GPU3": {"link": "PIX", "nics": ["NIC2"]},
+    "GPU4": {"link": "PIX", "nics": ["mlx5_3"]},
+    "GPU5": {"link": "SYS", "nics": ["mlx5_0", "NIC2", "mlx5_3"]},
+    "GPU6": {"link": "SYS", "nics": ["mlx5_0", "NIC2", "mlx5_3"]},
+    "GPU7": {"link": "SYS", "nics": ["mlx5_0", "NIC2", "mlx5_3"]}
+  },
+  "nic_numa_affinity": {
+    "mlx5_0": "",
+    "NIC2": "",
+    "mlx5_3": ""
+  },
+  "ib_device_numa_affinity": {
+    "mlx5_0": "3",
+    "mlx5_3": "5",
+    "mlx5_bond_0": "0"
+  },
+  "ib_device_cpu_affinity": {
+    "mlx5_0": "48-63",
+    "mlx5_3": "80-95",
+    "mlx5_bond_0": "0-15"
+  },
+  "ib_device_netdevs": {
+    "mlx5_0": ["ib0"],
+    "mlx5_3": ["ib3"],
+    "mlx5_bond_0": ["bond0"]
+  },
+  "lscpu_numa_node_count": 8,
+  "lscpu_numa_cpu_affinity": {
+    "0": "0-15",
+    "1": "16-31",
+    "2": "32-47",
+    "3": "48-63",
+    "4": "64-79",
+    "5": "80-95",
+    "6": "96-111",
+    "7": "112-127"
+  },
+  "topology_observations": [
+    "GPU0 nearest NICs: SYS:mlx5_0, NIC2, mlx5_3"
+  ]
+}
+

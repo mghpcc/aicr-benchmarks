@@ -20,6 +20,7 @@ here. Keep copy-paste command blocks literal.
 - [render-elbencho-report.py](render-elbencho-report.md)
 - [render-hpl-mxp-report.py](render-hpl-mxp-report.md)
 - [render-nccl-suite-report.py](render-nccl-suite-report.md)
+- [render-topology-map.py](render-topology-map.md)
 - [render-verify-dashboard.py](render-verify-dashboard.md)
 - [run-gds-fleet.sh](run-gds-fleet.md)
 - [run-gpu-topology-fleet.sh](run-gpu-topology-fleet.md)

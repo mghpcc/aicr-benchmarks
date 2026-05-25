@@ -1,0 +1,4 @@
+ib_device mlx5_0 numa_node=3 local_cpulist=48-63 netdevs=ib0
+ib_device mlx5_3 numa_node=5 local_cpulist=80-95 netdevs=ib3
+ib_device mlx5_bond_0 numa_node=0 local_cpulist=0-15 netdevs=bond0
+

@@ -20,6 +20,9 @@ Topology pages should not be read as throughput comparisons. Their value is the
 inventory, affinity, NIC proximity, parsed summaries, and provenance that make
 the other module studies easier to trust.
 
+For renderer examples that are not published readiness evidence, see
+[Topology Map](topology-map.md).
+
 ## Readiness Dashboards
 
 Use the dashboard below as the published topology readiness record for the
@@ -43,6 +46,9 @@ Use topology evidence as prerequisite context for the performance modules:
 - NCCL uses GPU/NIC proximity and fleet consistency when interpreting communication behavior.
 - DataLoader and DDP use node readiness context to avoid confusing input or training behavior with infrastructure problems.
 - HPL-MxP and Elbencho use the same readiness context when comparing compute or storage runs across nodes.
+
+Use these pages as verification and readiness provenance. Workload performance
+conclusions belong in the relevant benchmark module studies.
 
 When a topology page reports skipped nodes, treat those skips as a coverage
 boundary for the benchmark evidence. Do not generalize benchmark conclusions to
