@@ -120,7 +120,7 @@ for a standalone run).
   that fleet for an apples-to-apples claim; otherwise report explicitly as
   "sustained by N client nodes."
 
-## Storage spec being validated
+## Vast spec being validated
 
 AICR proposal, 16 × 7 Gen5 / Ceres 1350:
 

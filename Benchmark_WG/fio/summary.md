@@ -5,7 +5,7 @@ Source: `specval_1779653518` single-tier runs at 6 / 12 / 24 / 42 client nodes,
 sustained (conservative wall-clock aggregates).
 Spec constants from `spec_validate_summary.py:33-37`.
 
-## Storage spec (reference)
+## Vast spec (reference)
 
 | Workload | Metric | Max spec | Sustained spec |
 |---|---|---|---|
@@ -18,7 +18,7 @@ Spec constants from `spec_validate_summary.py:33-37`.
 
 ## ⭐ MOST IMPORTANT — fair apples-to-apples comparison
 
-Only the valid cold/sustained numbers below are fair to quote against the Storage
+Only the valid cold/sustained numbers below are fair to quote against the Vast
 spec (cache-tainted reads excluded; writes shown against both spec lines).
 
 | Workload | Fair number | vs spec | Result |
