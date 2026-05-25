@@ -579,9 +579,9 @@ if [[ "$apply" == "0" ]]; then
         dependency_flag=" --dependency=afterany:${previous_job_label}"
       fi
       if [[ "$profile" == "custom" && -n "$custom_gdsio_args" ]]; then
-        echo "  sbatch --parsable --partition=${partition} --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS='<args>' --nodelist=${node} ${sbatch_path}"
+        echo "  sbatch --parsable --partition=${partition} --time=${time_limit} --mem=0${dependency_flag} --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS='<args>' --nodelist=${node} ${sbatch_path}"
       else
-        echo "  sbatch --parsable --partition=${partition} --time=${time_limit}${dependency_flag} --export=ALL,PROFILE=${profile},GDS_PROFILE=${profile} --nodelist=${node} ${sbatch_path}"
+        echo "  sbatch --parsable --partition=${partition} --time=${time_limit} --mem=0${dependency_flag} --export=ALL,PROFILE=${profile},GDS_PROFILE=${profile} --nodelist=${node} ${sbatch_path}"
       fi
       previous_job_label="<previous-gds-job-id>"
     done <"$idle_nodes_file"
@@ -633,9 +633,9 @@ for round in $(seq 1 "$repeat_count"); do
       sleep "$submit_stagger_seconds"
     fi
     if [[ "$profile" == "custom" && -n "$custom_gdsio_args" ]]; then
-      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS="$custom_gdsio_args",AICR_GDS_ALLOW_CUSTOM_TARGET_FILE="$allow_custom_target_file" --nodelist="$node" "$sbatch_path")"
+      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" --mem=0 "${dependency_args[@]}" --export=ALL,PROFILE=custom,GDS_PROFILE=custom,AICR_GDS_CUSTOM_GDSIO_ARGS="$custom_gdsio_args",AICR_GDS_ALLOW_CUSTOM_TARGET_FILE="$allow_custom_target_file" --nodelist="$node" "$sbatch_path")"
     else
-      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" "${dependency_args[@]}" --export=ALL,PROFILE="$profile",GDS_PROFILE="$profile" --nodelist="$node" "$sbatch_path")"
+      job_id="$(sbatch --parsable --partition="$partition" --time="$time_limit" --mem=0 "${dependency_args[@]}" --export=ALL,PROFILE="$profile",GDS_PROFILE="$profile" --nodelist="$node" "$sbatch_path")"
     fi
     job_id="${job_id%%;*}"
     [[ -n "$job_id" ]] || aicr_die "sbatch did not return a job ID for ${node}"

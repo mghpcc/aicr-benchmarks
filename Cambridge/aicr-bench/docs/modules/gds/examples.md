@@ -14,6 +14,7 @@ This example starts from the script primitive directly. Keep one `exec` line act
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
+#SBATCH --mem=0
 #SBATCH --gres=<gpu-type-and-count>
 #SBATCH --time=00:15:00
 #SBATCH --output=%x-%j.out
@@ -24,6 +25,10 @@ set -euo pipefail
 # AICR HPC scheduler examples:
 #   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtxpro6000:8
 #   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
+
+# Keep #SBATCH --mem=0 or --mem=0 on the sbatch command line so the job
+# inherits the full per-node memory; GDS validation is sensitive to Slurm's
+# default per-job memory cap.
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -42,7 +47,7 @@ exec ./scripts/verify/run-gds.sh --profile small
 Replace the scheduler placeholders, then submit the customized workload. If the template was copied outside the install tree, pass the install root explicitly:
 
 ```bash
-sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-gds.sbatch
+sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-gds.sbatch
 ```
 
 ## Slurm Sbatch Scripts

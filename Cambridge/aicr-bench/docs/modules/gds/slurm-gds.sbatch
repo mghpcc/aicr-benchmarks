@@ -5,6 +5,7 @@
 #SBATCH --ntasks=1
 #SBATCH --ntasks-per-node=1
 #SBATCH --cpus-per-task=8
+#SBATCH --mem=0
 #SBATCH --gres=<gpu-type-and-count>
 #SBATCH --time=00:15:00
 #SBATCH --output=%x-%j.out
@@ -42,7 +43,7 @@ resolve_repo_root() {
   fi
 
   echo "ERROR: could not locate an AICR-Bench install root." >&2
-  echo "Submit with: sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench $(basename "${BASH_SOURCE[0]}")" >&2
+  echo "Submit with: sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench $(basename "${BASH_SOURCE[0]}")" >&2
   return 1
 }
 

@@ -58,7 +58,8 @@ make verify-gds CLUSTER=b200 PROFILE=small APPLY=1
 Fleet runs should be used only when you intend to run every selected idle node.
 Use `NODELIST` for targeted validation on specific nodes.
 
-For promoted benchmark-style GDS studies, use dependency-chain stagger mode.
+For reviewed GDS verification studies that need serialized storage load, use
+dependency-chain stagger mode.
 This spaces `sbatch` calls by five seconds, then uses Slurm
 `afterany:<previous_job_id>` dependencies so Slurm starts only one selected GDS
 job at a time:
