@@ -2,7 +2,8 @@
 
 ## Purpose
 
-Run an Elbencho workload inside a Slurm allocation and write raw and parsed storage benchmark artifacts.
+Run an Elbencho workload inside a Slurm allocation and write raw and parsed
+storage benchmark artifacts.
 
 ## Usage
 

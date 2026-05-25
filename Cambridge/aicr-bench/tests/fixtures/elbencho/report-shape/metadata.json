@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "fixture_id": "elbencho-report-shape",
+  "fixture_type": "report-shape",
+  "purpose": "Synthetic Elbencho summaries for renderer shape validation.",
+  "input_summary_glob": "generated in tests/scripts/check-elbencho-report-shape-fixture.py",
+  "date": "2026-05-17",
+  "cluster": "b200",
+  "rows": [
+    {
+      "run_id": "run-small-block",
+      "job_id": "21732",
+      "workload": "small-block",
+      "profile": "small",
+      "node_count": 1,
+      "peer_nodes": ["b0002"],
+      "evidence_label": "standard",
+      "metrics": {
+        "read_iops": 317984.0,
+        "write_iops": 98700.0,
+        "read_mib_per_second": 2484.0,
+        "write_mib_per_second": 771.0
+      }
+    },
+    {
+      "run_id": "run-metadata",
+      "job_id": "21744",
+      "workload": "metadata",
+      "profile": "small",
+      "node_count": 1,
+      "peer_nodes": ["b0002"],
+      "evidence_label": "non-cache-neutral-rehearsal",
+      "metrics": {
+        "mkdirs_per_second": 90364.0,
+        "file_creates_per_second": 98462.0,
+        "file_reads_per_second": 242971.0,
+        "file_writes_per_second": 98462.0,
+        "rmfiles_per_second": 76132.0,
+        "rmdirs_per_second": 57326.0,
+        "stats_per_second": 482968.0
+      }
+    },
+    {
+      "run_id": "run-peak-cluster",
+      "job_id": "21842",
+      "workload": "peak-cluster",
+      "profile": "small",
+      "node_count": 30,
+      "peer_nodes": [
+        "b0002",
+        "b0003",
+        "b0004",
+        "b0005",
+        "b0006",
+        "b0007",
+        "b0008",
+        "b0009",
+        "b0010",
+        "b0011",
+        "b0012",
+        "b0013",
+        "b0014",
+        "b0015",
+        "b0016",
+        "b0017",
+        "b0018",
+        "b0019",
+        "b0020",
+        "b0021",
+        "b0022",
+        "b0023",
+        "b0024",
+        "b0025",
+        "b0026",
+        "b0027",
+        "b0028",
+        "b0029",
+        "b0030",
+        "b0031"
+      ],
+      "evidence_label": "standard",
+      "metrics": {
+        "read_iops": 57751.7,
+        "write_iops": 34405.3,
+        "read_mib_per_second": 57751.7,
+        "write_mib_per_second": 34405.3
+      }
+    }
+  ]
+}

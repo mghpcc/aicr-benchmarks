@@ -50,6 +50,11 @@ make setup-python-slurm NODELIST=w0001
 make setup-python-slurm NODELIST=w0001 APPLY=1 WAIT=1
 ```
 
+Observed fresh-install timing on AICR HPC: the private configured UV setup
+completed in `00:00:39` on CPU node `w0001`. Treat this as an approximate
+operator estimate; first-time dependency resolution, lockfile changes, or
+filesystem load can change the runtime.
+
 Shared container builds run through Slurm. This keeps large OCI-to-SIF conversions off the login node.
 
 ## Containers
@@ -78,6 +83,11 @@ The target submits `slurm/setup/install-containers.sbatch` to
 `CONTAINER_PARTITION=cpu` with `CONTAINER_MEM=0` and waits for the job to finish
 when `APPLY=1` is set. The default image set pulls one PyTorch image and one
 NVIDIA HPC Benchmarks image.
+
+Observed fresh-install timing on AICR HPC: pulling and converting the default
+image set completed in `00:37:58` on CPU node `w0001`. The PyTorch SIF is the
+long part of the run; cached images, `CONTAINER_REFRESH=1`, registry speed, and
+scratch filesystem load can change the runtime.
 
 Refresh existing images:
 
@@ -119,6 +129,10 @@ AICR_UV_ENV_PREFIX="${AICR_UV_ENVS_DIR}/aicr-bench"
 AICR_UV_BIN="${AICR_UV_ROOT}/bin/uv"
 ```
 
-The default image set includes one PyTorch image and one NVIDIA HPC Benchmarks image. Optional probe images are installed only when their flags are enabled.
+The default image set includes one PyTorch image and one NVIDIA HPC Benchmarks
+image. Optional probe images are installed only when their flags are enabled.
+Elbencho is also optional; install it with `make install-elbencho APPLY=1`, or
+include it in the Slurm container install with
+`make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1`.
 
 For exceptional local-only debugging, `make install-containers-local` runs the pull helper in the current shell. Do not use that path for routine AICR HPC runtime builds.

@@ -41,5 +41,9 @@ make install-elbencho APPLY=1
 
 ## Notes
 
+The Elbencho image is optional and is not pulled by the default container
+install workflow. Build or pull it before Elbencho setup-gate smoke,
+install-smoke coverage, or benchmark rows when using a private runtime root.
+
 The static method is documented as a CPU/filesystem fallback only. It is not the
 supported GPU/GDS-capable campaign path.
