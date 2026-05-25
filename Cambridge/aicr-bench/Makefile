@@ -119,13 +119,20 @@ HPL_MXP_NB ?= auto
 HPL_MXP_NPROW ?= auto
 HPL_MXP_NPCOL ?= auto
 HPL_MXP_PRESET ?= smoke
-HPL_MXP_AFFINITY_PROFILE ?=
+HPL_MXP_AFFINITY_PROFILE ?= derived-nps4
 HPL_MXP_IMAGE ?=
 HPL_MXP_TIME ?= 00:30:00
-HPL_MXP_SLOPPY_TYPE ?= 2
+HPL_MXP_MEM ?= 0
+HPL_MXP_SLOPPY_TYPE ?= FP16
 HPL_MXP_TEST_LOOP ?=
 HPL_MXP_CPUS_PER_TASK ?= 16
 HPL_MXP_OMPI_COLL ?= ^ucc
+HPL_MXP_OMPI_PML ?=
+HPL_MXP_OMPI_BTL ?=
+HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE ?=
+HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE ?=
+HPL_MXP_UCX_TLS ?=
+HPL_MXP_UCX_NET_DEVICES ?=
 HPL_MXP_PMIX_MCA_GDS ?= ^ds12
 HPL_MXP_MPI_USE_MPI ?= 0
 HPL_MXP_MPI_PANEL_BROADCAST ?= 1
@@ -144,6 +151,9 @@ HPL_MXP_SCALING_STUDY ?= exploratory
 HPL_MXP_BASELINE_MATRIX_SIZE ?=
 HPL_MXP_REPEAT_COUNT ?= 1
 HPL_MXP_REPEAT_STAGGER_SECONDS ?= 30
+HPL_MXP_RENDER_JOB_ID_MIN ?=
+HPL_MXP_RENDER_JOB_ID_MAX ?=
+HPL_MXP_RENDER_JOB_ID_LIST ?=
 ELBENCHO_INSTALL_METHOD ?= container
 ELBENCHO_TAG ?= master-ubuntu-cuda-multiarch
 ELBENCHO_IMAGE ?=
@@ -222,8 +232,15 @@ DDP_REPEAT_COUNT_FLAG := $(if $(strip $(DDP_REPEAT_COUNT)),--repeat-count $(DDP_
 DDP_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(DDP_REPEAT_STAGGER_SECONDS)),--repeat-stagger-seconds $(DDP_REPEAT_STAGGER_SECONDS),)
 DATALOADER_DEPENDENCY_FLAG := $(if $(strip $(DATALOADER_DEPENDENCY)),--dependency $(DATALOADER_DEPENDENCY),)
 HPL_MXP_IMAGE_FLAG := $(if $(strip $(HPL_MXP_IMAGE)),--image $(HPL_MXP_IMAGE),)
+HPL_MXP_MEM_FLAG := $(if $(strip $(HPL_MXP_MEM)),--mem $(HPL_MXP_MEM),)
 HPL_MXP_CPUS_PER_TASK_FLAG := $(if $(strip $(HPL_MXP_CPUS_PER_TASK)),--cpus-per-task $(HPL_MXP_CPUS_PER_TASK),)
 HPL_MXP_OMPI_COLL_FLAG := $(if $(strip $(HPL_MXP_OMPI_COLL)),--ompi-coll $(HPL_MXP_OMPI_COLL),)
+HPL_MXP_OMPI_PML_FLAG := $(if $(strip $(HPL_MXP_OMPI_PML)),--ompi-pml $(HPL_MXP_OMPI_PML),)
+HPL_MXP_OMPI_BTL_FLAG := $(if $(strip $(HPL_MXP_OMPI_BTL)),--ompi-btl $(HPL_MXP_OMPI_BTL),)
+HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE_FLAG := $(if $(strip $(HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE)),--ompi-btl-tcp-if-include $(HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE),)
+HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE_FLAG := $(if $(strip $(HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE)),--ompi-oob-tcp-if-include $(HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE),)
+HPL_MXP_UCX_TLS_FLAG := $(if $(strip $(HPL_MXP_UCX_TLS)),--ucx-tls $(HPL_MXP_UCX_TLS),)
+HPL_MXP_UCX_NET_DEVICES_FLAG := $(if $(strip $(HPL_MXP_UCX_NET_DEVICES)),--ucx-net-devices $(HPL_MXP_UCX_NET_DEVICES),)
 HPL_MXP_PMIX_MCA_GDS_FLAG := $(if $(strip $(HPL_MXP_PMIX_MCA_GDS)),--pmix-mca-gds $(HPL_MXP_PMIX_MCA_GDS),)
 HPL_MXP_NPROW_FLAG := $(if $(filter-out auto,$(strip $(HPL_MXP_NPROW))),--nprow $(HPL_MXP_NPROW),)
 HPL_MXP_NPCOL_FLAG := $(if $(filter-out auto,$(strip $(HPL_MXP_NPCOL))),--npcol $(HPL_MXP_NPCOL),)
@@ -253,6 +270,9 @@ ELBENCHO_DEPENDENCY_FLAG := $(if $(strip $(ELBENCHO_DEPENDENCY)),--dependency $(
 BENCHMARK_DRY_RUN_ELBENCHO_FLAG := $(if $(filter 1,$(BENCHMARK_DRY_RUN_INCLUDE_ELBENCHO)),--include-elbencho,)
 DDP_COMPARISON_DEFAULT_SRUN_FLAG := $(if $(filter 1,$(DDP_COMPARISON_INCLUDE_DEFAULT_SRUN)),--include-default-srun,)
 REPEAT_AGGREGATION_FLAG := --repeat-aggregation $(REPEAT_AGGREGATION)
+HPL_MXP_RENDER_JOB_ID_MIN_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MIN)),--job-id-min $(HPL_MXP_RENDER_JOB_ID_MIN),)
+HPL_MXP_RENDER_JOB_ID_MAX_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MAX)),--job-id-max $(HPL_MXP_RENDER_JOB_ID_MAX),)
+HPL_MXP_RENDER_JOB_ID_LIST_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_LIST)),--job-id-list $(HPL_MXP_RENDER_JOB_ID_LIST),)
 GPU_PREFLIGHT_FILTER_FLAG := $(if $(filter 1,$(GPU_PREFLIGHT_FILTER)),--gpu-preflight-filter,)
 GDS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 REPORT_DATE := $(shell if [ "$(DATE)" = "today" ]; then date -u +%F; else printf '%s' "$(DATE)"; fi)
@@ -289,7 +309,7 @@ help:
 		"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
 		"      Preview or submit ResNet-50 DDP runs." \
 		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
-		"      Guarded HPL entrypoint; HPL_MXP_PRESET selects smoke, staged, campaign, or workspace rows." \
+		"      Guarded HPL entrypoint; HPL_MXP_PRESET selects smoke, staged, campaign-candidate, or weak-study rows." \
 		"  make render-benchmark-campaign DATE=<date>" \
 		"      Render the benchmark campaign requirements dashboard." \
 		"Common variables:" \
@@ -350,22 +370,23 @@ help-benchmarks:
 		"  Campaign-required rows use LAUNCHER=torchrun; srun is optional comparison evidence." \
 		"" \
 		"HPL-MxP:" \
-		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=<smoke|staged|campaign-candidate|workspace-fp16>" \
-		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=workspace-fp16 HPL_MXP_AFFINITY_PROFILE=derived-nps4 HPL_MXP_SCALING_STUDY=weak" \
-		"  Key vars: HPL_MXP_PRESET, HPL_MXP_MATRIX_SIZE, HPL_MXP_NB, HPL_MXP_TIME, HPL_MXP_TEST_LOOP." \
-		"            HPL_MXP_REPEAT_COUNT=5 submits independent samples for Olympic reporting." \
-		"            HPL_MXP_CPUS_PER_TASK for host-heavy FP64/GMRES tuning." \
+		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=<smoke|staged|campaign-candidate|weak-study>" \
+		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> HPL_MXP_PRESET=weak-study HPL_MXP_AFFINITY_PROFILE=derived-nps4 HPL_MXP_SCALING_STUDY=weak" \
+		"  Key vars: HPL_MXP_PRESET, HPL_MXP_MATRIX_SIZE, HPL_MXP_NB, HPL_MXP_TIME, HPL_MXP_MEM, HPL_MXP_TEST_LOOP." \
+		"            HPL_MXP_REPEAT_COUNT controls independent repeated samples." \
+		"            HPL_MXP_CPUS_PER_TASK for host-heavy FP64/GMRES rows." \
 		"            HPL_MXP_NPROW, HPL_MXP_NPCOL, HPL_MXP_AFFINITY_PROFILE," \
-		"            HPL_MXP_MPI_USE_MPI," \
+		"            HPL_MXP_OMPI_COLL/PML/BTL, HPL_MXP_UCX_TLS/NET_DEVICES," \
+		"            HPL_MXP_PMIX_MCA_GDS, HPL_MXP_MPI_USE_MPI," \
 		"            HPL_MXP_MPI_PANEL_BROADCAST, HPL_MXP_PRIORITIZE_FACTORIZATION," \
 		"            HPL_MXP_ANQ_DEVICE, HPL_MXP_FILL_DEVICE, HPL_MXP_CALL_DGEMV_THREADS," \
 		"            HPL_MXP_PRESET_GEMM_KERNEL," \
 		"            HPL_MXP_CPU_AFFINITY, HPL_MXP_MEM_AFFINITY, HPL_MXP_UCX_AFFINITY," \
-		"            HPL_MXP_U_PANEL_CHUNK_NBS for sizing/tuning studies." \
+		"            HPL_MXP_U_PANEL_CHUNK_NBS for sizing and control rows." \
 		"            HPL_MXP_SCALING_STUDY and HPL_MXP_BASELINE_MATRIX_SIZE for scaling." \
-		"  HPL_MXP_PRESET=workspace-fp16 uses the NVIDIA FP16 ladder and derived NPS4 affinity profile." \
-		"  May 16 formal rows use the NVIDIA container FP16 N ladder, workspace-fp16, weak study metadata, and derived NPS4 affinity." \
-		"  RTX formal nodes are 1/2/4; B200 formal nodes are 1/2/4/8/16." \
+		"  HPL_MXP_PRESET=weak-study uses the reviewed weak-scaling ladder and derived NPS4 affinity profile." \
+		"  weak-study rows use reviewed N targets, weak scaling metadata, and derived NPS4 affinity." \
+		"  weak-study supports the node counts accepted by submit-hpl-mxp." \
 		"  campaign-candidate rows remain available for older reviewed target-size studies." \
 		"  Compatibility alias: benchmark-hpl-mxp-smoke forwards to benchmark-hpl-mxp with HPL_MXP_PRESET=smoke." \
 		"" \
@@ -649,7 +670,7 @@ benchmark-ddp-launcher-comparison: require-settings
 	bash scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster $(CLUSTER) --date $(NODE_REPORT_DATE) --scales $(DDP_COMPARISON_SCALES) --time $(DDP_TIME) --srun-mpi $(DDP_SRUN_MPI) --srun-cpu-bind $(if $(strip $(DDP_SRUN_CPU_BIND)),$(DDP_SRUN_CPU_BIND),none) --srun-mem-bind $(if $(strip $(DDP_SRUN_MEM_BIND)),$(DDP_SRUN_MEM_BIND),none) --submit-stagger-seconds $(DDP_COMPARISON_STAGGER_SECONDS) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(DDP_COMPARISON_DEFAULT_SRUN_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
 
 benchmark-hpl-mxp: require-settings
-	bash scripts/benchmark/submit-hpl-mxp.sh --cluster $(CLUSTER) --nodes $(NODES) --preset $(HPL_MXP_PRESET) --matrix-size $(HPL_MXP_MATRIX_SIZE) --nb $(HPL_MXP_NB) $(HPL_MXP_NPROW_FLAG) $(HPL_MXP_NPCOL_FLAG) $(HPL_MXP_AFFINITY_PROFILE_FLAG) --time $(HPL_MXP_TIME) --sloppy-type $(HPL_MXP_SLOPPY_TYPE) $(HPL_MXP_TEST_LOOP_FLAG) $(HPL_MXP_REPEAT_COUNT_FLAG) $(HPL_MXP_REPEAT_STAGGER_SECONDS_FLAG) --date $(NODE_REPORT_DATE) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(HPL_MXP_IMAGE_FLAG) $(HPL_MXP_CPUS_PER_TASK_FLAG) $(HPL_MXP_OMPI_COLL_FLAG) $(HPL_MXP_PMIX_MCA_GDS_FLAG) $(HPL_MXP_MPI_USE_MPI_FLAG) $(HPL_MXP_MPI_PANEL_BROADCAST_FLAG) $(HPL_MXP_PRIORITIZE_TRSM_FLAG) $(HPL_MXP_PRIORITIZE_FACTORIZATION_FLAG) $(HPL_MXP_ANQ_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG) $(HPL_MXP_CALL_DGEMV_THREADS_FLAG) $(HPL_MXP_PRESET_GEMM_KERNEL_FLAG) $(HPL_MXP_CPU_AFFINITY_FLAG) $(HPL_MXP_MEM_AFFINITY_FLAG) $(HPL_MXP_UCX_AFFINITY_FLAG) $(HPL_MXP_U_PANEL_CHUNK_NBS_FLAG) $(HPL_MXP_SCALING_STUDY_FLAG) $(HPL_MXP_BASELINE_MATRIX_SIZE_FLAG) $(APPLY_FLAG)
+	bash scripts/benchmark/submit-hpl-mxp.sh --cluster $(CLUSTER) --nodes $(NODES) --preset $(HPL_MXP_PRESET) --matrix-size $(HPL_MXP_MATRIX_SIZE) --nb $(HPL_MXP_NB) $(HPL_MXP_NPROW_FLAG) $(HPL_MXP_NPCOL_FLAG) $(HPL_MXP_AFFINITY_PROFILE_FLAG) --time $(HPL_MXP_TIME) $(HPL_MXP_MEM_FLAG) --sloppy-type $(HPL_MXP_SLOPPY_TYPE) $(HPL_MXP_TEST_LOOP_FLAG) $(HPL_MXP_REPEAT_COUNT_FLAG) $(HPL_MXP_REPEAT_STAGGER_SECONDS_FLAG) --date $(NODE_REPORT_DATE) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(HPL_MXP_IMAGE_FLAG) $(HPL_MXP_CPUS_PER_TASK_FLAG) $(HPL_MXP_OMPI_COLL_FLAG) $(HPL_MXP_OMPI_PML_FLAG) $(HPL_MXP_OMPI_BTL_FLAG) $(HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE_FLAG) $(HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE_FLAG) $(HPL_MXP_UCX_TLS_FLAG) $(HPL_MXP_UCX_NET_DEVICES_FLAG) $(HPL_MXP_PMIX_MCA_GDS_FLAG) $(HPL_MXP_MPI_USE_MPI_FLAG) $(HPL_MXP_MPI_PANEL_BROADCAST_FLAG) $(HPL_MXP_PRIORITIZE_TRSM_FLAG) $(HPL_MXP_PRIORITIZE_FACTORIZATION_FLAG) $(HPL_MXP_ANQ_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG) $(HPL_MXP_CALL_DGEMV_THREADS_FLAG) $(HPL_MXP_PRESET_GEMM_KERNEL_FLAG) $(HPL_MXP_CPU_AFFINITY_FLAG) $(HPL_MXP_MEM_AFFINITY_FLAG) $(HPL_MXP_UCX_AFFINITY_FLAG) $(HPL_MXP_U_PANEL_CHUNK_NBS_FLAG) $(HPL_MXP_SCALING_STUDY_FLAG) $(HPL_MXP_BASELINE_MATRIX_SIZE_FLAG) $(APPLY_FLAG)
 
 benchmark-hpl-mxp-smoke:
 	@echo "benchmark-hpl-mxp-smoke is a compatibility alias; use benchmark-hpl-mxp HPL_MXP_PRESET=smoke."
@@ -670,7 +691,7 @@ render-ddp-resnet50:
 	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --date $(DATE) --cluster $(CLUSTER)
 
 render-hpl-mxp:
-	$(REPO_PY) scripts/report/render-hpl-mxp-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(REPEAT_AGGREGATION)
+	$(REPO_PY) scripts/report/render-hpl-mxp-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(REPEAT_AGGREGATION) $(HPL_MXP_RENDER_JOB_ID_MIN_FLAG) $(HPL_MXP_RENDER_JOB_ID_MAX_FLAG) $(HPL_MXP_RENDER_JOB_ID_LIST_FLAG)
 
 render-benchmark-campaign:
 	$(REPO_PY) scripts/report/render-benchmark-campaign.py --date $(DATE)
