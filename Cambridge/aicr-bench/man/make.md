@@ -129,15 +129,16 @@ make render-ddp-resnet50-ascii CLUSTER=b200 DATE=today
 | --- | --- |
 | `make benchmark-hpl-mxp` | Dry-run or submit NVIDIA HPL-MxP rows. |
 | `make benchmark-hpl-mxp-smoke` | Convenience target for the small smoke preset. |
-| `make render-hpl-mxp` | Render the HPL-MxP campaign report from existing results. |
+| `make render-hpl-mxp` | Render the HPL-MxP report from existing results. |
 
 Common HPL-MxP shapes:
 
 ```bash
 make benchmark-hpl-mxp CLUSTER=b200 NODES=1 NODELIST=b0001 HPL_MXP_PRESET=smoke
-make benchmark-hpl-mxp CLUSTER=b200 NODES=1 NODELIST=b0001 HPL_MXP_PRESET=campaign-candidate HPL_MXP_TEST_LOOP=10 HPL_MXP_TIME=04:00:00 APPLY=1
+make benchmark-hpl-mxp CLUSTER=b200 NODES=4 NODELIST=b0001,b0002,b0003,b0004 HPL_MXP_PRESET=weak-study HPL_MXP_REPEAT_COUNT=3
+make benchmark-hpl-mxp CLUSTER=b200 NODES=1 NODELIST=b0001 HPL_MXP_PRESET=weak-study HPL_MXP_SLOPPY_TYPE=FP8
 make benchmark-hpl-mxp CLUSTER=b200 NODES=4 NODELIST=b0001,b0002,b0003,b0004 HPL_MXP_PRESET=staged
-make render-hpl-mxp CLUSTER=b200 DATE=today
+make render-hpl-mxp CLUSTER=b200 DATE=today REPEAT_AGGREGATION=standard
 ```
 
 ## Common Variables
@@ -208,18 +209,37 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 
 | Variable | Meaning |
 | --- | --- |
-| `HPL_MXP_PRESET` | `smoke`, `staged`, or `campaign-candidate`. Default: `smoke`. |
+| `HPL_MXP_PRESET` | `smoke`, `staged`, `campaign-candidate`, or `weak-study`. Default: `smoke`. |
 | `HPL_MXP_MATRIX_SIZE` | Matrix size `N`, or `auto` for reviewed defaults. |
 | `HPL_MXP_NB` | Block size `NB`, or `auto` for reviewed defaults. |
 | `HPL_MXP_NPROW`, `HPL_MXP_NPCOL` | Processor grid override, or `auto`. |
 | `HPL_MXP_TIME` | Slurm time limit. Default: `00:30:00`. |
+| `HPL_MXP_MEM` | Slurm memory request. Default: `0` for full-node HPL-MxP rows. |
 | `HPL_MXP_IMAGE` | Optional NVIDIA HPC Benchmarks image override. |
+| `HPL_MXP_SLOPPY_TYPE` | HPL-MxP sloppy type: `FP16`, `FP8`, or B200-only `FP4`. Default: `FP16`. |
 | `HPL_MXP_TEST_LOOP` | Optional loop count forwarded to HPL-MxP. |
 | `HPL_MXP_CPUS_PER_TASK` | Slurm CPU request per task. Default: `16`. |
+| `HPL_MXP_REPEAT_COUNT` | Independent repeated rows for the same HPL-MxP shape. Default: `1`. |
+| `HPL_MXP_REPEAT_STAGGER_SECONDS` | Delay between repeated submissions. Default: `30`. |
+| `HPL_MXP_RENDER_JOB_ID_MIN`, `HPL_MXP_RENDER_JOB_ID_MAX`, `HPL_MXP_RENDER_JOB_ID_LIST` | Optional render filters for excluding unrelated same-day rows. |
+| `HPL_MXP_AFFINITY_PROFILE` | `derived-nps4` by default for AICR GPU benchmark rows. |
 | `HPL_MXP_OMPI_COLL` | Open MPI collective MCA setting. Default: `^ucc`. |
+| `HPL_MXP_OMPI_PML`, `HPL_MXP_OMPI_BTL` | Optional Open MPI PML and BTL MCA settings. |
+| `HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE`, `HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE` | Optional Open MPI TCP interface filters. |
+| `HPL_MXP_UCX_TLS`, `HPL_MXP_UCX_NET_DEVICES` | Optional UCX transport and network-device filters. |
 | `HPL_MXP_PMIX_MCA_GDS` | PMIx GDS MCA setting. Default: `^ds12`. |
-| `HPL_MXP_SCALING_STUDY` | `exploratory`, `strong`, `weak80`, or `weak90`. |
-| `HPL_MXP_TARGET_GPU_MEMORY_PCT` | Optional target VRAM percentage recorded in summary metadata. |
+| `HPL_MXP_MPI_USE_MPI` | HPL-MxP MPI-use-MPI flag. Default: `0`; `weak-study` sets `1`. |
+| `HPL_MXP_MPI_PANEL_BROADCAST` | HPL-MxP panel-broadcast percentage. Default: `1`; `weak-study` sets `50`. |
+| `HPL_MXP_PRIORITIZE_TRSM` | HPL-MxP TRSM priority flag. Default: `0`. |
+| `HPL_MXP_PRIORITIZE_FACTORIZATION` | HPL-MxP factorization priority flag. Default: `0`; `weak-study` sets `1`. |
+| `HPL_MXP_ANQ_DEVICE` | Optional FP64 matrix column placement override. |
+| `HPL_MXP_FILL_DEVICE` | Optional fill-device toggle. |
+| `HPL_MXP_FILL_DEVICE_BUFFER_SIZE` | Optional fill-device buffer reserve in MB. |
+| `HPL_MXP_CALL_DGEMV_THREADS` | Optional DGEMV thread override. |
+| `HPL_MXP_PRESET_GEMM_KERNEL` | Optional GEMM kernel preset. |
+| `HPL_MXP_CPU_AFFINITY`, `HPL_MXP_MEM_AFFINITY`, `HPL_MXP_UCX_AFFINITY` | Explicit affinity maps. |
+| `HPL_MXP_U_PANEL_CHUNK_NBS` | HPL-MxP U-panel chunk size. |
+| `HPL_MXP_SCALING_STUDY` | `exploratory`, `strong`, or `weak`. `weak-study` resolves to `weak`. |
 | `HPL_MXP_BASELINE_MATRIX_SIZE` | Optional baseline matrix size recorded in summary metadata. |
 
 ### Documentation And Container Variables
@@ -250,4 +270,4 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 - Omit `APPLY=1` for previews.
 - Use explicit `NODELIST` for applied examples and study reproduction.
 - HPL-MxP is compute- and memory-intensive; start with `HPL_MXP_PRESET=smoke`
-  on explicit nodes before running campaign-candidate shapes.
+  on explicit nodes before running larger shapes.
