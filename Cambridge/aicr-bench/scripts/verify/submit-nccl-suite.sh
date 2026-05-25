@@ -51,8 +51,8 @@ expand_nodes() {
 
 default_partition() {
   case "$1" in
-    b200) printf 'GPU2\n' ;;
-    rtxpro6000) printf 'GPU1\n' ;;
+    b200) printf 'b200-batch\n' ;;
+    rtxpro6000) printf 'rtx-batch\n' ;;
   esac
 }
 
@@ -616,13 +616,13 @@ if [[ "${apply}" == "0" ]]; then
       fi
       if [[ "${scope}" == "local" ]]; then
         if [[ "${suite_class}" == "b200_2rank_socket_4g" ]]; then
-          echo "  sbatch --parsable --ntasks=2 --ntasks-per-node=2 --cpus-per-task=64 --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]}"
+          echo "  sbatch --parsable --ntasks=2 --ntasks-per-node=2 --cpus-per-task=64 --mem=0 --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]}"
         else
-          echo "  sbatch --parsable --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]}"
+          echo "  sbatch --parsable --mem=0 --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]}"
         fi
       else
         ntasks=$(( scale * 8 ))
-        echo "  sbatch --parsable --nodes=${scale} --ntasks=${ntasks} --ntasks-per-node=8 --cpus-per-task=16 --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]} --nodes-per-job ${scale}"
+        echo "  sbatch --parsable --nodes=${scale} --ntasks=${ntasks} --ntasks-per-node=8 --cpus-per-task=16 --mem=0 --nodelist=${group} --time=${time_limit} ${sbatch_path} ${base_args[*]} --nodes-per-job ${scale}"
       fi
       previous_scale="${scale}"
     done <"${selected_groups_file}"
@@ -669,13 +669,14 @@ for round in $(seq 1 "${repeat_count}"); do
             --ntasks=2 \
             --ntasks-per-node=2 \
             --cpus-per-task=64 \
+            --mem=0 \
             --nodelist="${group}" \
             --time="${time_limit}" \
             "${sbatch_path}" \
             "${base_args[@]}"
         )"
       else
-        job_id="$(sbatch --parsable --nodelist="${group}" --time="${time_limit}" "${sbatch_path}" "${base_args[@]}")"
+        job_id="$(sbatch --parsable --mem=0 --nodelist="${group}" --time="${time_limit}" "${sbatch_path}" "${base_args[@]}")"
       fi
     else
       ntasks=$(( scale * 8 ))
@@ -685,6 +686,7 @@ for round in $(seq 1 "${repeat_count}"); do
           --ntasks="${ntasks}" \
           --ntasks-per-node=8 \
           --cpus-per-task=16 \
+          --mem=0 \
           --nodelist="${group}" \
           --time="${time_limit}" \
           "${sbatch_path}" \

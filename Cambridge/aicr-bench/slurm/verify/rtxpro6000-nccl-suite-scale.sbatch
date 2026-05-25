@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=rtx-nccl-suite-scale
-#SBATCH --partition=GPU1
+#SBATCH --partition=rtx-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=0
 #SBATCH --gres=gpu:rtx_pro_6000:8
 #SBATCH --time=02:30:00
 #SBATCH --output=results/slurm/%x-%j.out

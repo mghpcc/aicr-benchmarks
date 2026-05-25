@@ -9,11 +9,12 @@ This example starts from the script primitive directly. Keep one `exec` line act
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-nccl-primitive
-#SBATCH --partition=<GPU1-or-GPU2>
+#SBATCH --partition=<rtx-batch-or-b200-batch>
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=0
 #SBATCH --gres=<gpu-type-and-count>
 #SBATCH --time=02:30:00
 #SBATCH --output=%x-%j.out
@@ -22,8 +23,12 @@ set -euo pipefail
 
 # Replace the partition and GRES placeholders before submitting.
 # AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=GPU1 and #SBATCH --gres=gpu:rtxpro6000:8
-#   B200: #SBATCH --partition=GPU2 and #SBATCH --gres=gpu:b200:8
+#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtxpro6000:8
+#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
+
+# Keep #SBATCH --mem=0 or --mem=0 on the sbatch command line so the job
+# inherits the full per-node memory; NCCL validation is sensitive to Slurm's
+# default per-job memory cap.
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -42,7 +47,7 @@ exec ./scripts/verify/run-nccl-suite.sh --scope local --profile small
 Replace the scheduler placeholders, then submit the customized workload. If the template was copied outside the install tree, pass the install root explicitly:
 
 ```bash
-sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-nccl.sbatch
+sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-nccl.sbatch
 ```
 
 ## Slurm Sbatch Scripts

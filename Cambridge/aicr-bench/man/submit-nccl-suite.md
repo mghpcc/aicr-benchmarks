@@ -28,6 +28,9 @@ scripts/verify/submit-nccl-suite.sh --scope <local|rdma|scale> --cluster <b200|r
 - `--repeat-aggregation <standard|olympic>`: Repeat aggregation. Default: `standard`.
 - `--gpu-preflight-filter`: Keep only nodes with passing same-day GPU topology evidence.
 - `--submit-stagger-seconds <n>`: Delay between job submissions. Default: `5`.
+  The GDS fleet submitter additionally accepts `benchmark` to serialize storage
+  pressure via an `afterany` dependency chain; that mode is GDS-specific and is
+  not used for NCCL.
 - `--scale-stagger-seconds <n>`: Additional delay after one scale finishes before the next starts. Default: `0`.
 - `--round-stagger-seconds <n>`: Delay between repeat rounds. Default: `0`.
 - `--no-wait`: Do not wait for submitted jobs.
