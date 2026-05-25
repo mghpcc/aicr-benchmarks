@@ -105,6 +105,6 @@ Next steps:
   make setup-python-local
 
 On AICR HPC, set a private AICR_RUNTIME_ROOT in benchmark-settings.env and use:
-  make setup-python-slurm CLUSTER=rtxpro6000 NODELIST=<rtx-devel-node> APPLY=1 WAIT=1
-  make install-containers CONTAINER_NODELIST=<rtx-devel-node> APPLY=1
+  make setup-python-slurm NODELIST=<cpu-node> APPLY=1 WAIT=1
+  make install-containers CONTAINER_NODELIST=<cpu-node> APPLY=1
 EOF

@@ -22,14 +22,17 @@ FORBIDDEN_PATTERNS = (
     (re.compile(re.escape(WARMUP_ONE) + r"(?![0-9])"), f"published examples must not describe {WARMUP_ONE}"),
     (re.compile(re.escape(MEASURED_TWO) + r"(?![0-9])"), f"published examples must not describe {MEASURED_TWO}"),
 )
-STUDY_STATUS_RE = re.compile(r"<!--\s*aicr-study-status:\s*(published|scaffold|plan)\s*-->")
+STUDY_STATUS_RE = re.compile(r"<!--\s*aicr-study-status:\s*(published|scaffold|plan|draft|appendix)\s*-->")
 STUDY_LINK_RE = re.compile(r"\]\((studies/[^)#]+\.md)(?:#[^)]+)?\)")
-INDEX_NON_EVIDENCE_RE = re.compile(r"\b(pending|scaffold|planned|plan|run sheet)\b", re.IGNORECASE)
+INDEX_NON_EVIDENCE_RE = re.compile(r"\b(pending|scaffold|planned|plan|draft|context|run sheet)\b", re.IGNORECASE)
+INDEX_APPENDIX_RE = re.compile(r"\b(appendix|reference|supporting)\b", re.IGNORECASE)
 NON_EVIDENCE_BANNERS = {
     "scaffold": "Publication Scaffold - Not Evidence",
     "plan": "Campaign Plan - Not Evidence",
+    "draft": "Draft Context - Not Published Evidence",
+    "appendix": "Appendix - Supporting Reference, Not A Standalone Study",
 }
-PENDING_STUDY_RE = re.compile(r"\b(TODO|Pending promoted|Pending artifact|Pending run)\b")
+PENDING_STUDY_RE = re.compile(r"\b(TODO|Pending publication|Pending artifact review|Pending run)\b")
 REQUIRED_FIXTURE_METADATA = {
     "schema_version",
     "fixture_id",
@@ -44,7 +47,7 @@ def repo_root() -> Path:
 
 
 def markdown_files(root: Path) -> list[Path]:
-    skip_dirs = {".git", "graphify-out", "results"}
+    skip_dirs = {".git", "graphify-out", "results", "scratch"}
     paths: list[Path] = []
     for path in root.rglob("*.md"):
         parts = set(path.relative_to(root).parts)
@@ -84,8 +87,11 @@ def check_node_name_examples(root: Path) -> list[str]:
                     continue
                 if prefix == "b" and 1 <= number <= 31:
                     continue
+                if prefix == "w" and 1 <= number <= 9999:
+                    continue
                 failures.append(
-                    f"{rel}:{line_number}: node examples must use a0001-a0019 or b0001-b0031, found {token}"
+                    f"{rel}:{line_number}: node examples must use a0001-a0019, b0001-b0031, or w CPU nodes, "
+                    f"found {token}"
                 )
     return failures
 
@@ -107,9 +113,11 @@ def check_study_statuses(root: Path) -> list[str]:
         text = path.read_text(encoding="utf-8")
         status = study_status(text)
         statuses[rel] = status
+        if status in {"draft", "appendix"} and NON_EVIDENCE_BANNERS[status] not in text:
+            failures.append(f"{rel}: {status} page must include visible banner '{NON_EVIDENCE_BANNERS[status]}'")
         if PENDING_STUDY_RE.search(text):
-            if status not in {"scaffold", "plan"}:
-                failures.append(f"{rel}: pending/TODO study page must declare scaffold or plan status")
+            if status not in {"scaffold", "plan", "draft"}:
+                failures.append(f"{rel}: pending/TODO study page must declare scaffold, plan, or draft status")
                 continue
             banner = NON_EVIDENCE_BANNERS[status]
             if banner not in text:
@@ -125,10 +133,15 @@ def check_study_statuses(root: Path) -> list[str]:
                 except ValueError:
                     continue
                 target_status = statuses.get(target_rel)
-                if target_status in {"scaffold", "plan"} and not INDEX_NON_EVIDENCE_RE.search(line):
+                if target_status in {"scaffold", "plan", "draft"} and not INDEX_NON_EVIDENCE_RE.search(line):
                     failures.append(
                         f"{index_rel}:{line_number}: link to {target_status} page {target_rel} "
-                        "must be labeled pending/scaffold/planned/plan"
+                        "must be labeled pending/scaffold/planned/plan/draft/context"
+                    )
+                if target_status == "appendix" and not INDEX_APPENDIX_RE.search(line):
+                    failures.append(
+                        f"{index_rel}:{line_number}: link to appendix page {target_rel} "
+                        "must be labeled appendix/reference/supporting"
                     )
     return failures
 

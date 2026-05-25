@@ -11,7 +11,7 @@ Usage:
   scripts/setup/submit-container-install.sh [--apply] [--refresh] [--image-dir <path>] [--include-elbencho] [--partition <name>] [--nodelist <node[,node...]>] [--time <HH:MM:SS>] [--mem <size>] [--no-wait]
 
 Default behavior is a dry run. Pass --apply to submit the Apptainer image
-install as a Slurm job. The default partition is rtx-devel so large OCI-to-SIF
+install as a Slurm job. The default partition is cpu so large OCI-to-SIF
 conversions do not run on the login node.
 Submissions default to --mem=0 so Slurm grants the job the node memory cgroup.
 EOF
@@ -21,7 +21,7 @@ apply=0
 refresh=0
 image_dir_override=""
 include_elbencho="${AICR_INSTALL_ELBENCHO_CONTAINER:-0}"
-partition="${AICR_CONTAINER_INSTALL_PARTITION:-rtx-devel}"
+partition="${AICR_CONTAINER_INSTALL_PARTITION:-cpu}"
 nodelist="${AICR_CONTAINER_INSTALL_NODELIST:-}"
 time_limit="${AICR_CONTAINER_INSTALL_TIME:-04:00:00}"
 memory_request="${AICR_CONTAINER_INSTALL_MEM:-0}"

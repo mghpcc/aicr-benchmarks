@@ -8,31 +8,27 @@ source "${SCRIPT_DIR}/../lib/aicr-paths.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/setup/submit-python-runtime-slurm.sh --cluster <b200|rtxpro6000> [--setup] [--apply] [--wait] [--partition <name>] [--gres <value|none>] [--nodelist <csv>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>]
+  scripts/setup/submit-python-runtime-slurm.sh [--cluster <b200|rtxpro6000|setup>] [--setup] [--apply] [--wait] [--partition <name>] [--gres <value|none>] [--nodelist <csv>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>]
 
 Default behavior is a dry run. The submitted job verifies that a compute-node
 Slurm allocation uses the same direct repo Python runtime as login-node renders
 and submitters.
 Pass --setup to build or refresh the configured uv environment inside the Slurm
 allocation before running the doctor/import checks.
+Python setup and doctor jobs default to the CPU partition, do not request GPUs,
+and use cluster label "setup" unless --cluster is supplied for report grouping.
 Submissions default to --mem=0 so Slurm grants the job the node memory cgroup.
 EOF
 }
 
 default_partition() {
-  case "$1" in
-    b200) printf 'b200-devel\n' ;;
-    rtxpro6000) printf 'rtx-devel\n' ;;
-    *) aicr_die "unsupported cluster: $1" ;;
-  esac
+  local _cluster="$1"
+  printf 'cpu\n'
 }
 
 default_gres() {
-  case "$1" in
-    b200) printf 'gpu:b200:1\n' ;;
-    rtxpro6000) printf 'gpu:1\n' ;;
-    *) aicr_die "unsupported cluster: $1" ;;
-  esac
+  local _cluster="$1"
+  printf 'none\n'
 }
 
 cluster=""
@@ -63,8 +59,10 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-[[ -n "$cluster" ]] || { usage; exit 2; }
-aicr_assert_supported_cluster "$cluster"
+cluster="${cluster:-setup}"
+if [[ "$cluster" != "setup" ]]; then
+  aicr_assert_supported_cluster "$cluster"
+fi
 [[ "$time_limit" =~ ^[0-9]{2}:[0-9]{2}:[0-9]{2}$ ]] || aicr_die "--time must be HH:MM:SS"
 [[ "$cpus_per_task" =~ ^[0-9]+$ && "$cpus_per_task" -gt 0 ]] || aicr_die "--cpus-per-task must be a positive integer"
 [[ -n "$memory_request" ]] || aicr_die "--mem must not be empty"

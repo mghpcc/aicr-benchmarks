@@ -170,7 +170,7 @@ WAIT ?= 0
 RUNTIME_REPLACE_CURRENT ?= 0
 CONTAINER_REFRESH ?= 0
 INSTALL_ELBENCHO_CONTAINER ?= 0
-CONTAINER_PARTITION ?= rtx-devel
+CONTAINER_PARTITION ?= cpu
 CONTAINER_NODELIST ?=
 CONTAINER_TIME ?= 04:00:00
 CONTAINER_MEM ?= 0
@@ -401,7 +401,6 @@ doctor-python:
 
 doctor-python-slurm: require-settings
 	bash scripts/setup/submit-python-runtime-slurm.sh \
-		--cluster $(CLUSTER) \
 		--time $(PYTHON_DOCTOR_TIME) \
 		--cpus-per-task $(PYTHON_DOCTOR_CPUS_PER_TASK) \
 		--mem $(PYTHON_DOCTOR_MEM) \
@@ -414,7 +413,6 @@ doctor-python-slurm: require-settings
 
 setup-python-slurm: require-settings
 	bash scripts/setup/submit-python-runtime-slurm.sh \
-		--cluster $(CLUSTER) \
 		--setup \
 		--time $(PYTHON_DOCTOR_TIME) \
 		--cpus-per-task $(PYTHON_DOCTOR_CPUS_PER_TASK) \

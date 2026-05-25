@@ -127,7 +127,9 @@ aicr_require_repo_root
 aicr_mkdirs
 
 cluster="${AICR_CLUSTER_NAME:-$(aicr_cluster_name)}"
-aicr_assert_supported_cluster "$cluster"
+if [[ "$cluster" != "setup" ]]; then
+  aicr_assert_supported_cluster "$cluster"
+fi
 
 check="$AICR_CHECK_PYTHON_RUNTIME_SLURM"
 run_id="${SETUP_RUN_ID:-$(aicr_next_setup_run_id "$cluster" "$check")}"
@@ -169,7 +171,7 @@ esac
 setup_rc=0
 if [[ "$run_setup" == "1" ]]; then
   set +e
-  bash "${AICR_BMARK_DIR}/scripts/setup/setup-python-local.sh" --force \
+  bash "${AICR_BMARK_DIR}/scripts/setup/setup-python-local.sh" --force --runtime configured \
     >"${AICR_BMARK_DIR}/${setup_stdout_rel}" \
     2>"${AICR_BMARK_DIR}/${setup_stderr_rel}"
   setup_rc=$?
@@ -241,7 +243,7 @@ elif [[ "$doctor_rc" -eq 0 && "$import_rc" -eq 0 ]]; then
 else
   status="$AICR_STATUS_FAILED"
   pass_basis="setup-python-local.sh=${setup_rc}; doctor-python.sh=${doctor_rc}; run-repo-python required imports=${import_rc}"
-  notes="inspect canonical doctor-python and run-repo-python stderr artifacts"
+  notes="inspect canonical setup-python-local, doctor-python, and run-repo-python stderr artifacts"
 fi
 completed_at="$(aicr_timestamp_utc)"
 

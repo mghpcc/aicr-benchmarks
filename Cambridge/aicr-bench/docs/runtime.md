@@ -41,13 +41,13 @@ make setup-python-local
 make doctor-python
 ```
 
-To build or refresh a private UV environment inside a Slurm allocation, set a
-private runtime tree in `benchmark-settings.env`, dry-run first, then apply with
-an explicit devel node:
+To build or refresh a private configured UV environment inside a Slurm
+allocation, set the `AICR_RUNTIME_ROOT` block in `benchmark-settings.env`,
+dry-run first, then apply on an explicit CPU node:
 
 ```bash
-make setup-python-slurm CLUSTER=rtxpro6000 NODELIST=a0002
-make setup-python-slurm CLUSTER=rtxpro6000 NODELIST=a0002 APPLY=1 WAIT=1
+make setup-python-slurm NODELIST=w0001
+make setup-python-slurm NODELIST=w0001 APPLY=1 WAIT=1
 ```
 
 Shared container builds run through Slurm. This keeps large OCI-to-SIF conversions off the login node.
@@ -68,16 +68,16 @@ Container-backed modules use Apptainer images under:
 ${AICR_APPTAINER_IMAGE_DIR}
 ```
 
-Install the default public runtime containers through an RTX devel Slurm node:
+Install the default public runtime containers through the CPU Slurm queue:
 
 ```bash
 make install-containers
 ```
 
-The target dry-runs by default and prints the `sbatch` command for
-`slurm/setup/install-containers.sbatch` with `CONTAINER_PARTITION=rtx-devel` and
-`CONTAINER_MEM=0`. Add `APPLY=1` to submit and wait for the job to finish. The
-default image set pulls one PyTorch image and one NVIDIA HPC Benchmarks image.
+The target submits `slurm/setup/install-containers.sbatch` to
+`CONTAINER_PARTITION=cpu` with `CONTAINER_MEM=0` and waits for the job to finish
+when `APPLY=1` is set. The default image set pulls one PyTorch image and one
+NVIDIA HPC Benchmarks image.
 
 Refresh existing images:
 
@@ -85,17 +85,17 @@ Refresh existing images:
 make install-containers CONTAINER_REFRESH=1
 ```
 
-Submit to a specific RTX node when needed:
+Submit to a specific CPU node when needed:
 
 ```bash
-make install-containers CONTAINER_NODELIST=a0002
-make install-containers CONTAINER_NODELIST=a0002 APPLY=1
+make install-containers CONTAINER_NODELIST=w0002
+make install-containers CONTAINER_NODELIST=w0002 APPLY=1
 ```
 
 Submit and return immediately:
 
 ```bash
-make install-containers CONTAINER_NODELIST=a0002 CONTAINER_WAIT=0 APPLY=1
+make install-containers CONTAINER_NODELIST=w0002 CONTAINER_WAIT=0 APPLY=1
 ```
 
 The submit wrapper prints the Slurm job id and writes logs under `results/setup/container-install-<jobid>.out` and `results/setup/container-install-<jobid>.err`.

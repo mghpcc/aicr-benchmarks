@@ -10,20 +10,29 @@ source "${SCRIPT_DIR}/python-env-common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/setup/setup-python-local.sh [--force]
+  scripts/setup/setup-python-local.sh [--force] [--runtime <repo-local|configured>]
 
 Build or refresh the repo-local Python virtual environment from uv.lock when
 available, otherwise from pyproject.toml. This helper is for laptop and local
-development; it does not edit benchmark-settings.env.
+development by default; it does not edit benchmark-settings.env.
+
+Use --runtime configured for Slurm/runtime bootstrap jobs that should build the
+configured AICR_UV_ROOT and AICR_UV_ENV_PREFIX instead of the repo-local .tools
+fallback.
 EOF
 }
 
 force=0
+runtime_target="repo-local"
 while [[ $# -gt 0 ]]; do
   case "$1" in
     --force)
       force=1
       shift
+      ;;
+    --runtime)
+      runtime_target="${2:-}"
+      shift 2
       ;;
     -h|--help)
       usage
@@ -38,12 +47,25 @@ while [[ $# -gt 0 ]]; do
 done
 
 aicr_require_repo_root
+case "$runtime_target" in
+  repo-local|configured) ;;
+  *) aicr_die "--runtime must be repo-local or configured" ;;
+esac
 
 platform="$(aicr_python_platform)"
-local_uv_root="$(aicr_repo_local_runtime_root_prefix)"
-local_envs_dir="$(aicr_repo_local_uv_envs_dir)"
-local_env_prefix="$(aicr_repo_local_env_prefix)"
-lock_path="${AICR_BMARK_DIR}/.tools/.aicr-python-env.lock"
+if [[ "$runtime_target" == "configured" ]]; then
+  local_uv_root="$AICR_UV_ROOT"
+  local_envs_dir="$AICR_UV_ENVS_DIR"
+  local_env_prefix="$AICR_UV_ENV_PREFIX"
+  lock_path="${AICR_UV_ENVS_DIR}/.aicr-python-env.lock"
+  runtime_label="configured"
+else
+  local_uv_root="$(aicr_repo_local_runtime_root_prefix)"
+  local_envs_dir="$(aicr_repo_local_uv_envs_dir)"
+  local_env_prefix="$(aicr_repo_local_env_prefix)"
+  lock_path="${AICR_BMARK_DIR}/.tools/.aicr-python-env.lock"
+  runtime_label="repo-local"
+fi
 spec_path="$(aicr_python_env_spec_path "$platform")"
 spec_kind="$(aicr_python_env_spec_kind "$spec_path")"
 spec_sha="$(aicr_sha256_file "$spec_path")"
@@ -58,7 +80,7 @@ if [[ "$force" -eq 0 && -f "$manifest_path" && -x "${local_env_prefix}/bin/pytho
   current_spec_sha="$(awk -F= '$1 == "spec_sha256" {print $2}' "$manifest_path" 2>/dev/null || true)"
   if [[ "$current_platform" == "$platform" && "$current_spec_sha" == "$spec_sha" ]]; then
     if aicr_validate_env_python "${local_env_prefix}/bin/python"; then
-      echo "Repo-local Python environment is ready."
+      echo "${runtime_label} Python environment is ready."
       echo "Platform : ${platform}"
       echo "Env      : ${local_env_prefix}"
       echo "Spec     : ${spec_path}"
@@ -72,7 +94,7 @@ tmp_prefix="${local_envs_dir}/.aicr-bench-build-${timestamp}-$$"
 backup_prefix="${local_env_prefix}.previous-${timestamp}"
 
 rm -rf "$tmp_prefix"
-echo "Building repo-local Python environment"
+echo "Building ${runtime_label} Python environment"
 echo "Platform : ${platform}"
 echo "Env      : ${local_env_prefix}"
 echo "Spec     : ${spec_path} (${spec_kind})"
@@ -107,5 +129,5 @@ else
   exit 1
 fi
 
-echo "Repo-local Python environment is ready."
+echo "${runtime_label} Python environment is ready."
 echo "Python   : ${local_env_prefix}/bin/python"
