@@ -107,3 +107,13 @@ These issues were diagnosed and resolved for this cluster. Performance above ref
 - **Tensor Parallel:** Intra-node TP (AllReduce at 841 GB/s) is near-optimal. If TP degree > 8 requires crossing nodes, the fall-through to AllGather+ReduceScatter at 218 GB/s is workable but ~4× slower than intra-node.
 
 - **MoE Parallel:** At 39.8 GB/s inter-node, AllToAll is ~17× slower than intra-node (675 GB/s). Large-scale MoE with cross-node expert dispatch will be severely bandwidth-limited. Strategies: (a) constrain expert placement to single-node where possible, (b) use NVSHMEM-based or custom AllToAll that better pipelines NIC traffic, (c) increase MoE token batch size to amortize latency.
+
+>>> Where the 214 GB/s GDRDMA aggregate comes from, and why SHARP (~340 GB/s) can exceed it:
+>>>
+>>> The aggregate is not independently measured — it is `8 NICs/node × 26.7 GB/s/dir per NIC = 213.6 ≈ 214 GB/s/node/dir`. The 26.7 itself is below the NDR raw spec (400 Gb/s = 50 GB/s/dir unidir): in SendRecv each GPU transmits and receives on the same NIC at once, so its PCIe/GDRDMA DMA budget is shared between TX and RX and each direction collapses to ~26.7 GB/s. So 214 is the ceiling for any pattern that bidirectionally contends every NIC — which ring-style AllReduce does (measured 170 ≈ 79% of 214).
+>>>
+>>> SHARP can report ~340 (≈ 2 × measured 170) for two stacked reasons:
+>>> 1. The 214 ceiling is regime-specific, not the wire limit. The true unidirectional wire limit is `8 × 50 = 400 GB/s/node/dir`. The 214 only applies under bidirectional NIC contention (TX+RX sharing DMA); SHARP changes the traffic pattern so NICs are not fighting themselves and can run closer to the 50 GB/s unidir spec.
+>>> 2. `busbw` is a logical metric that credits offloaded work: `busbw = algbw × 2(n-1)/n` (factor ≈ 2 for large n). Ring AllReduce moves each byte across the wire ~2×, so its busbw ≈ wire speed. SHARP reduces in-network — each GPU sends its data up once and receives the reduced result down once, ~half the wire traffic for the same logical AllReduce — so for the same wire speed the reported busbw roughly doubles (170 → ~340). It is not more bytes on the wire than physically possible; the switch performs reduction the GPUs would otherwise have done across the fabric.
+>>>
+>>> Caveat: 340 is an estimate. Real SHARP gains depend on message size and tree depth — treat it as "roughly double," not an exact figure.

@@ -53,12 +53,12 @@ all-grads-sync, as expected when there is no data-parallel reduction.
 
 ### RTX 6000 (single node, GBS scaled with #GPUs to keep per-GPU GBS=128)
 
-| GPUs | TFLOP/s/GPU | iter (ms) | grads-sync ms | grads-sync %  | total (s) |
-|-----:|------------:|----------:|--------------:|--------------:|----------:|
-|   1  |       280.9 |    7905   |          3.7  |        0.05 % |    784.8  |
-|   2  |       274.9 |    8076   |        156.6  |        1.94 % |    801.3  |
-|   4  |       266.9 |    8317   |        365.2  |        4.39 % |    825.9  |
-|   8  |       264.8 |    8386   |        427.7  |        5.10 % |    833.0  |
+| GPUs | TFLOP/s/GPU | iter (ms) | grads-sync ms | grads-sync %  | total (s) | weak-scaling eff. |
+|-----:|------------:|----------:|--------------:|--------------:|----------:|------------------:|
+|   1  |       280.9 |    7905   |          3.7  |        0.05 % |    784.8  |           100.0 % |
+|   2  |       274.9 |    8076   |        156.6  |        1.94 % |    801.3  |            97.9 % |
+|   4  |       266.9 |    8317   |        365.2  |        4.39 % |    825.9  |            95.0 % |
+|   8  |       264.8 |    8386   |        427.7  |        5.10 % |    833.0  |            94.3 % |
 
 Per-GPU throughput drops from 280.9 → 264.8 TFLOP/s going 1 → 8 GPUs
 (**~94 % weak-scaling efficiency**). The slowdown tracks all-grads-sync, which
@@ -67,12 +67,12 @@ efficiency is paid to gradient all-reduce.
 
 ### B200 (single node, GBS scaled with #GPUs)
 
-| GPUs | TFLOP/s/GPU | iter (ms) | grads-sync ms | grads-sync %  | total (s) |
-|-----:|------------:|----------:|--------------:|--------------:|----------:|
-|   1  |      1024.4 |   10981   |          4.9  |        0.04 % |   1083.3  |
-|   2  |      1007.7 |   11162   |         66.7  |        0.60 % |   1101.8  |
-|   4  |       985.2 |   11418   |         77.6  |        0.68 % |   1125.3  |
-|   8  |       993.3 |   11325   |         84.4  |        0.75 % |   1117.4  |
+| GPUs | TFLOP/s/GPU | iter (ms) | grads-sync ms | grads-sync %  | total (s) | weak-scaling eff. |
+|-----:|------------:|----------:|--------------:|--------------:|----------:|------------------:|
+|   1  |      1024.4 |   10981   |          4.9  |        0.04 % |   1083.3  |           100.0 % |
+|   2  |      1007.7 |   11162   |         66.7  |        0.60 % |   1101.8  |            98.4 % |
+|   4  |       985.2 |   11418   |         77.6  |        0.68 % |   1125.3  |            96.2 % |
+|   8  |       993.3 |   11325   |         84.4  |        0.75 % |   1117.4  |            97.0 % |
 
 B200 shows excellent intra-node weak scaling — **~97 %** efficiency from 1 → 8
 GPUs (993 / 1024). The all-grads-sync fraction stays under 1 % even at 8 GPUs,

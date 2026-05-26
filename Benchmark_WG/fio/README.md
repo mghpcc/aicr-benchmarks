@@ -14,30 +14,39 @@ that exceed spec.
 
 ## Quick start
 
-```bash
-# 1. Submit the scaling sweep (chained tiers, runs unattended).
-./submit_spec_validate.sh
+Always probe the cache first, then size the sweep to it — `DEFEAT_TIB=128` is a
+safe default but on small tiers it lays out 128 TiB per read source and can blow
+past the wall clock. `--probe` submits a one-node measurement; read the
+recommended `DEFEAT_TIB` from its output file and pass that to the real sweep,
+which is typically far below 128 and finishes much faster. Finally read the
+verdict with `--strict` so the summary exits non-zero on a cache leak (CI-gateable).
 
-# 2. After it finishes, read the scaling curve + spec verdict.
-python spec_validate_summary.py results-peak/specval_<TIMESTAMP>
+```bash
+./submit_spec_validate.sh --probe                       # 1. measure cache (1 node); prints jobid
+grep -i "Recommended DEFEAT_TIB" output-peak/specval_probe_a<JOBID>_t*.out   # read the number
+DEFEAT_TIB=<rec> ./submit_spec_validate.sh              # 2. run the cold+fair sweep with it
+python spec_validate_summary.py --strict results-peak/<BASE_TAG>   # 3. verdict (exit 2 on leak)
 ```
 
-`submit_spec_validate.sh` prints the exact `BASE_TAG` (e.g. `specval_1779999999`)
-and the summary command to run when done.
+`submit_spec_validate.sh` prints `BASE_TAG` (e.g. `specval_1779999999`) and the
+summary command when done. Cold (no cache) and spec-fairness are **enforced**:
+the run fails if a read leaks cache or the fast engine is unavailable — details
+below.
 
 ## What makes the comparison fair
 
 The four things that made the old peak numbers unfair vs. spec, and how this
 harness fixes each:
 
-1. **Cold, not cache.** Each tier sizes the cluster-wide working set to
-   `DEFEAT_TIB` (default **32 TiB**), held constant across tiers so every tier
-   independently overflows the CBOX server cache. Reads are measured only after
-   two multi-TB write phases (`seq_write`, `rand_write`) have evicted the
-   laid-out read sources from cache. Client cache is killed as always
-   (`direct=1 + invalidate=1 + fadvise_hint=1`). Note: `direct=1` only bypasses
-   the *client* page cache — defeating the *server* CBOX cache requires
-   working-set sizing, which is why `DEFEAT_TIB` exists (see `node.md`).
+1. **Cold, measured + verified — not assumed.** `direct=1` only bypasses the
+   *client* page cache; defeating the *server* CBOX cache needs working-set
+   sizing. So: (a) `--probe` measures the real cache; (b) the cluster-wide
+   working set is sized to `DEFEAT_TIB` (default **128 TiB**, raised from 32
+   after 32 leaked at 24/42 nodes), held constant across tiers; (c) reads run
+   only after two multi-TB write phases evict the sources; and (d) **`VERIFY_COLD`
+   fails the run (exit 4)** if a cold `seq_read` still exceeds the physical cold
+   ceiling — a cache hit aborts instead of being reported. Client cache is killed
+   as always (`direct=1 + invalidate=1 + fadvise_hint=1`). See `node.md`.
 2. **Sustained, not burst.** `time_based` writes run for `RUNTIME` (default
    **900 s = 15 min**) so the CBOX NVMe write buffer saturates and you measure
    the rate storage can hold — comparable to the vendor "sustained write" line.
@@ -46,6 +55,16 @@ harness fixes each:
    metadata trap that made seq_write read 11% of spec).
 4. **Honest writes.** `end_fsync=1` (`HONEST_FSYNC=1`) — writes wait for server
    commit before the clock stops.
+5. **Fair engine.** Uses `io_uring`/`libaio` (real async, `RAND_IODEPTH` default
+   **64**) when available, else `pvsync2` (direct `preadv2`/`pwritev2` syscalls;
+   concurrency from `numjobs`, iodepth clamps to 1). It **aborts (exit 3)**
+   rather than fall back to `posixaio`, whose glibc thread pool caps random IOPS
+   at the engine. On this cluster io_uring is kernel-disabled
+   (`kernel.io_uring_disabled=2`) and libaio is absent, so `pvsync2` is selected.
+
+The summary is also a **CI gate**: `spec_validate_summary.py` exits non-zero
+(2 = cold read above its Max ceiling = cache leak; 3 = `--strict` read-over-spec)
+so a build can fail on an untrustworthy run.
 
 ## Why a scaling sweep
 
@@ -92,23 +111,35 @@ for a standalone run).
 | var | default | meaning |
 |---|---|---|
 | `CLIENT_TIERS` | `6 12 24 42` | client-node counts to sweep (even numbers; 2 nodes/task) |
-| `DEFEAT_TIB` | `32` | cluster working set per direction (TiB). Must exceed CBOX cache. Lower to ~4× actual cache once known, to cut layout time. |
+| `DEFEAT_TIB` | `128` | cluster working set per direction (TiB). Must exceed CBOX cache. Set to ~`CACHE_MULT`× the `--probe` result once known. |
+| `CACHE_MULT` | `4` | working set must be ≥ this × the measured cache |
+| `VERIFY_COLD` | `1` | 1 = **fail (exit 4)** if a cold read exceeds the cold ceiling; 0 = warn only |
+| `RAND_IODEPTH` / `SEQ_IODEPTH` | `64` / `8` | queue depth per worker; random needs real depth to measure the device |
 | `RUNTIME` | `900` | sustained-window seconds per `time_based` phase |
 | `RAMP_TIME` | `60` | warm-up before measurement |
-| `NUMJOBS` | `96` | fio workers per node = allocated cores. **Never** exceed cores — oversubscription regresses on a sync engine (see `summary.md` n128). `--cpus-per-task` is set to match. |
+| `NUMJOBS` | `96` | fio workers per node = allocated cores. **Never** exceed cores — oversubscription regresses (see `summary.md` n128). `--cpus-per-task` is set to match. |
 | `FILE_SIZE` | `1G` | per-file size for seq_* streaming |
 | `HONEST_FSYNC` | `1` | 1 = wait for server commit; 0 = buffered (dishonest, don't use for validation) |
-| `TIER_TIME` | `08:00:00` | Slurm `--time` per tier (size for the SLOWEST/smallest tier) |
-| `IOENGINE` | `auto` | probe `io_uring → libaio → pvsync2 → posixaio`; io_uring gives real iodepth if unblocked |
+| `TIER_TIME` | `16:00:00` | Slurm `--time` per tier (size for the SLOWEST/smallest tier; partition cap 24:00:00) |
+| `IOENGINE` | `auto` | `io_uring → libaio → pvsync2`, then **abort** (no posixaio fallback). `ALLOW_SLOW_ENGINE=1` permits posixaio (not spec-fair). |
 
 ## Cost & caveats
 
-- **Space + time.** At `DEFEAT_TIB=32` each tier lays out ~32 TiB per read
-  source on `/work` and rewrites ≥32 TiB during the write phases. Small tiers
-  (few nodes) lay out the same footprint with fewer nodes, so they are the slow
-  ones — the 6-node tier can take hours; the full chained sweep may run
-  overnight. This is the honest cost of cold+sustained measurement. `CLEANUP=1`
-  frees each task's data on exit, so peak `/work` use is ~one tier's footprint.
+- **Space + time.** At `DEFEAT_TIB=128` each tier lays out ~128 TiB per read
+  source on `/work` and rewrites ≥128 TiB during the write phases. Small tiers
+  lay out the same footprint with fewer nodes, so they are the slow ones — the
+  **6-node tier can exceed even the `TIER_TIME=16:00:00` default wall** and die with a
+  Slurm `TIMEOUT` (before `VERIFY_COLD` even runs). This is the honest cost of
+  cold+sustained measurement. `CLEANUP=1` frees each task's data on exit, so peak
+  `/work` use is ~one tier's footprint. To avoid the timeout, pick one:
+  ```bash
+  ./submit_spec_validate.sh --probe          # measure cache, then size DEFEAT_TIB to ~4x it (faster)
+  DEFEAT_TIB=<rec> ./submit_spec_validate.sh
+  # or keep 128 but give the small tiers the max wall (partition cap is 24h):
+  TIER_TIME=24:00:00 ./submit_spec_validate.sh
+  # or skip the slow small tiers if you only need the high end:
+  CLIENT_TIERS="24 42" ./submit_spec_validate.sh
+  ```
 - **Node mix.** Tiers 6/12/24 run on `b200-batch` only (homogeneous, cleanest
   scaling signal). The 42-node tier adds `rtx-batch` because the full pool is
   26 b200 + 16 rtx; that point mixes node types.
