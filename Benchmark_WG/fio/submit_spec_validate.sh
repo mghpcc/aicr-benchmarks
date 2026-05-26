@@ -32,7 +32,7 @@
 #   DEFEAT_TIB    cluster working set per direction in TiB (default 32). Drop
 #                 once the real CBOX cache size is known (use ~4× actual).
 #   RUNTIME       sustained-window seconds (default 900 = 15 min).
-#   TIER_TIME     Slurm --time per tier (default 08:00:00). Small tiers lay out
+#   TIER_TIME     Slurm --time per tier (default 16:00:00, cap 24:00:00). Small tiers lay out
 #                 the full DEFEAT footprint with few nodes, so they are the
 #                 slow ones — size the wall for the SMALLEST tier.
 #
@@ -44,19 +44,49 @@
 # exit, so peak /work usage is roughly one tier's footprint at a time.
 #
 # USAGE
-#   ./submit_spec_validate.sh
+#   ./submit_spec_validate.sh --probe        # measure the cache first (1 node)
+#   ./submit_spec_validate.sh                 # run the sweep (default DEFEAT_TIB)
+#   DEFEAT_TIB=<rec> ./submit_spec_validate.sh   # ... using the probe's number
 #   CLIENT_TIERS="12 42" DEFEAT_TIB=24 ./submit_spec_validate.sh
 # After it finishes:
 #   python spec_validate_summary.py results-peak/<BASE_TAG>
+#
+# FLAGS
+#   --probe   submit the single-node cache-size probe (CACHE_PROBE) on
+#             PROBE_PART, print a recommended DEFEAT_TIB, and EXIT (no sweep).
+#             Probe tunables: PROBE_PART (b200-batch), PROBE_TIME (02:00:00),
+#             CACHE_PROBE_MAX_TIB (32), CACHE_MULT (4).
 
 set -euo pipefail
 
+PROBE=0
+for arg in "$@"; do
+    case "$arg" in
+        --probe) PROBE=1 ;;
+        -h|--help)
+            grep -E '^# ' "$0" | sed 's/^# //'; exit 0 ;;
+        *) echo "unknown arg '$arg' (try --probe or --help)" >&2; exit 2 ;;
+    esac
+done
+
 CLIENT_TIERS="${CLIENT_TIERS:-6 12 24 42}"
 NUMJOBS="${NUMJOBS:-96}"
-DEFEAT_TIB="${DEFEAT_TIB:-32}"
+# Cache probe (--probe): single-node measurement on PROBE_PART. Prints a
+# recommended DEFEAT_TIB; it does NOT run the sweep.
+PROBE_PART="${PROBE_PART:-b200-batch}"
+PROBE_TIME="${PROBE_TIME:-02:00:00}"
+CACHE_PROBE_MAX_TIB="${CACHE_PROBE_MAX_TIB:-32}"
+CACHE_MULT="${CACHE_MULT:-4}"
+# Raised 32->128: the 32 TiB working set leaked cache at 24/42 nodes (read >
+# cold ceiling). Run `CACHE_PROBE=1 ./spec_validate_fio.sh` once to measure the
+# real cache, then set DEFEAT_TIB to ~4x it here.
+DEFEAT_TIB="${DEFEAT_TIB:-128}"
 RUNTIME="${RUNTIME:-900}"
 RAMP_TIME="${RAMP_TIME:-60}"
-TIER_TIME="${TIER_TIME:-08:00:00}"
+# 16 h default (partition cap is 24 h). At DEFEAT_TIB=128 the small tiers lay
+# out 128 TiB with few nodes and need >8 h; bump to 24:00:00 for c06 if needed,
+# or lower DEFEAT_TIB / skip small tiers to finish faster.
+TIER_TIME="${TIER_TIME:-16:00:00}"
 FIO_SCRIPT="${FIO_SCRIPT:-spec_validate_fio.sh}"
 
 BASE_TAG=specval_$(date +%s)
@@ -77,6 +107,28 @@ submit_array() {
                --array="$array" "$FIO_SCRIPT" \
         | awk '/Submitted batch job/ {print $NF}'
 }
+
+# Submit the single-node cache probe. Echoes the jobid.
+submit_probe() {
+    CACHE_PROBE=1 JOBS_PER_NODE="$NUMJOBS" TAG="${BASE_TAG}_probe" \
+    CACHE_PROBE_MAX_TIB="$CACHE_PROBE_MAX_TIB" CACHE_MULT="$CACHE_MULT" \
+        sbatch -p "$PROBE_PART" -J "specval_probe" \
+               -N1 --ntasks-per-node=1 --cpus-per-task="$NUMJOBS" \
+               --time="$PROBE_TIME" --gres=gpu:0 \
+               "$FIO_SCRIPT" \
+        | awk '/Submitted batch job/ {print $NF}'
+}
+
+if [[ "$PROBE" == "1" ]]; then
+    echo "--- cache probe on ${PROBE_PART} (1 node, max ${CACHE_PROBE_MAX_TIB} TiB, ${CACHE_MULT}x mult) ---"
+    pid=$(submit_probe)
+    echo "  probe jobid: ${pid}"
+    echo ""
+    echo "When it finishes, read the recommended DEFEAT_TIB from:"
+    echo "  output-peak/specval_probe_a${pid}_t*.out"
+    echo "then run the sweep with it:  DEFEAT_TIB=<rec> ./submit_spec_validate.sh"
+    exit 0
+fi
 
 for nc in $CLIENT_TIERS; do
     tasks=$(( nc / 2 ))            # 2 nodes per array task

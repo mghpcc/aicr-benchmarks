@@ -1,0 +1,52 @@
+; Peak sequential write bandwidth, steady-state, cache-hostile.
+;
+; bs=1M (matches NFS wsize), many files per job (nrfiles), each of size
+; SIZE_PER_JOB/nrfiles. time_based=1 runs each worker for RUNTIME seconds
+; (after a RAMP_TIME warm-up), looping over its file set so steady-state
+; throughput is measured rather than single-pass burst. end_fsync=1 makes
+; the result honest by waiting for server-side commit before stopping the
+; clock — without it, buffered NFS can ack before storage actually has the
+; data.
+;
+; The on-disk footprint per worker is still SIZE_PER_JOB (files get
+; rewritten in place under time_based), so cluster working set stays
+; numjobs × nodes × SIZE_PER_JOB — well above CBOX cache.
+;
+; Cache bypass:
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on written pages
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;                    CPUS_ALLOWED, NRFILES, JOBNAME, RUNTIME, RAMP_TIME
+
+[global]
+ioengine=pvsync2
+direct=1
+bs=1M
+rw=write
+size=26178848281
+nrfiles=24
+; sequential workload only needs one file open per worker at a time; cap
+; the FD count so nrfiles can be large (up to thousands) without blowing
+; through the per-process file-descriptor limit.
+openfiles=1
+iodepth=1
+numjobs=96
+group_reporting=1
+time_based=1
+runtime=900
+ramp_time=60
+directory=/work/mit/datasets/test/fio/specval_1779767723_c42/task_1/b0004/seq_write
+filename_format=fio.$jobname.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+end_fsync=1
+randrepeat=0
+thread=1
+cpus_allowed=0-95
+cpus_allowed_policy=split
+
+[seq_write]
+stonewall

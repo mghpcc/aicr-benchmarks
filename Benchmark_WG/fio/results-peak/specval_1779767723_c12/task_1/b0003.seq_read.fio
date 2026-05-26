@@ -1,0 +1,55 @@
+; Peak sequential read bandwidth, single-pass, cold-from-server.
+;
+; bs=1M matches NFS rsize. Many files per job (nrfiles), each of size
+; SIZE_PER_JOB/nrfiles, read once end-to-end (loops=1, no time_based).
+;
+; Cache strategy (server side is the one that matters here):
+;   - The wrapper drives WORKLOAD=all as
+;       seq_read_layout → seq_write → rand_write → seq_read → rand_read
+;     so by the time this job runs, several TB of unrelated writes have
+;     landed on the CBOX cluster after the seq_read source files were
+;     laid out, displacing them from CBOX server-side cache. Running this
+;     job standalone (WORKLOAD=seq_read) does NOT have that benefit; the
+;     implicit layout fio does in that case will warm cache with exactly
+;     what's about to be read. Use WORKLOAD=seq_read_layout + WORKLOAD=
+;     seq_read on separate sbatch invocations (with intervening writes)
+;     for an honest cold-read run.
+;
+; Client-side cache bypass (always on):
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on read pages
+;   loops=1         — single pass, no in-run cycling that would warm cache
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;                    CPUS_ALLOWED, NRFILES, JOBNAME
+
+[global]
+ioengine=pvsync2
+direct=1
+bs=1M
+rw=read
+size=91625968982
+nrfiles=85
+; sequential workload only needs one file open per worker at a time; cap
+; the FD count so nrfiles can be large (up to thousands) without blowing
+; through the per-process file-descriptor limit.
+openfiles=1
+iodepth=1
+numjobs=96
+group_reporting=1
+loops=1
+time_based=0
+directory=/work/mit/datasets/test/fio/specval_1779767723_c12/task_1/b0003/seq_read
+filename_format=fio.$jobname.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+randrepeat=0
+end_fsync=0
+thread=1
+cpus_allowed=0-95
+cpus_allowed_policy=split
+
+[seq_read]
+stonewall

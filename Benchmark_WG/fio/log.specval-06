@@ -1,0 +1,39 @@
+Vast spec VALIDATION — scaling sweep
+Base: results-peak/specval_1779767723_c06
+Tiers (client nodes): 6
+All numbers are CONSERVATIVE (honest wall-clock) aggregates, cold + sustained.
+
+=== seq_read  (GB/s, cold/sustained) ===
+   nodes  procs         GB/s     %Max  note
+       6      6        284.3    61.5%  
+  -> STORAGE-limited — plateaued at 62% of Max by 6 nodes. Product does not reach the quoted number on this path.
+
+=== seq_write  (GB/s, cold/sustained) ===
+   nodes  procs         GB/s     %Max  %Sustained  note
+       6      6         82.0    49.7%       93.7%  
+  -> STORAGE-limited — plateaued at 50% of Max by 6 nodes. Product does not reach the quoted number on this path.
+     (write Sustained spec 87.5 GB/s: 94% at 6 nodes)
+
+=== rand_read  (kIOPS, cold/sustained) ===
+   nodes  procs        kIOPS     %Max  note
+       6      6        570.8    20.6%  
+  -> STORAGE-limited — plateaued at 21% of Max by 6 nodes. Product does not reach the quoted number on this path.
+
+=== rand_write  (kIOPS, cold/sustained) ===
+   nodes  procs        kIOPS     %Max  note
+       6      6        294.8    35.7%  
+  -> STORAGE-limited — plateaued at 36% of Max by 6 nodes. Product does not reach the quoted number on this path.
+
+Reading this:
+- %Max compares to the vendor 'max' line; for writes %Sustained compares
+  to the sustained line (the honest steady-state target).
+- A read flagged CACHE? is NOT a valid cold number — its working set still
+  fits server cache. Raise DEFEAT_TIB until the flag clears, then re-read.
+- CLIENT-limited means add client nodes; STORAGE-limited means the product
+  itself tops out below spec on this access path. Both are real findings.
+- This is an aggregate-of-N-clients measurement. If the vendor quoted the
+  spec with a specific client fleet, match that fleet for an apples-to-apples
+  claim; otherwise report it explicitly as 'sustained by N client nodes'.
+
+=== CI GATE ===
+RESULT: PASS — no cold read exceeded its physical ceiling.

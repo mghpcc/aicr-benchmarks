@@ -4,6 +4,8 @@ Runs in this directory span a 2D sweep: **nodes ∈ {2, 4, 8, 12, 16}** × **cpu
 
 ## Benchmark A — READ (`raw` vs `dataloader`)
 
+![Slide 15 — multinode READ benchmark](slide_15_read.png)
+
 Single ~21 GB / 186 K-file workload, partitioned across ranks. Each rank runs `nproc = cpu_per_node` workers.
 
 ### GPU1 — GB/s
@@ -55,6 +57,8 @@ Single ~21 GB / 186 K-file workload, partitioned across ranks. Each rank runs `n
 | 16 | 128 | 74.28 | 33.25 | 2.23 |
 
 ## Benchmark B — WRITE (`raw` / `torch_save` / `dcp`)
+
+![Slide 16 — multinode WRITE benchmark](slide_16_write.png)
 
 Per-rank: `files_per_proc=8`, total files per rank = 256, sweep `file_size ∈ {100 KiB, 1 MiB, 10 MiB, 100 MiB}`.
 

@@ -4,6 +4,7 @@
 Usage:
     python spec_validate_summary.py results-peak/specval_<TIMESTAMP>
     python spec_validate_summary.py results-peak/specval_<TIMESTAMP>_c42  # one tier
+    python spec_validate_summary.py --strict results-peak/specval_<TIMESTAMP>
 
 Reads every tier directory matching "<base>_c<NN>" (NN = client-node count)
 produced by submit_spec_validate.sh, aggregates each tier with the proven
@@ -16,6 +17,12 @@ parse_run() from peak_aggregate_summary.py, and prints:
     (conservative read > Max ⇒ cache leaked through; not a real cold number),
   * a verdict per direction: MEETS spec / STORAGE-limited (plateaued below
     spec) / CLIENT-limited (still rising at the largest tier).
+
+CI GATE — exits non-zero so a build can fail on an untrustworthy run:
+  exit 2  a cold BW read exceeded its physical Max ceiling => cache leaked
+          (always fails, any tier);
+  exit 3  a random read exceeded its Max (premium-or-cache) AND --strict;
+  exit 0  clean.
 
 Conservative aggregate (honest wall-clock) is used throughout — never the
 optimistic cluster_sum — because this script exists to make a fair claim.
@@ -80,9 +87,13 @@ def discover_tiers(base):
 
 
 def main():
-    if len(sys.argv) != 2:
-        sys.exit("usage: spec_validate_summary.py results-peak/specval_<TIMESTAMP>[_cNN]")
-    base = sys.argv[1]
+    args = [a for a in sys.argv[1:] if a != "--strict"]
+    strict = "--strict" in sys.argv[1:]
+    if len(args) != 1:
+        sys.exit("usage: spec_validate_summary.py [--strict] "
+                 "results-peak/specval_<TIMESTAMP>[_cNN]\n"
+                 "  exit 2 = hard cache leak; 3 = --strict soft read-over-spec; 0 = clean")
+    base = args[0]
     tiers = discover_tiers(base)
     if not tiers:
         sys.exit(f"no tier dirs found for prefix '{base}' (expected '<base>_c<NN>')")
@@ -100,6 +111,12 @@ def main():
     print(f"Tiers (client nodes): {', '.join(str(n) for n, _ in tiers)}")
     print("All numbers are CONSERVATIVE (honest wall-clock) aggregates, cold + "
           "sustained.\n")
+
+    # CI gate trackers: a cold BW read above its Max ceiling is physically
+    # impossible from cold media -> hard cache leak (fails CI). A random-read
+    # IOPS above Max has no hard ceiling -> soft warning (fails only --strict).
+    hard_leaks = []   # (wl, nodes, val, spec_max)
+    soft_leaks = []   # (wl, nodes, val, spec_max)
 
     for wl in DIRECTIONS:
         metric, spec_max, spec_sus, unit = SPEC[wl]
@@ -122,11 +139,13 @@ def main():
             # impossible for cold data ⇒ cache leaked through (hard flag).
             if metric == "BW" and wl.endswith("read") and val > spec_max:
                 note = "CACHE? read > Max ceiling — working set may still fit cache"
+                hard_leaks.append((wl, nodes, val, spec_max))
             # Random read IOPS above spec has no hard ceiling (could be the
             # legitimate aggregate-of-clients premium, like rand_write), but it
             # can also be residual cache. Soft cross-check.
             elif metric == "IOPS" and wl.endswith("read") and val > spec_max:
                 note = "read > spec — verify it tracks the rand_write premium, else residual cache (raise DEFEAT_TIB)"
+                soft_leaks.append((wl, nodes, val, spec_max))
             if procs and nodes and procs < nodes:
                 note = (note + "; " if note else "") + f"only {procs} procs reported (<{nodes})"
             line += f"  {note}"
@@ -169,6 +188,32 @@ def main():
     print("- This is an aggregate-of-N-clients measurement. If the vendor quoted the")
     print("  spec with a specific client fleet, match that fleet for an apples-to-apples")
     print("  claim; otherwise report it explicitly as 'sustained by N client nodes'.")
+
+    # --- CI gate -----------------------------------------------------------
+    # Exit non-zero when the run is not trustworthy so CI can fail the build.
+    #   exit 2 = hard cache leak (cold BW read above its physical ceiling)
+    #   exit 3 = soft read-over-spec warning AND --strict was given
+    #   exit 0 = clean
+    print()
+    print("=== CI GATE ===")
+    if hard_leaks:
+        print("RESULT: FAIL — cache leak (cold read above the physical Max ceiling):")
+        for wl, nodes, val, smax in hard_leaks:
+            print(f"  {wl} @ {nodes} nodes: {val:.1f} > {smax:.1f} (Max). "
+                  f"Not a cold number — raise DEFEAT_TIB and re-run.")
+        sys.exit(2)
+    if soft_leaks:
+        tag = "FAIL" if strict else "WARN"
+        print(f"RESULT: {tag} — random read above spec (premium or residual cache):")
+        for wl, nodes, val, smax in soft_leaks:
+            print(f"  {wl} @ {nodes} nodes: {val:.1f} > {smax:.1f} (Max). "
+                  f"Confirm it tracks the rand_write premium, else raise DEFEAT_TIB.")
+        if strict:
+            sys.exit(3)
+        print("  (warning only; pass --strict to fail CI on this.)")
+        sys.exit(0)
+    print("RESULT: PASS — no cold read exceeded its physical ceiling.")
+    sys.exit(0)
 
 
 if __name__ == "__main__":

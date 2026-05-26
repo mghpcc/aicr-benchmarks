@@ -1,0 +1,49 @@
+; Peak random read IOPS.
+;
+; 4 KiB blocks, deep queue, many parallel jobs. Files must be pre-populated
+; (random read of a sparse/missing region returns zeros and won't exercise
+; the storage). The wrapper script handles pre-fill via --create-only on the
+; matching seq_write job.
+;
+; Cache bypass:
+;   direct=1        — bypass client page cache (O_DIRECT)
+;   invalidate=1    — invalidate any stale client cache before run
+;   fadvise_hint=1  — hint kernel POSIX_FADV_DONTNEED on read pages
+;
+; Working set is intentionally huge (SIZE_PER_JOB=16G × numjobs × nodes
+; exceeds aggregate CBOX cache by 10×+), so 4 KiB random ops hit cold blocks
+; even though time_based loops the workload.
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, RUNTIME, RAMP_TIME,
+;                    IODEPTH, IOENGINE, CPUS_ALLOWED, NRFILES, JOBNAME
+
+[global]
+ioengine=pvsync2
+direct=1
+bs=4k
+rw=randread
+size=45812984491
+nrfiles=1
+iodepth=1
+; batch submit/complete cuts io_uring syscall overhead when each op is only
+; 4 KiB. No-op on posixaio but doesn't hurt.
+iodepth_batch_submit=8
+iodepth_batch_complete=8
+numjobs=96
+group_reporting=1
+time_based=1
+runtime=900
+ramp_time=60
+directory=/work/mit/datasets/test/fio/specval_1779767723_c24/task_0/b0001/rand_read
+filename_format=fio.$jobname.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+randrepeat=0
+norandommap=1
+thread=1
+cpus_allowed=0-95
+cpus_allowed_policy=split
+
+[rand_read]
+stonewall
