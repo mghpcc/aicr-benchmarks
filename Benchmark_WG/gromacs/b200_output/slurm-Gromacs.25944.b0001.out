@@ -1,0 +1,50 @@
+Running on host: b0001
+                :-) GROMACS - gmx mdrun, 2024.6-plumed_2.9.3 (-:
+
+Executable:   /work/yale/support/apps/software/GROMACS/2024.6-foss-2024a-CUDA-12.8.0-PLUMED-2.9.3/bin/gmx
+Data prefix:  /work/yale/support/apps/software/GROMACS/2024.6-foss-2024a-CUDA-12.8.0-PLUMED-2.9.3
+Working dir:  /tmp/an492_yale/gromacs
+Command line:
+  gmx mdrun -s lignocellulose.tpr -deffnm /tmp/an492_yale/gromacs/gromacs_25944 -cpt 10000 -maxh 1.0 -nsteps 400000 -nb gpu -bonded gpu -ntmpi 8 -ntomp 16
+
+Reading file lignocellulose.tpr, VERSION 2020.1 (single precision)
+Note: file tpx version 119, software tpx version 134
+Overriding nsteps with value passed on the command line: 400000 steps, 800 ps
+Changing nstlist from 10 to 25, rlist from 1.262 to 1.407
+
+
+Update groups can not be used for this system because there are three or more consecutively coupled constraints
+
+On host b0001 8 GPUs selected for this run.
+Mapping of GPU IDs to the 8 GPU tasks in the 8 ranks on this node:
+  PP:0,PP:1,PP:2,PP:3,PP:4,PP:5,PP:6,PP:7
+PP tasks will do (non-perturbed) short-ranged and most bonded interactions on the GPU
+PP task will update and constrain coordinates on the CPU
+Using 8 MPI threads
+Using 16 OpenMP threads per tMPI thread
+
+starting mdrun ''
+400000 steps,    800.0 ps.
+
+Writing final coordinates.
+
+
+Dynamic load balancing report:
+ DLB was turned on during the run due to measured imbalance.
+ Average load imbalance: 2.7%.
+ The balanceable part of the MD step is 42%, load imbalance is computed from this.
+ Part of the total run time spent waiting due to load imbalance: 1.2%.
+ Steps where the load balancing was limited by -rdd, -rcon and/or -dds: X 0 %
+
+
+NOTE: 26 % of the run time was spent in domain decomposition,
+      11 % of the run time was spent in pair search,
+      you might want to increase nstlist (this has no effect on accuracy)
+
+               Core t (s)   Wall t (s)        (%)
+       Time:   137644.075     1075.345    12800.0
+                 (ns/day)    (hour/ns)
+Performance:       64.277        0.373
+
+GROMACS reminds you: "If There Is No Guitar In The House, You Know It's Owner Can Not Be Trusted" (Gogol Bordello)
+
