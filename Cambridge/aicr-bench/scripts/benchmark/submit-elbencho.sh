@@ -8,14 +8,14 @@ source "${BENCHMARK_DIR}/../verify/_common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/benchmark/submit-elbencho.sh --cluster <b200|rtxpro6000> --workload <peak-cluster|small-block|small-file|metadata> [--profile <smoke|small>] [--partition <name>] [--nodes <n>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <nodes>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--repeat-count <n>] [--repeat-stagger-seconds <n>] [--dependency <slurm-dependency>] [--command <elbencho command>] [--apply]
+  scripts/benchmark/submit-elbencho.sh --cluster <b200|rtxpro6000> --workload <peak-cluster|small-block|small-file|metadata> [--profile <smoke|small>] [--partition <name>] [--nodes <n>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <nodes>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--gres <gres>] [--repeat-count <n>] [--repeat-stagger-seconds <n>] [--dependency <slurm-dependency>] [--command <elbencho command>] [--apply]
 
 Default behavior is a dry run. When --command or ELBENCHO_CMD is omitted, the
 reviewed command template for --profile and --workload is used.
 With --from-node-report, selects passed nodes for the requested cluster from the latest node report.
 Repeats are submitted with afterok dependencies so storage jobs run serially.
 Elbencho submissions default to --mem=0 so Slurm grants the job the node memory
-cgroup.
+cgroup. GPU batch partitions also require the cluster GPU GRES by default.
 EOF
 }
 
@@ -23,6 +23,14 @@ default_partition_for_cluster() {
   case "$1" in
     b200) printf 'b200-batch\n' ;;
     rtxpro6000) printf 'rtx-batch\n' ;;
+    *) aicr_die "Unsupported cluster: $1" ;;
+  esac
+}
+
+default_gres_for_cluster() {
+  case "$1" in
+    b200) printf 'gpu:b200:8\n' ;;
+    rtxpro6000) printf 'gpu:rtx_pro_6000:8\n' ;;
     *) aicr_die "Unsupported cluster: $1" ;;
   esac
 }
@@ -69,6 +77,7 @@ date_arg="today"
 time_limit="01:00:00"
 cpus_per_task="8"
 memory_request="${ELBENCHO_MEM:-0}"
+gres_request="${ELBENCHO_GRES:-}"
 repeat_count="${ELBENCHO_REPEAT_COUNT:-1}"
 repeat_stagger_seconds="${ELBENCHO_REPEAT_STAGGER_SECONDS:-30}"
 external_dependency="${ELBENCHO_DEPENDENCY:-}"
@@ -119,6 +128,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --mem)
       memory_request="${2:-}"
+      shift 2
+      ;;
+    --gres)
+      gres_request="${2:-}"
       shift 2
       ;;
     --repeat-count)
@@ -189,6 +202,7 @@ if [[ "$from_node_report" -eq 1 ]]; then
 fi
 
 partition="${partition:-$(default_partition_for_cluster "$cluster")}"
+gres_request="${gres_request:-$(default_gres_for_cluster "$cluster")}"
 
 if [[ -z "$elbencho_cmd" ]]; then
   template_path="$(profile_command_path "$profile" "$workload")"
@@ -211,6 +225,7 @@ sbatch_base=(
   --cpus-per-task="$cpus_per_task"
   --exclusive
   --mem="$memory_request"
+  --gres="$gres_request"
   --time="$time_limit"
   --job-name="elbencho-${workload}-${profile}"
   --output="results/slurm/%x-%j.out"
@@ -231,6 +246,7 @@ if [[ "$apply" -eq 0 ]]; then
   echo "  Time limit  : ${time_limit}"
   echo "  CPUs/task   : ${cpus_per_task}"
   echo "  Memory      : ${memory_request}"
+  echo "  GRES        : ${gres_request}"
   echo "  Repeats     : ${repeat_count}"
   echo "  Stagger sec : ${repeat_stagger_seconds}"
   if [[ -n "$nodelist" ]]; then

@@ -7,11 +7,12 @@ Submit serialized Elbencho storage benchmark jobs.
 ## Usage
 
 ```text
-scripts/benchmark/submit-elbencho.sh --cluster <b200|rtxpro6000> --workload <peak-cluster|small-block|small-file|metadata> [--profile <smoke|small>] [--partition <name>] [--nodes <n>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <nodes>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--repeat-count <n>] [--repeat-stagger-seconds <n>] [--dependency <slurm-dependency>] [--command <elbencho command>] [--apply]
+scripts/benchmark/submit-elbencho.sh --cluster <b200|rtxpro6000> --workload <peak-cluster|small-block|small-file|metadata> [--profile <smoke|small>] [--partition <name>] [--nodes <n>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <nodes>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--gres <gres>] [--repeat-count <n>] [--repeat-stagger-seconds <n>] [--dependency <slurm-dependency>] [--command <elbencho command>] [--apply]
 ```
 
 Default behavior is a dry run. Repeats are submitted as a Slurm dependency
-chain. The Slurm memory request defaults to `--mem=0`.
+chain. The Slurm memory request defaults to `--mem=0`, and GPU partitions
+default to the cluster full-node GPU GRES.
 
 The Make entrypoint is:
 
@@ -32,6 +33,7 @@ make benchmark-elbencho CLUSTER=<b200|rtxpro6000> WORKLOAD=<peak-cluster|small-b
 - `--time <HH:MM:SS>`: Slurm time limit.
 - `--cpus-per-task <n>`: CPU allocation per Slurm task.
 - `--mem <size>`: Slurm memory request. Default: `0`.
+- `--gres <gres>`: Slurm GPU GRES. Defaults to the cluster full-node GPU GRES.
 - `--repeat-count <n>`: Submit independent repeated samples.
 - `--repeat-stagger-seconds <n>`: Seconds between repeated submissions.
 - `--dependency <value>`: External Slurm dependency for the first submitted job.
@@ -51,7 +53,8 @@ scripts/benchmark/submit-elbencho.sh \
   --nodes 1 \
   --nodelist b0002 \
   --cpus-per-task 128 \
-  --mem 0
+  --mem 0 \
+  --gres gpu:b200:8
 ```
 
 Preview a serialized repeat set:
@@ -64,6 +67,7 @@ scripts/benchmark/submit-elbencho.sh \
   --nodes 1 \
   --nodelist b0002 \
   --mem 0 \
+  --gres gpu:b200:8 \
   --repeat-count 5
 ```
 
