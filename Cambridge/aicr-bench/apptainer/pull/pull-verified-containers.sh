@@ -5,12 +5,13 @@ source "$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/scripts/lib/aicr-pat
 
 usage() {
   cat >&2 <<EOF
-Usage: $0 [--refresh] [--image-dir <path>] [--include-elbencho]
+Usage: $0 [--refresh] [--image-dir <path>] [--include-elbencho] [--only-elbencho]
 
 Options:
   --refresh          Re-pull and replace existing verified SIF images.
   --image-dir        Override AICR_APPTAINER_IMAGE_DIR for explicit runtime rebuilds.
   --include-elbencho Pull the optional elbencho image.
+  --only-elbencho    Pull/check only the optional elbencho image.
 
 Note:
   Routine AICR HPC setup submits this helper through Slurm:
@@ -23,6 +24,7 @@ EOF
 refresh=0
 image_dir_override=""
 include_elbencho="${AICR_INSTALL_ELBENCHO_CONTAINER:-0}"
+only_elbencho=0
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -36,6 +38,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --include-elbencho)
       include_elbencho=1
+      shift
+      ;;
+    --only-elbencho)
+      include_elbencho=1
+      only_elbencho=1
       shift
       ;;
     -h|--help)
@@ -115,8 +122,12 @@ PYTORCH_PROBE_URI="${PYTORCH_PROBE_URI:-docker://nvcr.io/nvidia/pytorch:26.03-py
 HPC_BENCH_URI="${HPC_BENCH_URI:-docker://nvcr.io/nvidia/hpc-benchmarks:26.02}"
 ELBENCHO_URI="${ELBENCHO_URI:-docker://breuner/elbencho:${AICR_ELBENCHO_TAG}}"
 
-pull_image "${PYTORCH_PRIMARY_URI}" "${AICR_APPTAINER_IMAGE_DIR}/pytorch-25.10-py3.sif"
-pull_image "${HPC_BENCH_URI}" "${AICR_APPTAINER_IMAGE_DIR}/hpc-benchmarks-26.02.sif"
+if [[ "$only_elbencho" != "1" ]]; then
+  pull_image "${PYTORCH_PRIMARY_URI}" "${AICR_APPTAINER_IMAGE_DIR}/pytorch-25.10-py3.sif"
+  pull_image "${HPC_BENCH_URI}" "${AICR_APPTAINER_IMAGE_DIR}/hpc-benchmarks-26.02.sif"
+else
+  echo "Only Elbencho requested -> skipping default PyTorch and HPC Benchmarks image checks"
+fi
 
 if [[ "$include_elbencho" == "1" ]]; then
   pull_image "${ELBENCHO_URI}" "${AICR_ELBENCHO_IMAGE}"
@@ -125,7 +136,10 @@ else
   echo "AICR_INSTALL_ELBENCHO_CONTAINER=0 -> skipping optional elbencho image pull"
 fi
 
-if [[ "${ENABLE_PYTORCH_PROBE:-0}" == "1" ]]; then
+if [[ "$only_elbencho" == "1" ]]; then
+  echo
+  echo "Only Elbencho requested -> skipping optional PyTorch probe image pull"
+elif [[ "${ENABLE_PYTORCH_PROBE:-0}" == "1" ]]; then
   echo
   echo "ENABLE_PYTORCH_PROBE=1 -> pulling optional PyTorch probe image"
   pull_image "${PYTORCH_PROBE_URI}" "${AICR_APPTAINER_IMAGE_DIR}/pytorch-26.03-py3.sif"
@@ -136,7 +150,9 @@ fi
 
 echo
 echo "Pulled images:"
-ls -lh   "${AICR_APPTAINER_IMAGE_DIR}/pytorch-25.10-py3.sif"   "${AICR_APPTAINER_IMAGE_DIR}/hpc-benchmarks-26.02.sif"
+if [[ "$only_elbencho" != "1" ]]; then
+  ls -lh   "${AICR_APPTAINER_IMAGE_DIR}/pytorch-25.10-py3.sif"   "${AICR_APPTAINER_IMAGE_DIR}/hpc-benchmarks-26.02.sif"
+fi
 if [[ "$include_elbencho" == "1" ]]; then
   ls -lh "${AICR_ELBENCHO_IMAGE}"
 fi

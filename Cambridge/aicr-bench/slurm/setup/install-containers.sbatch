@@ -20,6 +20,9 @@ fi
 if [[ "${AICR_INSTALL_ELBENCHO_CONTAINER:-0}" == "1" ]]; then
   args+=(--include-elbencho)
 fi
+if [[ "${AICR_INSTALL_ONLY_ELBENCHO_CONTAINER:-0}" == "1" ]]; then
+  args+=(--only-elbencho)
+fi
 
 echo "AICR container install job"
 echo "host=$(hostname -s 2>/dev/null || hostname)"

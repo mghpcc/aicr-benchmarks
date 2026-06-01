@@ -8,12 +8,14 @@ source "${DIR}/../lib/aicr-paths.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/setup/submit-container-install.sh [--apply] [--refresh] [--image-dir <path>] [--include-elbencho] [--partition <name>] [--nodelist <node[,node...]>] [--time <HH:MM:SS>] [--mem <size>] [--no-wait]
+  scripts/setup/submit-container-install.sh [--apply] [--refresh] [--image-dir <path>] [--include-elbencho] [--only-elbencho] [--partition <name>] [--nodelist <node[,node...]>] [--time <HH:MM:SS>] [--mem <size>] [--no-wait]
 
 Default behavior is a dry run. Pass --apply to submit the Apptainer image
 install as a Slurm job. The default partition is cpu so large OCI-to-SIF
 conversions do not run on the login node.
 Submissions default to --mem=0 so Slurm grants the job the node memory cgroup.
+Use --only-elbencho to add or refresh only the optional Elbencho image without
+rechecking the default PyTorch and HPC Benchmarks images.
 EOF
 }
 
@@ -21,6 +23,7 @@ apply=0
 refresh=0
 image_dir_override=""
 include_elbencho="${AICR_INSTALL_ELBENCHO_CONTAINER:-0}"
+only_elbencho="${AICR_INSTALL_ONLY_ELBENCHO_CONTAINER:-0}"
 partition="${AICR_CONTAINER_INSTALL_PARTITION:-cpu}"
 nodelist="${AICR_CONTAINER_INSTALL_NODELIST:-}"
 time_limit="${AICR_CONTAINER_INSTALL_TIME:-04:00:00}"
@@ -43,6 +46,11 @@ while [[ $# -gt 0 ]]; do
       ;;
     --include-elbencho)
       include_elbencho=1
+      shift
+      ;;
+    --only-elbencho)
+      include_elbencho=1
+      only_elbencho=1
       shift
       ;;
     --partition)
@@ -91,7 +99,7 @@ sbatch_path="${AICR_BMARK_DIR}/slurm/setup/install-containers.sbatch"
 
 mkdir -p "${AICR_BMARK_DIR}/results/setup"
 
-export_arg="ALL,AICR_CONTAINER_REFRESH=${refresh},AICR_INSTALL_ELBENCHO_CONTAINER=${include_elbencho}"
+export_arg="ALL,AICR_CONTAINER_REFRESH=${refresh},AICR_INSTALL_ELBENCHO_CONTAINER=${include_elbencho},AICR_INSTALL_ONLY_ELBENCHO_CONTAINER=${only_elbencho}"
 if [[ -n "$image_dir_override" ]]; then
   export_arg="${export_arg},AICR_CONTAINER_IMAGE_DIR_OVERRIDE=${image_dir_override}"
 fi
@@ -121,6 +129,7 @@ if [[ -n "$nodelist" ]]; then
 fi
 echo "Refresh   : ${refresh}"
 echo "Elbencho  : ${include_elbencho}"
+echo "Only Elb. : ${only_elbencho}"
 if [[ -n "$image_dir_override" ]]; then
   echo "Image dir : ${image_dir_override}"
 else

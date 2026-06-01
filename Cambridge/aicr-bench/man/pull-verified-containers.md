@@ -26,7 +26,7 @@ apptainer/pull/pull-verified-containers.sh [--refresh] [--image-dir <path>]
 Routine AICR HPC usage goes through Slurm:
 
 ```bash
-make install-containers CONTAINER_NODELIST=a0002
+make install-containers CONTAINER_NODELIST=w0002
 ```
 
 Direct local debugging:
