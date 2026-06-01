@@ -11,6 +11,19 @@ printing or submitting the Slurm job.
 
 Allocation-side runner:
 
+<!-- aicr-test
+id: hpl-mxp-runner-help
+suite: hpl-mxp
+kind: local
+safety: help
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "--matrix-size"
+    - "--cpu-affinity"
+    - "--ucx-affinity"
+-->
 ```bash
 scripts/benchmark/run-hpl-mxp.sh --help
 ```
@@ -31,6 +44,25 @@ expect:
 -->
 ```bash
 scripts/benchmark/submit-hpl-mxp.sh --help
+```
+
+Report renderer:
+
+<!-- aicr-test
+id: hpl-mxp-render-help
+suite: hpl-mxp
+kind: local
+safety: help
+cwd: install-root
+expect:
+  mode: contains
+  patterns:
+    - "--repeat-aggregation"
+    - "--job-id-min"
+    - "--job-id-list"
+-->
+```bash
+bash scripts/lib/run-repo-python.sh scripts/report/render-hpl-mxp-report.py --help
 ```
 
 ## Presets

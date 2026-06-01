@@ -10,14 +10,14 @@ HPL-MxP rows. Public rows use one MPI rank per GPU and the reviewed
 ## Reading Path
 
 Start with the aligned weak study for the broadest B200 and RTX PRO 6000
-precision comparison. Use the FP16 weak-scaling page when you need the
-five-sample Olympic aggregate at the NVIDIA HPC Benchmarks container default
-`N` values.
+public-result comparison. Use the FP16 weak-scaling page only as supporting
+historical context until its public artifact bundle, provenance JSON, checksum,
+and retrieve/verify commands are published.
 
 | Study | Platforms | Precision Modes | What It Tests | Evidence Type | Results |
 | --- | --- | --- | --- | --- | --- |
 | [HPL-MxP aligned weak study](studies/precision-weak-study-2026-05-24.md) | B200 and RTX PRO 6000 | B200 `FP16`, `FP8`, `FP4`; RTX `FP16`, `FP8` | Weak-scaling precision comparison on the aligned ladder. | Public result | [Results](studies/precision-weak-study-2026-05-24.md#b200-results) |
-| [HPL-MxP FP16 weak scaling](studies/fp16-weak-study-2026-05-16.md) | B200 and RTX PRO 6000 | `FP16` | Weak scaling at the NVIDIA HPC Benchmarks container default `N` values. | FP16 baseline | [Results](studies/fp16-weak-study-2026-05-16.md#results) |
+| [HPL-MxP FP16 weak scaling](studies/fp16-weak-study-2026-05-16.md) | B200 and RTX PRO 6000 | `FP16` | Weak scaling at the NVIDIA HPC Benchmarks container default `N` values. | Appendix/supporting context; public bundle pending | [Context](studies/fp16-weak-study-2026-05-16.md#results) |
 
 ## Result Summary
 

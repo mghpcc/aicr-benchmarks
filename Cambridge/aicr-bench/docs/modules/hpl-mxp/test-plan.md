@@ -14,18 +14,18 @@ node-scoped, and starts with smoke rows.
 - `make docs-test-plan-hpl-mxp` lists selected HPL-MxP `aicr-test` blocks
   without running them.
 - `make docs-test-hpl-mxp` runs local help and dry-run examples.
-- Command examples with `aicr-test` metadata cover submitter help and smoke
-  dry-run paths.
-- Report rendering is covered by the HPL-MxP renderer and benchmark registry
-  validation, but full render replay still requires generated or restored
-  result trees.
+- Command examples with `aicr-test` metadata cover runner help, submitter help,
+  renderer help, and smoke dry-run paths.
+- Report rendering has a local help doctest. Full render replay still requires
+  generated or restored result trees.
 
 ## Command Coverage
 
 | Source | Command | Replay level | Acceptance |
 | --- | --- | --- | --- |
+| `scripts.md` | [run-hpl-mxp.sh](../../../man/run-hpl-mxp.md) `--help` | Local doctest | Help exposes matrix, process-grid, MPI, UCX, and HPL-MxP controls. |
 | `scripts.md` | [submit-hpl-mxp.sh](../../../man/submit-hpl-mxp.md) `--help` | Local doctest | Help exposes presets and affinity controls. |
-| `scripts.md` | [run-hpl-mxp.sh](../../../man/run-hpl-mxp.md) `--help` | Local replay | Help exposes matrix, process-grid, MPI, UCX, and HPL-MxP controls. |
+| `scripts.md` | [render-hpl-mxp-report.py](../../../man/render-hpl-mxp-report.md) `--help` | Local doctest | Help exposes repeat aggregation and job-id filters. |
 | `make.md` | `make benchmark-hpl-mxp ... HPL_MXP_PRESET=smoke` | Local dry-run doctest | Prints resolved smoke shape, current partition, explicit node list, and `sbatch` command. |
 | `make.md` | `make benchmark-hpl-mxp ... HPL_MXP_MEM=0` | Local dry-run doctest | Confirms full-node Slurm memory request is present in the dry-run command. |
 | `examples.md` | smoke dry-run example | Local dry-run doctest | Prints the same dry-run contract from the examples page. |

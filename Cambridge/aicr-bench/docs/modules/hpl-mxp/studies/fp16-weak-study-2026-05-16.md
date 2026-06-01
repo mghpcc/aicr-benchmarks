@@ -1,6 +1,13 @@
 # HPL-MxP FP16 Weak Scaling
 
-<!-- aicr-study-status: published -->
+<!-- aicr-study-status: appendix -->
+
+Appendix - Supporting Reference, Not A Standalone Study.
+
+This page preserves the May 16 FP16 aggregate summary. Public bundle status is
+pending, so treat the table as historical context, not standalone public-result
+evidence. Promote it only after the OSN bundle, provenance JSON, checksum, and
+retrieve/verify commands are published.
 
 Purpose: show FP16 weak scaling on RTX PRO 6000 and B200 using the HPL-MxP
 `N` values from the NVIDIA HPC Benchmarks container defaults and the reviewed
@@ -92,12 +99,14 @@ to saturate the platforms as well as the larger rows. B200 is reported through
 
 ## Artifact Status
 
-The public page is self-contained for the aggregate result table. Public
-artifact bundle status is pending. Rendered report references are:
+This page is not standalone public-result evidence yet. Public bundle status is
+pending. Do not use the aggregate table for publication claims until the public
+bundle, provenance JSON, checksum, and retrieve/verify commands are added.
+
+Rendered report references are retained as operator context:
 
 - `results/reports/2026-05-16/hpl-mxp/hpl-mxp-b200-2026-05-16.md`
 - `results/reports/2026-05-16/hpl-mxp/hpl-mxp-rtxpro6000-2026-05-16.md`
 
-Raw runtime trees, Slurm logs, and uncurated provenance files are not committed
-to Git. Add public artifact bundle links, checksums, and retrieval instructions
-here only after the bundle is curated and published.
+Runtime trees, Slurm logs, and uncurated provenance files are not committed to
+Git.
