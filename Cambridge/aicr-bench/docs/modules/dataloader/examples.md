@@ -9,11 +9,12 @@ This example starts from the script primitive directly. Keep one `exec` line act
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-dataloader-primitive
-#SBATCH --partition=<GPU1-or-GPU2>
+#SBATCH --partition=<rtx-batch-or-b200-batch>
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=0
 #SBATCH --gres=<gpu-type-and-count>
 #SBATCH --time=01:00:00
 #SBATCH --output=%x-%j.out
@@ -22,8 +23,8 @@ set -euo pipefail
 
 # Replace the partition and GRES placeholders before submitting.
 # AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=GPU1 and #SBATCH --gres=gpu:rtxpro6000:8
-#   B200: #SBATCH --partition=GPU2 and #SBATCH --gres=gpu:b200:8
+#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtx_pro_6000:8
+#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -42,7 +43,7 @@ exec ./scripts/benchmark/run-dataloader.sh --profile large --nodes 1 --mode repl
 Replace the scheduler placeholders, then submit the customized workload. If the template was copied outside the install tree, pass the install root explicitly:
 
 ```bash
-sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-dataloader.sbatch
+sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-dataloader.sbatch
 ```
 
 ## Slurm Sbatch Scripts
@@ -58,6 +59,21 @@ defaults already spelled out.
 - [rtxpro6000-dataloader-1n-1g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-1n-1g.sbatch)
 - [rtxpro6000-dataloader-1n-8g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-1n-8g.sbatch)
 - [rtxpro6000-dataloader-mn-8g.sbatch](../../../slurm/benchmark/rtxpro6000-dataloader-mn-8g.sbatch)
+
+### Slurm Wrapper Syntax
+
+The module-local primitive is shell-parseable without a Slurm allocation.
+
+<!-- aicr-test
+id: dataloader-slurm-wrapper-syntax
+suite: dataloader
+kind: local
+safety: inspect
+cwd: install-root
+-->
+```bash
+bash -n docs/modules/dataloader/slurm-dataloader.sbatch
+```
 
 ## Using the Make Interface
 
@@ -134,6 +150,29 @@ Artifacts produced after `APPLY=1`:
 - Parsed scale rows for the rendered report.
 - Reviewed scale evidence lives in [DataLoader studies](studies.md).
 
+## Render Or Replay Reports
+
+Use the render target after collection to rebuild the DataLoader report from
+existing raw and parsed evidence. This is a replay step; it does not submit new
+Slurm jobs.
+
+```bash
+make render-dataloader CLUSTER=b200 DATE=2026-05-16 DATALOADER_REPEAT_AGGREGATION=olympic
+```
+
+For the prepared-input lab report shape, use the dedicated input-lab renderer:
+
+```bash
+make render-dataloader-input-lab CLUSTER=b200 DATE=2026-05-16
+```
+
+Rendered reports are generated under `results/reports/<date>/dataloader/`.
+Published, curated study pages and artifact bundles are linked from
+[DataLoader studies](studies.md).
+Input-path terminology and derived dataset preparation are summarized in
+[Input Pipeline Reference](input-pipeline-reference.md) and
+[Derived ImageNet Datasets](derived-datasets.md).
+
 ### One-node Optimization Validation
 
 Use a cheap single-GPU batch sweep to find the plateau region first. Then use
@@ -199,12 +238,12 @@ expect:
     - "dropped_samples_per_second=100.00/140.00"
 -->
 ```bash
-python3 tests/scripts/check-dataloader-olympic-fixture.py
+AICR_ALLOW_SYSTEM_PYTHON=0 bash scripts/lib/run-repo-python.sh tests/scripts/check-dataloader-olympic-fixture.py
 ```
 
-The same fixture also checks the rendered Markdown and interactive HTML report
-shape. This proves the renderer keeps the expected sections and labels without
-using live benchmark results.
+The same fixture also checks the rendered Markdown report shape. This proves the
+renderer keeps the expected sections and labels without using live benchmark
+results.
 
 <!-- aicr-test
 id: dataloader-synthetic-report-shape-fixture
@@ -217,10 +256,9 @@ expect:
   patterns:
     - "fixture=dataloader-olympic-repeat-known-answer"
     - "markdown_shape=passed"
-    - "interactive_html_shape=passed"
 -->
 ```bash
-python3 tests/scripts/check-dataloader-report-shape-fixture.py
+AICR_ALLOW_SYSTEM_PYTHON=0 bash scripts/lib/run-repo-python.sh tests/scripts/check-dataloader-report-shape-fixture.py
 ```
 
 Artifacts produced after applied collection:

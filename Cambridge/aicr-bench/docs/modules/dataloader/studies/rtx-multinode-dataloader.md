@@ -3,8 +3,8 @@
 <!-- aicr-study-status: published -->
 
 
-Purpose: report the RTX distributed-sharded DataLoader two-node and four-node
-parameter-selection study that follows RTX single-GPU and one-node validation.
+Purpose: report RTX distributed-sharded DataLoader parameter selection on two
+and four RTX Pro 6000 nodes.
 
 It reports the RTX multi-node DataLoader campaign. The
 first pass established the `512/640/768`, `num_workers=16`,
@@ -95,7 +95,7 @@ region remains around `batch_size=640`, while the four-node rows favor
 
 Four-node throughput scales strongly, but every tested four-node configuration
 is above the `5%` retained rank-imbalance threshold. That makes this a useful
-parameter-selection result, but not yet a final DDP handoff setting.
+parameter-selection result, but not a final training configuration.
 
 ## First-Stage Aggregated Results
 
@@ -202,10 +202,8 @@ imbalance, and repeat stability. That selection feeds the
 
 ## Figures
 
-The durable GitHub record for this study is static matplotlib figures plus the
-tables above. The figures below are rendered from the aggregate rows
-on this page so repeated settings appear consistently across the tables and
-heatmaps. Heatmaps use batch size from small at the bottom to large at the top.
+The figures below summarize the same aggregate rows as the tables above, so
+repeated settings appear consistently across the tables and heatmaps.
 
 First-stage figures:
 

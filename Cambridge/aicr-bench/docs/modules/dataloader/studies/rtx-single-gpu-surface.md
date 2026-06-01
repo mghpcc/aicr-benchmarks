@@ -46,10 +46,11 @@ scripts/benchmark/sweep-dataloader.sh \
 
 ## Result Summary
 
-Single-GPU runs rank candidate settings by `samples/s`; rank imbalance is not
-measured with one rank. This surface records where RTX throughput plateaus
-across batch size, worker count, and prefetch factor before one-node 8-GPU
-validation.
+Single-GPU runs rank candidate settings by `samples/s`. Rank imbalance is
+undefined with one rank, and is reintroduced on the one-node replicated page
+where eight ranks share the node. This surface records where RTX throughput
+plateaus across batch size, worker count, and prefetch factor before one-node
+8-GPU validation.
 
 ## Figures
 
@@ -62,7 +63,7 @@ The first-pass RTX surface favored `num_workers=24` on a single GPU. The
 highest-throughput cell was batch `640`, workers `24`, prefetch `4` at about
 `6.6k samples/s`; several `384`, `512`, `768`, and `1024` cells with
 `24` workers were close enough to carry a small candidate set into one-node
-8-GPU validation. The one-node run checks whether the single-rank gain survives
+8-GPU validation. The one-node run checks whether the single-rank gain remains
 when eight ranks share the node.
 
 ## Artifact Bundle

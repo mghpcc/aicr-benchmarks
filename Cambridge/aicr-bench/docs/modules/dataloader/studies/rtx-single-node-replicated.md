@@ -3,7 +3,7 @@
 <!-- aicr-study-status: published -->
 
 
-Purpose: report the RTX one-node replicated DataLoader worker scan that selects the first scale-facing input-pipeline setting.
+Purpose: report the RTX one-node replicated DataLoader worker scan that selects the first multi-node candidate input-pipeline setting.
 
 This study follows the [RTX single-GPU surface](rtx-single-gpu-surface.md).
 The single-GPU run chose candidate regions. This one-node run asks which worker
@@ -85,7 +85,7 @@ scripts/benchmark/sweep-dataloader.sh \
 ## Result Summary
 
 The RTX one-node result has two layers. The worker scan below shows that
-`num_workers=16` is the defensible scale-facing worker count: workers below
+`num_workers=16` is the defensible multi-node worker count: workers below
 `16` are more balanced but leave too much throughput on the table, while
 workers above `16` sometimes match throughput with worse retained rank
 imbalance. The appended batch/prefetch refinement then keeps
@@ -169,9 +169,7 @@ For the first RTX multi-node pass, carry forward `batch_size=768`,
 
 ## Figures
 
-The heatmaps use batch size from small at the bottom to large at the top. The
-scatter plots show throughput against retained rank imbalance for the candidate
-rows.
+The scatter plots show throughput against retained rank imbalance for the candidate rows.
 
 Worker scan figures:
 

@@ -4,16 +4,18 @@
 
 
 Purpose: report the B200 distributed-sharded DataLoader two-node and four-node
-parameter-selection study that follows B200 single-GPU and one-node validation.
+parameter-selection study.
 
-This study uses the same reporting pattern as the RTX multi-node DataLoader
-study. The first pass tested the `512/640/768`, `num_workers=16`,
-`prefetch_factor=4/6/8` scale surface. The follow-up pass added `batch_size=384`
-and `num_workers=12` comparisons.
+## Study Question
+
+This study asks which B200 distributed-sharded DataLoader settings provide the
+best two-node and four-node balance between throughput and rank imbalance. It
+compares batch size, worker count, and prefetch factor before the larger
+[B200 2/4/8/16-node DataLoader scale study](b200-multinode-scale-probe.md).
 
 ## Command Run
 
-First stage:
+Initial matrix:
 
 ```bash
 scripts/benchmark/sweep-dataloader.sh \
@@ -34,7 +36,7 @@ scripts/benchmark/sweep-dataloader.sh \
   -- --warmup-batches 100 --measured-batches 500 --byte-estimate-sample-count 0
 ```
 
-Follow-up balance pass:
+Expanded matrix:
 
 ```bash
 scripts/benchmark/sweep-dataloader.sh \
@@ -57,7 +59,7 @@ scripts/benchmark/sweep-dataloader.sh \
 
 ## Result Summary
 
-The intended campaign completed as filtered runtime evidence:
+All rows used in this comparison completed:
 
 | Field | Value |
 | --- | --- |
@@ -65,33 +67,32 @@ The intended campaign completed as filtered runtime evidence:
 | Mode | `distributed-sharded` |
 | Two-node group | `b0002,b0003` |
 | Four-node group | `b0002,b0003,b0004,b0005` |
-| First-stage batch sizes | `512,640,768` |
-| First-stage num workers | `16` |
-| First-stage prefetch factors | `4,6,8` |
-| Follow-up batch sizes | `384,512,640` |
-| Follow-up num workers | `12,16` |
-| Follow-up prefetch factors | `4,6` |
+| Initial batch sizes | `512,640,768` |
+| Initial num workers | `16` |
+| Initial prefetch factors | `4,6,8` |
+| Expanded batch sizes | `384,512,640` |
+| Expanded num workers | `12,16` |
+| Expanded prefetch factors | `4,6` |
 | Pin memory / persistent workers | `1` / `1` |
 | CPUs per task | `16` |
 | Warmup / measured batches | `100` / `500` |
 | Repeats | `5` |
 | Aggregation | Olympic average, dropping lowest and highest throughput from five repeats |
-| Filtered summaries | `170/170` matched intended job IDs, `170/170` passed |
+| Summaries | `170/170` matched intended job IDs, `170/170` passed |
 
-One submitted follow-up job produced no parsed output. The rendered evidence set
-excludes that zero-output submission and includes top-off job `18833` for the
-same matrix point, so every reported row has five samples.
+Every reported row has five parsed samples. Job `18833` supplies the fifth
+sample for one expanded-matrix point.
 
-## Campaign Stages
+## Run Matrices
 
-| Stage | Purpose | Result |
+| Matrix | Scope | Result |
 | --- | --- | --- |
-| First stage | Test `512/640/768`, `16` workers, `prefetch_factor=4/6/8` on 2 and 4 B200 nodes. | 90/90 summaries passed. Two-node rows were balanced; four-node rows favored `512/16/{6,8}` for balanced throughput. |
-| Follow-up balance pass | Add `384` batch size and `12` worker comparisons while keeping the strongest `16` worker rows visible. | Lower-worker rows reduced throughput substantially. The best four-node balanced rows remained at `num_workers=16`. |
+| Initial matrix | `512/640/768`, `16` workers, `prefetch_factor=4/6/8` on 2 and 4 B200 nodes. | 90/90 summaries passed. Two-node rows were balanced; four-node rows favored `512/16/{6,8}` for balanced throughput. |
+| Expanded matrix | Added `384` batch size and `12` worker comparisons while keeping the strongest `16` worker rows visible. | Lower-worker rows reduced throughput substantially. The best four-node balanced rows remained at `num_workers=16`. |
 
 ## Aggregated Results
 
-Repeated configuration rows use Olympic aggregation. `Jitter` is the retained
+Repeated configuration rows use Olympic aggregation. `Jitter` is the included
 throughput range after dropping the lowest and highest throughput samples.
 `Samples/s/node` normalizes the headline throughput by node count so the
 two-node and four-node rows can be compared directly.
@@ -140,59 +141,57 @@ four-node rows without letting total node count hide per-node throughput.
 
 | View | Nodes | Batch | Workers | Prefetch | Samples/s | Samples/s/node | Rank imbalance % | Note |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Best two-node retained row | 2 | 640 | 16 | 4 | 90,823 | 45,412 | 4.36 | Highest balanced two-node row in the rendered set. |
-| Best two-node balance row | 2 | 640 | 16 | 8 | 90,036 | 45,018 | 3.54 | Slightly lower throughput with the lowest retained imbalance among `16` worker two-node rows. |
-| Best four-node retained row | 4 | 512 | 16 | 6 | 177,871 | 44,468 | 4.55 | Highest four-node row below the retained imbalance threshold. |
-| Best four-node balance row | 4 | 512 | 16 | 8 | 177,281 | 44,320 | 4.18 | Nearly the same throughput as `512/16/6`, with lower retained imbalance. |
+| Best two-node row | 2 | 640 | 16 | 4 | 90,823 | 45,412 | 4.36 | Highest balanced two-node row in the reported set. |
+| Best two-node balance row | 2 | 640 | 16 | 8 | 90,036 | 45,018 | 3.54 | Slightly lower throughput with the lowest imbalance among `16` worker two-node rows. |
+| Best four-node row | 4 | 512 | 16 | 6 | 177,871 | 44,468 | 4.55 | Highest four-node row below the imbalance threshold. |
+| Best four-node balance row | 4 | 512 | 16 | 8 | 177,281 | 44,320 | 4.18 | Nearly the same throughput as `512/16/6`, with lower imbalance. |
 | Larger-batch comparison row | 4 | 640 | 16 | 4 | 171,323 | 42,831 | 4.56 | Balanced, but lower throughput than `512/16/{6,8}`. |
 | Lower-worker comparison row | 4 | 512 | 12 | 6 | 152,908 | 38,227 | 4.37 | Balanced, but much slower than `16` workers. |
 
 ## Interpretation
 
 The B200 two-node and four-node rows are cleaner than the RTX rows at the same
-stage. The best two-node row is `640/16/4`: `90,823 samples/s`, `45,412
-samples/s/node`, and `4.36%` retained rank imbalance. The nearby
+node counts. The best two-node row is `640/16/4`: `90,823 samples/s`, `45,412
+samples/s/node`, and `4.36%` rank imbalance. The nearby
 `640/16/{6,8}` rows are also balanced.
 
-At four nodes, `512/16/6` is the strongest row in the retained balanced region:
-`177,871 samples/s`, `44,468 samples/s/node`, `4.55%` retained rank imbalance,
-and `575 samples/s` retained jitter. `512/16/8` is a close balance comparator at
-`177,281 samples/s`, `44,320 samples/s/node`, and `4.18%` retained rank
-imbalance.
+At four nodes, `512/16/6` is the strongest row in the balanced region:
+`177,871 samples/s`, `44,468 samples/s/node`, `4.55%` rank imbalance, and
+`575 samples/s` jitter. `512/16/8` is a close balance comparator at
+`177,281 samples/s`, `44,320 samples/s/node`, and `4.18%` rank imbalance.
 
-The `num_workers=12` rows reduce throughput substantially. They do not justify
-moving the B200 scale-facing default away from `num_workers=16`.
+The `num_workers=12` rows reduce throughput substantially. The `16` worker
+rows remain stronger for this two-node and four-node B200 study.
 
-## Selected Scale-Probe Matrix
+## Larger Scale Study
 
-The next B200 scale probe should carry the best four-node region to eight nodes:
+The larger B200 scale study carries the strongest four-node region to eight
+and sixteen nodes:
 
 | Nodes | Batch sizes | Workers | Prefetch factors | Repeats |
 | ---: | --- | ---: | --- | ---: |
 | 8 | `512,640` | 16 | `4,6,8` | 5 |
 
-This keeps the strongest four-node setting (`512/16/6`), its balance comparator
-(`512/16/8`), and the larger-batch family (`640/16/{4,6,8}`) visible at the
-next node count.
+The matrix keeps the strongest four-node setting (`512/16/6`), its balance
+comparator (`512/16/8`), and the larger-batch family (`640/16/{4,6,8}`) visible
+at larger node counts. See
+[B200 2/4/8/16-node DataLoader scale study](b200-multinode-scale-probe.md).
 
 ## Figures
 
-The durable record for this study is static matplotlib figures plus the tables
-above. Heatmaps use batch size from small at the bottom to large at the top.
+Initial matrix figures:
 
-First-stage figures:
+![B200 initial-matrix throughput](figures/dataloader-b200-multinode-first-stage-throughput-matrix-2026-05-13.png)
 
-![B200 first-stage throughput matrix](figures/dataloader-b200-multinode-first-stage-throughput-matrix-2026-05-13.png)
+![B200 initial-matrix throughput per node](figures/dataloader-b200-multinode-first-stage-throughput-per-node-matrix-2026-05-13.png)
 
-![B200 first-stage throughput per node matrix](figures/dataloader-b200-multinode-first-stage-throughput-per-node-matrix-2026-05-13.png)
+![B200 initial-matrix rank imbalance](figures/dataloader-b200-multinode-first-stage-imbalance-matrix-2026-05-13.png)
 
-![B200 first-stage rank-imbalance matrix](figures/dataloader-b200-multinode-first-stage-imbalance-matrix-2026-05-13.png)
+Expanded matrix figures:
 
-Follow-up balance-pass figures:
+![B200 expanded-matrix samples per node](figures/dataloader-b200-multinode-samples-per-node-2026-05-13.png)
 
-![B200 follow-up samples per node](figures/dataloader-b200-multinode-samples-per-node-2026-05-13.png)
-
-![B200 follow-up candidate scatter](figures/dataloader-b200-multinode-followup-candidate-scatter-2026-05-13.png)
+![B200 expanded-matrix throughput and balance scatter](figures/dataloader-b200-multinode-followup-candidate-scatter-2026-05-13.png)
 
 ## Artifact Bundle
 

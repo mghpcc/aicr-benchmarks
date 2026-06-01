@@ -3,7 +3,13 @@
 <!-- aicr-study-status: published -->
 
 
-Purpose: map the B200 one-rank DataLoader batch, worker, and prefetch surface before one-node 8-GPU validation.
+Purpose: map the B200 one-rank DataLoader batch, worker, and prefetch surface.
+
+## Study Question
+
+This study asks which batch, worker, and prefetch settings produce the
+strongest one-rank B200 DataLoader throughput. The selected region is then
+checked in the one-node replicated study, where eight ranks share the node.
 
 ## Run Shape
 
@@ -46,24 +52,29 @@ scripts/benchmark/sweep-dataloader.sh \
 
 ## Result Summary
 
-Single-GPU runs rank candidate settings by `samples/s`; rank imbalance is not
-measured with one rank. This surface records where B200 throughput plateaus
-across batch size, worker count, and prefetch factor before one-node 8-GPU
-validation.
+Single-GPU rows are ranked by `samples/s`; rank imbalance is not defined for
+one rank. The surface shows where B200 throughput plateaus across batch size,
+worker count, and prefetch factor before the one-node replicated study.
 
 ## Figures
 
-The May 12, 2026 single-GPU surface is summarized as a static throughput
-heatmap. This figure summarizes the candidate-selection run before one-node 8-GPU validation.
+The heatmap summarizes the B200 single-GPU throughput surface from May 12,
+2026.
 
 ![B200 single-GPU throughput surface](figures/dataloader-single-gpu-throughput-b200-2026-05-12.png)
 
 The first-pass B200 surface favored `num_workers=24` on a single GPU. The
 highest-throughput cell was batch `640`, workers `24`, prefetch `8` at about
 `6.7k samples/s`; several `384`, `512`, `768`, and `1024` cells with
-`24` workers were close enough to carry a small candidate set into one-node
-8-GPU validation. The one-node run checks whether the single-rank gain survives
-when eight ranks share CPU, memory, PCIe, storage, and filesystem paths.
+`24` workers were close enough to check in the one-node replicated study, where
+eight ranks share CPU, memory, PCIe, storage, and filesystem paths.
+
+## How To Read This Result
+
+- This is a one-rank throughput surface, not an eight-rank balance result.
+- Rank imbalance is evaluated in the one-node replicated study.
+- High-throughput single-GPU cells identify the settings checked next in the
+  one-node replicated study.
 
 ## Artifact Bundle
 

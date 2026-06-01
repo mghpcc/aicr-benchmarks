@@ -3,11 +3,16 @@
 <!-- aicr-study-status: published -->
 
 
-Purpose: report the B200 one-node replicated DataLoader worker scan that selects the first scale-facing input-pipeline setting.
+Purpose: report the B200 one-node replicated DataLoader worker scan.
 
 This study follows the [B200 single-GPU surface](b200-single-gpu-surface.md).
-The single-GPU run chose candidate regions. This one-node run asks which worker
-count remains fast and balanced when eight replicated ranks share one B200 node.
+The single-GPU run chose candidate regions.
+
+## Study Question
+
+This study asks which worker count remains fast and balanced when eight
+replicated ranks share one B200 node. The selected row becomes the B200
+one-node setting for the multi-node DataLoader scale study.
 
 ## Run Shape
 
@@ -58,11 +63,10 @@ scripts/benchmark/sweep-dataloader.sh \
 
 ## Result Summary
 
-The B200 one-node result points to `batch_size=768`, `num_workers=16`, and
-`prefetch_factor=4` for the first multi-node DataLoader pass. Workers below
-`16` are more balanced but leave too much throughput on the table. Workers
-above `16` sometimes match throughput, but their retained rank imbalance is
-worse, which makes them a weaker default for scale-facing work.
+The B200 one-node result selects `batch_size=768`, `num_workers=16`, and
+`prefetch_factor=4`. Lower worker counts are more balanced but lower
+throughput. Higher worker counts do not improve throughput enough to offset
+higher retained rank imbalance.
 
 ## Result
 
@@ -79,22 +83,32 @@ worse, which makes them a weaker default for scale-facing work.
 | 768 | 20 | 4 | 45,043 | 4.76% | 75 |
 | 768 | 24 | 4 | 45,887 | 9.04% | 306 |
 
-The `768/16/4` point is the scale-facing B200 default from this study:
+The `768/16/4` point is the B200 multi-node starting point from this study:
 `45,954 samples/s`, `4.19%` retained rank imbalance, and `84 samples/s`
 retained jitter. The nearby `768/24/4` point does not become the default
 because it has similar throughput but `9.04%` retained imbalance.
 
+No separate batch/prefetch refinement was needed for B200 because `768/16/4`
+had the best throughput while keeping retained rank imbalance below `5%`.
+
 ## Figures
 
-The throughput and rank-imbalance heatmaps use batch size from small at the
-bottom to large at the top. The scatter plot shows throughput against retained
-rank imbalance for the candidate rows.
+The worker-scan scatter plot shows throughput against retained rank imbalance
+for the tested rows.
 
 ![B200 one-node replicated throughput matrix](figures/dataloader-one-node-replicated-throughput-matrix-b200-2026-05-12.png)
 
 ![B200 one-node replicated rank-imbalance matrix](figures/dataloader-one-node-replicated-imbalance-matrix-b200-2026-05-12.png)
 
 ![B200 one-node replicated candidate scatter](figures/dataloader-one-node-replicated-candidate-scatter-b200-2026-05-12.png)
+
+## How To Read This Result
+
+- This is a one-node replicated DataLoader result, not a multi-node scaling
+  result.
+- The selected `768/16/4` row balances throughput, retained rank imbalance,
+  and retained jitter.
+- Multi-node behavior is reported in the B200 multi-node DataLoader studies.
 
 ## Artifact Bundle
 

@@ -4,16 +4,22 @@
 
 
 Purpose: report B200 distributed-sharded DataLoader scaling from two to sixteen
-nodes using the selected `num_workers=16` workload family.
+nodes for the `384/512/640`, `num_workers=16` workload family.
 
-This study extends the
-[B200 multi-node parameter-selection study](b200-multinode-dataloader.md) with
-the `384/512/640` batch-size and `prefetch_factor=4/6/8` matrix across `2`,
-`4`, `8`, and `16` nodes.
+## Study Question
+
+This study asks how the selected B200 distributed-sharded DataLoader workload
+family scales from two to sixteen nodes, and which batch and prefetch settings
+produce the strongest throughput and rank balance at larger scale.
+
+It uses the workload family identified in the
+[B200 multi-node parameter-selection study](b200-multinode-dataloader.md):
+`384/512/640` batch size, `num_workers=16`, and `prefetch_factor=4/6/8` across
+`2`, `4`, `8`, and `16` nodes.
 
 ## Command Run
 
-Eight-node and sixteen-node scale probe:
+Eight-node and sixteen-node run:
 
 ```bash
 scripts/benchmark/sweep-dataloader.sh \
@@ -34,7 +40,7 @@ scripts/benchmark/sweep-dataloader.sh \
   -- --warmup-batches 100 --measured-batches 500 --byte-estimate-sample-count 0
 ```
 
-`384` batch-size completion runs:
+Additional `384` batch-size rows:
 
 ```bash
 scripts/benchmark/sweep-dataloader.sh \
@@ -55,13 +61,13 @@ scripts/benchmark/sweep-dataloader.sh \
   -- --warmup-batches 100 --measured-batches 500 --byte-estimate-sample-count 0
 ```
 
-The completion runs used `--nodes-list 8,16` with
-`--prefetch-factor-list 4,6,8`, plus `--nodes-list 2,4` with
-`--prefetch-factor-list 8` to fill the remaining `384/16/8` comparison rows.
+The additional runs used `--nodes-list 8,16` with `--prefetch-factor-list
+4,6,8`, plus `--nodes-list 2,4` with `--prefetch-factor-list 8` for the
+remaining `384/16/8` comparison rows.
 
 ## Result Summary
 
-The scale probe completed all intended jobs used in this comparison:
+All rows used in this comparison completed:
 
 | Field | Value |
 | --- | --- |
@@ -71,8 +77,8 @@ The scale probe completed all intended jobs used in this comparison:
 | Four-node group | `b0002,b0003,b0004,b0005` |
 | Eight-node group | `b0002-b0009` |
 | Sixteen-node group | `b0002-b0017` |
-| Two/four-node source | `60/60` selected rows passed from the parameter-selection job-id file, plus `10/10` lower-batch completion rows from job IDs `18946-18955` |
-| Eight/sixteen-node source | `90/90` rows passed from job IDs `18834-18893`, `18913-18927`, and `18931-18945` |
+| Two/four-node source | `60/60` rows from the parameter-selection job-id file, plus `10/10` lower-batch rows from job IDs `18946-18955` |
+| Eight/sixteen-node source | `90/90` rows from job IDs `18834-18893`, `18913-18927`, and `18931-18945` |
 | Aggregated configs | `36` rows across `2,4,8,16` nodes |
 | Batch sizes | `384,512,640` |
 | Num workers | `16` |
@@ -148,7 +154,7 @@ count hide per-node throughput.
 | `384/16/6` | 45,073 | 43,384 | 39,330 | 36,502 | 9.06 | Best sixteen-node total throughput and samples/s/node in this study. |
 | `384/16/8` | 44,750 | 43,237 | 39,318 | 36,496 | 8.51 | Complete lower-batch row; closest sixteen-node alternative with the lowest sixteen-node imbalance in the 384 family. |
 | `512/16/4` | 44,967 | 44,359 | 40,512 | 33,066 | 14.87 | Highest eight-node total throughput among the selected rows, but high sixteen-node imbalance. |
-| `512/16/6` | 44,914 | 44,468 | 40,520 | 33,114 | 14.75 | Nearly tied with 512/16/4 at sixteen nodes, with high retained imbalance. |
+| `512/16/6` | 44,914 | 44,468 | 40,520 | 33,114 | 14.75 | Nearly tied with 512/16/4 at sixteen nodes, with high imbalance. |
 | `512/16/8` | 44,998 | 44,320 | 40,522 | 33,114 | 14.22 | Similar throughput to the other 512 rows and slightly lower sixteen-node imbalance. |
 | `640/16/4` | 45,412 | 42,831 | 39,782 | 33,721 | 9.55 | Highest two-node per-node row and strongest sixteen-node per-node result in the 640 family. |
 | `640/16/6` | 45,321 | 42,717 | 39,691 | 33,677 | 10.19 | Close to 640/16/4 with slightly higher sixteen-node imbalance. |
@@ -156,15 +162,15 @@ count hide per-node throughput.
 
 | View | Nodes | Batch | Workers | Prefetch | Samples/s | Samples/s/node | Rank imbalance % | Note |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Best two-node retained row | 2 | 640 | 16 | 4 | 90,823 | 45,412 | 4.36 | Highest two-node throughput in the selected comparison set. |
-| Best four-node retained row | 4 | 512 | 16 | 6 | 177,871 | 44,468 | 4.55 | Highest four-node throughput in the selected comparison set. |
-| Best eight-node retained row | 8 | 512 | 16 | 8 | 324,174 | 40,522 | 7.08 | Highest eight-node throughput among the selected rows. |
-| Best sixteen-node retained row | 16 | 384 | 16 | 6 | 584,032 | 36,502 | 9.06 | Highest sixteen-node throughput and highest sixteen-node samples/s/node. |
-| Lowest sixteen-node imbalance row | 16 | 384 | 16 | 8 | 583,943 | 36,496 | 8.51 | Lowest retained imbalance among the sixteen-node rows and essentially tied on throughput. |
+| Best two-node row | 2 | 640 | 16 | 4 | 90,823 | 45,412 | 4.36 | Highest two-node throughput in the comparison set. |
+| Best four-node row | 4 | 512 | 16 | 6 | 177,871 | 44,468 | 4.55 | Highest four-node throughput in the comparison set. |
+| Best eight-node row | 8 | 512 | 16 | 8 | 324,174 | 40,522 | 7.08 | Highest eight-node throughput among the reported rows. |
+| Best sixteen-node row | 16 | 384 | 16 | 6 | 584,032 | 36,502 | 9.06 | Highest sixteen-node throughput and highest sixteen-node samples/s/node. |
+| Lowest sixteen-node imbalance row | 16 | 384 | 16 | 8 | 583,943 | 36,496 | 8.51 | Lowest imbalance among the sixteen-node rows and essentially tied on throughput. |
 
 ## Findings
 
-Total throughput increases through sixteen nodes. The best retained two-node
+Total throughput increases through sixteen nodes. The best two-node
 row is `90,823 samples/s`; the best four-node row is `177,871 samples/s`; the
 best eight-node row is `324,174 samples/s`; and the best sixteen-node row is
 `584,032 samples/s`.
@@ -175,21 +181,21 @@ Per-node throughput decreases at larger scale. The best selected two-node row is
 
 At eight nodes, the `512` batch rows remain the highest-throughput family. At
 sixteen nodes, the `384` batch rows are stronger than the `512/640` rows and
-have lower retained rank imbalance than the `512` rows. The best sixteen-node
+have lower rank imbalance than the `512` rows. The best sixteen-node
 row in this study is `384/16/6`; `384/16/8` is the closest balanced
 alternative.
 
 ## Figures
 
 The first two heatmaps compare the completed eight-node and sixteen-node rows.
-The cumulative figures compare per-node throughput and retained rank imbalance
+The cumulative figures compare per-node throughput and rank imbalance
 across two, four, eight, and sixteen nodes.
 
 ![B200 eight/sixteen-node throughput matrix](figures/dataloader-b200-8-16node-throughput-matrix-2026-05-14.png)
 
 ![B200 eight/sixteen-node rank-imbalance matrix](figures/dataloader-b200-8-16node-imbalance-matrix-2026-05-14.png)
 
-![B200 scale candidate scatter](figures/dataloader-b200-scale-probe-candidate-scatter-2026-05-14.png)
+![B200 scale throughput and balance scatter](figures/dataloader-b200-scale-probe-candidate-scatter-2026-05-14.png)
 
 ![B200 cumulative 2/4/8/16-node samples per node](figures/dataloader-b200-multinode-samples-per-node-2-4-8-16-2026-05-14.png)
 
