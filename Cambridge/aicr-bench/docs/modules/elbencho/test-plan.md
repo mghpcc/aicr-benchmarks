@@ -19,8 +19,8 @@ Slurm jobs, writing storage rows, or requiring generated result trees.
   storage workload planning.
 - `scripts/verify/smoke-test-elbencho.sh` checks the optional Elbencho runtime
   image for CUDA and cufile/GDS feature signals during setup-gate smoke.
-- The renderer fixture covers small-block, metadata, and 30-node peak-cluster
-  summary rows.
+- The renderer fixture covers small-block, metadata, and peak-cluster summary
+  rows.
 
 ## Command Coverage
 
@@ -32,9 +32,9 @@ Slurm jobs, writing storage rows, or requiring generated result trees.
 | `examples.md` | one-node small-block dry-run | Local dry-run doctest | Prints the same dry-run contract from the examples page. |
 | `scripts.md` | [install-elbencho-runtime.sh](../../../man/install-elbencho-runtime.md) `--help` | Local replay | Help documents the optional container runtime install path. |
 | `scripts.md` | [render-elbencho-report.py](../../../man/render-elbencho-report.md) `--help` | Local replay | Help exposes date, cluster, results root, format, and write controls. |
-| `test-plan.md` | renderer fixture test | Local replay | Renders small-block, metadata, and 30-node peak-cluster rows without generated result trees. |
+| `test-plan.md` | renderer fixture test | Local replay | Renders small-block, metadata, and peak-cluster rows without generated result trees. |
 | `make.md` | `make benchmark-elbencho ... APPLY=1` | AICR HPC apply replay | Submits a one-node smoke or small row on an explicit node and writes raw/parsed artifacts. |
-| `studies.md` | study requirements | Manual review | Keeps study claims tied to completed rows, artifact bundles, provenance, and the 31-node partial caveat. |
+| `studies.md` | study requirements | Manual review | Keeps study claims tied to completed rows, artifact bundles, provenance, and historical peak caveats. |
 
 ## Local Replay
 
@@ -116,6 +116,4 @@ Acceptance criteria:
 
 - Full Elbencho replay is HPC-only because it requires the optional runtime
   image, scratch target, Slurm allocation, and storage policy approval.
-- The peak-cluster study row remains a 30-node partial row until a future
-  31-node row can be collected with `b0001`.
 - Metadata rows without a cache-drop helper remain non-cache-neutral.

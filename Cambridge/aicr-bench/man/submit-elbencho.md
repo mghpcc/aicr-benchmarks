@@ -11,8 +11,8 @@ scripts/benchmark/submit-elbencho.sh --cluster <b200|rtxpro6000> --workload <pea
 ```
 
 Default behavior is a dry run. Repeats are submitted as a Slurm dependency
-chain. The Slurm memory request defaults to `--mem=0`, and GPU partitions
-default to the cluster full-node GPU GRES.
+chain. The Slurm memory request defaults to `--mem=0`, and GPU batch jobs
+request the selected cluster's full-node GPU GRES by default.
 
 The Make entrypoint is:
 
@@ -33,7 +33,8 @@ make benchmark-elbencho CLUSTER=<b200|rtxpro6000> WORKLOAD=<peak-cluster|small-b
 - `--time <HH:MM:SS>`: Slurm time limit.
 - `--cpus-per-task <n>`: CPU allocation per Slurm task.
 - `--mem <size>`: Slurm memory request. Default: `0`.
-- `--gres <gres>`: Slurm GPU GRES. Defaults to the cluster full-node GPU GRES.
+- `--gres <gres>`: Slurm GPU GRES request. Defaults to the selected cluster's
+  full-node GPU GRES.
 - `--repeat-count <n>`: Submit independent repeated samples.
 - `--repeat-stagger-seconds <n>`: Seconds between repeated submissions.
 - `--dependency <value>`: External Slurm dependency for the first submitted job.
@@ -53,8 +54,7 @@ scripts/benchmark/submit-elbencho.sh \
   --nodes 1 \
   --nodelist b0002 \
   --cpus-per-task 128 \
-  --mem 0 \
-  --gres gpu:b200:8
+  --mem 0
 ```
 
 Preview a serialized repeat set:
@@ -67,7 +67,6 @@ scripts/benchmark/submit-elbencho.sh \
   --nodes 1 \
   --nodelist b0002 \
   --mem 0 \
-  --gres gpu:b200:8 \
   --repeat-count 5
 ```
 

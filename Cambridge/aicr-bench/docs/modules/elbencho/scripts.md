@@ -70,6 +70,11 @@ preview or install the Apptainer runtime. Use
 Use [render-elbencho-report.py](../../../man/render-elbencho-report.md) to
 summarize parsed rows.
 
+GPU batch partitions require a GPU GRES request. The submitter defaults to the
+selected cluster's full-node GPU GRES so dry-runs and apply commands match site
+scheduling policy. Override with `--gres <gres>` only for reviewed
+site-specific cases.
+
 The Elbencho container is optional and is not part of the default runtime image
 set. For private runtime roots, build or pull it before Elbencho smoke or
 benchmark rows with `make install-elbencho APPLY=1`, or with

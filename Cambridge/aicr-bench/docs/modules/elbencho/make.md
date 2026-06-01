@@ -5,6 +5,8 @@ Purpose: run curated Elbencho storage workloads through Make.
 `benchmark-elbencho` is the Make front door for Elbencho. It delegates to
 [submit-elbencho.sh](../../../man/submit-elbencho.md), prints the planned Slurm
 command before submission, and serializes repeats with dependency chaining.
+GPU batch jobs request the selected cluster's full-node GPU GRES by default;
+set `ELBENCHO_GRES=<gres>` only for reviewed site-specific scheduling cases.
 
 ## Runtime Install Preview
 
@@ -84,10 +86,8 @@ Use `ELBENCHO_TARGET_ROOT`, `ELBENCHO_SIZE`, `ELBENCHO_BLOCK`,
 `ELBENCHO_THREADS`, `ELBENCHO_IODEPTH`, `ELBENCHO_FILE_PATTERN`,
 `ELBENCHO_FILES`, and `ELBENCHO_DIRS` to tune profile templates. Make defaults
 to `ELBENCHO_MEM=0`; keep that full-node memory request for benchmark rows
-unless the run is a memory diagnostic. GPU batch jobs default to the cluster
-full-node GPU GRES; set `ELBENCHO_GRES=<gres>` only for reviewed site-specific
-scheduling cases. Use `ELBENCHO_CMD` only for expert overrides and label those
-rows clearly.
+unless the run is a memory diagnostic. Use `ELBENCHO_CMD` only for expert
+overrides and label those rows clearly.
 
 ## Artifacts
 
