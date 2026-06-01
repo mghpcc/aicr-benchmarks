@@ -10,6 +10,11 @@ scale campaign replay documented in [Test plan](test-plan.md).
 
 ## Quick Read
 
+NCCL study pages are communication validation evidence. Treat operation rates
+and scale tables as evidence about local, RDMA, and rank-per-GPU paths for the
+documented node set and suite class; do not present them as standalone
+application benchmark results.
+
 Start with the local-mode pages when validating a single node or rank layout.
 Use the RDMA ladder pages when the question is multi-node communication scale.
 Each linked study page owns its artifact bundle, provenance, checksum, and

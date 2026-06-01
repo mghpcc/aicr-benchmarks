@@ -4,6 +4,11 @@ Purpose: list curated GDS studies and their external artifact bundles.
 
 ## Quick Read
 
+GDS study pages are verification evidence for CUDA/GDS and storage-path
+readiness. Treat throughput tables as validation context for a specific profile,
+node set, and artifact bundle; do not generalize them as standalone storage
+benchmark results.
+
 Start with the single-node `small` page for command shape, then read the
 single-node `medium` or `large` page for a fuller profile. Use the B200 fleet
 studies when the question is node-to-node consistency rather than one-node
