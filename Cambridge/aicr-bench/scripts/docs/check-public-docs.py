@@ -27,10 +27,13 @@ STUDY_LINK_RE = re.compile(r"\]\((studies/[^)#]+\.md)(?:#[^)]+)?\)")
 INDEX_NON_EVIDENCE_RE = re.compile(r"\b(pending|scaffold|planned|plan|draft|context|run sheet)\b", re.IGNORECASE)
 INDEX_APPENDIX_RE = re.compile(r"\b(appendix|reference|supporting)\b", re.IGNORECASE)
 NON_EVIDENCE_BANNERS = {
-    "scaffold": "Publication Scaffold - Not Evidence",
-    "plan": "Campaign Plan - Not Evidence",
-    "draft": "Draft Context - Not Published Evidence",
-    "appendix": "Appendix - Supporting Reference, Not A Standalone Study",
+    "scaffold": ("Publication Scaffold - Not Evidence",),
+    "plan": ("Campaign Plan - Not Evidence",),
+    "draft": ("Draft Context - Not Published Evidence",),
+    "appendix": (
+        "Appendix - Supporting Reference, Not A Standalone Study",
+        "Appendix - Decode-Path Detail",
+    ),
 }
 PENDING_STUDY_RE = re.compile(r"\b(TODO|Pending publication|Pending artifact review|Pending run)\b")
 REQUIRED_FIXTURE_METADATA = {
@@ -113,15 +116,16 @@ def check_study_statuses(root: Path) -> list[str]:
         text = path.read_text(encoding="utf-8")
         status = study_status(text)
         statuses[rel] = status
-        if status in {"draft", "appendix"} and NON_EVIDENCE_BANNERS[status] not in text:
-            failures.append(f"{rel}: {status} page must include visible banner '{NON_EVIDENCE_BANNERS[status]}'")
+        if status in {"draft", "appendix"} and not has_status_banner(text, status):
+            banners = "', '".join(NON_EVIDENCE_BANNERS[status])
+            failures.append(f"{rel}: {status} page must include one visible banner from '{banners}'")
         if PENDING_STUDY_RE.search(text):
             if status not in {"scaffold", "plan", "draft"}:
                 failures.append(f"{rel}: pending/TODO study page must declare scaffold, plan, or draft status")
                 continue
-            banner = NON_EVIDENCE_BANNERS[status]
-            if banner not in text:
-                failures.append(f"{rel}: {status} study page must include visible banner '{banner}'")
+            if not has_status_banner(text, status):
+                banners = "', '".join(NON_EVIDENCE_BANNERS[status])
+                failures.append(f"{rel}: {status} study page must include one visible banner from '{banners}'")
 
     for index_path in sorted((root / "docs" / "modules").glob("*/studies.md")):
         index_rel = index_path.relative_to(root)
@@ -144,6 +148,10 @@ def check_study_statuses(root: Path) -> list[str]:
                         "must be labeled appendix/reference/supporting"
                     )
     return failures
+
+
+def has_status_banner(text: str, status: str) -> bool:
+    return any(banner in text for banner in NON_EVIDENCE_BANNERS[status])
 
 
 def metadata_has_input(metadata: dict) -> bool:
