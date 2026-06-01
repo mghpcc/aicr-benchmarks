@@ -19,6 +19,8 @@ scripts/verify/submit-nccl-suite.sh --scope <local|rdma|scale> --cluster <b200|r
 - `--suite-class <name>`: Optional local suite-class filter. Supported values
   are B200 `b200_8rank_1g`, `b200_1proc_8g`, `b200_2rank_socket_4g`, and RTX
   `rtx_8rank_1g`, `rtx_pair_policy`.
+- `--ops <list>`: Optional comma-separated operation filter. Supported values
+  are `allreduce`, `allgather`, `reduce_scatter`, `alltoall`, and `sendrecv`.
 - `--nodes <list>`: Optional space- or comma-separated candidate node list.
 - `--nodes-per-job <n>`: RDMA group size, or one scale for `--scope scale`.
 - `--scales <list>`: Scale scope node counts.

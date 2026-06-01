@@ -27,12 +27,23 @@ Default behavior runs local checks, submitter dry-runs, and explicit
   `/scratch/csim/validate/install-gpu-smoke-audit-<UTC>`.
 - `--date <YYYY-MM-DD>`: Report date. Default: current UTC date.
 - `--apply`: Submit tiny node-scoped smoke jobs after dry-runs and GPU probes pass.
+- `--resume-from-audit-root <path>`: Resume an interrupted apply run from an
+  existing audit root. This reuses recorded job IDs, skips local checks,
+  skips dry-runs, skips explicit `sbatch --test-only`, and continues with
+  apply/report phases.
 - `--skip-local-checks`: Skip docs, links, help, and syntax checks.
+- `--skip-dry-runs`: Skip Make/script dry-runs. This is intended for resume
+  workflows after a dry-run layer already passed.
 - `--skip-explicit-sbatch`: Skip explicit `sbatch --test-only` template coverage.
+- `--skip-topology`: Skip GPU Topology install-smoke coverage.
+- `--skip-gds`: Skip GDS install-smoke coverage.
+- `--skip-nccl`: Skip NCCL local/RDMA install-smoke coverage.
 - `--skip-rdma`: Skip two-node NCCL RDMA.
 - `--skip-hpl-mxp`: Skip HPL-MxP install-smoke coverage.
 - `--skip-dataloader`: Skip DataLoader install-smoke coverage.
 - `--skip-ddp`: Skip DDP install-smoke coverage.
+- `--only-elbencho`: Run only Elbencho plus required node preflight. This
+  implies `--include-elbencho` and skips the other module workloads.
 - `--hpl-mxp-b200-node <node>`: B200 node for HPL-MxP one-node smoke. Defaults
   to the first `--b200-nodes` entry.
 - `--hpl-mxp-rtx-node <node>`: RTX node for HPL-MxP dry-run and optional apply.
@@ -95,6 +106,8 @@ node, `--mem=0`, and a scratch target root. The Elbencho image is optional and
 is not built by the default container install path; build it first with
 `make install-elbencho APPLY=1` or
 `make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1`.
+Use `--only-elbencho` for a targeted Elbencho loop after the broader GPU module
+suite has already passed.
 
 ## Outputs
 
@@ -128,3 +141,15 @@ scripts/verify/run-install-gpu-smoke-suite.sh \
   --b200-nodes b0001,b0002 \
   --apply
 ```
+
+Resume an interrupted applied run:
+
+```bash
+scripts/verify/run-install-gpu-smoke-suite.sh \
+  --rtx-nodes a0002,a0003 \
+  --b200-nodes b0001,b0002 \
+  --resume-from-audit-root /scratch/csim/validate/install-gpu-smoke-audit-YYYYMMDD-HHMMSS
+```
+
+For long applied runs, launch from AICR HPC inside `tmux` or with `nohup` so an
+SSH disconnect does not stop the operator process.

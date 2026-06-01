@@ -23,6 +23,7 @@ Options:
   --cluster <name>           b200 or rtxpro6000
   --profile <name>           smoke, small, medium, or large (default: small)
   --suite-class <name>       Optional local suite class filter
+  --ops <list>               Optional comma-separated op filter
   --nodes <list>             Optional space/comma-separated candidate node list
   --nodes-per-job <n>        RDMA group size, or a single scale for --scope scale
   --scales <list>            Scale scope node counts, comma/space-separated
@@ -283,6 +284,7 @@ scope=""
 cluster=""
 profile="small"
 suite_class=""
+suite_ops=""
 nodes=""
 nodes_per_job=""
 scales=""
@@ -319,6 +321,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --suite-class)
       suite_class="${2:?missing value for --suite-class}"
+      shift 2
+      ;;
+    --ops|--op)
+      suite_ops="${2:?missing value for --ops}"
       shift 2
       ;;
     --nodes)
@@ -401,6 +407,24 @@ if [[ -n "${suite_class}" ]]; then
     b200:b200_1proc_8g|b200:b200_8rank_1g|b200:b200_2rank_socket_4g|rtxpro6000:rtx_8rank_1g|rtxpro6000:rtx_pair_policy) ;;
     *) echo "ERROR: unsupported --suite-class ${suite_class} for ${cluster}" >&2; exit 2 ;;
   esac
+fi
+if [[ -n "${suite_ops}" ]]; then
+  IFS=',' read -r -a requested_ops <<<"${suite_ops// /,}"
+  cleaned_ops=()
+  for op in "${requested_ops[@]}"; do
+    [[ -n "${op}" ]] || continue
+    case "${op}" in
+      allreduce|allgather|reduce_scatter|alltoall|sendrecv) ;;
+      *)
+        echo "ERROR: unsupported --ops item: ${op}" >&2
+        echo "Expected comma-separated subset of allreduce,allgather,reduce_scatter,alltoall,sendrecv" >&2
+        exit 2
+        ;;
+    esac
+    cleaned_ops+=("${op}")
+  done
+  [[ "${#cleaned_ops[@]}" -gt 0 ]] || { echo "ERROR: --ops selected no operations" >&2; exit 2; }
+  suite_ops="$(IFS=,; echo "${cleaned_ops[*]}")"
 fi
 [[ "${repeat_count}" =~ ^[0-9]+$ && "${repeat_count}" -ge 1 ]] || { echo "ERROR: --repeat-count must be positive" >&2; exit 2; }
 case "${repeat_aggregation}" in
@@ -597,6 +621,9 @@ fi
 base_args=(--profile "${profile}")
 if [[ -n "${suite_class}" ]]; then
   base_args+=(--suite-class "${suite_class}")
+fi
+if [[ -n "${suite_ops}" ]]; then
+  base_args+=(--ops "${suite_ops}")
 fi
 
 if [[ "${apply}" == "0" ]]; then

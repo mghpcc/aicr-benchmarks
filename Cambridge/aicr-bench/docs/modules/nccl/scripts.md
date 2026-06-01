@@ -64,7 +64,7 @@ bash scripts/lib/run-repo-python.sh scripts/report/render-nccl-suite-report.py -
 
 | Profile | Use |
 | --- | --- |
-| `smoke` | Tiny launch and parser proof. |
+| `smoke` | Tiny per-operation launch and parser proof. |
 | `small` | Teaching-sized local, RDMA, and scale checks. |
 | `medium` | Longer NCCL message sweep. |
 | `large` | Extended NCCL message sweep. |
@@ -83,6 +83,9 @@ Local-mode suite classes are explicit and cluster scoped:
 
 The default operation set is `allreduce`, `allgather`, `reduce_scatter`, and
 `alltoall`. The RTX pair-policy class replaces `alltoall` with `sendrecv`.
+Use `--ops allreduce` or `NCCL_SUITE_OPS=allreduce` for install-smoke checks
+that should prove the container, MPI launch, parser, and report path without
+running the full module smoke matrix.
 
 RDMA and scale runs synthesize suite-class labels from their scope and node
 count, such as `b200_rdma_2n_8rank_1g_per_node` or

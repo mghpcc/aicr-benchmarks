@@ -21,12 +21,23 @@ Options:
                            /scratch/csim/validate/install-gpu-smoke-audit-<UTC>
   --date <YYYY-MM-DD>      Report date. Default: current UTC date.
   --apply                  Submit smoke jobs after dry-runs and GPU probes pass.
+  --resume-from-audit-root <path>
+                           Resume an interrupted apply run from an existing
+                           audit root. Reuses recorded job IDs, skips local
+                           checks, skips dry-runs, skips sbatch --test-only,
+                           and continues with apply/report phases.
   --skip-local-checks      Skip docs/link/help/syntax checks.
+  --skip-dry-runs          Skip Make/script dry-runs. Intended for resume only.
   --skip-explicit-sbatch   Skip sbatch --test-only coverage for Slurm templates.
+  --skip-topology          Skip GPU Topology dry-run and apply coverage.
+  --skip-gds               Skip GDS dry-run and apply coverage.
+  --skip-nccl              Skip NCCL local/RDMA dry-run and apply coverage.
   --skip-rdma              Skip two-node NCCL RDMA dry-runs and apply jobs.
   --skip-hpl-mxp           Skip HPL-MxP dry-run and apply coverage.
   --skip-dataloader        Skip DataLoader dry-run and apply coverage.
   --skip-ddp               Skip DDP dry-run and apply coverage.
+  --only-elbencho          Run only Elbencho plus required node preflight.
+                           Implies --include-elbencho and skips other modules.
   --hpl-mxp-b200-node <n>  B200 node for HPL-MxP one-node smoke. Default:
                            first --b200-nodes entry.
   --hpl-mxp-rtx-node <n>   RTX node for HPL-MxP dry-run and optional apply.
@@ -77,8 +88,13 @@ b200_nodes=""
 audit_root=""
 report_date="$(date -u +%F)"
 apply=0
+resume=0
 run_local_checks=1
+run_dryruns=1
 run_explicit_sbatch=1
+run_topology=1
+run_gds=1
+run_nccl=1
 run_rdm=1
 run_hpl_mxp=1
 run_dataloader=1
@@ -123,12 +139,37 @@ while [[ $# -gt 0 ]]; do
       apply=1
       shift
       ;;
+    --resume-from-audit-root)
+      audit_root="${2:-}"
+      resume=1
+      apply=1
+      run_local_checks=0
+      run_dryruns=0
+      run_explicit_sbatch=0
+      shift 2
+      ;;
     --skip-local-checks)
       run_local_checks=0
       shift
       ;;
+    --skip-dry-runs)
+      run_dryruns=0
+      shift
+      ;;
     --skip-explicit-sbatch)
       run_explicit_sbatch=0
+      shift
+      ;;
+    --skip-topology)
+      run_topology=0
+      shift
+      ;;
+    --skip-gds)
+      run_gds=0
+      shift
+      ;;
+    --skip-nccl)
+      run_nccl=0
       shift
       ;;
     --skip-rdma)
@@ -144,6 +185,17 @@ while [[ $# -gt 0 ]]; do
       shift
       ;;
     --skip-ddp)
+      run_ddp=0
+      shift
+      ;;
+    --only-elbencho)
+      run_elbencho=1
+      run_topology=0
+      run_gds=0
+      run_nccl=0
+      run_rdm=0
+      run_hpl_mxp=0
+      run_dataloader=0
       run_ddp=0
       shift
       ;;
@@ -214,6 +266,7 @@ while [[ $# -gt 0 ]]; do
     --render-only)
       render_only=1
       run_local_checks=0
+      run_dryruns=0
       run_explicit_sbatch=0
       apply=0
       shift
@@ -291,6 +344,10 @@ esac
 if [[ -z "${audit_root}" ]]; then
   audit_root="/scratch/csim/validate/install-gpu-smoke-audit-$(date -u +%Y%m%d-%H%M%S)"
 fi
+if [[ "${resume}" == "1" && -z "${audit_root}" ]]; then
+  echo "ERROR: --resume-from-audit-root requires a path" >&2
+  exit 2
+fi
 if [[ "${run_elbencho}" == "1" && -z "${elbencho_target_root}" ]]; then
   user_name="${USER:-$(id -un)}"
   elbencho_target_root="/scratch/${user_name}/elbencho/install-smoke-$(date -u +%Y%m%d-%H%M%S)"
@@ -313,6 +370,50 @@ log_cmd() {
     printf '\n'
   } | tee "${log_path}"
   (set -o pipefail; "$@" 2>&1 | tee -a "${log_path}")
+}
+
+normalize_job_ids() {
+  tr '[:space:]' ',' | tr -s ',' | sed 's/^,//; s/,$//' | awk -F',' '
+    {
+      for (i = 1; i <= NF; i++) {
+        if ($i != "" && !seen[$i]++) {
+          out = out ? out "," $i : $i
+        }
+      }
+    }
+    END { print out }
+  '
+}
+
+extract_job_ids_from_log() {
+  local log_path="$1"
+  [[ -s "${log_path}" ]] || return 1
+  sed -nE \
+    -e 's/.* as job ([0-9]+).*/\1/p' \
+    -e 's/^Submitted .* job ids: ([0-9, ]+).*/\1/p' \
+    -e 's/^Submitted .* job ([0-9]+).*/\1/p' \
+    -e 's/^job_id=([0-9]+).*/\1/p' \
+    "${log_path}" | normalize_job_ids
+}
+
+slurm_jobs_completed() {
+  local job_ids_csv="$1"
+  local rows
+  [[ -n "${job_ids_csv}" ]] || return 1
+  rows="$(sacct -X -n -P -j "${job_ids_csv}" --format=JobID,State,ExitCode 2>/dev/null || true)"
+  [[ -n "${rows}" ]] || return 1
+  printf '%s\n' "${rows}" | awk -F'|' '
+    NF >= 3 {
+      seen = 1
+      split($2, state, " ")
+      if (state[1] != "COMPLETED" || $3 != "0:0") {
+        bad = 1
+      }
+    }
+    END {
+      exit (seen && !bad) ? 0 : 1
+    }
+  '
 }
 
 run_logged() {
@@ -350,8 +451,13 @@ write_context() {
     echo "audit_root=${audit_root}"
     echo "report_date=${report_date}"
     echo "mode=$([[ "${apply}" == "1" ]] && echo apply || echo dry-run)"
+    echo "resume=$([[ "${resume}" == "1" ]] && echo enabled || echo disabled)"
     echo "rtx_nodes=${rtx_nodes}"
     echo "b200_nodes=${b200_nodes}"
+    echo "topology=$([[ "${run_topology}" == "1" ]] && echo enabled || echo skipped)"
+    echo "gds=$([[ "${run_gds}" == "1" ]] && echo enabled || echo skipped)"
+    echo "nccl=$([[ "${run_nccl}" == "1" ]] && echo enabled || echo skipped)"
+    echo "rdma=$([[ "${run_rdm}" == "1" ]] && echo enabled || echo skipped)"
     echo "hpl_mxp=$([[ "${run_hpl_mxp}" == "1" ]] && echo enabled || echo skipped)"
     echo "hpl_mxp_b200_node=${hpl_mxp_b200_node:-}"
     echo "hpl_mxp_rtx_node=${hpl_mxp_rtx_node:-}"
@@ -423,16 +529,22 @@ dry_run_cluster() {
   one="$(first_node "${nodes}")"
   two="$(first_two_nodes_csv "${nodes}")"
 
-  run_logged dryruns "make-verify-topology-${cluster}" make verify-topology CLUSTER="${cluster}" NODELIST="${one}" APPLY=0
-  run_logged dryruns "make-verify-gds-${cluster}-smoke" make verify-gds CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" APPLY=0
+  if [[ "${run_topology}" == "1" ]]; then
+    run_logged dryruns "make-verify-topology-${cluster}" make verify-topology CLUSTER="${cluster}" NODELIST="${one}" APPLY=0
+  fi
+  if [[ "${run_gds}" == "1" ]]; then
+    run_logged dryruns "make-verify-gds-${cluster}-smoke" make verify-gds CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" APPLY=0
+  fi
   case "${cluster}" in
     rtxpro6000) local_suite_class="rtx_8rank_1g" ;;
     b200) local_suite_class="b200_8rank_1g" ;;
     *) echo "ERROR: unsupported cluster ${cluster}" >&2; exit 2 ;;
   esac
-  run_logged dryruns "make-verify-nccl-local-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=local CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" NCCL_SUITE_CLASS="${local_suite_class}" NCCL_SUITE_OPS=allreduce APPLY=0
-  if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
-    run_logged dryruns "make-verify-nccl-rdma-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER="${cluster}" PROFILE=smoke NODELIST="${two}" NCCL_NODES_PER_JOB=2 NCCL_SUITE_OPS=allreduce APPLY=0
+  if [[ "${run_nccl}" == "1" ]]; then
+    run_logged dryruns "make-verify-nccl-local-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=local CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" NCCL_SUITE_CLASS="${local_suite_class}" NCCL_SUITE_OPS=allreduce APPLY=0
+    if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
+      run_logged dryruns "make-verify-nccl-rdma-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER="${cluster}" PROFILE=smoke NODELIST="${two}" NCCL_NODES_PER_JOB=2 NCCL_SUITE_OPS=allreduce APPLY=0
+    fi
   fi
   if [[ "${run_hpl_mxp}" == "1" ]]; then
     case "${cluster}" in
@@ -449,11 +561,17 @@ dry_run_cluster() {
     run_logged dryruns "make-ddp-${cluster}-smoke" make benchmark-ddp-resnet50 CLUSTER="${cluster}" NODES=1 NODELIST="${one}" LAUNCHER=torchrun DDP_TIME="${ddp_time}" DDP_MEM=0 DDP_RUN_ARGS="--input-backend synthetic-gpu --warmup-iters 1 --measured-iters 1 --batch-size 8 --num-workers 0 --persistent-workers 0 --pin-memory 0 --channels-last 0" NODE_REPORT_DATE="${report_date}" APPLY=0
   fi
 
-  run_logged dryruns "script-topology-${cluster}" bash scripts/verify/run-gpu-topology-fleet.sh --cluster "${cluster}" --nodes "${one}"
-  run_logged dryruns "script-gds-${cluster}-smoke" bash scripts/verify/run-gds-fleet.sh --cluster "${cluster}" --profile smoke --nodes "${one}"
-  run_logged dryruns "script-nccl-local-${cluster}-smoke" bash scripts/verify/submit-nccl-suite.sh --scope local --cluster "${cluster}" --profile smoke --nodes "${one}" --suite-class "${local_suite_class}" --ops allreduce
-  if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
-    run_logged dryruns "script-nccl-rdma-${cluster}-smoke" bash scripts/verify/submit-nccl-suite.sh --scope rdma --cluster "${cluster}" --profile smoke --nodes "${two}" --nodes-per-job 2 --ops allreduce
+  if [[ "${run_topology}" == "1" ]]; then
+    run_logged dryruns "script-topology-${cluster}" bash scripts/verify/run-gpu-topology-fleet.sh --cluster "${cluster}" --nodes "${one}"
+  fi
+  if [[ "${run_gds}" == "1" ]]; then
+    run_logged dryruns "script-gds-${cluster}-smoke" bash scripts/verify/run-gds-fleet.sh --cluster "${cluster}" --profile smoke --nodes "${one}"
+  fi
+  if [[ "${run_nccl}" == "1" ]]; then
+    run_logged dryruns "script-nccl-local-${cluster}-smoke" bash scripts/verify/submit-nccl-suite.sh --scope local --cluster "${cluster}" --profile smoke --nodes "${one}" --suite-class "${local_suite_class}" --ops allreduce
+    if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
+      run_logged dryruns "script-nccl-rdma-${cluster}-smoke" bash scripts/verify/submit-nccl-suite.sh --scope rdma --cluster "${cluster}" --profile smoke --nodes "${two}" --nodes-per-job 2 --ops allreduce
+    fi
   fi
   if [[ "${run_hpl_mxp}" == "1" ]]; then
     run_logged dryruns "script-hpl-mxp-${cluster}-smoke" bash scripts/benchmark/submit-hpl-mxp.sh --cluster "${cluster}" --nodes 1 --nodelist "${hpl_node}" --preset "${hpl_mxp_preset}" --time "${hpl_mxp_time}" --mem 0 --test-loop 1 --affinity-profile derived-nps4 --sloppy-type "${hpl_mxp_sloppy_type}" --date "${report_date}"
@@ -487,16 +605,22 @@ sbatch_test_cluster() {
     *) echo "ERROR: unsupported cluster ${cluster}" >&2; exit 2 ;;
   esac
 
-  run_logged sbatch-test "${cluster}-gpu-topology" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-gpu-topology-1n-8g.sbatch"
-  run_logged sbatch-test "${cluster}-gds" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-gds-1n-8g.sbatch"
+  if [[ "${run_topology}" == "1" ]]; then
+    run_logged sbatch-test "${cluster}-gpu-topology" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-gpu-topology-1n-8g.sbatch"
+  fi
+  if [[ "${run_gds}" == "1" ]]; then
+    run_logged sbatch-test "${cluster}-gds" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-gds-1n-8g.sbatch"
+  fi
   case "${cluster}" in
     rtxpro6000) local_suite_class="rtx_8rank_1g" ;;
     b200) local_suite_class="b200_8rank_1g" ;;
     *) echo "ERROR: unsupported cluster ${cluster}" >&2; exit 2 ;;
   esac
-  run_logged sbatch-test "${cluster}-nccl-local" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-nccl-suite-local-1n-8g.sbatch" --profile smoke --suite-class "${local_suite_class}" --ops allreduce
-  if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
-    run_logged sbatch-test "${cluster}-nccl-rdma" sbatch --test-only --nodelist="${two}" "slurm/verify/${prefix}-nccl-suite-rdma.sbatch" --profile smoke --nodes-per-job 2 --ops allreduce
+  if [[ "${run_nccl}" == "1" ]]; then
+    run_logged sbatch-test "${cluster}-nccl-local" sbatch --test-only --nodelist="${one}" "slurm/verify/${prefix}-nccl-suite-local-1n-8g.sbatch" --profile smoke --suite-class "${local_suite_class}" --ops allreduce
+    if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
+      run_logged sbatch-test "${cluster}-nccl-rdma" sbatch --test-only --nodelist="${two}" "slurm/verify/${prefix}-nccl-suite-rdma.sbatch" --profile smoke --nodes-per-job 2 --ops allreduce
+    fi
   fi
   if [[ "${run_hpl_mxp}" == "1" ]]; then
     case "${cluster}" in
@@ -533,6 +657,14 @@ submit_gpu_probe() {
   local job_id gpu_count
 
   echo "== ${name} =="
+  if [[ "${resume}" == "1" && -s "${log_path}" ]]; then
+    job_id="$(sed -n 's/^job_id=//p' "${log_path}" | tail -n 1)"
+    gpu_count="$(sed -n 's/^gpu_count=//p' "${log_path}" | tail -n 1)"
+    if [[ -n "${job_id}" && "${gpu_count}" == "8" ]] && slurm_jobs_completed "${job_id}"; then
+      echo "Resuming ${name}; existing GPU probe ${job_id} already passed." | tee -a "${log_path}"
+      return 0
+    fi
+  fi
   {
     echo "partition=${partition}"
     echo "node=${node}"
@@ -574,6 +706,11 @@ wait_for_slurm_jobs() {
 
   echo "== wait-${name} =="
   echo "job_ids=${job_ids_csv}" | tee "${log_path}"
+  if slurm_jobs_completed "${job_ids_csv}"; then
+    sacct -j "${job_ids_csv}" --format=JobID,JobName,Partition,State,ExitCode,Elapsed,NodeList -P | tee -a "${log_path}"
+    return 0
+  fi
+
   while true; do
     queue_rows="$(squeue -h -j "${job_ids_csv}" -o '%i|%T|%M|%N|%R' || true)"
     if [[ -z "${queue_rows}" ]]; then
@@ -588,10 +725,52 @@ wait_for_slurm_jobs() {
   done
 
   sacct -j "${job_ids_csv}" --format=JobID,JobName,Partition,State,ExitCode,Elapsed,NodeList -P | tee -a "${log_path}"
-  if sacct -X -n -j "${job_ids_csv}" --format=State -P | awk -F'|' 'NF && $1 !~ /^COMPLETED/ { bad=1 } END { exit bad ? 0 : 1 }'; then
+  if sacct -X -n -j "${job_ids_csv}" --format=State,ExitCode -P | awk -F'|' 'NF { split($1, state, " "); if (state[1] != "COMPLETED" || $2 != "0:0") bad=1 } END { exit bad ? 0 : 1 }'; then
     echo "ERROR: one or more ${name} jobs did not complete cleanly" | tee -a "${log_path}" >&2
     exit 1
   fi
+}
+
+resume_or_wait_recorded_phase() {
+  local name="$1"
+  local job_file="$2"
+  local log_path="$3"
+  local job_ids=""
+
+  if [[ -s "${job_file}" ]]; then
+    job_ids="$(cat "${job_file}" | normalize_job_ids)"
+  elif [[ "${resume}" == "1" && -s "${log_path}" ]]; then
+    job_ids="$(extract_job_ids_from_log "${log_path}" || true)"
+    if [[ -n "${job_ids}" ]]; then
+      printf '%s\n' "${job_ids}" >"${job_file}"
+    fi
+  fi
+
+  [[ -n "${job_ids}" ]] || return 1
+  echo "Resuming ${name} with recorded job ids: ${job_ids}" | tee -a "${log_path}"
+  wait_for_slurm_jobs "${name}" "${job_ids}"
+  return 0
+}
+
+run_apply_job_phase() {
+  local name="$1"
+  local job_file="$2"
+  shift 2
+  local log_path="${audit_root}/logs/${name}.log"
+  local job_ids
+
+  if [[ "${resume}" == "1" ]] && resume_or_wait_recorded_phase "${name}" "${job_file}" "${log_path}"; then
+    return 0
+  fi
+
+  run_logged logs "${name}" "$@"
+  job_ids="$(extract_job_ids_from_log "${log_path}" || true)"
+  if [[ -z "${job_ids}" ]]; then
+    echo "ERROR: could not parse job ids from ${log_path}" >&2
+    exit 1
+  fi
+  printf '%s\n' "${job_ids}" >"${job_file}"
+  wait_for_slurm_jobs "${name}" "${job_ids}"
 }
 
 preflight_cluster() {
@@ -630,18 +809,28 @@ apply_cluster() {
     *) echo "ERROR: unsupported cluster ${cluster}" >&2; exit 2 ;;
   esac
 
-  run_logged logs "apply-topology-${cluster}" make verify-topology CLUSTER="${cluster}" NODELIST="${one}" APPLY=1
-  run_logged logs "apply-gds-${cluster}-smoke" make verify-gds CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" APPLY=1
-  run_logged logs "apply-nccl-local-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=local CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" NCCL_SUITE_CLASS="${local_suite_class}" NCCL_SUITE_OPS=allreduce APPLY=1
-  if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
-    run_logged logs "apply-nccl-rdma-${cluster}-smoke" make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER="${cluster}" PROFILE=smoke NODELIST="${two}" NCCL_NODES_PER_JOB=2 NCCL_SUITE_OPS=allreduce APPLY=1
+  if [[ "${run_topology}" == "1" ]]; then
+    run_apply_job_phase "apply-topology-${cluster}" "${audit_root}/logs/topology-${cluster}-job-ids.txt" \
+      make verify-topology CLUSTER="${cluster}" NODELIST="${one}" APPLY=1
+  fi
+  if [[ "${run_gds}" == "1" ]]; then
+    run_apply_job_phase "apply-gds-${cluster}-smoke" "${audit_root}/logs/gds-${cluster}-job-ids.txt" \
+      make verify-gds CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" APPLY=1
+  fi
+  if [[ "${run_nccl}" == "1" ]]; then
+    run_apply_job_phase "apply-nccl-local-${cluster}-smoke" "${audit_root}/logs/nccl-local-${cluster}-job-ids.txt" \
+      make verify-nccl-suite NCCL_SCOPE=local CLUSTER="${cluster}" PROFILE=smoke NODELIST="${one}" NCCL_SUITE_CLASS="${local_suite_class}" NCCL_SUITE_OPS=allreduce APPLY=1
+    if [[ "${run_rdm}" == "1" && "$(node_count "${two}")" -ge 2 ]]; then
+      run_apply_job_phase "apply-nccl-rdma-${cluster}-smoke" "${audit_root}/logs/nccl-rdma-${cluster}-job-ids.txt" \
+        make verify-nccl-suite NCCL_SCOPE=rdma CLUSTER="${cluster}" PROFILE=smoke NODELIST="${two}" NCCL_NODES_PER_JOB=2 NCCL_SUITE_OPS=allreduce APPLY=1
+    fi
   fi
 }
 
 apply_hpl_mxp_cluster() {
   local cluster="$1"
   local nodes="$2"
-  local one hpl_node log_name log_path job_ids
+  local one hpl_node log_name
   one="$(first_node "${nodes}")"
 
   [[ "${run_hpl_mxp}" == "1" ]] || return 0
@@ -658,64 +847,40 @@ apply_hpl_mxp_cluster() {
   esac
 
   log_name="apply-hpl-mxp-${cluster}-smoke"
-  log_path="${audit_root}/logs/${log_name}.log"
-  run_logged logs "${log_name}" make benchmark-hpl-mxp CLUSTER="${cluster}" NODES=1 NODELIST="${hpl_node}" HPL_MXP_PRESET="${hpl_mxp_preset}" HPL_MXP_TIME="${hpl_mxp_time}" HPL_MXP_MEM=0 HPL_MXP_TEST_LOOP=1 HPL_MXP_AFFINITY_PROFILE=derived-nps4 HPL_MXP_SLOPPY_TYPE="${hpl_mxp_sloppy_type}" NODE_REPORT_DATE="${report_date}" APPLY=1
-
-  job_ids="$(sed -n 's/^Submitted HPL-MxP job ids: //p' "${log_path}" | tail -n 1 | tr -d ' ')"
-  if [[ -z "${job_ids}" ]]; then
-    echo "ERROR: could not parse HPL-MxP job ids from ${log_path}" >&2
-    exit 1
-  fi
-  printf '%s\n' "${job_ids}" >"${audit_root}/logs/hpl-mxp-${cluster}-job-ids.txt"
-  wait_for_slurm_jobs "hpl-mxp-${cluster}" "${job_ids}"
+  run_apply_job_phase "${log_name}" "${audit_root}/logs/hpl-mxp-${cluster}-job-ids.txt" \
+    make benchmark-hpl-mxp CLUSTER="${cluster}" NODES=1 NODELIST="${hpl_node}" HPL_MXP_PRESET="${hpl_mxp_preset}" HPL_MXP_TIME="${hpl_mxp_time}" HPL_MXP_MEM=0 HPL_MXP_TEST_LOOP=1 HPL_MXP_AFFINITY_PROFILE=derived-nps4 HPL_MXP_SLOPPY_TYPE="${hpl_mxp_sloppy_type}" NODE_REPORT_DATE="${report_date}" APPLY=1
 }
 
 apply_dataloader_cluster() {
   local cluster="$1"
   local nodes="$2"
-  local one log_name log_path job_ids
+  local one log_name
   one="$(first_node "${nodes}")"
 
   [[ "${run_dataloader}" == "1" ]] || return 0
 
   log_name="apply-dataloader-${cluster}-smoke"
-  log_path="${audit_root}/logs/${log_name}.log"
-  run_logged logs "${log_name}" make benchmark-dataloader CLUSTER="${cluster}" DATALOADER_NODES=1 GPU_COUNT=1 MODE=single NODELIST="${one}" DATALOADER_INPUT_BACKENDS=pytorch-cpu-dataloader DATALOADER_BATCH_SIZES=8 DATALOADER_NUM_WORKERS=1 DATALOADER_PREFETCH_FACTORS=2 DATALOADER_PIN_MEMORY=0 DATALOADER_PERSISTENT_WORKERS=0 DATALOADER_CPUS_PER_TASK=4 DATALOADER_TIME="${dataloader_time}" DATALOADER_MEM=0 DATALOADER_RUN_ARGS="--warmup-batches 1 --measured-batches 1 --byte-estimate-sample-count 0" NODE_REPORT_DATE="${report_date}" APPLY=1
-
-  job_ids="$(sed -n 's/^Submitted dataloader benchmark job //p' "${log_path}" | paste -sd, - | tr -d ' ')"
-  if [[ -z "${job_ids}" ]]; then
-    echo "ERROR: could not parse DataLoader job ids from ${log_path}" >&2
-    exit 1
-  fi
-  printf '%s\n' "${job_ids}" >"${audit_root}/logs/dataloader-${cluster}-job-ids.txt"
-  wait_for_slurm_jobs "dataloader-${cluster}" "${job_ids}"
+  run_apply_job_phase "${log_name}" "${audit_root}/logs/dataloader-${cluster}-job-ids.txt" \
+    make benchmark-dataloader CLUSTER="${cluster}" DATALOADER_NODES=1 GPU_COUNT=1 MODE=single NODELIST="${one}" DATALOADER_INPUT_BACKENDS=pytorch-cpu-dataloader DATALOADER_BATCH_SIZES=8 DATALOADER_NUM_WORKERS=1 DATALOADER_PREFETCH_FACTORS=2 DATALOADER_PIN_MEMORY=0 DATALOADER_PERSISTENT_WORKERS=0 DATALOADER_CPUS_PER_TASK=4 DATALOADER_TIME="${dataloader_time}" DATALOADER_MEM=0 DATALOADER_RUN_ARGS="--warmup-batches 1 --measured-batches 1 --byte-estimate-sample-count 0" NODE_REPORT_DATE="${report_date}" APPLY=1
 }
 
 apply_ddp_cluster() {
   local cluster="$1"
   local nodes="$2"
-  local one log_name log_path job_ids
+  local one log_name
   one="$(first_node "${nodes}")"
 
   [[ "${run_ddp}" == "1" ]] || return 0
 
   log_name="apply-ddp-${cluster}-smoke"
-  log_path="${audit_root}/logs/${log_name}.log"
-  run_logged logs "${log_name}" make benchmark-ddp-resnet50 CLUSTER="${cluster}" NODES=1 NODELIST="${one}" LAUNCHER=torchrun DDP_TIME="${ddp_time}" DDP_MEM=0 DDP_RUN_ARGS="--input-backend synthetic-gpu --warmup-iters 1 --measured-iters 1 --batch-size 8 --num-workers 0 --persistent-workers 0 --pin-memory 0 --channels-last 0" NODE_REPORT_DATE="${report_date}" APPLY=1
-
-  job_ids="$(sed -n 's/^Submitted DDP ResNet-50 job ids: //p' "${log_path}" | tail -n 1 | tr -d ' ')"
-  if [[ -z "${job_ids}" ]]; then
-    echo "ERROR: could not parse DDP job ids from ${log_path}" >&2
-    exit 1
-  fi
-  printf '%s\n' "${job_ids}" >"${audit_root}/logs/ddp-${cluster}-job-ids.txt"
-  wait_for_slurm_jobs "ddp-${cluster}" "${job_ids}"
+  run_apply_job_phase "${log_name}" "${audit_root}/logs/ddp-${cluster}-job-ids.txt" \
+    make benchmark-ddp-resnet50 CLUSTER="${cluster}" NODES=1 NODELIST="${one}" LAUNCHER=torchrun DDP_TIME="${ddp_time}" DDP_MEM=0 DDP_RUN_ARGS="--input-backend synthetic-gpu --warmup-iters 1 --measured-iters 1 --batch-size 8 --num-workers 0 --persistent-workers 0 --pin-memory 0 --channels-last 0" NODE_REPORT_DATE="${report_date}" APPLY=1
 }
 
 apply_elbencho_cluster() {
   local cluster="$1"
   local nodes="$2"
-  local one elbencho_node log_name log_path job_ids
+  local one elbencho_node log_name
   one="$(first_node "${nodes}")"
 
   [[ "${run_elbencho}" == "1" ]] || return 0
@@ -726,28 +891,26 @@ apply_elbencho_cluster() {
   esac
 
   log_name="apply-elbencho-${cluster}-smoke"
-  log_path="${audit_root}/logs/${log_name}.log"
-  run_logged logs "${log_name}" env AICR_ELBENCHO_B200_APPLY_ALLOW=1 ELBENCHO_TARGET_ROOT="${elbencho_target_root}" make benchmark-elbencho CLUSTER="${cluster}" WORKLOAD=small-block NODES=1 NODELIST="${elbencho_node}" ELBENCHO_PROFILE=smoke ELBENCHO_CPUS_PER_TASK=8 ELBENCHO_MEM=0 ELBENCHO_TIME="${elbencho_time}" NODE_REPORT_DATE="${report_date}" APPLY=1
-
-  job_ids="$(sed -n 's/^Submitted Elbencho job ids: //p' "${log_path}" | tail -n 1 | tr -d ' ')"
-  if [[ -z "${job_ids}" ]]; then
-    echo "ERROR: could not parse Elbencho job ids from ${log_path}" >&2
-    exit 1
-  fi
-  printf '%s\n' "${job_ids}" >"${audit_root}/logs/elbencho-${cluster}-job-ids.txt"
-  wait_for_slurm_jobs "elbencho-${cluster}" "${job_ids}"
+  run_apply_job_phase "${log_name}" "${audit_root}/logs/elbencho-${cluster}-job-ids.txt" \
+    env AICR_ELBENCHO_B200_APPLY_ALLOW=1 ELBENCHO_TARGET_ROOT="${elbencho_target_root}" make benchmark-elbencho CLUSTER="${cluster}" WORKLOAD=small-block NODES=1 NODELIST="${elbencho_node}" ELBENCHO_PROFILE=smoke ELBENCHO_CPUS_PER_TASK=8 ELBENCHO_MEM=0 ELBENCHO_TIME="${elbencho_time}" NODE_REPORT_DATE="${report_date}" APPLY=1
 }
 
 render_cluster() {
   local cluster="$1"
   local hpl_job_ids elbencho_job_ids nccl_local_output nccl_rdma_output
-  run_logged reports "render-topology-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-verify-dashboard.py --results-root results --date "${report_date}" --cluster "${cluster}" --check gpu-topology --both --write
-  run_logged reports "render-gds-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-verify-dashboard.py --results-root results --date "${report_date}" --cluster "${cluster}" --check gds --both --write
-  nccl_local_output="results/reports/${report_date}/nccl-suite-local-${cluster}.md"
-  run_logged reports "render-nccl-local-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-nccl-suite-report.py --date "${report_date}" --cluster "${cluster}" --scope local --results-root results --output "${nccl_local_output}"
-  if [[ "${run_rdm}" == "1" ]]; then
-    nccl_rdma_output="results/reports/${report_date}/nccl-suite-rdma-${cluster}-2n.md"
-    run_logged reports "render-nccl-rdma-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-nccl-suite-report.py --date "${report_date}" --cluster "${cluster}" --scope rdma --nodes-per-job 2 --results-root results --output "${nccl_rdma_output}"
+  if [[ "${run_topology}" == "1" ]]; then
+    run_logged reports "render-topology-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-verify-dashboard.py --results-root results --date "${report_date}" --cluster "${cluster}" --check gpu-topology --both --write
+  fi
+  if [[ "${run_gds}" == "1" ]]; then
+    run_logged reports "render-gds-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-verify-dashboard.py --results-root results --date "${report_date}" --cluster "${cluster}" --check gds --both --write
+  fi
+  if [[ "${run_nccl}" == "1" ]]; then
+    nccl_local_output="results/reports/${report_date}/nccl-suite-local-${cluster}.md"
+    run_logged reports "render-nccl-local-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-nccl-suite-report.py --date "${report_date}" --cluster "${cluster}" --scope local --results-root results --output "${nccl_local_output}"
+    if [[ "${run_rdm}" == "1" ]]; then
+      nccl_rdma_output="results/reports/${report_date}/nccl-suite-rdma-${cluster}-2n.md"
+      run_logged reports "render-nccl-rdma-${cluster}" scripts/lib/run-repo-python.sh scripts/report/render-nccl-suite-report.py --date "${report_date}" --cluster "${cluster}" --scope rdma --nodes-per-job 2 --results-root results --output "${nccl_rdma_output}"
+    fi
   fi
   if [[ -s "${audit_root}/logs/hpl-mxp-${cluster}-job-ids.txt" ]]; then
     hpl_job_ids="$(cat "${audit_root}/logs/hpl-mxp-${cluster}-job-ids.txt")"
@@ -774,8 +937,13 @@ write_summary() {
     echo "- Installed tree: ${repo_root}"
     echo "- Audit root: ${audit_root}"
     echo "- Mode: $([[ "${apply}" == "1" ]] && echo apply || echo dry-run)"
+    echo "- Resume: $([[ "${resume}" == "1" ]] && echo enabled || echo disabled)"
+    echo "- Dry-runs: $([[ "${run_dryruns}" == "1" ]] && echo enabled || echo skipped)"
     echo "- RTX nodes: ${rtx_nodes:-skipped}"
     echo "- B200 nodes: ${b200_nodes:-skipped}"
+    echo "- GPU Topology: $([[ "${run_topology}" == "1" ]] && echo enabled || echo skipped)"
+    echo "- GDS: $([[ "${run_gds}" == "1" ]] && echo enabled || echo skipped)"
+    echo "- NCCL: $([[ "${run_nccl}" == "1" ]] && echo enabled || echo skipped)"
     echo "- RDMA: $([[ "${run_rdm}" == "1" ]] && echo enabled || echo skipped)"
     echo "- HPL-MxP: $([[ "${run_hpl_mxp}" == "1" ]] && echo enabled || echo skipped)"
     echo "- HPL-MxP B200 node: ${hpl_mxp_b200_node:-skipped}"
@@ -802,6 +970,27 @@ write_summary() {
     echo "- Explicit Slurm template tests: sbatch-test/"
     echo "- GPU probes: preflight/"
     echo "- Renders: reports/"
+    echo
+    echo "## Recorded Jobs"
+    echo
+    shopt -s nullglob
+    local job_file
+    local found_jobs=0
+    for job_file in "${audit_root}"/logs/*job-ids.txt; do
+      found_jobs=1
+      echo "- $(basename "${job_file}" .txt): $(cat "${job_file}")"
+    done
+    shopt -u nullglob
+    if [[ "${found_jobs}" == "0" ]]; then
+      echo "- none recorded"
+    fi
+    echo
+    echo "## Intentional Gaps"
+    echo
+    echo "- RTX HPL-MxP apply is skipped unless --hpl-mxp-apply-rtx is set."
+    echo "- Elbencho apply is skipped unless --include-elbencho is set."
+    echo "- Broad campaigns, full NCCL operation matrices, HPL-MxP FP4/FP8 rows,"
+    echo "  and multi-node DataLoader/DDP scaling are outside install-smoke scope."
   } >"${audit_root}/SUMMARY.md"
   echo "Wrote ${audit_root}/SUMMARY.md"
 }
@@ -824,14 +1013,17 @@ if [[ "${run_local_checks}" == "1" ]]; then
   run_local_surface_checks
 fi
 
-if [[ "${run_rtx}" == "1" ]]; then
-  dry_run_cluster rtxpro6000 "${rtx_nodes}"
+if [[ "${run_dryruns}" == "1" ]]; then
+  if [[ "${run_rtx}" == "1" ]]; then
+    dry_run_cluster rtxpro6000 "${rtx_nodes}"
+  fi
+  if [[ "${run_b200}" == "1" ]]; then
+    dry_run_cluster b200 "${b200_nodes}"
+  fi
+  grep -R -L -- '--mem=0' "${audit_root}/dryruns"/*.log >"${audit_root}/dryruns-without-mem0.txt" || true
+else
+  echo "Skipped dry-runs." >"${audit_root}/dryruns/skipped.txt"
 fi
-if [[ "${run_b200}" == "1" ]]; then
-  dry_run_cluster b200 "${b200_nodes}"
-fi
-
-grep -R -L -- '--mem=0' "${audit_root}/dryruns"/*.log >"${audit_root}/dryruns-without-mem0.txt" || true
 
 if [[ "${run_explicit_sbatch}" == "1" ]]; then
   if [[ "${run_rtx}" == "1" ]]; then

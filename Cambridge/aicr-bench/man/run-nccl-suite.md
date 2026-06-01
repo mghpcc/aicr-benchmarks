@@ -20,6 +20,7 @@ This script is normally called by Slurm wrappers under `slurm/verify/`. Use `mak
 - `--suite-class <name>`: Optional local suite-class filter. Supported values
   are B200 `b200_8rank_1g`, `b200_1proc_8g`, `b200_2rank_socket_4g`, and RTX
   `rtx_8rank_1g`, `rtx_pair_policy`.
+- `--ops <list>`: Optional comma-separated operation filter, such as `allreduce`.
 - `--nodes-per-job <n>`: Multi-node node-count metadata.
 - `--help`: Print help.
 

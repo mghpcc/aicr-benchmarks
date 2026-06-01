@@ -17,12 +17,14 @@ Options:
   --cluster <name>          b200 or rtxpro6000 (default: detected/env)
   --profile <name>          smoke, small, medium, or large (default: small)
   --suite-class <name>      Optional local suite class filter
+  --ops <list>              Optional comma-separated op filter
   --nodes-per-job <n>       Multi-node node count metadata (default: Slurm nodelist count)
   -h, --help                Show this help
 
 Environment overrides:
   HPCBENCH_IMAGE
   NCCL_SUITE_RUN_ID
+  NCCL_SUITE_OPS
   NCCL_SUITE_FAIL_ON_DMESG
 EOF
 }
@@ -31,6 +33,7 @@ scope=""
 cluster="${AICR_CLUSTER_NAME:-}"
 profile="${PROFILE:-${NCCL_SUITE_PROFILE:-small}}"
 suite_class_filter="${NCCL_SUITE_CLASS:-}"
+suite_ops_filter="${NCCL_SUITE_OPS:-}"
 nodes_per_job=""
 fail_on_dmesg="${NCCL_SUITE_FAIL_ON_DMESG:-1}"
 
@@ -50,6 +53,10 @@ while [[ $# -gt 0 ]]; do
       ;;
     --suite-class)
       suite_class_filter="${2:?missing value for --suite-class}"
+      shift 2
+      ;;
+    --ops|--op)
+      suite_ops_filter="${2:?missing value for --ops}"
       shift 2
       ;;
     --nodes-per-job)
@@ -90,6 +97,44 @@ if [[ -n "${suite_class_filter}" ]]; then
       ;;
   esac
 fi
+
+selected_ops=()
+if [[ -n "${suite_ops_filter}" ]]; then
+  IFS=',' read -r -a selected_ops <<<"${suite_ops_filter// /,}"
+  cleaned_ops=()
+  for op in "${selected_ops[@]}"; do
+    [[ -n "${op}" ]] || continue
+    case "${op}" in
+      allreduce|allgather|reduce_scatter|alltoall|sendrecv) ;;
+      *)
+        echo "ERROR: unsupported --ops item: ${op}" >&2
+        echo "Expected comma-separated subset of allreduce,allgather,reduce_scatter,alltoall,sendrecv" >&2
+        exit 2
+        ;;
+    esac
+    cleaned_ops+=("${op}")
+  done
+  selected_ops=("${cleaned_ops[@]}")
+  [[ "${#selected_ops[@]}" -gt 0 ]] || { echo "ERROR: --ops selected no operations" >&2; exit 2; }
+fi
+
+filter_ops() {
+  local input_ops=("$@")
+  local op selected out=()
+  if [[ "${#selected_ops[@]}" == "0" ]]; then
+    printf '%s\n' "${input_ops[@]}"
+    return 0
+  fi
+  for op in "${input_ops[@]}"; do
+    for selected in "${selected_ops[@]}"; do
+      if [[ "${op}" == "${selected}" ]]; then
+        out+=("${op}")
+        break
+      fi
+    done
+  done
+  printf '%s\n' "${out[@]}"
+}
 
 case "${profile}" in
   smoke)
@@ -672,6 +717,7 @@ required_ops=(allreduce allgather reduce_scatter alltoall)
 if [[ "${scope}" == "local" && "${cluster}" == "rtxpro6000" ]]; then
   required_ops=(allreduce allgather reduce_scatter alltoall sendrecv)
 fi
+mapfile -t required_ops < <(filter_ops "${required_ops[@]}")
 missing_ops=()
 for required_op in "${required_ops[@]}"; do
   if [[ "$(capability_value "${required_op}")" != "1" ]]; then
@@ -687,30 +733,35 @@ if [[ "${preflight_status}" == "passed" ]]; then
   if [[ "${scope}" == "local" ]]; then
     case "${cluster}" in
       b200)
+        mapfile -t ops < <(filter_ops allreduce allgather reduce_scatter alltoall)
         run_ops_for_class "b200_1proc_8g" "" 8 1 "1proc_8g" "local" "direct" 0 \
-          allreduce allgather reduce_scatter alltoall
+          "${ops[@]}"
         run_ops_for_class "b200_8rank_1g" "" 1 8 "8rank_1g" "local" "srun" 1 \
-          allreduce allgather reduce_scatter alltoall
+          "${ops[@]}"
         run_ops_for_class "b200_2rank_socket_4g" "rank0=3,0,1,2;rank1=7,4,5,6" 4 2 "2rank_socket_4g" "local-socket" "socket-srun" 0 \
-          allreduce allgather reduce_scatter alltoall
+          "${ops[@]}"
         ;;
       rtxpro6000)
+        mapfile -t ops < <(filter_ops allreduce allgather reduce_scatter alltoall)
         run_ops_for_class "rtx_8rank_1g" "" 1 8 "8rank_1g" "local" "srun" 1 \
-          allreduce allgather reduce_scatter alltoall
+          "${ops[@]}"
+        mapfile -t ops < <(filter_ops allreduce allgather reduce_scatter sendrecv)
         for pair in 0,1 2,3 4,5 6,7; do
           run_ops_for_class "rtx_pair_policy" "${pair}" 2 1 "1proc_2g" "local-pair" "direct" 0 \
-            allreduce allgather reduce_scatter sendrecv
+            "${ops[@]}"
         done
         ;;
     esac
   elif [[ "${scope}" == "rdma" ]]; then
     total_ranks=$(( node_count * 8 ))
+    mapfile -t ops < <(filter_ops allreduce allgather reduce_scatter alltoall)
     run_ops_for_class "${cluster}_rdma_${node_count}n_8rank_1g" "" 1 "${total_ranks}" "8rank_1g_per_node" "rdma" "srun" 1 \
-      allreduce allgather reduce_scatter alltoall
+      "${ops[@]}"
   else
     total_ranks=$(( node_count * 8 ))
+    mapfile -t ops < <(filter_ops allreduce allgather reduce_scatter alltoall)
     run_ops_for_class "${cluster}_scale_${node_count}n_8rank_1g" "" 1 "${total_ranks}" "8rank_1g_per_node" "scale" "srun" 1 \
-      allreduce allgather reduce_scatter alltoall
+      "${ops[@]}"
   fi
 fi
 
