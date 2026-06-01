@@ -11,7 +11,7 @@ provenance needed to interpret the measurement.
 
 | Study | Platform | Workloads | Result Type | Results |
 | --- | --- | --- | --- | --- |
-| [B200 Elbencho storage study](studies/b200-storage-2026-05-17.md) | B200 | One-node small-block, small-file, metadata; 30-node peak-cluster | Study result, with peak-cluster SOW status `Partial` | [Results](studies/b200-storage-2026-05-17.md#result-summary) |
+| [B200 Elbencho storage study](studies/b200-storage-2026-05-17.md) | B200 | One-node small-block, small-file, metadata; supplemental 31-node historical peaks | Study result, with memo status `Met` | [Results](studies/b200-storage-2026-05-17.md#result-summary) |
 
 ## Study Scope
 
@@ -19,11 +19,11 @@ The B200 storage study includes:
 
 - one-node parameter sweeps for `small-block`, `small-file`, and `metadata`;
 - five-sample confirmation repeats for selected one-node candidates;
-- five 30-node B200 `peak-cluster` samples on `b0002-b0031`;
+- supplemental 31-node historical peak read/write points;
 - artifact bundles, provenance JSON, and checksum files.
 
-The peak-cluster SOW item remains `Partial` until a future 31-node B200 sample
-can be collected with `b0001` available.
+The peak-cluster memo requirement is met by later supplemental 31-node historical peak
+evidence. Those rows are peak points, not medians.
 
 ## Collection Guidance
 

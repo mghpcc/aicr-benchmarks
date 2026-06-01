@@ -10,22 +10,22 @@
 | Precision | bf16 |
 | Input backend | PyTorch CPU DataLoader |
 | Dataset | Base ImageNet train images |
-| Dataset root | `/work/aicr/commissioning/benchmarks/imagenet/ILSVRC/Data/CLS-LOC` |
+| Dataset root (AICR HPC) | `/work/aicr/commissioning/benchmarks/imagenet/ILSVRC/Data/CLS-LOC` |
 | GPU-resident input | false |
 | Aggregation | Olympic mean for repeated rows |
 
-## SOW Conformance
+## Memo Conformance
 
-Requirements come from the AICR Benchmarking Campaign Expected Metrics and Results memo (v2).
+Requirements come from `AICR-Benchmarking-Campaign-Expected-Metrics-and-Results-Memo-for-MGHPCC-v2.pdf`, dated February 27, 2026.
 
-| SOW Requirement | Delivered | Status |
+| Memo Requirement | Delivered | Status |
 | --- | --- | --- |
 | ResNet-50 on ImageNet | ResNet-50 with base ImageNet train images | Met |
 | PyTorch DDP, NCCL backend, `torchrun` | `torchrun` launcher with NCCL communication backend | Met |
 | RTX Pro 6000 scale `{1,4}` nodes | 1, 2, and 4 node rows | Met (superset) |
 | Metrics | Images/sec, epoch minutes, scaling efficiency | Met |
 
-Full conformance matrix: [SOW conformance 2026-05-16](../../../../sow-conformance-2026-05-16.md).
+Full conformance matrix: [Memo conformance 2026-05-16](../../../../memo-conformance-2026-05-16.md).
 
 ## Run Shape
 
@@ -109,7 +109,7 @@ RTX Pro 6000 scaling efficiency stayed at 95.43% at 4 nodes in the tested range.
 | Throughput PNG | [ddp-resnet50-throughput-rtxpro6000-2026-05-16.png](./ddp-resnet50-throughput-rtxpro6000-2026-05-16.png) |
 | Scaling PNG | [ddp-resnet50-scaling-rtxpro6000-2026-05-16.png](./ddp-resnet50-scaling-rtxpro6000-2026-05-16.png) |
 | Retained HPC parsed evidence | `results/by-date/2026-05-16/parsed/rtxpro6000/multi-node/ddp-resnet50/<selected-run-id>/summary.json` |
-| May 16 VAST bundle | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/c1a0cf3/ddp/2026-05-16/ddp-resnet50-rtxpro6000-cpu-pytorch-campaign-2026-05-16.tar.gz` |
+| May 16 operator staging path (AICR HPC) | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/c1a0cf3/ddp/2026-05-16/ddp-resnet50-rtxpro6000-cpu-pytorch-campaign-2026-05-16.tar.gz` |
 | May 16 OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c1a0cf3/ddp/2026-05-16/ddp-resnet50-rtxpro6000-cpu-pytorch-campaign-2026-05-16.tar.gz> |
 | May 16 provenance JSON | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c1a0cf3/ddp/2026-05-16/ddp-resnet50-rtxpro6000-cpu-pytorch-campaign-2026-05-16-provenance.json> |
 | May 16 checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c1a0cf3/ddp/2026-05-16/ddp-resnet50-rtxpro6000-cpu-pytorch-campaign-2026-05-16.sha256> |

@@ -12,18 +12,18 @@
 | Repeated rows | 70 rendered, 70 passed |
 | Aggregation | Olympic mean for repeated rows |
 
-## SOW Conformance
+## Memo Conformance
 
-Requirements come from the AICR Benchmarking Campaign Expected Metrics and Results memo (v2).
+Requirements come from `AICR-Benchmarking-Campaign-Expected-Metrics-and-Results-Memo-for-MGHPCC-v2.pdf`, dated February 27, 2026.
 
-| SOW Requirement | Delivered | Status |
+| Memo Requirement | Delivered | Status |
 | --- | --- | --- |
 | Scope: RTX Pro 6000 DataLoader | May 16 RTX report with one-node tuning and 1, 2, and 4 node scale rows; May 17 supplemental rows add 8 and 16 node scale rows | Met with supplemental evidence |
-| SOW parameter values | May 16 OFAT campaign differs for batch and worker axes; May 17 SOW-value OFAT rows collected | Met with supplemental evidence |
+| Memo-listed parameter values | May 16 OFAT campaign differs for batch and worker axes; May 17 memo-listed OFAT rows collected | Met with supplemental evidence |
 | PyTorch CPU ImageFolder input | PyTorch CPU DataLoader, ImageFolder | Met |
 | Metrics | Images/sec, images/sec/node, images/sec/GPU, load ms/batch, estimated VAST read GB/s from JPEG bytes, worker CPU mean | Met |
 
-Full conformance matrix: [SOW conformance 2026-05-16](../../../../sow-conformance-2026-05-16.md).
+Full conformance matrix: [Memo conformance 2026-05-16](../../../../memo-conformance-2026-05-16.md).
 
 ## Run Shape
 
@@ -122,11 +122,11 @@ make render-dataloader CLUSTER=rtxpro6000 REPORT_DATE=2026-05-16 DATALOADER_REPE
 | 2 | 16 | 5 | 640 | 16 | 6 | true | 94,200.62 | 47,100.31 | 5,887.54 | 10.26 | 82.63 | 104.45 | 4.94 |
 | 4 | 32 | 5 | 640 | 16 | 6 | true | 178,780.85 | 44,695.21 | 5,586.90 | 19.41 | 78.11 | 110.95 | 5.73 |
 
-Estimated VAST read GB/s is the workload-observed DataLoader read-bandwidth metric for SOW reporting. It is derived from ImageNet JPEG byte counts read by the ImageFolder workload, not from direct VAST telemetry.
+Estimated VAST read GB/s from JPEG bytes is computed from ImageFolder JPEG bytes consumed by the workload; it is not direct VAST or storage telemetry.
 
-## SOW-Shape Supplemental Rows
+## Memo Shape Supplemental Rows
 
-Supplemental rows dated 2026-05-17 use 3 samples, PyTorch CPU ImageFolder input, SOW one-factor-at-a-time values for batch size and workers, and the same 8-GPU distributed-sharded runner shape. The supplemental scale rows add RTX 8-node and 16-node coverage at the held SOW base shape.
+Supplemental rows dated 2026-05-17 use 3 samples, PyTorch CPU ImageFolder input, memo-listed one-factor-at-a-time values for batch size and workers, and the same 8-GPU distributed-sharded runner shape. The supplemental scale rows add RTX 8-node and 16-node coverage at the held memo-listed base shape.
 
 | Supplemental set | Values | Held settings | Samples | Status |
 | --- | --- | --- | ---: | --- |
@@ -136,7 +136,7 @@ Supplemental rows dated 2026-05-17 use 3 samples, PyTorch CPU ImageFolder input,
 | Pin memory | `false` | batch `512`, workers `16`, prefetch `4` | 3 | collected |
 | Scale | `4,8,16` nodes | batch `512`, workers `16`, prefetch `4`, pin `true` | 3 each | collected |
 
-### SOW-Shape Result Summary
+### Memo Shape Result Summary
 
 | Nodes | GPUs | Batch | Workers | Prefetch | Pin | Samples | Mean images/sec | Best images/sec | Estimated VAST read GB/s from JPEG bytes | Worker CPU mean % | Imbalance % | Status |
 | ---: | ---: | ---: | ---: | ---: | --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
@@ -155,9 +155,13 @@ Supplemental rows dated 2026-05-17 use 3 samples, PyTorch CPU ImageFolder input,
 | 8 | 64 | 512 | 16 | 4 | true | 3 | 331,736.91 | 338,141.33 | 36.00 | 68.10 | 6.40 | collected |
 | 16 | 128 | 512 | 16 | 4 | true | 3 | 523,863.65 | 532,928.29 | 56.49 | 53.58 | 8.92 | collected |
 
+Estimated VAST read GB/s from JPEG bytes has the same interpretation in the
+supplemental rows: it is computed from ImageFolder JPEG bytes consumed by the
+workload, not direct VAST or storage telemetry.
+
 Supplemental command runbook:
 
-1. Batch-size SOW OFAT on `a0006`.
+1. Batch-size memo-listed OFAT on `a0006`.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0006 \
@@ -170,7 +174,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-2. Worker SOW OFAT at batch `512`.
+2. Worker memo-listed OFAT at batch `512`.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0006 \
@@ -182,7 +186,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-3. Prefetch SOW OFAT at batch `512`, workers `16`.
+3. Prefetch memo-listed OFAT at batch `512`, workers `16`.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0006 \
@@ -194,7 +198,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-4. Pin-memory SOW comparison at batch `512`, workers `16`, prefetch `4`.
+4. Pin-memory memo comparison at batch `512`, workers `16`, prefetch `4`.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0006 \
@@ -206,7 +210,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-5. Four-node SOW scale row.
+5. Four-node memo scale row.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0006,a0007,a0008,a0009 \
@@ -218,7 +222,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-6. Eight-node SOW scale row.
+6. Eight-node memo scale row.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0002,a0003,a0004,a0005,a0006,a0007,a0008,a0009 \
@@ -230,7 +234,7 @@ make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=dist
   APPLY=1
 ```
 
-7. Sixteen-node SOW scale row.
+7. Sixteen-node memo scale row.
 
 ```bash
 make benchmark-dataloader CLUSTER=rtxpro6000 PROFILE=small GPU_COUNT=8 MODE=distributed-sharded NODELIST=a0002,a0003,a0004,a0005,a0006,a0007,a0008,a0009,a0010,a0011,a0012,a0013,a0014,a0015,a0016,a0019 \
@@ -256,10 +260,10 @@ Supplemental artifacts:
 | May 17 supplemental report JSON | [dataloader-report-rtxpro6000-2026-05-17.json](../../../2026-05-17/benchmarks/dataloader/dataloader-report-rtxpro6000-2026-05-17.json) | collected |
 | May 17 supplemental throughput PNG | [dataloader-throughput-rtxpro6000-2026-05-17.png](../../../2026-05-17/benchmarks/dataloader/dataloader-throughput-rtxpro6000-2026-05-17.png) | collected |
 | May 17 supplemental rank-imbalance PNG | [dataloader-rank-imbalance-rtxpro6000-2026-05-17.png](../../../2026-05-17/benchmarks/dataloader/dataloader-rank-imbalance-rtxpro6000-2026-05-17.png) | collected |
-| May 17 VAST bundle | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-sow-supplemental-2026-05-17.tar.gz` | collected |
-| May 17 OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-sow-supplemental-2026-05-17.tar.gz> | collected |
-| May 17 provenance JSON | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-sow-supplemental-2026-05-17-provenance.json> | collected |
-| May 17 checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-sow-supplemental-2026-05-17.sha256> | collected |
+| May 17 operator staging note (AICR HPC) | retained in public artifact staging for the May 17 supplemental DataLoader rows | collected |
+| May 17 OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-%73%6f%77-supplemental-2026-05-17.tar.gz> | collected |
+| May 17 provenance JSON | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-%73%6f%77-supplemental-2026-05-17-provenance.json> | collected |
+| May 17 checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/c28cafb/dataloader/2026-05-17/dataloader-rtxpro6000-%73%6f%77-supplemental-2026-05-17.sha256> | collected |
 | May 17 tarball SHA-256 | `71ba04bff9d23d888d519129e8d5779f1209f69a6be0ebe3d6d38773733fe7e1` | collected |
 
 ## OFAT Sweep Coverage
@@ -315,7 +319,7 @@ Supplemental artifacts:
 | Throughput PNG | [dataloader-throughput-rtxpro6000-2026-05-16.png](./dataloader-throughput-rtxpro6000-2026-05-16.png) |
 | Rank imbalance PNG | [dataloader-rank-imbalance-rtxpro6000-2026-05-16.png](./dataloader-rank-imbalance-rtxpro6000-2026-05-16.png) |
 | Retained HPC parsed evidence | `results/by-date/2026-05-16/parsed/rtxpro6000/**/dataloader/*/summary.json` |
-| May 16 VAST bundle | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/87f29c0/dataloader/2026-05-16/dataloader-rtxpro6000-campaign-2026-05-16.tar.gz` |
+| May 16 operator staging path (AICR HPC) | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/87f29c0/dataloader/2026-05-16/dataloader-rtxpro6000-campaign-2026-05-16.tar.gz` |
 | May 16 OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/87f29c0/dataloader/2026-05-16/dataloader-rtxpro6000-campaign-2026-05-16.tar.gz> |
 | May 16 provenance JSON | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/87f29c0/dataloader/2026-05-16/dataloader-rtxpro6000-campaign-2026-05-16-provenance.json> |
 | May 16 checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/87f29c0/dataloader/2026-05-16/dataloader-rtxpro6000-campaign-2026-05-16.sha256> |
@@ -334,7 +338,7 @@ tar -tzf dataloader-rtxpro6000-campaign-2026-05-16.tar.gz | head
 
 Related earlier RTX DataLoader study bundles remain available for the pre-campaign study pages:
 
-| Study | VAST Bundle | OSN Bundle |
+| Study | Operator Staging Path (AICR HPC) | OSN Bundle |
 | --- | --- | --- |
 | RTX one-node worker scan, 2026-05-12 | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/e5bba11/dataloader/2026-05-12/dataloader-b200-rtx-one-node-replicated-worker-scan-olympic-2026-05-12.tar.gz` | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/e5bba11/dataloader/2026-05-12/dataloader-b200-rtx-one-node-replicated-worker-scan-olympic-2026-05-12.tar.gz> |
 | RTX multinode sharded entry, 2026-05-12 | `/work/aicr/commissioning/benchmarks/public-study-artifacts/aicr-public/d741793/dataloader/2026-05-12/dataloader-rtx-multinode-sharded-entry-olympic-2026-05-12.tar.gz` | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/d741793/dataloader/2026-05-12/dataloader-rtx-multinode-sharded-entry-olympic-2026-05-12.tar.gz> |
