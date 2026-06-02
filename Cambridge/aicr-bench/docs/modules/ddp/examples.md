@@ -12,21 +12,22 @@ active and align the scheduler shape with the active launcher. Committed copy:
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-ddp-primitive
-#SBATCH --partition=<rtx-batch-or-b200-batch>
+#SBATCH --partition=rtx-batch
+##SBATCH --partition=b200-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=0
-#SBATCH --gres=<gpu-type-and-count>   # placeholder, replace before submitting
+#SBATCH --gres=gpu:rtx_pro_6000:8
+##SBATCH --gres=gpu:b200:8
 #SBATCH --time=02:00:00
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
 set -euo pipefail
 
-# Replace the partition and GRES placeholders before submitting.
-# AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtx_pro_6000:8
-#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
+# Keep one matching partition/GRES pair active:
+#   RTX:  #SBATCH --partition=rtx-batch   and #SBATCH --gres=gpu:rtx_pro_6000:8
+#   B200: #SBATCH --partition=b200-batch  and #SBATCH --gres=gpu:b200:8
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -42,8 +43,9 @@ exec ./scripts/benchmark/run-ddp-resnet50.sh --launcher torchrun --warmup-iters 
 # exec ./scripts/benchmark/run-ddp-resnet50.sh --launcher srun --warmup-iters 100 --measured-iters 500 --batch-size 64 --num-workers 0 --persistent-workers 0
 ```
 
-Replace the scheduler placeholders, then submit the customized workload. If the
-template was copied outside the install tree, pass the install root explicitly:
+Select the scheduler partition/GRES pair, then submit the customized workload.
+If the template was copied outside the install tree, pass the install root
+explicitly:
 
 ```bash
 sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-ddp-resnet50.sbatch

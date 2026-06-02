@@ -9,22 +9,23 @@ This example starts from the script primitive directly. Keep one `exec` line act
 ```bash
 #!/usr/bin/env bash
 #SBATCH --job-name=aicr-dataloader-primitive
-#SBATCH --partition=<rtx-batch-or-b200-batch>
+#SBATCH --partition=rtx-batch
+##SBATCH --partition=b200-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
 #SBATCH --mem=0
-#SBATCH --gres=<gpu-type-and-count>
+#SBATCH --gres=gpu:rtx_pro_6000:8
+##SBATCH --gres=gpu:b200:8
 #SBATCH --time=01:00:00
 #SBATCH --output=%x-%j.out
 #SBATCH --error=%x-%j.err
 set -euo pipefail
 
-# Replace the partition and GRES placeholders before submitting.
-# AICR HPC scheduler examples:
-#   RTX:  #SBATCH --partition=rtx-batch and #SBATCH --gres=gpu:rtx_pro_6000:8
-#   B200: #SBATCH --partition=b200-batch and #SBATCH --gres=gpu:b200:8
+# Keep one matching partition/GRES pair active:
+#   RTX:  #SBATCH --partition=rtx-batch   and #SBATCH --gres=gpu:rtx_pro_6000:8
+#   B200: #SBATCH --partition=b200-batch  and #SBATCH --gres=gpu:b200:8
 
 REPO_ROOT="${AICR_BMARK_DIR:?set AICR_BMARK_DIR to your aicr-bench install root}"
 cd "$REPO_ROOT"
@@ -40,7 +41,9 @@ exec ./scripts/benchmark/run-dataloader.sh --profile large --nodes 1 --mode repl
 # exec ./scripts/benchmark/run-dataloader.sh --profile large --nodes 2 --mode distributed-sharded --requested-gpu-count 16
 ```
 
-Replace the scheduler placeholders, then submit the customized workload. If the template was copied outside the install tree, pass the install root explicitly:
+Select the scheduler partition/GRES pair, then submit the customized workload.
+If the template was copied outside the install tree, pass the install root
+explicitly:
 
 ```bash
 sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench slurm-dataloader.sbatch
