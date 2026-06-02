@@ -468,6 +468,7 @@ help-benchmarks:
 		"" \
 		"Elbencho:" \
 		"  make benchmark-elbencho CLUSTER=<b200|rtxpro6000> WORKLOAD=<peak-cluster|small-block|small-file|metadata> PROFILE=<smoke|small>" \
+		"  make install-elbencho previews the optional Elbencho runtime image; add APPLY=1 to pull it." \
 		"  PROFILE selects reviewed file-backed templates; ELBENCHO_PROFILE is an Elbencho-specific override." \
 		"  ELBENCHO_REPEAT_COUNT submits serialized Slurm repeats with afterok dependencies." \
 		"  ELBENCHO_SIZE, ELBENCHO_BLOCK, ELBENCHO_THREADS, ELBENCHO_IODEPTH, ELBENCHO_FILE_PATTERN, ELBENCHO_FILES, and ELBENCHO_DIRS tune profile templates for calibration." \
