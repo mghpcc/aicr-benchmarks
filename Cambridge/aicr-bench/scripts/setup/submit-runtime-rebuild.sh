@@ -10,8 +10,8 @@ usage() {
 Usage:
   scripts/setup/submit-runtime-rebuild.sh [--apply] [--wait] [--wait-complete] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--replace-current]
 
-Default behavior is a dry run. Builder selection uses an exactly idle rtx-devel
-node. If rtx-devel has no idle nodes, the helper fails unless --wait or --partition
+Default behavior is a dry run. Builder selection uses an exactly idle b200-batch
+node. If b200-batch has no idle nodes, the helper fails unless --wait or --partition
 is provided.
 Runtime rebuild submissions default to --mem=0 so Slurm grants the job the node
 memory cgroup.
@@ -115,15 +115,15 @@ if [[ -n "$partition_override" ]]; then
   selected_partition="$partition_override"
   selection_note="explicit partition override"
 else
-  if selected_node="$(first_idle_node_for_partition rtx-devel)"; then
-    selected_partition="rtx-devel"
-    selection_note="idle rtx-devel"
+  if selected_node="$(first_idle_node_for_partition b200-batch)"; then
+    selected_partition="b200-batch"
+    selection_note="idle b200-batch"
   elif [[ "$wait_for_idle" == "1" ]]; then
-    selected_partition="rtx-devel"
-    selection_note="queued on rtx-devel because --wait was provided"
+    selected_partition="b200-batch"
+    selection_note="queued on b200-batch because --wait was provided"
   else
-    echo "ERROR: no exactly-idle builder nodes found in rtx-devel" >&2
-    echo "Pass --wait to queue on rtx-devel, or --partition <name> for an explicit override." >&2
+    echo "ERROR: no exactly-idle builder nodes found in b200-batch" >&2
+    echo "Pass --wait to queue on b200-batch, or --partition <name> for an explicit override." >&2
     exit 1
   fi
 fi
