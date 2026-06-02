@@ -33,7 +33,7 @@ ${AICR_IMAGENET_DIR}/train
 
 ## Acquisition
 
-ImageNet acquisition is an operator-managed external step. One confirmed
+ImageNet acquisition is a user-managed external step. One confirmed
 workflow is:
 
 ```bash
@@ -42,7 +42,7 @@ source ~/.venvs/kaggle/bin/activate
 uv pip install kaggle
 ```
 
-Authenticate with Kaggle using your own operator-managed credentials. Do not
+Authenticate with Kaggle using your own user-managed credentials. Do not
 commit API keys or tokens into the repository, shell history snapshots, or
 repo-tracked config files.
 
@@ -129,6 +129,19 @@ Val images:    50000
 ```
 
 On AICR HPC, `AICR_APPTAINER_COMMON_OPTS` should expand to
-`--no-mount /etc/localtime --bind /work:/work`. That keeps ad hoc checks
-aligned with Slurm-driven benchmark jobs and makes the shared `/work` dataset
-tree visible inside the container.
+`--no-mount /etc/localtime --bind /work:/work --bind /scratch:/scratch`.
+That keeps ad hoc checks aligned with Slurm-driven benchmark jobs, makes the
+shared `/work` ImageNet tree visible inside the container, and exposes
+scratch-hosted derived datasets when you choose `/scratch/$USER` for
+regenerated data.
+
+## Derived Experiment Inputs
+
+Some DataLoader and DDP studies create ImageNet-derived JPEG and NumPy inputs
+from this canonical ImageFolder tree. Those derived datasets are controlled
+experiment inputs for decode-pressure, backend-crossover, and prepared-input
+ceiling studies. They are not replacements for canonical ImageNet evidence.
+
+See [Derived ImageNet Datasets](../modules/dataloader/derived-datasets.md) for
+the supported formats, dry-run planner, CPU-queue submitter, Make wrapper, and
+storage policy.

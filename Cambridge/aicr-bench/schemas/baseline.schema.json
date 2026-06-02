@@ -1,0 +1,46 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/aicr/schemas/baseline.schema.json",
+  "title": "AICR Setup Baseline",
+  "description": "Promoted setup baseline for a cluster-level readiness gate.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "cluster", "baseline_id", "state", "promoted_at_utc", "promoted_by", "checks"],
+  "properties": {
+    "schema_version": {"type": "integer", "const": 1},
+    "cluster": {"type": "string", "enum": ["rtxpro6000", "b200"]},
+    "baseline_id": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}-(rtxpro6000|b200)-r[0-9]{2}$"},
+    "state": {"type": "string", "enum": ["ready", "invalid"]},
+    "promoted_at_utc": {"type": "string", "format": "date-time"},
+    "promoted_by": {"type": "string", "minLength": 1},
+    "invalidated_at_utc": {"type": ["string", "null"], "format": "date-time"},
+    "invalidated_by": {"type": ["string", "null"]},
+    "notes": {"type": "string"},
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["container-compat", "pytorch-smoke", "hpc-benchmarks-smoke", "elbencho-smoke"],
+      "properties": {
+        "container-compat": {"$ref": "#/$defs/checkRef"},
+        "pytorch-smoke": {"$ref": "#/$defs/checkRef"},
+        "hpc-benchmarks-smoke": {"$ref": "#/$defs/checkRef"},
+        "elbencho-smoke": {"$ref": "#/$defs/checkRef"}
+      }
+    }
+  },
+  "$defs": {
+    "checkRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["run_id", "status", "record_path", "parsed_status_path", "completed_at_utc"],
+      "properties": {
+        "run_id": {"type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{6}Z-r[0-9]{2}$"},
+        "status": {"type": "string", "enum": ["passed"]},
+        "record_path": {"type": "string", "pattern": "^results/setup/(rtxpro6000|b200)/raw/(container-compat|pytorch-smoke|hpc-benchmarks-smoke|elbencho-smoke)/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{6}Z-r[0-9]{2}/metadata/record\\.json$"},
+        "parsed_status_path": {"type": "string", "pattern": "^results/setup/(rtxpro6000|b200)/parsed/(container-compat|pytorch-smoke|hpc-benchmarks-smoke|elbencho-smoke)/[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{6}Z-r[0-9]{2}/status\\.json$"},
+        "completed_at_utc": {"type": "string", "format": "date-time"},
+        "job_id": {"type": ["string", "null"]}
+      }
+    }
+  }
+}

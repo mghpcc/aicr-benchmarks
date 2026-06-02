@@ -90,6 +90,33 @@ bash scripts/verify/run-install-gpu-smoke-suite.sh \
   --apply
 ```
 
+For long applied runs, start the command inside `tmux` or run it with `nohup`
+from the AICR HPC login node so a local SSH disconnect does not stop the
+operator process:
+
+```bash
+tmux new -s install-gpu-smoke
+bash scripts/verify/run-install-gpu-smoke-suite.sh \
+  --rtx-nodes a0002,a0003 \
+  --b200-nodes b0001,b0002 \
+  --audit-root /scratch/csim/validate/install-gpu-smoke-audit-YYYYMMDD-HHMMSS \
+  --apply
+```
+
+If the operator process exits after jobs were submitted, resume from the same
+installed tree and audit root:
+
+```bash
+bash scripts/verify/run-install-gpu-smoke-suite.sh \
+  --rtx-nodes a0002,a0003 \
+  --b200-nodes b0001,b0002 \
+  --resume-from-audit-root /scratch/csim/validate/install-gpu-smoke-audit-YYYYMMDD-HHMMSS
+```
+
+Resume mode reuses recorded job IDs, skips local checks, skips dry-runs, skips
+`sbatch --test-only`, waits on any still-running recorded jobs, and continues
+with the remaining apply and render phases.
+
 The apply path runs, per enabled cluster:
 
 - one GPU Topology job on the first node
@@ -136,9 +163,18 @@ or, for the Slurm container install workflow:
 make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1
 ```
 
+To add only the optional Elbencho image through Slurm without rechecking the
+default images:
+
+```bash
+make install-containers INSTALL_ONLY_ELBENCHO_CONTAINER=1 APPLY=1
+```
+
 When enabled, Elbencho install smoke uses the public `smoke` profile, one
 explicit node per enabled cluster, `--mem=0`, and a scratch target root under
 `/scratch/$USER/elbencho/install-smoke-<UTC>` unless overridden.
+Use `--only-elbencho` or `INSTALL_SMOKE_ONLY_ELBENCHO=1` for a targeted
+Elbencho loop after the broader GPU module suite has already passed.
 
 Before apply jobs, the driver submits short `nvidia-smi -L` probe jobs with
 explicit `--nodelist`, cluster GPU GRES, and `--mem=0`. The run stops if a
@@ -176,6 +212,11 @@ make install-gpu-smoke-suite \
 Useful switches:
 
 - `INSTALL_SMOKE_AUDIT_ROOT=<path>` fixes the evidence directory.
+- `INSTALL_SMOKE_RESUME_FROM_AUDIT_ROOT=<path>` resumes an interrupted applied
+  run from an existing audit root.
+- `INSTALL_SMOKE_SKIP_TOPOLOGY=1` skips GPU Topology install-smoke coverage.
+- `INSTALL_SMOKE_SKIP_GDS=1` skips GDS install-smoke coverage.
+- `INSTALL_SMOKE_SKIP_NCCL=1` skips NCCL local/RDMA install-smoke coverage.
 - `INSTALL_SMOKE_SKIP_RDMA=1` skips two-node NCCL RDMA.
 - `INSTALL_SMOKE_SKIP_HPL_MXP=1` skips HPL-MxP install-smoke coverage.
 - `INSTALL_SMOKE_SKIP_DATALOADER=1` skips DataLoader install-smoke coverage.
@@ -191,8 +232,11 @@ Useful switches:
 - `INSTALL_SMOKE_ELBENCHO_RTX_NODE=<node>` overrides the RTX Elbencho node.
 - `INSTALL_SMOKE_ELBENCHO_TARGET_ROOT=<path>` sets the scratch target root.
 - `INSTALL_SMOKE_ELBENCHO_TIME=00:10:00` sets the Elbencho time limit.
+- `INSTALL_SMOKE_ONLY_ELBENCHO=1` enables only Elbencho and required node
+  preflight.
 - `INSTALL_SMOKE_SKIP_RTX=1` or `INSTALL_SMOKE_SKIP_B200=1` narrows cluster coverage.
 - `INSTALL_SMOKE_SKIP_LOCAL_CHECKS=1` skips docs/help/syntax checks.
+- `INSTALL_SMOKE_SKIP_DRY_RUNS=1` skips Make/script dry-runs.
 - `INSTALL_SMOKE_SKIP_EXPLICIT_SBATCH=1` skips `sbatch --test-only`.
 - `INSTALL_SMOKE_NO_RENDER=1` skips final report rendering.
 - `INSTALL_SMOKE_RENDER_ONLY=1` renders reports from existing evidence without
@@ -212,6 +256,25 @@ Each run writes:
 
 Generated results remain under the installed tree `results/` and the audit root.
 Do not commit generated runtime assets, Slurm logs, or result trees.
+
+## Coverage Audit
+
+Current install-smoke coverage is deliberately small and reproducible:
+
+- GPU Topology: one node per enabled cluster.
+- GDS: one `PROFILE=smoke` node per enabled cluster.
+- NCCL: one local `allreduce` row per enabled cluster and one two-node RDMA
+  `allreduce` row when two nodes are supplied.
+- HPL-MxP: one B200 FP16 smoke row by default; RTX HPL-MxP apply is opt-in.
+- DataLoader: one one-GPU `pytorch-cpu-dataloader` smoke row per enabled cluster.
+- DDP: one one-node `torchrun` `synthetic-gpu` smoke row per enabled cluster.
+- Elbencho: optional only, because it needs the optional Elbencho runtime image
+  and writes a scratch storage target.
+
+The suite does not validate public performance claims. It intentionally skips
+broad campaigns, repeated statistics, HPL-MxP FP4/FP8 and weak-study rows,
+multi-node DDP/DataLoader scaling, full NCCL operation matrices, and Elbencho
+unless explicitly requested.
 
 ## Stop Rules
 

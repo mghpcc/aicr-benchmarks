@@ -4,7 +4,7 @@ Purpose: document shared naming, workflow, and artifact conventions for public A
 
 AICR-Bench has two public layers:
 
-- Scripts are benchmark primitives for users building their own Slurm workflows, studies, reports, or automation.
+- Scripts are workflow primitives for users building their own Slurm workflows, studies, reports, or automation.
 - Make is the curated campaign driver that composes those primitives into repeatable runs, dashboards, and repo-standard artifact layouts.
 
 ## Module Shape
@@ -61,6 +61,9 @@ Use these labels consistently:
 - `Local dry-run doctest`: runs in the default docs test and exercises a
   dry-run command without submitting Slurm jobs. Use this when the command can
   run on a workstation with explicit inputs and does not need Slurm discovery.
+- `Local fixture replay`: runs in the default docs test against committed
+  synthetic or reduced fixtures. Use this for parser, aggregation, and renderer
+  behavior that can be proven without generated result trees.
 - `Local replay`: local validation command that is run during handoff checks but
   is not an `aicr-test` block.
 - `AICR HPC dry-run doctest`: reserved for future default docs tests that must
@@ -87,7 +90,7 @@ Documentation tests use `aicr-test` metadata blocks. Defaults must be safe:
 - Default docs tests must not submit Slurm jobs, require GPUs, require VAST
   pressure, or require generated result trees. Avoid default doctests for
   dry-run commands that perform Slurm node discovery or write fleet manifests;
-  document those commands as AICR HPC dry-run replay instead.
+  document those commands as AICR HPC dry-run replay instructions.
 - Applied docs tests must require `DOCS_APPLY=1` and an explicit `NODELIST`.
 - Applied docs tests should use smoke-sized profiles or tiny scale ladders.
 - Long campaign replay belongs in the module test plan, not in default doctests.
@@ -165,7 +168,7 @@ intentional stress behavior, not the public teaching default.
 Storage-backed modules can change the measured result by changing how many jobs
 hit VAST at the same time. For these modules, a numeric stagger is a controlled
 pressure setting: lower values increase concurrent filesystem pressure, and
-higher values reduce it. Promoted benchmark-style studies should run only one
+higher values reduce it. Published benchmark-style studies should run only one
 job of that IO-heavy type at a time by using a Slurm dependency-chain stagger
 mode when the module submitter supports it.
 
@@ -186,7 +189,7 @@ pacing and campaign-shape controls rather than VAST IO isolation controls.
 Renderers read existing parsed artifacts and create dashboards, reports, CSV, JSON metadata, or PNG outputs. Make may call renderers as part of an opinionated campaign flow. Script artifact sections should list only the artifacts produced by the documented runner, submitter, or sweep scripts, not duplicate rendered report outputs.
 
 Dashboard statistic definitions live in [Stats Explained](../stats-explained.md).
-Generated reports should link there rather than to operator-private paths.
+Generated reports should link there directly.
 
 Render replay belongs in `test-plan.md` when a module produces reports or
 dashboards. If no committed fixture exists, the test plan should say that render
@@ -211,13 +214,15 @@ DataLoader and DDP profiles control workload intensity only. Nodes, GPU counts, 
 
 The `slurm-<module>.sbatch` files show how to wrap a script primitive in your own Slurm workload. The sbatch wrapper owns scheduler shape: partition, node count, task count, GPU resource request, CPU count, and time limit.
 
-The primitive command inside the wrapper should avoid cluster-specific defaults. Set `AICR_CLUSTER_NAME` explicitly when detection is not enough, or let the runner detect the cluster from the allocated GPU type. If you submit a copied template from outside the install root, pass `AICR_BMARK_DIR` with `sbatch --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench ...`.
+The primitive command inside the wrapper should avoid cluster-specific defaults. Set `AICR_CLUSTER_NAME` explicitly when detection is not enough, or let the runner detect the cluster from the allocated GPU type. If you submit a copied template from outside the install root, pass `AICR_BMARK_DIR` with `sbatch --mem=0 --export=ALL,AICR_BMARK_DIR=/path/to/aicr-bench ...`.
 
 When customizing a Slurm primitive example:
 
 - Keep one `exec` line active.
 - Align `#SBATCH --nodes`, `#SBATCH --ntasks`, `#SBATCH --ntasks-per-node`, and GPU count with that active command.
-- Use `GPU1` for RTX jobs and `GPU2` for B200 jobs on AICR HPC.
+- Keep `#SBATCH --mem=0` unless a documented diagnostic intentionally tests a
+  smaller Slurm memory cgroup.
+- Use `rtx-batch` for RTX jobs and `b200-batch` for B200 jobs on AICR HPC.
 - Use profile inspection from `scripts.md`; submitted workload examples should run work, not inspect profiles.
 
 ## Artifact Sections
@@ -226,4 +231,4 @@ Every implemented module documents artifacts at the end of both `scripts.md` and
 
 - Script artifact sections describe what direct primitive runs, submitters, or sweeps write.
 - Make artifact sections describe the curated campaign layout, reports, dashboards, manifests, and rendered files.
-- Examples describe expected artifact classes. Studies and reviewed reports link promoted evidence bundles; examples should not link raw generated `results/` trees.
+- Examples describe expected artifact classes. Studies and reviewed reports link published evidence bundles; examples should not link raw generated `results/` trees.

@@ -1,10 +1,10 @@
-# Profiling & Benchmarking Modules
+# Verification & Benchmarking Modules
 
 Purpose: catalog the public AICR-Bench modules and explain the two-layer interface model.
 
 AICR-Bench exposes two public layers:
 
-- Scripts are benchmark primitives for users building their own Slurm workflows, studies, reports, or automation.
+- Scripts are workflow primitives for users building their own Slurm workflows, studies, reports, or automation.
 - Make is the curated campaign driver that composes those primitives into repeatable runs, dashboards, and repo-standard artifact layouts.
 
 Shared naming and workflow rules are in [Module conventions](conventions.md).
@@ -20,7 +20,8 @@ Each module has:
 Use the module pages when learning a workflow:
 
 - [Make driver](make-driver.md)
-- Profiling
+- [Install-tree GPU smoke suite](install-smoke.md)
+- Verification and diagnostics
   - [GPU Topology](gpu-topology/)
   - [GPU Direct Storage (GDS)](gds/)
   - [NVIDIA Collective Communications Library (NCCL)](nccl/)

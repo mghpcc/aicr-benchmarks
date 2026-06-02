@@ -4,8 +4,8 @@ AICR-Bench install tree with Slurm + Apptainer workflows for focused GPU support
 
 Supported GPU profiles:
 
-- `rtxpro6000`: GPU1 partition, nodes `a0001-a0019`, 8x RTX PRO 6000.
-- `b200`: GPU2 partition, nodes `b0001-b0031`, 8x B200.
+- `rtxpro6000`: rtx-batch partition, nodes `a0001-a0019`, 8x RTX PRO 6000.
+- `b200`: b200-batch partition, nodes `b0001-b0031`, 8x B200.
 
 Run commands from this install root so `benchmark-settings.env` resolves through `SLURM_SUBMIT_DIR`. Runtime assets live outside Git checkouts under `/work/aicr/commissioning/benchmarks/runtime` by default and are refreshed only by explicit operator action.
 

@@ -15,6 +15,7 @@ To use a private runtime tree, set it in `benchmark-settings.env`:
 ```bash
 AICR_RUNTIME_ROOT=/path/to/aicr-runtime
 AICR_APPTAINER_IMAGE_DIR="${AICR_RUNTIME_ROOT}/apptainer/images"
+AICR_ELBENCHO_IMAGE="${AICR_APPTAINER_IMAGE_DIR}/elbencho-${AICR_ELBENCHO_TAG}.sif"
 AICR_UV_ROOT="${AICR_RUNTIME_ROOT}/uv"
 AICR_UV_ENVS_DIR="${AICR_RUNTIME_ROOT}/uv-envs"
 AICR_UV_ENV_PREFIX="${AICR_UV_ENVS_DIR}/aicr-bench"
@@ -134,5 +135,8 @@ image. Optional probe images are installed only when their flags are enabled.
 Elbencho is also optional; install it with `make install-elbencho APPLY=1`, or
 include it in the Slurm container install with
 `make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1`.
+To add only the optional Elbencho image through Slurm without rechecking the
+default images, use
+`make install-containers INSTALL_ONLY_ELBENCHO_CONTAINER=1 APPLY=1`.
 
 For exceptional local-only debugging, `make install-containers-local` runs the pull helper in the current shell. Do not use that path for routine AICR HPC runtime builds.
