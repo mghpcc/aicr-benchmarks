@@ -60,12 +60,6 @@ JPEG/GDS studies.
 | Prepared-tensor scale | [DDP prepared-tensor GPU/cuFile scale follow-up](studies/prepared-tensor-gds-scale-followup.md) | B200 scale follow-up: same-input `spc=64` one-, two-, four-, and eight-node prepared-block ladder plus a separate five-repeat `spc=128` one-, two-, four-, eight-, and sixteen-node ladder. Prepared fp16 tensor transport evidence with synthetic GPU labels for the DALI rows and cuFile compatibility mode logged. | [Results](studies/prepared-tensor-gds-scale-followup.md#spc64-scale-follow-up) |
 | Prepared-tensor transport | [DDP RTX prepared-tensor GPU/cuFile transport study](studies/rtx-prepared-tensor-gds-transport.md) | RTX prepared-block DDP study with five-repeat one-, two-, four-, and eight-node `100/500` rows. Prepared fp16 tensor transport evidence with synthetic GPU labels for the DALI rows and rank-local cuFile logs for GDS rows. | [Results](studies/rtx-prepared-tensor-gds-transport.md#result-summary-one--two--four--and-eight-node-diagnostic) |
 
-## Reference Notes
-
-| Page | Use |
-| --- | --- |
-| [Appendix reference: Synthetic GPU ceiling](studies/synthetic-gpu-ceiling.md) | Earlier synthetic-only scale context for the compute/network ceiling with the input pipeline removed. |
-
 ## How To Read These Studies
 
 The DataLoader module answers input-side questions before training. DDP

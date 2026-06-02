@@ -77,8 +77,6 @@ One-node wins identify candidates for the multi-node scale study.
   PyTorch CPU mmap block comparator at this prepared fp16 tensor transport
   endpoint. The DALI rows use synthetic GPU labels, and eight-node GDS runs
   include sixty-four rank-local cuFile logs.
-- [Synthetic GPU ceiling](studies/synthetic-gpu-ceiling.md) provides appendix
-  context for earlier synthetic-only scale rows.
 - [DDP synthetic large JPEG training](studies/synthetic-large-jpeg-training.md)
   explains large compressed-image decode pressure under training.
 
