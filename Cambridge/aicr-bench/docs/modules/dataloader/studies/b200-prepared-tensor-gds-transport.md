@@ -77,6 +77,19 @@ means as the result table.
 
 ![B200 prepared-tensor estimated read bandwidth](figures/dataloader-b200-prepared-tensor-gds-read-gbps-2026-05-26.png)
 
+## Artifact Availability
+
+This page records supporting DataLoader-only transport context for the B200
+prepared-block endpoint. The exact job IDs and focused figures are listed
+above. No standalone public artifact bundle is linked for this B200
+DataLoader-only ladder.
+
+Use the companion DDP studies for artifacted training-throughput evidence on
+the same prepared input representation:
+
+- [DDP prepared-tensor GPU/cuFile transport pilot](../../ddp/studies/prepared-tensor-gds-transport.md)
+- [DDP prepared-tensor GPU/cuFile scale follow-up](../../ddp/studies/prepared-tensor-gds-scale-followup.md)
+
 ## Reader Path
 
 The GDS rows use DALI's NumPy GPU/cuFile reader path:

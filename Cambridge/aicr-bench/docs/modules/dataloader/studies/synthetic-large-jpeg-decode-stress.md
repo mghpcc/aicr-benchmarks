@@ -78,3 +78,16 @@ the measured loop.
 
 Use this result to understand compressed large-image input behavior and to
 motivate DALI-specific DDP follow-up for similar workloads.
+
+## Source Artifact Bundle
+
+This appendix is drawn from the
+[DataLoader Input Pipeline Lab](input-pipeline-lab.md). Use that source study
+for the public artifact bundle, provenance, checksum, and retrieve/verify
+commands.
+
+| Artifact | Location |
+| --- | --- |
+| OSN bundle | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/8d17114/dataloader/2026-05-19/dataloader-input-pipeline-lab-2026-05-19.tar.gz> |
+| OSN provenance | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/8d17114/dataloader/2026-05-19/dataloader-input-pipeline-lab-2026-05-19-provenance.json> |
+| OSN checksum | <https://uma1.osn.mghpcc.org/csim-bmark/public-study-artifacts/aicr-public/8d17114/dataloader/2026-05-19/dataloader-input-pipeline-lab-2026-05-19.sha256> |
