@@ -6,10 +6,10 @@ usage() {
 Usage:
   scripts/report/check-artifact-policy.sh
 
-Checks the Git working tree for raw, generated, or unpromoted benchmark artifacts
+Checks the Git working tree for raw, generated, or unreviewed benchmark artifacts
 that should not be committed by default.
 
-Set AICR_ARTIFACT_POLICY_ALLOW=1 only when intentionally promoting reviewed
+Set AICR_ARTIFACT_POLICY_ALLOW=1 only when intentionally adding reviewed
 results/reports or archive evidence.
 EOF
 }
@@ -83,8 +83,8 @@ fi
 cat >&2 <<'EOF'
 ERROR: raw/generated benchmark artifacts are present in the Git working tree.
 
-Generated runtime evidence is not committed by default. Promote reports only
-after explicit review, then rerun with:
+Generated runtime evidence is not committed by default. Add reviewed reports
+only after explicit review, then rerun with:
 
   AICR_ARTIFACT_POLICY_ALLOW=1 make check-artifact-policy
 
