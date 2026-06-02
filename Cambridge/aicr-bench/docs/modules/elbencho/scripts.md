@@ -61,6 +61,13 @@ scripts/report/render-elbencho-report.py --help
 | `smoke` | Small launch and parser proof. |
 | `small` | Study template for promoted rows. |
 
+For `peak-cluster`, the `small` profile can separate write and read evidence.
+The default `ELBENCHO_PHASE=write-read` preserves the current write+read and
+cleanup behavior. Use `ELBENCHO_PHASE=write-keep` with an explicit
+`ELBENCHO_RUN_ROOT` to preserve written data, then
+`ELBENCHO_PHASE=read-existing` with the same run root for read-only evidence
+after a reviewed settle or churn step.
+
 ## Direct Use
 
 Use [install-elbencho-runtime.sh](../../../man/install-elbencho-runtime.md) to

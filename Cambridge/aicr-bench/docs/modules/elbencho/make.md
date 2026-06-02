@@ -54,6 +54,27 @@ ELBENCHO_TARGET_ROOT=/scratch/$USER/elbencho \
 make benchmark-elbencho CLUSTER=b200 WORKLOAD=peak-cluster NODES=30 NODELIST=b0002,b0003,b0004,b0005,b0006,b0007,b0008,b0009,b0010,b0011,b0012,b0013,b0014,b0015,b0016,b0017,b0018,b0019,b0020,b0021,b0022,b0023,b0024,b0025,b0026,b0027,b0028,b0029,b0030,b0031 ELBENCHO_PROFILE=small ELBENCHO_CPUS_PER_TASK=128
 ```
 
+The `small` peak-cluster profile defaults to `ELBENCHO_PHASE=write-read`: write
+the run data, read it, stop services, and remove the run-scoped directory.
+For read-path studies that need data to remain across a reviewed settle or
+churn step, use an explicit run root:
+
+```bash
+ELBENCHO_TARGET_ROOT=/scratch/$USER/elbencho \
+ELBENCHO_PHASE=write-keep \
+ELBENCHO_RUN_ROOT=/scratch/$USER/elbencho/peak-cluster/read-path-001 \
+make benchmark-elbencho CLUSTER=b200 WORKLOAD=peak-cluster NODES=30 NODELIST=b0002,b0003,b0004,b0005,b0006,b0007,b0008,b0009,b0010,b0011,b0012,b0013,b0014,b0015,b0016,b0017,b0018,b0019,b0020,b0021,b0022,b0023,b0024,b0025,b0026,b0027,b0028,b0029,b0030,b0031 ELBENCHO_PROFILE=small ELBENCHO_CPUS_PER_TASK=128 APPLY=1
+```
+
+After the reviewed settle or churn step, run read-only evidence against the same
+directory:
+
+```bash
+ELBENCHO_PHASE=read-existing \
+ELBENCHO_RUN_ROOT=/scratch/$USER/elbencho/peak-cluster/read-path-001 \
+make benchmark-elbencho CLUSTER=b200 WORKLOAD=peak-cluster NODES=30 NODELIST=b0002,b0003,b0004,b0005,b0006,b0007,b0008,b0009,b0010,b0011,b0012,b0013,b0014,b0015,b0016,b0017,b0018,b0019,b0020,b0021,b0022,b0023,b0024,b0025,b0026,b0027,b0028,b0029,b0030,b0031 ELBENCHO_PROFILE=small ELBENCHO_CPUS_PER_TASK=128 APPLY=1
+```
+
 ## Node Selection
 
 Omit `NODELIST` only when using `FROM_NODE_REPORT=1` to select strict-passed
@@ -84,10 +105,12 @@ The rendered B200 rows are summarized in the
 
 Use `ELBENCHO_TARGET_ROOT`, `ELBENCHO_SIZE`, `ELBENCHO_BLOCK`,
 `ELBENCHO_THREADS`, `ELBENCHO_IODEPTH`, `ELBENCHO_FILE_PATTERN`,
-`ELBENCHO_FILES`, and `ELBENCHO_DIRS` to tune profile templates. Make defaults
-to `ELBENCHO_MEM=0`; keep that full-node memory request for benchmark rows
-unless the run is a memory diagnostic. Use `ELBENCHO_CMD` only for expert
-overrides and label those rows clearly.
+`ELBENCHO_FILES`, and `ELBENCHO_DIRS` to tune profile templates. The
+peak-cluster `small` profile also accepts `ELBENCHO_PHASE` and
+`ELBENCHO_RUN_ROOT` for split write/read evidence. Make defaults to
+`ELBENCHO_MEM=0`; keep that full-node memory request for benchmark rows unless
+the run is a memory diagnostic. Use `ELBENCHO_CMD` only for expert overrides
+and label those rows clearly.
 
 ## Artifacts
 
