@@ -29,6 +29,10 @@ ImageNet evidence. Related result pages provide endpoint-specific results:
 [Prepared-input ceilings](prepared-input-ceilings.md), and
 [Synthetic large JPEG decode stress](synthetic-large-jpeg-decode-stress.md).
 
+**Timing note:** this page uses the earlier `20` warmup / `100` measured
+timing format. Newer standalone studies use `100` warmup / `500` measured
+batches.
+
 ## Run Shape
 
 | Field | Value |
@@ -51,9 +55,6 @@ ImageNet evidence. Related result pages provide endpoint-specific results:
 Dataset layout and derived-input preparation are documented separately in
 [ImageNet Dataset Preparation](../../../resources/imagenet.md) and
 [Derived ImageNet Datasets](../derived-datasets.md).
-
-This page uses the earlier `20` warmup / `100` measured timing format. Newer
-standalone studies use `100` warmup / `500` measured batches.
 
 ## Command Run
 

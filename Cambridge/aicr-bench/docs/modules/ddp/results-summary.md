@@ -52,7 +52,8 @@ One-node wins identify candidates for the multi-node scale study.
 ## Ceilings And Branches
 
 - [DDP input ceilings](studies/input-ceilings.md) compare prepared NumPy input
-  against a synthetic GPU compute/input-free ceiling.
+  against a synthetic GPU compute/input-free ceiling. That page is the public
+  home for the current synthetic GPU ceiling rows.
 - [DDP prepared-tensor GPU/cuFile transport pilot](studies/prepared-tensor-gds-transport.md)
   measures a prepared fp16 block endpoint on one B200 node. DALI NumPy
   GPU/cuFile reached `33,799` images/s versus `17,471` for PyTorch CPU mmap on
