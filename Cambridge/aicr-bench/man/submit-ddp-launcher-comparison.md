@@ -9,7 +9,7 @@ requested scale, the helper submits a `torchrun` row and a controlled-bind
 ## Usage
 
 ```text
-scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster <b200|rtxpro6000> [--scales <csv>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <csv>] [--time <HH:MM:SS>] [--srun-cpu-bind <value>] [--srun-mem-bind <value>] [--srun-mpi <value>] [--include-default-srun] [--submit-stagger-seconds <n>] [--apply] [--] [run-ddp-resnet50 args...]
+scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster <b200|rtxpro6000> [--scales <csv>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--nodelist <csv>] [--time <HH:MM:SS>] [--mem <size>] [--srun-cpu-bind <value>] [--srun-mem-bind <value>] [--srun-mpi <value>] [--include-default-srun] [--submit-stagger-seconds <n>] [--apply] [--] [run-ddp-resnet50 args...]
 ```
 
 The Make entrypoint is:
@@ -26,6 +26,7 @@ make benchmark-ddp-launcher-comparison CLUSTER=<b200|rtxpro6000> NODELIST=<node[
 - `--date <value>`: Node-report date for `--from-node-report`. Default: `today`.
 - `--nodelist <csv>`: Ordered node pool. Each scale uses the first `N` nodes.
 - `--time <HH:MM:SS>`: Slurm time limit. Default: `02:00:00`.
+- `--mem <size>`: Slurm memory request. Default: `0`.
 - `--srun-cpu-bind <value>`: CPU binding value for the controlled `srun` row.
 - `--srun-mem-bind <value>`: Memory binding value for the controlled `srun` row.
 - `--srun-mpi <value>`: MPI plugin value for the `srun` row. Default: `pmix`.

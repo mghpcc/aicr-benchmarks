@@ -57,6 +57,7 @@
 	render-dataloader \
 	render-dataloader-b200 \
 	render-ddp-resnet50 \
+	render-ddp-resnet50-ascii \
 	render-hpl-mxp \
 	render-benchmark-campaign \
 	render-ddp-b200 \
@@ -140,6 +141,7 @@ DATALOADER_DEPENDENCY ?=
 DATALOADER_RUN_ARGS ?=
 DDP_RUN_ARGS ?=
 DDP_TIME ?= 02:00:00
+DDP_MEM ?= 0
 DDP_REPEAT_COUNT ?= 1
 DDP_REPEAT_STAGGER_SECONDS ?= 30
 DDP_SRUN_MPI ?= pmix
@@ -712,6 +714,7 @@ docs-test-plan-ddp:
 
 docs-test-ddp:
 	$(MAKE) docs-test DOCS=docs/modules/ddp DOCS_TEST_SUITE=ddp
+	$(REPO_PY) tests/scripts/check-ddp-report-shape-fixture.py
 
 docs-test-plan-hpl-mxp:
 	$(MAKE) docs-test-plan DOCS=docs/modules/hpl-mxp DOCS_TEST_SUITE=hpl-mxp
@@ -778,10 +781,10 @@ benchmark-dataloader: require-settings
 		-- $(DATALOADER_RUN_ARGS)
 
 benchmark-ddp-resnet50: require-settings
-	DDP_SRUN_MPI="$(DDP_SRUN_MPI)" DDP_SRUN_CPU_BIND="$(DDP_SRUN_CPU_BIND)" DDP_SRUN_MEM_BIND="$(DDP_SRUN_MEM_BIND)" bash scripts/benchmark/submit-ddp-resnet50.sh --cluster $(CLUSTER) --nodes $(NODES) --launcher $(LAUNCHER) --date $(NODE_REPORT_DATE) $(DDP_REPEAT_COUNT_FLAG) $(DDP_REPEAT_STAGGER_SECONDS_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
+	DDP_SRUN_MPI="$(DDP_SRUN_MPI)" DDP_SRUN_CPU_BIND="$(DDP_SRUN_CPU_BIND)" DDP_SRUN_MEM_BIND="$(DDP_SRUN_MEM_BIND)" bash scripts/benchmark/submit-ddp-resnet50.sh --cluster $(CLUSTER) --nodes $(NODES) --launcher $(LAUNCHER) --date $(NODE_REPORT_DATE) --time $(DDP_TIME) --mem $(DDP_MEM) $(DDP_REPEAT_COUNT_FLAG) $(DDP_REPEAT_STAGGER_SECONDS_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
 
 benchmark-ddp-launcher-comparison: require-settings
-	bash scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster $(CLUSTER) --date $(NODE_REPORT_DATE) --scales $(DDP_COMPARISON_SCALES) --time $(DDP_TIME) --srun-mpi $(DDP_SRUN_MPI) --srun-cpu-bind $(if $(strip $(DDP_SRUN_CPU_BIND)),$(DDP_SRUN_CPU_BIND),none) --srun-mem-bind $(if $(strip $(DDP_SRUN_MEM_BIND)),$(DDP_SRUN_MEM_BIND),none) --submit-stagger-seconds $(DDP_COMPARISON_STAGGER_SECONDS) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(DDP_COMPARISON_DEFAULT_SRUN_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
+	bash scripts/benchmark/submit-ddp-launcher-comparison.sh --cluster $(CLUSTER) --date $(NODE_REPORT_DATE) --scales $(DDP_COMPARISON_SCALES) --time $(DDP_TIME) --mem $(DDP_MEM) --srun-mpi $(DDP_SRUN_MPI) --srun-cpu-bind $(if $(strip $(DDP_SRUN_CPU_BIND)),$(DDP_SRUN_CPU_BIND),none) --srun-mem-bind $(if $(strip $(DDP_SRUN_MEM_BIND)),$(DDP_SRUN_MEM_BIND),none) --submit-stagger-seconds $(DDP_COMPARISON_STAGGER_SECONDS) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(DDP_COMPARISON_DEFAULT_SRUN_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
 
 benchmark-hpl-mxp: require-settings
 	bash scripts/benchmark/submit-hpl-mxp.sh --cluster $(CLUSTER) --nodes $(NODES) --preset $(HPL_MXP_PRESET) --matrix-size $(HPL_MXP_MATRIX_SIZE) --nb $(HPL_MXP_NB) $(HPL_MXP_NPROW_FLAG) $(HPL_MXP_NPCOL_FLAG) $(HPL_MXP_AFFINITY_PROFILE_FLAG) --time $(HPL_MXP_TIME) $(HPL_MXP_MEM_FLAG) --sloppy-type $(HPL_MXP_SLOPPY_TYPE) $(HPL_MXP_TEST_LOOP_FLAG) $(HPL_MXP_REPEAT_COUNT_FLAG) $(HPL_MXP_REPEAT_STAGGER_SECONDS_FLAG) --date $(NODE_REPORT_DATE) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(HPL_MXP_IMAGE_FLAG) $(HPL_MXP_CPUS_PER_TASK_FLAG) $(HPL_MXP_OMPI_COLL_FLAG) $(HPL_MXP_OMPI_PML_FLAG) $(HPL_MXP_OMPI_BTL_FLAG) $(HPL_MXP_OMPI_BTL_TCP_IF_INCLUDE_FLAG) $(HPL_MXP_OMPI_OOB_TCP_IF_INCLUDE_FLAG) $(HPL_MXP_UCX_TLS_FLAG) $(HPL_MXP_UCX_NET_DEVICES_FLAG) $(HPL_MXP_PMIX_MCA_GDS_FLAG) $(HPL_MXP_MPI_USE_MPI_FLAG) $(HPL_MXP_MPI_PANEL_BROADCAST_FLAG) $(HPL_MXP_PRIORITIZE_TRSM_FLAG) $(HPL_MXP_PRIORITIZE_FACTORIZATION_FLAG) $(HPL_MXP_ANQ_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_FLAG) $(HPL_MXP_FILL_DEVICE_BUFFER_SIZE_FLAG) $(HPL_MXP_CALL_DGEMV_THREADS_FLAG) $(HPL_MXP_PRESET_GEMM_KERNEL_FLAG) $(HPL_MXP_CPU_AFFINITY_FLAG) $(HPL_MXP_MEM_AFFINITY_FLAG) $(HPL_MXP_UCX_AFFINITY_FLAG) $(HPL_MXP_U_PANEL_CHUNK_NBS_FLAG) $(HPL_MXP_SCALING_STUDY_FLAG) $(HPL_MXP_BASELINE_MATRIX_SIZE_FLAG) $(APPLY_FLAG)
@@ -803,6 +806,9 @@ render-dataloader-b200: render-dataloader
 
 render-ddp-resnet50:
 	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --date $(DATE) --cluster $(CLUSTER)
+
+render-ddp-resnet50-ascii:
+	$(REPO_PY) scripts/report/render-ddp-resnet50-report.py --date $(DATE) --cluster $(CLUSTER) --ascii
 
 render-hpl-mxp:
 	$(REPO_PY) scripts/report/render-hpl-mxp-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(REPEAT_AGGREGATION) $(HPL_MXP_RENDER_JOB_ID_MIN_FLAG) $(HPL_MXP_RENDER_JOB_ID_MAX_FLAG) $(HPL_MXP_RENDER_JOB_ID_LIST_FLAG)
