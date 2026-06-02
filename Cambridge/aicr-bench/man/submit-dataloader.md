@@ -4,12 +4,12 @@
 
 Preview or submit one PyTorch DataLoader Slurm job for explicit AICR GPU nodes.
 This is the host-side one-job submitter; use
-`scripts/benchmark/sweep-dataloader.sh` for parameter matrices.
+[sweep-dataloader.sh](sweep-dataloader.md) for parameter matrices.
 
 ## Usage
 
 ```text
-scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--nodelist <nodes>] [--apply] [--] [runner args...]
+scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--dependency <slurm-dependency>] [--nodelist <nodes>] [--apply] [--] [runner args...]
 ```
 
 The Make entrypoint is:
@@ -23,15 +23,20 @@ make benchmark-dataloader CLUSTER=<b200|rtxpro6000> PROFILE=<small|medium|large>
 - `--cluster <name>`: `b200` or `rtxpro6000`.
 - `--profile <name>`: `small`, `medium`, or `large`. Controls workload intensity defaults only.
 - `--inspect-profile`: Print the selected profile without submitting a job.
-- `--nodes <n>`: Node count. B200 accepts `1`, `2`, `4`, `8`, or `16`; RTX accepts `1`, `2`, `4`, or `8`.
+- `--nodes <n>`: Node count. B200 and RTX accept `1`, `2`, `4`, `8`, or `16`.
 - `--gpu-count <1|8>`: Selects one-GPU or eight-GPU wrappers.
 - `--mode <name>`: `single`, `replicated`, or `distributed-sharded`.
+- `--from-node-report`: Select passed nodes for the selected cluster from the latest node report.
+- `--date <value>`: Node-report date for `--from-node-report`. Default: `today`.
 - `--partition <name>`: Override Slurm partition.
 - `--time <HH:MM:SS>`: Override Slurm time limit.
 - `--cpus-per-task <n>`: CPU allocation per Slurm task.
+- `--mem <size>`: Slurm memory request. Default: `0`, so the job receives the
+  node memory cgroup.
+- `--dependency <value>`: Forward a Slurm dependency to `sbatch`.
 - `--nodelist <nodes>`: Explicit node or comma-separated nodes.
 - `--apply`: Submit the job. Omit for dry-run preview.
-- `-- <runner args...>`: Forward remaining arguments to `run-dataloader.sh`.
+- `-- <runner args...>`: Forward remaining arguments to [run-dataloader.sh](run-dataloader.md).
 - `--help`: Print help.
 
 ## Examples

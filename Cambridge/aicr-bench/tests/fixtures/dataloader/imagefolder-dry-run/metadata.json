@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "fixture_id": "dataloader-imagefolder-dry-run",
+  "fixture_type": "synthetic-docs-dry-run-input",
+  "purpose": "Provide an ImageFolder-shaped tree for prepare-dataloader-derived-dataset.py dry-run documentation tests.",
+  "input_root": "tests/fixtures/dataloader/imagefolder-dry-run",
+  "input_split": "train",
+  "input_policy": "Placeholder JPEG path is discovered but never opened because docs tests use procedural-jpeg without --apply.",
+  "expected_class_count": 1,
+  "expected_sample_count": 1,
+  "not_benchmark_evidence": true
+}

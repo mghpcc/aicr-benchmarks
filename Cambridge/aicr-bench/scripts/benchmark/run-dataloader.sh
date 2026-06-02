@@ -12,18 +12,74 @@ source "${BENCHMARK_DIR}/../verify/_common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/benchmark/run-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--mode <single|replicated|distributed-sharded>] [--requested-gpu-count <n>] [--dataset-root <path>] [--split <train|val>] [--image <path>] [--gpu <index>] [--batch-size <n>] [--num-workers <n>] [--prefetch-factor <n>] [--pin-memory <0|1>] [--persistent-workers <0|1>] [--warmup-batches <n>] [--measured-batches <n>] [--h2d <0|1>] [--transfer-labels <0|1>] [--drop-last <0|1>] [--byte-estimate-sample-count <n>]
+  scripts/benchmark/run-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--mode <single|replicated|distributed-sharded>] [--requested-gpu-count <n>] [--dataset-root <path>] [--split <train|val>] [--image <path>] [--gpu <index>] [--input-backend <pytorch-cpu-dataloader|dali-gpu-decode|numpy-uint8-shards|numpy-fp16-shards|numpy-fp16-blocks-pytorch|dali-numpy-fp16-cpu|dali-numpy-fp16-gds|dali-numpy-fp16-blocks-cpu|dali-numpy-fp16-blocks-gds>] [--derived-root <path>] [--derived-image-size <n>] [--derived-samples-per-class <n>] [--derived-seed <n>] [--batch-size <n>] [--num-workers <n>] [--prefetch-factor <n>] [--dali-num-threads <n>] [--dali-prefetch-queue-depth <n>] [--dali-numpy-reader-prefetch-queue-depth <n>] [--dali-decode-mode <random-crop|decode-resize>] [--dali-hw-decoder-load <float>] [--dali-gds-chunk-size <value>] [--numpy-block-cache-size <n>] [--cufile-log-path <path>] [--cufile-log-level <level>] [--pin-memory <0|1>] [--persistent-workers <0|1>] [--warmup-batches <n>] [--measured-batches <n>] [--h2d <0|1>] [--transfer-labels <0|1>] [--drop-last <0|1>] [--byte-estimate-sample-count <n>]
 
 This runnable v1 harness records canonical raw/parsed benchmark artifacts under results/by-date/ and results/by-node/.
-Profiles control workload intensity defaults only. Explicit environment variables
-and command-line flags override profile defaults.
 
-B200 accepts --nodes 1, 2, 4, 8, or 16. RTX accepts --nodes 1, 2, 4, or 8.
+Profiles set workload-intensity defaults; explicit flags override them.
+B200 accepts --nodes 1, 2, 4, 8, or 16. RTX accepts --nodes 1, 2, 4, 8, or 16.
 EOF
+}
+
+dataloader_profile_defaults() {
+  case "$1" in
+    "")
+      return 0
+      ;;
+    small)
+      batch_size="512"
+      num_workers="16"
+      prefetch_factor="4"
+      warmup_batches="20"
+      measured_batches="100"
+      ;;
+    medium)
+      batch_size="512"
+      num_workers="16"
+      prefetch_factor="4"
+      warmup_batches="100"
+      measured_batches="500"
+      ;;
+    large)
+      batch_size="512"
+      num_workers="16"
+      prefetch_factor="4"
+      warmup_batches="200"
+      measured_batches="5000"
+      ;;
+    *)
+      aicr_die "--profile must be small, medium, or large"
+      ;;
+  esac
+}
+
+dataloader_print_profile() {
+  echo "profile=${profile:-custom}"
+  echo "batch_size=${batch_size}"
+  echo "num_workers=${num_workers}"
+  echo "prefetch_factor=${prefetch_factor}"
+  echo "warmup_batches=${warmup_batches}"
+  echo "measured_batches=${measured_batches}"
 }
 
 aicr_require_repo_root
 aicr_mkdirs
+
+dataloader_nofile_limit="${DATALOADER_NOFILE_LIMIT:-65536}"
+if [[ -n "$dataloader_nofile_limit" ]]; then
+  if ! ulimit -n "$dataloader_nofile_limit" 2>/dev/null; then
+    dataloader_nofile_hard="$(ulimit -Hn 2>/dev/null || true)"
+    if [[ "$dataloader_nofile_hard" =~ ^[0-9]+$ ]]; then
+      if ! ulimit -n "$dataloader_nofile_hard" 2>/dev/null; then
+        printf 'Warning: could not set DataLoader nofile limit to %s or hard limit %s\n' \
+          "$dataloader_nofile_limit" "$dataloader_nofile_hard" >&2
+      fi
+    else
+      printf 'Warning: could not set DataLoader nofile limit to %s\n' \
+        "$dataloader_nofile_limit" >&2
+    fi
+  fi
+fi
 
 count_cuda_visible_devices() {
   local value="${CUDA_VISIBLE_DEVICES:-}"
@@ -50,97 +106,38 @@ count_cuda_visible_devices() {
   printf '%s\n' "$count"
 }
 
-profile_value() {
-  local selected="$1"
-  local field="$2"
-  case "${selected}:${field}" in
-    small:batch_size) printf '512\n' ;;
-    small:num_workers) printf '16\n' ;;
-    small:prefetch_factor) printf '4\n' ;;
-    small:pin_memory) printf '1\n' ;;
-    small:persistent_workers) printf '1\n' ;;
-    small:warmup_batches) printf '20\n' ;;
-    small:measured_batches) printf '100\n' ;;
-    small:h2d) printf '1\n' ;;
-    small:transfer_labels) printf '1\n' ;;
-    small:drop_last) printf '0\n' ;;
-    small:byte_estimate_sample_count) printf '1024\n' ;;
-    medium:batch_size) printf '512\n' ;;
-    medium:num_workers) printf '16\n' ;;
-    medium:prefetch_factor) printf '4\n' ;;
-    medium:pin_memory) printf '1\n' ;;
-    medium:persistent_workers) printf '1\n' ;;
-    medium:warmup_batches) printf '100\n' ;;
-    medium:measured_batches) printf '500\n' ;;
-    medium:h2d) printf '1\n' ;;
-    medium:transfer_labels) printf '1\n' ;;
-    medium:drop_last) printf '0\n' ;;
-    medium:byte_estimate_sample_count) printf '1024\n' ;;
-    large:batch_size) printf '512\n' ;;
-    large:num_workers) printf '16\n' ;;
-    large:prefetch_factor) printf '4\n' ;;
-    large:pin_memory) printf '1\n' ;;
-    large:persistent_workers) printf '1\n' ;;
-    large:warmup_batches) printf '200\n' ;;
-    large:measured_batches) printf '5000\n' ;;
-    large:h2d) printf '1\n' ;;
-    large:transfer_labels) printf '1\n' ;;
-    large:drop_last) printf '0\n' ;;
-    large:byte_estimate_sample_count) printf '1024\n' ;;
-    *) aicr_die "unsupported DataLoader profile field: ${selected}:${field}" ;;
-  esac
-}
+assert_derived_jpeg_dataset_root() {
+  local dataset_root_norm="${dataset_root%/}"
+  local derived_root_norm="${derived_root%/}"
+  local subset
+  local expected_direct
+  local expected_global
 
-print_profile() {
-  local selected="$1"
-  printf 'profile=%s\n' "${selected}"
-  printf 'batch_size=%s\n' "$(profile_value "${selected}" batch_size)"
-  printf 'num_workers=%s\n' "$(profile_value "${selected}" num_workers)"
-  printf 'prefetch_factor=%s\n' "$(profile_value "${selected}" prefetch_factor)"
-  printf 'pin_memory=%s\n' "$(profile_value "${selected}" pin_memory)"
-  printf 'persistent_workers=%s\n' "$(profile_value "${selected}" persistent_workers)"
-  printf 'warmup_batches=%s\n' "$(profile_value "${selected}" warmup_batches)"
-  printf 'measured_batches=%s\n' "$(profile_value "${selected}" measured_batches)"
-  printf 'h2d=%s\n' "$(profile_value "${selected}" h2d)"
-  printf 'transfer_labels=%s\n' "$(profile_value "${selected}" transfer_labels)"
-  printf 'drop_last=%s\n' "$(profile_value "${selected}" drop_last)"
-  printf 'byte_estimate_sample_count=%s\n' "$(profile_value "${selected}" byte_estimate_sample_count)"
-}
-
-profile="${PROFILE:-small}"
-inspect_profile=0
-scan_args=("$@")
-scan_index=0
-while [[ $scan_index -lt ${#scan_args[@]} ]]; do
-  case "${scan_args[$scan_index]}" in
-    --profile)
-      profile="${scan_args[$((scan_index + 1))]:-}"
-      scan_index=$((scan_index + 2))
-      ;;
-    --profile=*)
-      profile="${scan_args[$scan_index]#--profile=}"
-      scan_index=$((scan_index + 1))
-      ;;
-    --inspect-profile)
-      inspect_profile=1
-      scan_index=$((scan_index + 1))
-      ;;
-    --)
-      break
-      ;;
-    *)
-      scan_index=$((scan_index + 1))
-      ;;
+  [[ "$derived_jpeg_identity_requested" == "1" ]] || return 0
+  [[ -n "$derived_root_norm" ]] || return 0
+  case "$input_backend" in
+    pytorch-cpu-dataloader|dali-gpu-decode) ;;
+    *) return 0 ;;
   esac
-done
-case "$profile" in
-  small|medium|large) ;;
-  *) aicr_die "--profile must be small, medium, or large" ;;
-esac
-if [[ "$inspect_profile" == "1" ]]; then
-  print_profile "$profile"
-  exit 0
-fi
+
+  subset="spc-${derived_samples_per_class}-seed-${derived_seed}"
+  expected_direct="${derived_root_norm}/size-${derived_image_size}/jpeg"
+  expected_global=""
+  if [[ "${derived_root_norm##*/}" != "$subset" ]]; then
+    expected_global="${derived_root_norm}/imagenet/${dataset_split}/${subset}/size-${derived_image_size}/jpeg"
+  fi
+  if [[ "$dataset_root_norm" == "$expected_direct" || "$dataset_root_norm" == "$expected_global" ]]; then
+    return 0
+  fi
+  if [[ "$dataset_root_norm" == "$derived_root_norm" && "$derived_root_norm" == */"size-${derived_image_size}/jpeg" ]]; then
+    return 0
+  fi
+
+  if [[ -n "$expected_global" ]]; then
+    aicr_die "derived JPEG metadata requires --dataset-root to point at size-${derived_image_size}/jpeg for JPEG backends; got dataset_root=${dataset_root_norm}, expected ${expected_direct} or ${expected_global}"
+  fi
+  aicr_die "derived JPEG metadata requires --dataset-root to point at size-${derived_image_size}/jpeg for JPEG backends; got dataset_root=${dataset_root_norm}, expected ${expected_direct}"
+}
 
 cluster="${EXTERNAL_CLUSTER_NAME:-${AICR_CLUSTER_NAME:-$(aicr_cluster_name)}}"
 dataset_root="${EXTERNAL_IMAGENET_DIR:-${AICR_IMAGENET_DIR}}"
@@ -150,34 +147,61 @@ selected_gpu="${DATALOADER_GPU:-0}"
 mode="${DATALOADER_MODE:-single}"
 node_count="${DATALOADER_NODE_COUNT:-${SLURM_NNODES:-1}}"
 requested_gpu_count="${DATALOADER_REQUESTED_GPU_COUNT:-}"
-batch_size="${DATALOADER_BATCH_SIZE:-$(profile_value "$profile" batch_size)}"
-num_workers="${DATALOADER_NUM_WORKERS:-$(profile_value "$profile" num_workers)}"
-prefetch_factor="${DATALOADER_PREFETCH_FACTOR:-$(profile_value "$profile" prefetch_factor)}"
-pin_memory="${DATALOADER_PIN_MEMORY:-$(profile_value "$profile" pin_memory)}"
-persistent_workers="${DATALOADER_PERSISTENT_WORKERS:-$(profile_value "$profile" persistent_workers)}"
-warmup_batches="${DATALOADER_WARMUP_BATCHES:-$(profile_value "$profile" warmup_batches)}"
-measured_batches="${DATALOADER_MEASURED_BATCHES:-$(profile_value "$profile" measured_batches)}"
-h2d="${DATALOADER_H2D:-$(profile_value "$profile" h2d)}"
-transfer_labels="${DATALOADER_TRANSFER_LABELS:-$(profile_value "$profile" transfer_labels)}"
-drop_last="${DATALOADER_DROP_LAST:-$(profile_value "$profile" drop_last)}"
-byte_estimate_sample_count="${DATALOADER_BYTE_ESTIMATE_SAMPLE_COUNT:-$(profile_value "$profile" byte_estimate_sample_count)}"
+input_backend="${DATALOADER_INPUT_BACKEND:-pytorch-cpu-dataloader}"
+derived_root="${DATALOADER_DERIVED_ROOT:-${AICR_DATALOADER_DERIVED_ROOT:-}}"
+derived_image_size="${DATALOADER_DERIVED_IMAGE_SIZE:-224}"
+derived_samples_per_class="${DATALOADER_DERIVED_SAMPLES_PER_CLASS:-16}"
+derived_seed="${DATALOADER_DERIVED_SEED:-1234}"
+batch_size="${DATALOADER_BATCH_SIZE:-256}"
+num_workers="${DATALOADER_NUM_WORKERS:-16}"
+prefetch_factor="${DATALOADER_PREFETCH_FACTOR:-4}"
+dali_num_threads="${DATALOADER_DALI_NUM_THREADS:-0}"
+dali_prefetch_queue_depth="${DATALOADER_DALI_PREFETCH_QUEUE_DEPTH:-2}"
+dali_numpy_reader_prefetch_queue_depth="${DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTH:-1}"
+dali_decode_mode="${DATALOADER_DALI_DECODE_MODE:-random-crop}"
+dali_hw_decoder_load="${DATALOADER_DALI_HW_DECODER_LOAD:-0.65}"
+dali_gds_chunk_size="${DATALOADER_DALI_GDS_CHUNK_SIZE:-}"
+numpy_block_cache_size="${DATALOADER_NUMPY_BLOCK_CACHE_SIZE:-1}"
+cufile_log_path="${DATALOADER_CUFILE_LOG_PATH:-}"
+cufile_log_level="${DATALOADER_CUFILE_LOG_LEVEL:-}"
+pin_memory="${DATALOADER_PIN_MEMORY:-1}"
+persistent_workers="${DATALOADER_PERSISTENT_WORKERS:-1}"
+warmup_batches="${DATALOADER_WARMUP_BATCHES:-20}"
+measured_batches="${DATALOADER_MEASURED_BATCHES:-100}"
+h2d="${DATALOADER_H2D:-1}"
+transfer_labels="${DATALOADER_TRANSFER_LABELS:-1}"
+drop_last="${DATALOADER_DROP_LAST:-0}"
+byte_estimate_sample_count="${DATALOADER_BYTE_ESTIMATE_SAMPLE_COUNT:-1024}"
+profile="${DATALOADER_PROFILE:-}"
+inspect_profile=0
+derived_jpeg_identity_requested=0
+
+argv=("$@")
+for ((index = 0; index < ${#argv[@]}; index++)); do
+  case "${argv[$index]}" in
+    --profile)
+      profile="${argv[$((index + 1))]:-}"
+      ;;
+    --inspect-profile)
+      inspect_profile=1
+      ;;
+  esac
+done
+dataloader_profile_defaults "$profile"
 
 while [[ $# -gt 0 ]]; do
   case "$1" in
+    --cluster)
+      cluster="${2:-}"
+      shift 2
+      ;;
     --profile)
       profile="${2:-}"
       shift 2
       ;;
-    --profile=*)
-      profile="${1#--profile=}"
-      shift
-      ;;
     --inspect-profile)
+      inspect_profile=1
       shift
-      ;;
-    --cluster)
-      cluster="${2:-}"
-      shift 2
       ;;
     --mode)
       mode="${2:-}"
@@ -207,6 +231,28 @@ while [[ $# -gt 0 ]]; do
       selected_gpu="${2:-}"
       shift 2
       ;;
+    --input-backend)
+      input_backend="${2:-}"
+      shift 2
+      ;;
+    --derived-root)
+      derived_root="${2:-}"
+      derived_jpeg_identity_requested=1
+      shift 2
+      ;;
+    --derived-image-size)
+      derived_image_size="${2:-}"
+      derived_jpeg_identity_requested=1
+      shift 2
+      ;;
+    --derived-samples-per-class)
+      derived_samples_per_class="${2:-}"
+      shift 2
+      ;;
+    --derived-seed)
+      derived_seed="${2:-}"
+      shift 2
+      ;;
     --batch-size)
       batch_size="${2:-}"
       shift 2
@@ -217,6 +263,42 @@ while [[ $# -gt 0 ]]; do
       ;;
     --prefetch-factor)
       prefetch_factor="${2:-}"
+      shift 2
+      ;;
+    --dali-num-threads)
+      dali_num_threads="${2:-}"
+      shift 2
+      ;;
+    --dali-prefetch-queue-depth)
+      dali_prefetch_queue_depth="${2:-}"
+      shift 2
+      ;;
+    --dali-numpy-reader-prefetch-queue-depth)
+      dali_numpy_reader_prefetch_queue_depth="${2:-}"
+      shift 2
+      ;;
+    --dali-decode-mode)
+      dali_decode_mode="${2:-}"
+      shift 2
+      ;;
+    --dali-hw-decoder-load)
+      dali_hw_decoder_load="${2:-}"
+      shift 2
+      ;;
+    --dali-gds-chunk-size)
+      dali_gds_chunk_size="${2:-}"
+      shift 2
+      ;;
+    --numpy-block-cache-size)
+      numpy_block_cache_size="${2:-}"
+      shift 2
+      ;;
+    --cufile-log-path)
+      cufile_log_path="${2:-}"
+      shift 2
+      ;;
+    --cufile-log-level)
+      cufile_log_level="${2:-}"
       shift 2
       ;;
     --pin-memory)
@@ -261,6 +343,11 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
+if [[ "$inspect_profile" -eq 1 ]]; then
+  dataloader_print_profile
+  exit 0
+fi
+
 aicr_assert_supported_cluster "$cluster"
 case "$node_count" in
   1|2|4|8|16) ;;
@@ -268,8 +355,8 @@ case "$node_count" in
 esac
 if [[ "$cluster" == "rtxpro6000" ]]; then
   case "$node_count" in
-    1|2|4|8) ;;
-    *) aicr_die "RTX DataLoader supports --nodes 1, 2, 4, or 8" ;;
+    1|2|4|8|16) ;;
+    *) aicr_die "RTX DataLoader supports --nodes 1, 2, 4, 8, or 16" ;;
   esac
 fi
 case "$mode" in
@@ -289,6 +376,18 @@ case "$mode" in
 esac
 
 [[ "$dataset_split" == "train" || "$dataset_split" == "val" ]] || aicr_die "--split must be train or val"
+case "$input_backend" in
+  pytorch-cpu-dataloader|dali-gpu-decode|numpy-uint8-shards|numpy-fp16-shards|numpy-fp16-blocks-pytorch|dali-numpy-fp16-cpu|dali-numpy-fp16-gds|dali-numpy-fp16-blocks-cpu|dali-numpy-fp16-blocks-gds) ;;
+  *) aicr_die "--input-backend must be pytorch-cpu-dataloader, dali-gpu-decode, numpy-uint8-shards, numpy-fp16-shards, numpy-fp16-blocks-pytorch, dali-numpy-fp16-cpu, dali-numpy-fp16-gds, dali-numpy-fp16-blocks-cpu, or dali-numpy-fp16-blocks-gds" ;;
+esac
+case "$input_backend" in
+  numpy-uint8-shards|numpy-fp16-shards|numpy-fp16-blocks-pytorch|dali-numpy-fp16-cpu|dali-numpy-fp16-gds|dali-numpy-fp16-blocks-cpu|dali-numpy-fp16-blocks-gds)
+    [[ -n "$derived_root" ]] || aicr_die "derived input backends require --derived-root or AICR_DATALOADER_DERIVED_ROOT"
+    ;;
+esac
+[[ "$derived_image_size" =~ ^[0-9]+$ && "$derived_image_size" -gt 0 ]] || aicr_die "--derived-image-size must be a positive integer"
+[[ "$derived_samples_per_class" =~ ^[0-9]+$ && "$derived_samples_per_class" -gt 0 ]] || aicr_die "--derived-samples-per-class must be a positive integer"
+[[ "$derived_seed" =~ ^[0-9]+$ ]] || aicr_die "--derived-seed must be a non-negative integer"
 [[ "$requested_gpu_count" =~ ^[0-9]+$ && "$requested_gpu_count" -gt 0 ]] || aicr_die "--requested-gpu-count must be a positive integer"
 if [[ "$mode" == "single" && "$requested_gpu_count" != "1" ]]; then
   aicr_die "--mode single requires --requested-gpu-count 1"
@@ -303,6 +402,16 @@ fi
 [[ "$batch_size" =~ ^[0-9]+$ && "$batch_size" -gt 0 ]] || aicr_die "--batch-size must be a positive integer"
 [[ "$num_workers" =~ ^[0-9]+$ && "$num_workers" -ge 0 ]] || aicr_die "--num-workers must be a non-negative integer"
 [[ "$prefetch_factor" =~ ^[0-9]+$ && "$prefetch_factor" -gt 0 ]] || aicr_die "--prefetch-factor must be a positive integer"
+[[ "$dali_num_threads" =~ ^[0-9]+$ ]] || aicr_die "--dali-num-threads must be a non-negative integer"
+[[ "$dali_prefetch_queue_depth" =~ ^[0-9]+$ && "$dali_prefetch_queue_depth" -gt 0 ]] || aicr_die "--dali-prefetch-queue-depth must be a positive integer"
+[[ "$dali_numpy_reader_prefetch_queue_depth" =~ ^[0-9]+$ && "$dali_numpy_reader_prefetch_queue_depth" -gt 0 ]] || aicr_die "--dali-numpy-reader-prefetch-queue-depth must be a positive integer"
+case "$dali_decode_mode" in
+  random-crop|decode-resize) ;;
+  *) aicr_die "--dali-decode-mode must be random-crop or decode-resize" ;;
+esac
+[[ "$dali_hw_decoder_load" =~ ^[0-9]+([.][0-9]+)?$ ]] || aicr_die "--dali-hw-decoder-load must be a non-negative number"
+[[ -z "$dali_gds_chunk_size" || "$dali_gds_chunk_size" =~ ^[0-9]+([kKmM])?$ ]] || aicr_die "--dali-gds-chunk-size must be a byte count accepted by DALI, such as 2097152 or 2M"
+[[ "$numpy_block_cache_size" =~ ^[0-9]+$ && "$numpy_block_cache_size" -gt 0 ]] || aicr_die "--numpy-block-cache-size must be a positive integer"
 [[ "$pin_memory" == "0" || "$pin_memory" == "1" ]] || aicr_die "--pin-memory must be 0 or 1"
 [[ "$persistent_workers" == "0" || "$persistent_workers" == "1" ]] || aicr_die "--persistent-workers must be 0 or 1"
 [[ "$warmup_batches" =~ ^[0-9]+$ && "$warmup_batches" -ge 0 ]] || aicr_die "--warmup-batches must be a non-negative integer"
@@ -312,6 +421,7 @@ fi
 [[ "$drop_last" == "0" || "$drop_last" == "1" ]] || aicr_die "--drop-last must be 0 or 1"
 [[ "$byte_estimate_sample_count" =~ ^[0-9]+$ ]] || aicr_die "--byte-estimate-sample-count must be a non-negative integer"
 [[ "$selected_gpu" =~ ^[0-9]+$ ]] || aicr_die "--gpu must be a non-negative integer"
+assert_derived_jpeg_dataset_root
 
 date_utc="$(aicr_today_date)"
 node_short="$(hostname -s 2>/dev/null || hostname)"
@@ -352,6 +462,8 @@ cpus_per_task="${SLURM_CPUS_PER_TASK:-}"
 if [[ -z "$cpus_per_task" && "$mode" != "single" ]]; then
   cpus_per_task="16"
 fi
+nofile_limit_soft="$(ulimit -Sn 2>/dev/null || true)"
+nofile_limit_hard="$(ulimit -Hn 2>/dev/null || true)"
 submitted_at="$(aicr_timestamp_utc)"
 wrapper_out_rel="${raw_rel}/wrapper/slurm-${job_id:-manual}.out"
 wrapper_err_rel="${raw_rel}/wrapper/slurm-${job_id:-manual}.err"
@@ -364,6 +476,7 @@ cmd_rel="${raw_rel}/canonical/dataloader-command.sh"
 stdout_rel="${raw_rel}/canonical/dataloader-stdout.txt"
 stderr_rel="${raw_rel}/canonical/dataloader-stderr.txt"
 metrics_rel="${raw_rel}/canonical/dataloader-metrics.json"
+cufile_log_rel="${raw_rel}/canonical/cufile.log"
 inventory_rel="${raw_rel}/canonical/nvidia-smi-L.txt"
 rank_table_rel="${raw_rel}/canonical/rank-metrics.tsv"
 summary_json_rel="${parsed_rel}/summary.json"
@@ -375,12 +488,24 @@ cmd_abs="${AICR_BMARK_DIR}/${cmd_rel}"
 stdout_abs="${AICR_BMARK_DIR}/${stdout_rel}"
 stderr_abs="${AICR_BMARK_DIR}/${stderr_rel}"
 metrics_abs="${AICR_BMARK_DIR}/${metrics_rel}"
+cufile_log_abs="${AICR_BMARK_DIR}/${cufile_log_rel}"
 inventory_abs="${AICR_BMARK_DIR}/${inventory_rel}"
 rank_table_abs="${AICR_BMARK_DIR}/${rank_table_rel}"
 summary_json_abs="${AICR_BMARK_DIR}/${summary_json_rel}"
 status_json_abs="${AICR_BMARK_DIR}/${status_json_rel}"
 record_abs="${AICR_BMARK_DIR}/${record_rel}"
 workload_script_abs="${BENCHMARK_DIR}/run-dataloader-workload.py"
+if [[ -z "$cufile_log_path" ]]; then
+  case "$input_backend" in
+    *-gds)
+      if [[ "${mode}" == "single" ]]; then
+        cufile_log_path="${cufile_log_abs}"
+      else
+        cufile_log_path="${AICR_BMARK_DIR}/${raw_rel}/canonical/ranks/rank-{rank}/cufile.log"
+      fi
+      ;;
+  esac
+fi
 : >"${rank_table_abs}"
 if aicr_have_cmd nvidia-smi; then
   nvidia-smi -L >"${inventory_abs}" 2>&1 || true
@@ -417,7 +542,6 @@ single_cuda_visible_devices="${CUDA_VISIBLE_DEVICES:-$selected_gpu}"
 
 cat >"${env_abs}" <<EOF_ENV
 cluster=${cluster}
-profile=${profile}
 host=${node_short}
 run_id=${run_id}
 scope=${scope}
@@ -431,9 +555,23 @@ dataset_split=${dataset_split}
 selected_gpu=${selected_gpu}
 mode=${mode}
 requested_gpu_count=${requested_gpu_count}
+input_backend=${input_backend}
+derived_root=${derived_root}
+derived_image_size=${derived_image_size}
+derived_samples_per_class=${derived_samples_per_class}
+derived_seed=${derived_seed}
 batch_size=${batch_size}
 num_workers=${num_workers}
 prefetch_factor=${prefetch_factor}
+dali_num_threads=${dali_num_threads}
+dali_prefetch_queue_depth=${dali_prefetch_queue_depth}
+dali_numpy_reader_prefetch_queue_depth=${dali_numpy_reader_prefetch_queue_depth}
+dali_decode_mode=${dali_decode_mode}
+dali_hw_decoder_load=${dali_hw_decoder_load}
+dali_gds_chunk_size=${dali_gds_chunk_size}
+numpy_block_cache_size=${numpy_block_cache_size}
+cufile_log_path=${cufile_log_path}
+cufile_log_level=${cufile_log_level}
 pin_memory=${pin_memory}
 persistent_workers=${persistent_workers}
 warmup_batches=${warmup_batches}
@@ -442,6 +580,9 @@ h2d=${h2d}
 transfer_labels=${transfer_labels}
 drop_last=${drop_last}
 cpus_per_task=${cpus_per_task}
+nofile_limit_soft=${nofile_limit_soft}
+nofile_limit_hard=${nofile_limit_hard}
+nofile_limit_requested=${dataloader_nofile_limit}
 byte_estimate_sample_count=${byte_estimate_sample_count}
 gpu_count=${gpu_count}
 expected_visible_gpu_count=${expected_visible_gpu_count}
@@ -456,7 +597,7 @@ EOF_ENV
 if [[ "${mode}" == "single" ]]; then
   {
     # shellcheck disable=SC2086
-    printf '%q ' apptainer exec ${AICR_APPTAINER_COMMON_OPTS} --nv "${image}" env CUDA_VISIBLE_DEVICES="${single_cuda_visible_devices}" python3 "${workload_script_abs}" --dataset-root "${dataset_root}" --split "${dataset_split}" --batch-size "${batch_size}" --num-workers "${num_workers}" --prefetch-factor "${prefetch_factor}" --pin-memory "${pin_memory}" --persistent-workers "${persistent_workers}" --warmup-batches "${warmup_batches}" --measured-batches "${measured_batches}" --selected-gpu "${selected_gpu}" --sampler-mode "${mode}" --rank 0 --world-size 1 --local-rank "${selected_gpu}" --node-rank 0 --local-gpu-index "${selected_gpu}" --node-list "${peer_nodes_csv}" --node-count "${node_count}" --launcher "${launcher}" --h2d "${h2d}" --transfer-labels "${transfer_labels}" --drop-last "${drop_last}" --byte-estimate-sample-count "${byte_estimate_sample_count}" --output "${metrics_abs}"
+    printf '%q ' apptainer exec ${AICR_APPTAINER_COMMON_OPTS} --nv "${image}" env CUDA_VISIBLE_DEVICES="${single_cuda_visible_devices}" python3 "${workload_script_abs}" --dataset-root "${dataset_root}" --split "${dataset_split}" --input-backend "${input_backend}" --derived-root "${derived_root}" --derived-image-size "${derived_image_size}" --derived-samples-per-class "${derived_samples_per_class}" --derived-seed "${derived_seed}" --batch-size "${batch_size}" --num-workers "${num_workers}" --prefetch-factor "${prefetch_factor}" --dali-num-threads "${dali_num_threads}" --dali-prefetch-queue-depth "${dali_prefetch_queue_depth}" --dali-numpy-reader-prefetch-queue-depth "${dali_numpy_reader_prefetch_queue_depth}" --dali-decode-mode "${dali_decode_mode}" --dali-hw-decoder-load "${dali_hw_decoder_load}" --dali-gds-chunk-size "${dali_gds_chunk_size}" --numpy-block-cache-size "${numpy_block_cache_size}" --cufile-log-path "${cufile_log_path}" --cufile-log-level "${cufile_log_level}" --pin-memory "${pin_memory}" --persistent-workers "${persistent_workers}" --warmup-batches "${warmup_batches}" --measured-batches "${measured_batches}" --selected-gpu "${selected_gpu}" --sampler-mode "${mode}" --rank 0 --world-size 1 --local-rank "${selected_gpu}" --node-rank 0 --local-gpu-index "${selected_gpu}" --node-list "${peer_nodes_csv}" --node-count "${node_count}" --launcher "${launcher}" --h2d "${h2d}" --transfer-labels "${transfer_labels}" --drop-last "${drop_last}" --byte-estimate-sample-count "${byte_estimate_sample_count}" --output "${metrics_abs}"
     echo
   } >"${cmd_abs}"
 else
@@ -468,9 +609,23 @@ else
     python3 "$workload_script_abs"
       --dataset-root "$dataset_root"
       --split "$dataset_split"
+      --input-backend "$input_backend"
+      --derived-root "$derived_root"
+      --derived-image-size "$derived_image_size"
+      --derived-samples-per-class "$derived_samples_per_class"
+      --derived-seed "$derived_seed"
       --batch-size "$batch_size"
       --num-workers "$num_workers"
       --prefetch-factor "$prefetch_factor"
+      --dali-num-threads "$dali_num_threads"
+      --dali-prefetch-queue-depth "$dali_prefetch_queue_depth"
+      --dali-numpy-reader-prefetch-queue-depth "$dali_numpy_reader_prefetch_queue_depth"
+      --dali-decode-mode "$dali_decode_mode"
+      --dali-hw-decoder-load "$dali_hw_decoder_load"
+      --dali-gds-chunk-size "$dali_gds_chunk_size"
+      --numpy-block-cache-size "$numpy_block_cache_size"
+      --cufile-log-path "$cufile_log_path"
+      --cufile-log-level "$cufile_log_level"
       --pin-memory "$pin_memory"
       --persistent-workers "$persistent_workers"
       --warmup-batches "$warmup_batches"
@@ -497,16 +652,10 @@ notes=()
 dataset_split_root="${dataset_root}/${dataset_split}"
 runner_rc=0
 
-if [[ ! -d "${dataset_root}" ]]; then
+if [[ "${input_backend}" != numpy-* && "${input_backend}" != dali-numpy-* && ! -d "${dataset_root}" ]]; then
   status="failed"
   notes+=("dataset root not found: ${dataset_root}")
-elif [[ ! -d "${dataset_root}/train" ]]; then
-  status="failed"
-  notes+=("missing train split under dataset root")
-elif [[ ! -d "${dataset_root}/val" ]]; then
-  status="failed"
-  notes+=("missing val split under dataset root")
-elif [[ ! -d "${dataset_split_root}" ]]; then
+elif [[ "${input_backend}" != numpy-* && "${input_backend}" != dali-numpy-* && ! -d "${dataset_split_root}" ]]; then
   status="failed"
   notes+=("missing requested split directory: ${dataset_split_root}")
 elif [[ ! -f "${image}" ]]; then
@@ -535,9 +684,23 @@ if [[ "${status}" == "passed" ]]; then
       python3 "${workload_script_abs}" \
         --dataset-root "${dataset_root}" \
         --split "${dataset_split}" \
+        --input-backend "${input_backend}" \
+        --derived-root "${derived_root}" \
+        --derived-image-size "${derived_image_size}" \
+        --derived-samples-per-class "${derived_samples_per_class}" \
+        --derived-seed "${derived_seed}" \
         --batch-size "${batch_size}" \
         --num-workers "${num_workers}" \
         --prefetch-factor "${prefetch_factor}" \
+        --dali-num-threads "${dali_num_threads}" \
+        --dali-prefetch-queue-depth "${dali_prefetch_queue_depth}" \
+        --dali-numpy-reader-prefetch-queue-depth "${dali_numpy_reader_prefetch_queue_depth}" \
+        --dali-decode-mode "${dali_decode_mode}" \
+        --dali-hw-decoder-load "${dali_hw_decoder_load}" \
+        --dali-gds-chunk-size "${dali_gds_chunk_size}" \
+        --numpy-block-cache-size "${numpy_block_cache_size}" \
+        --cufile-log-path "${cufile_log_path}" \
+        --cufile-log-level "${cufile_log_level}" \
         --pin-memory "${pin_memory}" \
         --persistent-workers "${persistent_workers}" \
         --warmup-batches "${warmup_batches}" \
@@ -571,21 +734,8 @@ if [[ "${status}" == "passed" ]]; then
     runner_rc=$?
     set -e
     if [[ "${runner_rc}" -ne 0 ]]; then
-      complete_rank_metrics=1
-      for rank in $(seq 0 "$((requested_gpu_count - 1))"); do
-        rank_metrics_rel="${raw_rel}/canonical/ranks/rank-${rank}/dataloader-metrics.json"
-        if [[ ! -f "${AICR_BMARK_DIR}/${rank_metrics_rel}" ]]; then
-          complete_rank_metrics=0
-          break
-        fi
-      done
-      if [[ "${complete_rank_metrics}" == "1" ]]; then
-        notes+=("multi-rank launcher returned ${runner_rc} after all rank metrics were written; treating launcher status as warning")
-        runner_rc=0
-      else
-        status="failed"
-        notes+=("multi-rank dataloader launcher failed")
-      fi
+      status="failed"
+      notes+=("multi-rank dataloader launcher failed")
     fi
     for rank in $(seq 0 "$((requested_gpu_count - 1))"); do
       rank_dir_rel="${raw_rel}/canonical/ranks/rank-${rank}"
@@ -597,7 +747,7 @@ if [[ "${status}" == "passed" ]]; then
       : >"${AICR_BMARK_DIR}/${rank_stdout_rel}"
       : >"${AICR_BMARK_DIR}/${rank_stderr_rel}"
       rank_rc=0
-      if [[ ! -f "${AICR_BMARK_DIR}/${rank_metrics_rel}" ]]; then
+      if [[ "${runner_rc}" -ne 0 || ! -f "${AICR_BMARK_DIR}/${rank_metrics_rel}" ]]; then
         rank_rc=1
       fi
       printf '%s\t%s\t%s\t%s\t%s\n' \
@@ -614,7 +764,7 @@ else
 fi
 
 summary_payload="$(
-  aicr_python - "${metrics_abs}" "${rank_table_abs}" "${AICR_BMARK_DIR}" "${mode}" "${requested_gpu_count}" "${node_count}" "${peer_nodes_csv}" "${launcher}" "${scope}" "${h2d}" "${transfer_labels}" "${drop_last}" "${status}" "$(aicr_join_csv "${notes[@]}")" "${runner_rc}" "${cluster}" "${date_utc}" "${run_id}" "${node_short}" "${job_id}" "${image}" "${dataset_root}" "${dataset_split}" "${selected_gpu}" "${gpu_count}" "${expected_visible_gpu_count}" "${gpu_preflight_count}" "${gpu_preflight_count_source}" "${gpu_preflight_status}" "${inventory_rel}" "${gpu_name}" "${batch_size}" "${num_workers}" "${prefetch_factor}" "${pin_memory}" "${persistent_workers}" "${warmup_batches}" "${measured_batches}" "${cpus_per_task}" "${byte_estimate_sample_count}" <<'PY'
+  aicr_python - "${metrics_abs}" "${rank_table_abs}" "${AICR_BMARK_DIR}" "${mode}" "${requested_gpu_count}" "${node_count}" "${peer_nodes_csv}" "${launcher}" "${scope}" "${h2d}" "${transfer_labels}" "${drop_last}" "${status}" "$(aicr_join_csv "${notes[@]}")" "${runner_rc}" "${cluster}" "${date_utc}" "${run_id}" "${node_short}" "${job_id}" "${image}" "${dataset_root}" "${dataset_split}" "${selected_gpu}" "${gpu_count}" "${expected_visible_gpu_count}" "${gpu_preflight_count}" "${gpu_preflight_count_source}" "${gpu_preflight_status}" "${inventory_rel}" "${gpu_name}" "${input_backend}" "${derived_root}" "${derived_image_size}" "${derived_samples_per_class}" "${derived_seed}" "${batch_size}" "${num_workers}" "${prefetch_factor}" "${dali_num_threads}" "${dali_prefetch_queue_depth}" "${dali_numpy_reader_prefetch_queue_depth}" "${dali_decode_mode}" "${dali_hw_decoder_load}" "${dali_gds_chunk_size}" "${cufile_log_path}" "${cufile_log_level}" "${pin_memory}" "${persistent_workers}" "${warmup_batches}" "${measured_batches}" "${cpus_per_task}" "${byte_estimate_sample_count}" <<'PY'
 import json
 import sys
 from pathlib import Path
@@ -651,9 +801,22 @@ from pathlib import Path
     gpu_preflight_status,
     gpu_inventory_rel,
     gpu_name,
+    input_backend,
+    derived_root,
+    derived_image_size,
+    derived_samples_per_class,
+    derived_seed,
     batch_size,
     num_workers,
     prefetch_factor,
+    dali_num_threads,
+    dali_prefetch_queue_depth,
+    dali_numpy_reader_prefetch_queue_depth,
+    dali_decode_mode,
+    dali_hw_decoder_load,
+    dali_gds_chunk_size,
+    cufile_log_path,
+    cufile_log_level,
     pin_memory,
     persistent_workers,
     warmup_batches,
@@ -689,6 +852,17 @@ def mean(values):
 def sum_if_any(values):
     values = [value for value in values if value is not None]
     return sum(values) if values else None
+
+
+def first_present(values):
+    for value in values:
+        if value is not None:
+            return value
+    return None
+
+
+def numeric_values(values):
+    return [value for value in values if isinstance(value, (int, float))]
 
 if int(runner_rc) != 0:
     status = "failed"
@@ -734,12 +908,56 @@ if mode == "single":
     worker_cpu_utilization_mean_percent = metrics.get("worker_cpu_utilization_mean_percent")
     worker_cpu_utilization_max_percent = metrics.get("worker_cpu_utilization_max_percent")
     worker_cpu_utilization_total_percent = metrics.get("worker_cpu_utilization_total_percent")
+    nofile_requested = metrics.get("nofile_requested")
+    nofile_soft = metrics.get("nofile_soft")
+    nofile_hard = metrics.get("nofile_hard")
+    nofile_soft_min = nofile_soft
+    nofile_soft_max = nofile_soft
+    nofile_hard_min = nofile_hard
+    nofile_hard_max = nofile_hard
+    open_file_descriptor_count = metrics.get("open_file_descriptor_count")
+    open_file_descriptor_count_max = open_file_descriptor_count
     dataset_split_root = metrics.get("dataset_split_root") or f"{dataset_root}/{dataset_split}"
     dataset_size = metrics.get("dataset_size")
     class_count = metrics.get("class_count")
     effective_prefetch_factor = metrics.get("prefetch_factor")
     if effective_prefetch_factor is None:
         effective_prefetch_factor = int(prefetch_factor)
+    effective_input_backend = metrics.get("input_backend", input_backend)
+    effective_study_class = metrics.get("study_class")
+    effective_representation_class = metrics.get("representation_class")
+    effective_transport_class = metrics.get("transport_class")
+    effective_canonical_imagenet = metrics.get("canonical_imagenet")
+    effective_derived_jpeg = metrics.get("derived_jpeg")
+    effective_prepared_input_ceiling = metrics.get("prepared_input_ceiling")
+    effective_input_delivery_endpoint = metrics.get("input_delivery_endpoint")
+    effective_dali_num_threads = metrics.get("dali_num_threads")
+    effective_dali_prefetch_queue_depth = metrics.get("dali_prefetch_queue_depth")
+    effective_dali_numpy_reader_prefetch_queue_depth = metrics.get("dali_numpy_reader_prefetch_queue_depth")
+    effective_dali_decode_mode = metrics.get("dali_decode_mode")
+    effective_dali_hw_decoder_load = metrics.get("dali_hw_decoder_load")
+    effective_gds_requested = metrics.get("gds_requested")
+    effective_dali_reader_device = metrics.get("dali_reader_device")
+    effective_dali_numpy_use_o_direct = metrics.get("dali_numpy_use_o_direct")
+    effective_dali_gds_chunk_size = metrics.get("dali_gds_chunk_size")
+    effective_cufile_log_path = metrics.get("cufile_log_path")
+    effective_cufile_log_level = metrics.get("cufile_log_level")
+    effective_storage_transport_path = metrics.get("storage_transport_path")
+    effective_dataset_file_count = metrics.get("dataset_file_count")
+    effective_dataset_block_count = metrics.get("dataset_block_count")
+    effective_dataset_total_bytes = metrics.get("dataset_total_bytes")
+    effective_logical_sample_count = metrics.get("logical_sample_count")
+    effective_numpy_block_size = metrics.get("numpy_block_size")
+    effective_numpy_block_cache_size = metrics.get("numpy_block_cache_size")
+    effective_derived_root = metrics.get("derived_root")
+    effective_derived_image_size = metrics.get("derived_image_size")
+    effective_derived_samples_per_class = metrics.get("derived_samples_per_class")
+    effective_derived_seed = metrics.get("derived_seed")
+    effective_derived_format = metrics.get("derived_format")
+    effective_derived_storage_dtype = metrics.get("derived_storage_dtype")
+    effective_derived_storage_layout = metrics.get("derived_storage_layout")
+    input_gpu_resident = metrics.get("input_gpu_resident")
+    labels_gpu_resident = metrics.get("labels_gpu_resident")
     effective_persistent_workers = metrics.get("persistent_workers")
     if effective_persistent_workers is None:
         effective_persistent_workers = persistent_workers == "1"
@@ -811,11 +1029,50 @@ else:
                 "worker_cpu_utilization_max_percent": rank_metrics.get("worker_cpu_utilization_max_percent"),
                 "worker_cpu_utilization_total_percent": rank_metrics.get("worker_cpu_utilization_total_percent"),
                 "sampler_mode": rank_metrics.get("sampler_mode", mode),
+                "input_backend": rank_metrics.get("input_backend", input_backend),
+                "study_class": rank_metrics.get("study_class"),
+                "representation_class": rank_metrics.get("representation_class"),
+                "transport_class": rank_metrics.get("transport_class"),
+                "canonical_imagenet": rank_metrics.get("canonical_imagenet"),
+                "derived_jpeg": rank_metrics.get("derived_jpeg"),
+                "prepared_input_ceiling": rank_metrics.get("prepared_input_ceiling"),
+                "input_delivery_endpoint": rank_metrics.get("input_delivery_endpoint"),
+                "input_gpu_resident": rank_metrics.get("input_gpu_resident"),
+                "labels_gpu_resident": rank_metrics.get("labels_gpu_resident"),
+                "dali_num_threads": rank_metrics.get("dali_num_threads"),
+                "dali_prefetch_queue_depth": rank_metrics.get("dali_prefetch_queue_depth"),
+                "dali_numpy_reader_prefetch_queue_depth": rank_metrics.get("dali_numpy_reader_prefetch_queue_depth"),
+                "dali_decode_mode": rank_metrics.get("dali_decode_mode"),
+                "dali_hw_decoder_load": rank_metrics.get("dali_hw_decoder_load"),
+                "gds_requested": rank_metrics.get("gds_requested"),
+                "dali_reader_device": rank_metrics.get("dali_reader_device"),
+                "dali_numpy_use_o_direct": rank_metrics.get("dali_numpy_use_o_direct"),
+                "dali_gds_chunk_size": rank_metrics.get("dali_gds_chunk_size"),
+                "cufile_log_path": rank_metrics.get("cufile_log_path"),
+                "cufile_log_level": rank_metrics.get("cufile_log_level"),
+                "storage_transport_path": rank_metrics.get("storage_transport_path"),
+                "dataset_file_count": rank_metrics.get("dataset_file_count"),
+                "dataset_block_count": rank_metrics.get("dataset_block_count"),
+                "dataset_total_bytes": rank_metrics.get("dataset_total_bytes"),
+                "logical_sample_count": rank_metrics.get("logical_sample_count"),
+                "numpy_block_size": rank_metrics.get("numpy_block_size"),
+                "numpy_block_cache_size": rank_metrics.get("numpy_block_cache_size"),
+                "derived_root": rank_metrics.get("derived_root"),
+                "derived_image_size": rank_metrics.get("derived_image_size"),
+                "derived_samples_per_class": rank_metrics.get("derived_samples_per_class"),
+                "derived_seed": rank_metrics.get("derived_seed"),
+                "derived_format": rank_metrics.get("derived_format"),
+                "derived_storage_dtype": rank_metrics.get("derived_storage_dtype"),
+                "derived_storage_layout": rank_metrics.get("derived_storage_layout"),
                 "sampler_length": rank_metrics.get("sampler_length"),
                 "dataset_size": rank_metrics.get("dataset_size"),
                 "class_count": rank_metrics.get("class_count"),
                 "visible_gpu_count": rank_metrics.get("visible_gpu_count"),
                 "h2d_enabled": rank_metrics.get("h2d_enabled"),
+                "nofile_requested": rank_metrics.get("nofile_requested"),
+                "nofile_soft": rank_metrics.get("nofile_soft"),
+                "nofile_hard": rank_metrics.get("nofile_hard"),
+                "open_file_descriptor_count": rank_metrics.get("open_file_descriptor_count"),
                 "notes": "; ".join(note for note in rank_notes if note),
             })
     if len(per_rank) != int(requested_gpu_count):
@@ -854,6 +1111,18 @@ else:
     ]
     worker_cpu_utilization_max_percent = max(worker_cpu_utilization_max_values) if worker_cpu_utilization_max_values else None
     worker_cpu_utilization_total_percent = sum_if_any(item.get("worker_cpu_utilization_total_percent") for item in per_rank)
+    nofile_requested = first_present(item.get("nofile_requested") for item in per_rank)
+    nofile_soft_values = numeric_values(item.get("nofile_soft") for item in per_rank)
+    nofile_hard_values = numeric_values(item.get("nofile_hard") for item in per_rank)
+    open_fd_values = numeric_values(item.get("open_file_descriptor_count") for item in per_rank)
+    nofile_soft = min(nofile_soft_values) if nofile_soft_values else None
+    nofile_hard = min(nofile_hard_values) if nofile_hard_values else None
+    nofile_soft_min = min(nofile_soft_values) if nofile_soft_values else None
+    nofile_soft_max = max(nofile_soft_values) if nofile_soft_values else None
+    nofile_hard_min = min(nofile_hard_values) if nofile_hard_values else None
+    nofile_hard_max = max(nofile_hard_values) if nofile_hard_values else None
+    open_file_descriptor_count = max(open_fd_values) if open_fd_values else None
+    open_file_descriptor_count_max = open_file_descriptor_count
     if status == "passed" and aggregate_samples_per_second is None:
         status = "failed"
         notes.append("aggregate_samples_per_second missing from rank metrics")
@@ -871,6 +1140,41 @@ else:
     effective_prefetch_factor = first_metrics.get("prefetch_factor")
     if effective_prefetch_factor is None:
         effective_prefetch_factor = int(prefetch_factor)
+    effective_input_backend = first_metrics.get("input_backend", input_backend)
+    effective_study_class = first_metrics.get("study_class")
+    effective_representation_class = first_metrics.get("representation_class")
+    effective_transport_class = first_metrics.get("transport_class")
+    effective_canonical_imagenet = first_metrics.get("canonical_imagenet")
+    effective_derived_jpeg = first_metrics.get("derived_jpeg")
+    effective_prepared_input_ceiling = first_metrics.get("prepared_input_ceiling")
+    effective_input_delivery_endpoint = first_metrics.get("input_delivery_endpoint")
+    effective_dali_num_threads = first_metrics.get("dali_num_threads")
+    effective_dali_prefetch_queue_depth = first_metrics.get("dali_prefetch_queue_depth")
+    effective_dali_numpy_reader_prefetch_queue_depth = first_metrics.get("dali_numpy_reader_prefetch_queue_depth")
+    effective_dali_decode_mode = first_metrics.get("dali_decode_mode")
+    effective_dali_hw_decoder_load = first_metrics.get("dali_hw_decoder_load")
+    effective_gds_requested = first_metrics.get("gds_requested")
+    effective_dali_reader_device = first_metrics.get("dali_reader_device")
+    effective_dali_numpy_use_o_direct = first_metrics.get("dali_numpy_use_o_direct")
+    effective_dali_gds_chunk_size = first_metrics.get("dali_gds_chunk_size")
+    effective_cufile_log_path = first_metrics.get("cufile_log_path") or cufile_log_path
+    effective_cufile_log_level = first_metrics.get("cufile_log_level") or cufile_log_level
+    effective_storage_transport_path = first_metrics.get("storage_transport_path")
+    effective_dataset_file_count = first_metrics.get("dataset_file_count")
+    effective_dataset_block_count = first_metrics.get("dataset_block_count")
+    effective_dataset_total_bytes = first_metrics.get("dataset_total_bytes")
+    effective_logical_sample_count = first_metrics.get("logical_sample_count")
+    effective_numpy_block_size = first_metrics.get("numpy_block_size")
+    effective_numpy_block_cache_size = first_metrics.get("numpy_block_cache_size")
+    effective_derived_root = first_metrics.get("derived_root")
+    effective_derived_image_size = first_metrics.get("derived_image_size")
+    effective_derived_samples_per_class = first_metrics.get("derived_samples_per_class")
+    effective_derived_seed = first_metrics.get("derived_seed")
+    effective_derived_format = first_metrics.get("derived_format")
+    effective_derived_storage_dtype = first_metrics.get("derived_storage_dtype")
+    effective_derived_storage_layout = first_metrics.get("derived_storage_layout")
+    input_gpu_resident = any(bool(item.get("input_gpu_resident")) for item in per_rank)
+    labels_gpu_resident = any(bool(item.get("labels_gpu_resident")) for item in per_rank)
     effective_persistent_workers = first_metrics.get("persistent_workers")
     if effective_persistent_workers is None:
         effective_persistent_workers = persistent_workers == "1"
@@ -895,6 +1199,41 @@ else:
         "world_size": int(requested_gpu_count),
         "requested_gpu_count": int(requested_gpu_count),
         "rank_count": len(per_rank),
+        "input_backend": effective_input_backend,
+        "study_class": effective_study_class,
+        "representation_class": effective_representation_class,
+        "transport_class": effective_transport_class,
+        "canonical_imagenet": effective_canonical_imagenet,
+        "derived_jpeg": effective_derived_jpeg,
+        "prepared_input_ceiling": effective_prepared_input_ceiling,
+        "input_delivery_endpoint": effective_input_delivery_endpoint,
+        "input_gpu_resident": input_gpu_resident,
+        "labels_gpu_resident": labels_gpu_resident,
+        "dali_num_threads": effective_dali_num_threads,
+        "dali_prefetch_queue_depth": effective_dali_prefetch_queue_depth,
+        "dali_numpy_reader_prefetch_queue_depth": effective_dali_numpy_reader_prefetch_queue_depth,
+        "dali_decode_mode": effective_dali_decode_mode,
+        "dali_hw_decoder_load": effective_dali_hw_decoder_load,
+        "gds_requested": effective_gds_requested,
+        "dali_reader_device": effective_dali_reader_device,
+        "dali_numpy_use_o_direct": effective_dali_numpy_use_o_direct,
+        "dali_gds_chunk_size": effective_dali_gds_chunk_size,
+        "cufile_log_path": effective_cufile_log_path,
+        "cufile_log_level": effective_cufile_log_level,
+        "storage_transport_path": effective_storage_transport_path,
+        "dataset_file_count": effective_dataset_file_count,
+        "dataset_block_count": effective_dataset_block_count,
+        "dataset_total_bytes": effective_dataset_total_bytes,
+        "logical_sample_count": effective_logical_sample_count,
+        "numpy_block_size": effective_numpy_block_size,
+        "numpy_block_cache_size": effective_numpy_block_cache_size,
+        "derived_root": effective_derived_root,
+        "derived_image_size": effective_derived_image_size,
+        "derived_samples_per_class": effective_derived_samples_per_class,
+        "derived_seed": effective_derived_seed,
+        "derived_format": effective_derived_format,
+        "derived_storage_dtype": effective_derived_storage_dtype,
+        "derived_storage_layout": effective_derived_storage_layout,
         "samples_total": samples_total,
         "elapsed_seconds": elapsed_seconds,
         "load_elapsed_seconds": load_elapsed_seconds,
@@ -906,6 +1245,15 @@ else:
         "estimated_read_bytes": estimated_read_bytes,
         "estimated_vast_read_gb_per_second": estimated_vast_read_gb_per_second,
         "worker_cpu_utilization_mean_percent": worker_cpu_utilization_mean_percent,
+        "nofile_requested": nofile_requested,
+        "nofile_soft": nofile_soft,
+        "nofile_hard": nofile_hard,
+        "nofile_soft_min": nofile_soft_min,
+        "nofile_soft_max": nofile_soft_max,
+        "nofile_hard_min": nofile_hard_min,
+        "nofile_hard_max": nofile_hard_max,
+        "open_file_descriptor_count": open_file_descriptor_count,
+        "open_file_descriptor_count_max": open_file_descriptor_count_max,
     }, indent=2) + "\n", encoding="utf-8")
 
 rank_sps_values = [item.get("samples_per_second") for item in per_rank if item.get("samples_per_second") is not None]
@@ -954,9 +1302,44 @@ payload = {
     "dataset_split_root": dataset_split_root,
     "dataset_size": dataset_size,
     "class_count": class_count,
+    "input_backend": effective_input_backend,
+    "study_class": effective_study_class,
+    "representation_class": effective_representation_class,
+    "transport_class": effective_transport_class,
+    "canonical_imagenet": effective_canonical_imagenet,
+    "derived_jpeg": effective_derived_jpeg,
+    "prepared_input_ceiling": effective_prepared_input_ceiling,
+    "input_delivery_endpoint": effective_input_delivery_endpoint,
+    "input_gpu_resident": input_gpu_resident,
+    "labels_gpu_resident": labels_gpu_resident,
+    "derived_root": effective_derived_root,
+    "derived_image_size": effective_derived_image_size,
+    "derived_samples_per_class": effective_derived_samples_per_class,
+    "derived_seed": effective_derived_seed,
+    "derived_format": effective_derived_format,
+    "derived_storage_dtype": effective_derived_storage_dtype,
+    "derived_storage_layout": effective_derived_storage_layout,
     "batch_size": int(batch_size),
     "num_workers": int(num_workers),
     "prefetch_factor": effective_prefetch_factor,
+    "dali_num_threads": effective_dali_num_threads,
+    "dali_prefetch_queue_depth": effective_dali_prefetch_queue_depth,
+    "dali_numpy_reader_prefetch_queue_depth": effective_dali_numpy_reader_prefetch_queue_depth,
+    "dali_decode_mode": effective_dali_decode_mode,
+    "dali_hw_decoder_load": effective_dali_hw_decoder_load,
+    "gds_requested": effective_gds_requested,
+    "dali_reader_device": effective_dali_reader_device,
+    "dali_numpy_use_o_direct": effective_dali_numpy_use_o_direct,
+    "dali_gds_chunk_size": effective_dali_gds_chunk_size,
+    "cufile_log_path": effective_cufile_log_path,
+    "cufile_log_level": effective_cufile_log_level,
+    "storage_transport_path": effective_storage_transport_path,
+    "dataset_file_count": effective_dataset_file_count,
+    "dataset_block_count": effective_dataset_block_count,
+    "dataset_total_bytes": effective_dataset_total_bytes,
+    "logical_sample_count": effective_logical_sample_count,
+    "numpy_block_size": effective_numpy_block_size,
+    "numpy_block_cache_size": effective_numpy_block_cache_size,
     "pin_memory": pin_memory == "1",
     "persistent_workers": effective_persistent_workers,
     "warmup_batches": int(warmup_batches),
@@ -985,6 +1368,15 @@ payload = {
     "worker_cpu_utilization_mean_percent": worker_cpu_utilization_mean_percent,
     "worker_cpu_utilization_max_percent": worker_cpu_utilization_max_percent,
     "worker_cpu_utilization_total_percent": worker_cpu_utilization_total_percent,
+    "nofile_requested": nofile_requested,
+    "nofile_soft": nofile_soft,
+    "nofile_hard": nofile_hard,
+    "nofile_soft_min": nofile_soft_min,
+    "nofile_soft_max": nofile_soft_max,
+    "nofile_hard_min": nofile_hard_min,
+    "nofile_hard_max": nofile_hard_max,
+    "open_file_descriptor_count": open_file_descriptor_count,
+    "open_file_descriptor_count_max": open_file_descriptor_count_max,
     "rank_min_samples_per_second": rank_min_samples_per_second,
     "rank_median_samples_per_second": rank_median_samples_per_second,
     "rank_max_samples_per_second": rank_max_samples_per_second,
@@ -1011,7 +1403,13 @@ if [[ "${mode}" != "single" ]]; then
   while IFS=$'\t' read -r _rank rank_metrics_rel rank_stdout_rel rank_stderr_rel _rank_rc; do
     [[ -n "${rank_metrics_rel}" ]] || continue
     canonical_artifacts+=("${rank_metrics_rel}" "${rank_stdout_rel}" "${rank_stderr_rel}")
+    rank_cufile_rel="$(dirname "${rank_metrics_rel}")/cufile.log"
+    if [[ -f "${AICR_BMARK_DIR}/${rank_cufile_rel}" ]]; then
+      canonical_artifacts+=("${rank_cufile_rel}")
+    fi
   done <"${rank_table_abs}"
+elif [[ -f "${cufile_log_abs}" ]]; then
+  canonical_artifacts+=("${cufile_log_rel}")
 fi
 
 aicr_write_summary_status_pair "${summary_json_abs}" "${status_json_abs}" "${summary_payload}" "${status}" "parsed.summary.status"
@@ -1049,9 +1447,44 @@ lines = [
     f"dataset_root={summary['dataset_root']}",
     f"dataset_split={summary['dataset_split']}",
     f"dataset_split_root={summary['dataset_split_root']}",
+    f"input_backend={summary.get('input_backend', '')}",
+    f"study_class={summary.get('study_class', '')}",
+    f"representation_class={summary.get('representation_class', '')}",
+    f"transport_class={summary.get('transport_class', '')}",
+    f"canonical_imagenet={summary.get('canonical_imagenet', '')}",
+    f"derived_jpeg={summary.get('derived_jpeg', '')}",
+    f"prepared_input_ceiling={summary.get('prepared_input_ceiling', '')}",
+    f"input_delivery_endpoint={summary.get('input_delivery_endpoint', '')}",
+    f"input_gpu_resident={summary.get('input_gpu_resident', '')}",
+    f"labels_gpu_resident={summary.get('labels_gpu_resident', '')}",
+    f"derived_root={summary.get('derived_root', '')}",
+    f"derived_image_size={summary.get('derived_image_size', '')}",
+    f"derived_samples_per_class={summary.get('derived_samples_per_class', '')}",
+    f"derived_seed={summary.get('derived_seed', '')}",
+    f"derived_format={summary.get('derived_format', '')}",
+    f"derived_storage_dtype={summary.get('derived_storage_dtype', '')}",
+    f"derived_storage_layout={summary.get('derived_storage_layout', '')}",
     f"batch_size={summary['batch_size']}",
     f"num_workers={summary['num_workers']}",
     f"prefetch_factor={summary['prefetch_factor']}",
+    f"dali_num_threads={summary.get('dali_num_threads', '')}",
+    f"dali_prefetch_queue_depth={summary.get('dali_prefetch_queue_depth', '')}",
+    f"dali_numpy_reader_prefetch_queue_depth={summary.get('dali_numpy_reader_prefetch_queue_depth', '')}",
+    f"dali_decode_mode={summary.get('dali_decode_mode', '')}",
+    f"dali_hw_decoder_load={summary.get('dali_hw_decoder_load', '')}",
+    f"gds_requested={summary.get('gds_requested', '')}",
+    f"dali_reader_device={summary.get('dali_reader_device', '')}",
+    f"dali_numpy_use_o_direct={summary.get('dali_numpy_use_o_direct', '')}",
+    f"dali_gds_chunk_size={summary.get('dali_gds_chunk_size', '')}",
+    f"cufile_log_path={summary.get('cufile_log_path', '')}",
+    f"cufile_log_level={summary.get('cufile_log_level', '')}",
+    f"storage_transport_path={summary.get('storage_transport_path', '')}",
+    f"dataset_file_count={summary.get('dataset_file_count', '')}",
+    f"dataset_block_count={summary.get('dataset_block_count', '')}",
+    f"dataset_total_bytes={summary.get('dataset_total_bytes', '')}",
+    f"logical_sample_count={summary.get('logical_sample_count', '')}",
+    f"numpy_block_size={summary.get('numpy_block_size', '')}",
+    f"numpy_block_cache_size={summary.get('numpy_block_cache_size', '')}",
     f"pin_memory={summary['pin_memory']}",
     f"persistent_workers={summary['persistent_workers']}",
     f"warmup_batches={summary['warmup_batches']}",
@@ -1075,6 +1508,15 @@ lines = [
     f"worker_cpu_utilization_mean_percent={summary.get('worker_cpu_utilization_mean_percent', '')}",
     f"worker_cpu_utilization_max_percent={summary.get('worker_cpu_utilization_max_percent', '')}",
     f"worker_cpu_utilization_total_percent={summary.get('worker_cpu_utilization_total_percent', '')}",
+    f"nofile_requested={summary.get('nofile_requested', '')}",
+    f"nofile_soft={summary.get('nofile_soft', '')}",
+    f"nofile_hard={summary.get('nofile_hard', '')}",
+    f"nofile_soft_min={summary.get('nofile_soft_min', '')}",
+    f"nofile_soft_max={summary.get('nofile_soft_max', '')}",
+    f"nofile_hard_min={summary.get('nofile_hard_min', '')}",
+    f"nofile_hard_max={summary.get('nofile_hard_max', '')}",
+    f"open_file_descriptor_count={summary.get('open_file_descriptor_count', '')}",
+    f"open_file_descriptor_count_max={summary.get('open_file_descriptor_count_max', '')}",
     f"rank_min_samples_per_second={summary.get('rank_min_samples_per_second', '')}",
     f"rank_median_samples_per_second={summary.get('rank_median_samples_per_second', '')}",
     f"rank_max_samples_per_second={summary.get('rank_max_samples_per_second', '')}",
@@ -1112,7 +1554,7 @@ if [[ "${scope}" == "${AICR_SCOPE_NODE}" ]]; then
   aicr_append_index_row_from_record "${AICR_BMARK_DIR}/$(aicr_by_node_history_path "${cluster}" "${node_short}")" "${record_abs}"
 fi
 
-echo "DataLoader benchmark status: ${status}"
+echo "Dataloader benchmark status: ${status}"
 echo "Record: ${record_rel}"
 echo "Summary: ${summary_rel}"
 

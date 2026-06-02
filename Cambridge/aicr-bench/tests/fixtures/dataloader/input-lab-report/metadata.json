@@ -1,0 +1,21 @@
+{
+  "schema_version": 1,
+  "fixture_id": "dataloader-input-lab-report-shape",
+  "fixture_type": "synthetic-parsed-summary",
+  "date": "2026-05-12",
+  "cluster": "b200",
+  "input_summary_glob": "input/by-date/2026-05-12/parsed/b200/nodes/*/dataloader/*/summary.json",
+  "purpose": "Validate DataLoader input-lab report output shape with a small synthetic backend matrix.",
+  "not_benchmark_evidence": true,
+  "expected": {
+    "baseline_samples_per_second": 50000.0,
+    "row_count": 5,
+    "aggregate_row_count": 5,
+    "input_backends": [
+      "dali-gpu-decode",
+      "numpy-fp16-shards",
+      "numpy-uint8-shards",
+      "pytorch-cpu-dataloader"
+    ]
+  }
+}

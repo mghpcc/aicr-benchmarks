@@ -1,9 +1,10 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=b200-dataloader-mn-8g
-#SBATCH --partition=GPU2
+#SBATCH --partition=b200-batch
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
+#SBATCH --mem=0
 #SBATCH --gres=gpu:b200:8
 #SBATCH --time=01:00:00
 #SBATCH --output=results/slurm/%x-%j.out

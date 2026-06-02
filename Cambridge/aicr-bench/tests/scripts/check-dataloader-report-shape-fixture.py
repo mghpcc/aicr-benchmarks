@@ -48,6 +48,19 @@ def assert_nonempty(path: Path) -> None:
         raise SystemExit(f"{path}: missing or empty")
 
 
+def row_from_fixture_summary(renderer, summary_path: Path, fixture: Path, metadata: dict):
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    return renderer.row_from_summary(
+        summary,
+        summary_path,
+        fixture / "input",
+        metadata["date"],
+        metadata["cluster"],
+        "node",
+        summary.get("host"),
+    )
+
+
 def main() -> int:
     args = build_parser().parse_args()
     root = repo_root()
@@ -61,83 +74,60 @@ def main() -> int:
     summaries = sorted(fixture.glob(metadata["input_summary_glob"]))
     if not summaries:
         raise SystemExit(f"no summary.json files matched {metadata['input_summary_glob']} under {fixture}")
-    rows = [renderer.row_from_summary(path, renderer.load_json(path)) for path in summaries]
-    summary_rows = renderer.aggregate_dataloader_repeat_rows(rows, expected["aggregation"])
+    rows = [row_from_fixture_summary(renderer, path, fixture, metadata) for path in summaries]
+    df = renderer.pd.DataFrame(rows)
 
     with tempfile.TemporaryDirectory(prefix="aicr-dataloader-report-shape-") as tmp:
         output_dir = Path(tmp)
         date_value = metadata["date"]
         cluster = metadata["cluster"]
         csv_path = output_dir / f"dataloader-summary-{cluster}-{date_value}.csv"
-        summary_csv_path = output_dir / f"dataloader-aggregated-summary-{cluster}-{date_value}.csv"
+        metadata_path = output_dir / f"dataloader-report-{cluster}-{date_value}.json"
         md_path = output_dir / f"dataloader-{cluster}-{date_value}.md"
         png_path = output_dir / f"dataloader-throughput-{cluster}-{date_value}.png"
-        throughput_matrix_path = output_dir / f"dataloader-throughput-matrix-{cluster}-{date_value}.png"
-        imbalance_matrix_path = output_dir / f"dataloader-imbalance-matrix-{cluster}-{date_value}.png"
-        candidate_scatter_path = output_dir / f"dataloader-candidate-scatter-{cluster}-{date_value}.png"
-        interactive_html_path = output_dir / f"dataloader-matrix-{cluster}-{date_value}.html"
+        imbalance_path = output_dir / f"dataloader-rank-imbalance-{cluster}-{date_value}.png"
 
-        renderer.write_csv(csv_path, rows)
-        renderer.write_csv(summary_csv_path, summary_rows)
-        interactive_html_path.write_text(
-            renderer.build_interactive_html_page(
-                cluster,
-                date_value,
-                "Synthetic fixture dashboard shape check, not benchmark certification evidence.",
-                ["Synthetic fixture takeaway."],
-                "<table><tbody><tr><td>candidate</td></tr></tbody></table>",
-                "<script>Plotly.newPlot('fixture')</script>",
-            ),
-            encoding="utf-8",
-        )
-        md_path.write_text(
-            renderer.build_markdown(
-                rows,
-                summary_rows,
-                date_value,
-                cluster,
-                csv_path,
-                summary_csv_path,
-                png_path,
-                throughput_matrix_path,
-                imbalance_matrix_path,
-                candidate_scatter_path,
-                interactive_html_path,
-                expected["aggregation"],
-            ),
-            encoding="utf-8",
+        df.to_csv(csv_path, index=False)
+        metadata_path.write_text(json.dumps({"fixture": metadata["fixture_id"]}) + "\n", encoding="utf-8")
+        renderer.write_markdown_report(
+            df,
+            md_path,
+            csv_path,
+            metadata_path,
+            False,
+            png_path,
+            False,
+            imbalance_path,
+            [],
+            0,
+            date_value,
+            cluster,
+            expected["aggregation"],
         )
 
         for path in [
             csv_path,
-            summary_csv_path,
             md_path,
-            interactive_html_path,
+            metadata_path,
         ]:
             assert_nonempty(path)
 
         assert_contains(
             md_path,
             [
-                "## Aggregated Configuration Summary",
-                "Repeated configuration rows are summarized before plotting.",
-                "dataloader-aggregated-summary",
+                "## Repeated Config Summary",
+                "Grouped rows use the same sampler",
+                "Olympic avg images/sec",
                 "## Detailed Rows",
+                "[Stats Explained](../../../../docs/stats-explained.md)",
             ],
         )
-        assert_contains(
-            interactive_html_path,
-            [
-                "What To Take Away",
-                "Top Balanced Candidates",
-                "not benchmark certification evidence",
-                "Plotly.newPlot",
-            ],
-        )
+        text = md_path.read_text(encoding="utf-8")
+        if "../../..... /../docs/stats-explained.md" in text:
+            raise SystemExit(f"{md_path}: emitted malformed Stats Explained link")
 
     print(f"fixture={metadata['fixture_id']}")
     print("markdown_shape=passed")
-    print("interactive_html_shape=passed")
     return 0
 
 

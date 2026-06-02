@@ -46,9 +46,10 @@ tests/fixtures/<module>/<fixture-id>/
 
 ## Current Fixtures
 
+- `dataloader/imagefolder-dry-run`: provides an ImageFolder-shaped tree for
+  derived-dataset planner dry-runs. It is not pixel-valid benchmark input.
+- `dataloader/input-lab-report`: validates DataLoader input-lab report output
+  shape across PyTorch, DALI, NumPy uint8, and NumPy fp16 synthetic rows.
 - `dataloader/olympic-repeat`: validates that DataLoader Olympic aggregation
   drops the lowest and highest throughput samples and computes paired metrics
   from the retained jobs.
-- `nccl/scaling-math`: validates NCCL `busbw` scaling efficiency, B200
-  4-node-normalized AllReduce interpretation, and AICR public
-  fabric-utilization denominators.

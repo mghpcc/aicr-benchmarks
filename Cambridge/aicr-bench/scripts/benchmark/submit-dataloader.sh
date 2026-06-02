@@ -8,21 +8,54 @@ source "${BENCHMARK_DIR}/../verify/_common.sh"
 usage() {
   cat >&2 <<'EOF'
 Usage:
-  scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--nodelist <nodes>] [--apply] [--] [runner args...]
+  scripts/benchmark/submit-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--gpu-count <1|8>] [--mode <single|replicated|distributed-sharded>] [--from-node-report] [--date <YYYY-MM-DD|today|yesterday>] [--partition <name>] [--time <HH:MM:SS>] [--cpus-per-task <n>] [--mem <size>] [--dependency <slurm-dependency>] [--nodelist <nodes>] [--apply] [--] [runner args...]
 
-Default behavior is a dry run: print the sbatch command that would submit the DataLoader benchmark.
-Use --nodelist to select one node or a comma-separated node list explicitly.
+Default behavior is a dry run: print the sbatch command that would submit the dataloader benchmark.
+With --from-node-report, selects passed nodes for the selected cluster from the latest node report.
 Arguments after -- are forwarded to scripts/benchmark/run-dataloader.sh inside the batch job.
-Profiles control workload intensity defaults only. Explicit runner args override profile defaults.
+Submissions default to --mem=0 so Slurm grants the job the node memory cgroup.
 
-B200 accepts --nodes 1, 2, 4, 8, or 16. RTX accepts --nodes 1, 2, 4, or 8.
+Profiles set workload-intensity defaults; explicit runner args after -- override them.
+B200 accepts --nodes 1, 2, 4, 8, or 16. RTX accepts --nodes 1, 2, 4, 8, or 16.
 EOF
+}
+
+dataloader_profile_args() {
+  profile_args=()
+  case "$1" in
+    "")
+      return 0
+      ;;
+    small)
+      profile_args=(--batch-size 512 --num-workers 16 --prefetch-factor 4 --warmup-batches 20 --measured-batches 100)
+      ;;
+    medium)
+      profile_args=(--batch-size 512 --num-workers 16 --prefetch-factor 4 --warmup-batches 100 --measured-batches 500)
+      ;;
+    large)
+      profile_args=(--batch-size 512 --num-workers 16 --prefetch-factor 4 --warmup-batches 200 --measured-batches 5000)
+      ;;
+    *)
+      aicr_die "--profile must be small, medium, or large"
+      ;;
+  esac
+}
+
+dataloader_print_profile() {
+  local profile_name="$1"
+  dataloader_profile_args "$profile_name"
+  echo "profile=${profile_name}"
+  echo "batch_size=${profile_args[1]}"
+  echo "num_workers=${profile_args[3]}"
+  echo "prefetch_factor=${profile_args[5]}"
+  echo "warmup_batches=${profile_args[7]}"
+  echo "measured_batches=${profile_args[9]}"
 }
 
 default_partition() {
   case "$1" in
-    b200) printf 'GPU2\n' ;;
-    rtxpro6000) printf 'GPU1\n' ;;
+    b200) printf 'b200-batch\n' ;;
+    rtxpro6000) printf 'rtx-batch\n' ;;
     *) aicr_die "unsupported cluster: $1" ;;
   esac
 }
@@ -40,22 +73,32 @@ assert_no_submit_arg_conflicts() {
   done
 }
 
+validate_slurm_memory() {
+  local value="$1"
+  [[ -z "$value" || "$value" =~ ^[0-9]+([KMGTP])?$ ]] || aicr_die "--mem must be a Slurm memory value such as 0, 512G, or 1T"
+}
+
 aicr_require_repo_root
 aicr_mkdirs
 
 repo_python=(aicr_python)
 
 cluster="b200"
-profile="${PROFILE:-small}"
 partition=""
 time_limit="01:00:00"
 cpus_per_task="16"
+memory_request="${DATALOADER_MEM:-0}"
 nodes="1"
 gpu_count="1"
 mode=""
 nodelist=""
+dependency=""
+from_node_report=0
+date_arg="today"
 apply=0
+profile=""
 inspect_profile=0
+profile_args=()
 forward_args=()
 
 while [[ $# -gt 0 ]]; do
@@ -67,10 +110,6 @@ while [[ $# -gt 0 ]]; do
     --profile)
       profile="${2:-}"
       shift 2
-      ;;
-    --profile=*)
-      profile="${1#--profile=}"
-      shift
       ;;
     --inspect-profile)
       inspect_profile=1
@@ -100,8 +139,24 @@ while [[ $# -gt 0 ]]; do
       cpus_per_task="${2:-}"
       shift 2
       ;;
+    --mem)
+      memory_request="${2:-}"
+      shift 2
+      ;;
     --nodelist)
       nodelist="${2:-}"
+      shift 2
+      ;;
+    --dependency)
+      dependency="${2:-}"
+      shift 2
+      ;;
+    --from-node-report)
+      from_node_report=1
+      shift
+      ;;
+    --date)
+      date_arg="${2:-}"
       shift 2
       ;;
     --apply)
@@ -124,18 +179,18 @@ while [[ $# -gt 0 ]]; do
   esac
 done
 
-case "$profile" in
-  small|medium|large) ;;
-  *) aicr_die "--profile must be small, medium, or large" ;;
-esac
-if [[ "$inspect_profile" == "1" ]]; then
-  scripts/benchmark/run-dataloader.sh --profile "$profile" --inspect-profile
+dataloader_profile_args "$profile"
+if [[ "$inspect_profile" -eq 1 ]]; then
+  [[ -n "$profile" ]] || profile="small"
+  dataloader_print_profile "$profile"
   exit 0
 fi
 
 aicr_assert_supported_cluster "$cluster"
 partition="${partition:-$(default_partition "$cluster")}"
 [[ "$cpus_per_task" =~ ^[0-9]+$ && "$cpus_per_task" -gt 0 ]] || aicr_die "--cpus-per-task must be a positive integer"
+validate_slurm_memory "$memory_request"
+[[ -z "$dependency" || "$dependency" =~ ^[A-Za-z0-9_,:\?\.\-]+$ ]] || aicr_die "--dependency contains unsupported characters"
 [[ "$time_limit" =~ ^[0-9]{2}:[0-9]{2}:[0-9]{2}$ ]] || aicr_die "--time must be HH:MM:SS"
 case "$nodes" in
   1|2|4|8|16) ;;
@@ -143,8 +198,8 @@ case "$nodes" in
 esac
 if [[ "$cluster" == "rtxpro6000" ]]; then
   case "$nodes" in
-    1|2|4|8) ;;
-    *) aicr_die "RTX DataLoader supports --nodes 1, 2, 4, or 8" ;;
+    1|2|4|8|16) ;;
+    *) aicr_die "RTX DataLoader supports --nodes 1, 2, 4, 8, or 16" ;;
   esac
 fi
 case "$gpu_count" in
@@ -174,6 +229,11 @@ fi
 if [[ "${#forward_args[@]}" -gt 0 ]]; then
   assert_no_submit_arg_conflicts "${forward_args[@]}"
 fi
+if [[ "$from_node_report" -eq 1 ]]; then
+  [[ -z "$nodelist" ]] || aicr_die "--from-node-report and --nodelist cannot be combined"
+  nodelist="$("${repo_python[@]}" "${BENCHMARK_DIR}/select-benchmark-nodes.py" --date "$date_arg" --cluster "$cluster" --count "$nodes" --format csv)"
+fi
+
 requested_gpu_count="$gpu_count"
 if [[ "$nodes" != "1" ]]; then
   requested_gpu_count="$((nodes * gpu_count))"
@@ -190,16 +250,35 @@ case "${cluster}:${nodes}:${gpu_count}" in
   rtxpro6000:*:8) sbatch_script="${rtx_wrapper_prefix}-mn-8g.sbatch" ;;
   *) aicr_die "unsupported DataLoader submission shape: cluster=${cluster} nodes=${nodes} gpu_count=${gpu_count}" ;;
 esac
-sbatch_cmd=(sbatch --parsable --partition="$partition" --time="$time_limit" --nodes="$nodes" --cpus-per-task="$cpus_per_task")
+sbatch_cmd=(sbatch --parsable --partition="$partition" --time="$time_limit" --nodes="$nodes" --cpus-per-task="$cpus_per_task" --mem="$memory_request")
 if [[ -n "$nodelist" ]]; then
   sbatch_cmd+=(--nodelist="$nodelist")
 fi
+if [[ -n "$dependency" ]]; then
+  sbatch_cmd+=(--dependency="$dependency")
+fi
 sbatch_cmd+=("$sbatch_script")
 sbatch_cmd+=(--cluster "$cluster" --mode "$mode" --nodes "$nodes" --requested-gpu-count "$requested_gpu_count")
-sbatch_cmd+=(--profile "$profile")
+if [[ "${#profile_args[@]}" -gt 0 ]]; then
+  sbatch_cmd+=("${profile_args[@]}")
+fi
 if [[ "${#forward_args[@]}" -gt 0 ]]; then
   sbatch_cmd+=("${forward_args[@]}")
 fi
+
+echo "DataLoader submission summary"
+echo "  Mode        : $([[ "$apply" -eq 1 ]] && echo apply || echo dry-run)"
+echo "  Jobs        : 1"
+echo "  Cluster     : ${cluster}"
+echo "  Nodes       : ${nodes}"
+echo "  GPUs/node   : ${gpu_count}"
+echo "  Partition   : ${partition}"
+echo "  CPUs/task   : ${cpus_per_task}"
+echo "  Memory      : ${memory_request}"
+if [[ -n "$nodelist" ]]; then
+  echo "  Node list   : ${nodelist}"
+fi
+echo
 
 if [[ "$apply" -eq 0 ]]; then
   echo "Dry run. Command that would be submitted:"
@@ -210,4 +289,4 @@ if [[ "$apply" -eq 0 ]]; then
 fi
 
 job_id="$("${sbatch_cmd[@]}")"
-echo "Submitted DataLoader benchmark job ${job_id}"
+echo "Submitted dataloader benchmark job ${job_id}"

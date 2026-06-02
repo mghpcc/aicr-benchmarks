@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 #SBATCH --job-name=rtxpro6000-dataloader-1n-8g
-#SBATCH --partition=GPU1
+#SBATCH --partition=rtx-batch
 #SBATCH --nodes=1
 #SBATCH --ntasks=8
 #SBATCH --ntasks-per-node=8
 #SBATCH --cpus-per-task=16
-#SBATCH --gres=gpu:8
+#SBATCH --mem=0
+#SBATCH --gres=gpu:rtx_pro_6000:8
 #SBATCH --time=01:00:00
 #SBATCH --output=results/slurm/%x-%j.out
 #SBATCH --error=results/slurm/%x-%j.err

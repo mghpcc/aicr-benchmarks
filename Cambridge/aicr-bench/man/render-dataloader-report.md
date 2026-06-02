@@ -44,13 +44,9 @@ scripts/report/render-dataloader-report.py --results-root results --date today -
 ```text
 results/reports/<date>/dataloader/dataloader-<cluster>-<date>.md
 results/reports/<date>/dataloader/dataloader-summary-<cluster>-<date>.csv
-results/reports/<date>/dataloader/dataloader-aggregated-summary-<cluster>-<date>.csv
-results/reports/<date>/dataloader/dataloader-<cluster>-<date>.json
+results/reports/<date>/dataloader/dataloader-report-<cluster>-<date>.json
 results/reports/<date>/dataloader/dataloader-throughput-<cluster>-<date>.png
-results/reports/<date>/dataloader/dataloader-throughput-matrix-<cluster>-<date>.png
-results/reports/<date>/dataloader/dataloader-imbalance-matrix-<cluster>-<date>.png
-results/reports/<date>/dataloader/dataloader-candidate-scatter-<cluster>-<date>.png
-results/reports/<date>/dataloader/dataloader-matrix-<cluster>-<date>.html
+results/reports/<date>/dataloader/dataloader-rank-imbalance-<cluster>-<date>.png
 ```
 
 The generated Markdown keeps raw rows for audit and includes an aggregated

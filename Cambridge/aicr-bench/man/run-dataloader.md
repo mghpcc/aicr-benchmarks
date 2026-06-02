@@ -9,12 +9,12 @@ Slurm wrappers and host-side submitters.
 ## Usage
 
 ```text
-scripts/benchmark/run-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--mode <single|replicated|distributed-sharded>] [--requested-gpu-count <n>] [--dataset-root <path>] [--split <train|val>] [--image <path>] [--gpu <index>] [--batch-size <n>] [--num-workers <n>] [--prefetch-factor <n>] [--pin-memory <0|1>] [--persistent-workers <0|1>] [--warmup-batches <n>] [--measured-batches <n>] [--h2d <0|1>] [--transfer-labels <0|1>] [--drop-last <0|1>] [--byte-estimate-sample-count <n>]
+scripts/benchmark/run-dataloader.sh [--cluster <b200|rtxpro6000>] [--profile <small|medium|large>] [--inspect-profile] [--nodes <n>] [--mode <single|replicated|distributed-sharded>] [--requested-gpu-count <n>] [--dataset-root <path>] [--split <train|val>] [--image <path>] [--gpu <index>] [--input-backend <pytorch-cpu-dataloader|dali-gpu-decode|numpy-uint8-shards|numpy-fp16-shards|numpy-fp16-blocks-pytorch|dali-numpy-fp16-cpu|dali-numpy-fp16-gds|dali-numpy-fp16-blocks-cpu|dali-numpy-fp16-blocks-gds>] [--derived-root <path>] [--derived-image-size <n>] [--derived-samples-per-class <n>] [--derived-seed <n>] [--batch-size <n>] [--num-workers <n>] [--prefetch-factor <n>] [--dali-num-threads <n>] [--dali-prefetch-queue-depth <n>] [--dali-numpy-reader-prefetch-queue-depth <n>] [--dali-decode-mode <random-crop|decode-resize>] [--dali-hw-decoder-load <float>] [--dali-gds-chunk-size <value>] [--numpy-block-cache-size <n>] [--cufile-log-path <path>] [--cufile-log-level <level>] [--pin-memory <0|1>] [--persistent-workers <0|1>] [--warmup-batches <n>] [--measured-batches <n>] [--h2d <0|1>] [--transfer-labels <0|1>] [--drop-last <0|1>] [--byte-estimate-sample-count <n>]
 ```
 
 This script is normally called by Slurm wrappers under `slurm/benchmark/`. Use
-`make benchmark-dataloader`, `scripts/benchmark/submit-dataloader.sh`, or
-`scripts/benchmark/sweep-dataloader.sh` from the install root for normal
+`make benchmark-dataloader`, [submit-dataloader.sh](submit-dataloader.md), or
+[sweep-dataloader.sh](sweep-dataloader.md) from the install root for normal
 operation.
 
 ## Options
@@ -29,9 +29,32 @@ operation.
 - `--split <train|val>`: Dataset split. Default: `train`.
 - `--image <path>`: PyTorch Apptainer image.
 - `--gpu <index>`: GPU index for `single` mode.
+- `--input-backend <name>`: `pytorch-cpu-dataloader`, `dali-gpu-decode`,
+  `numpy-uint8-shards`, `numpy-fp16-shards`, `numpy-fp16-blocks-pytorch`,
+  `dali-numpy-fp16-cpu`, `dali-numpy-fp16-gds`,
+  `dali-numpy-fp16-blocks-cpu`, or `dali-numpy-fp16-blocks-gds`.
+- `--numpy-block-cache-size <n>`: per-worker mmap block cache size for the
+  PyTorch NumPy block backend.
+- `--derived-root <path>`: Derived dataset root for NumPy shard and DALI NumPy
+  file backends.
+- `--derived-image-size <n>`: Derived image-size selector.
+- `--derived-samples-per-class <n>`: Derived subset selector.
+- `--derived-seed <n>`: Derived subset seed selector.
 - `--batch-size <n>`: Per-rank batch size.
 - `--num-workers <n>`: DataLoader workers per rank.
 - `--prefetch-factor <n>`: DataLoader prefetch factor.
+- `--dali-num-threads <n>`: DALI CPU worker threads for DALI backend runs.
+- `--dali-prefetch-queue-depth <n>`: DALI pipeline prefetch queue depth.
+- `--dali-numpy-reader-prefetch-queue-depth <n>`: Reader-level prefetch queue
+  depth for DALI NumPy file and block readers. Defaults to `1`.
+- `--dali-decode-mode <random-crop|decode-resize>`: DALI decode policy.
+- `--dali-hw-decoder-load <float>`: DALI hardware decoder load hint.
+- `--dali-gds-chunk-size <value>`: Optional `DALI_GDS_CHUNK_SIZE` value set
+  before DALI pipeline construction, such as `2097152` or `2M`.
+- `--cufile-log-path <path>`: Optional cuFile log path for DALI NumPy GDS rows.
+  Defaults to the run artifact tree for `*-gds` backends.
+- `--cufile-log-level <level>`: Optional `CUFILE_LOGGING_LEVEL` for GDS rows with a
+  cuFile log path. Defaults to `INFO` when a path is set.
 - `--pin-memory <0|1>`: Enable page-locked host memory.
 - `--persistent-workers <0|1>`: Keep workers alive across iterator resets.
 - `--warmup-batches <n>`: Untimed batches before measurement.
@@ -53,6 +76,19 @@ operation.
 ## Environment
 
 - `AICR_IMAGENET_DIR`: ImageFolder root containing `train/` and `val/`.
+- `AICR_DATALOADER_DERIVED_ROOT`: Derived dataset root for NumPy shard and DALI
+  NumPy file backends. Defaults under `$AICR_BMARK_DIR/scratch`; on AICR HPC, prefer
+  `/scratch/$USER` for regenerated datasets unless you intentionally need
+  durable storage.
+- `DATALOADER_DALI_GDS_CHUNK_SIZE`: Optional default for
+  `--dali-gds-chunk-size`.
+- `DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTH`: Optional default for
+  `--dali-numpy-reader-prefetch-queue-depth`.
+- `DATALOADER_CUFILE_LOG_PATH`: Optional default for `--cufile-log-path`.
+- `DATALOADER_CUFILE_LOG_LEVEL`: Optional default for `--cufile-log-level`.
+- `DATALOADER_NOFILE_LIMIT`: Soft file-descriptor limit requested before the
+  workload starts. Default: `65536`. The parsed summary records the requested
+  value, effective soft and hard limits, and a best-effort open FD count.
 - `DATALOADER_IMAGE`: DataLoader PyTorch image override.
 - `PYTORCH_IMAGE`: PyTorch image fallback.
 - `AICR_RUNTIME_ROOT`: Base runtime tree.

@@ -36,7 +36,7 @@ submit Slurm jobs.
 | `make docs-link-check` | Check public docs and man-page links. |
 | `make docs-test` | Run executable documentation checks. |
 | `make docs-test-plan` | Print selected executable documentation checks without running them. |
-| `make install-gpu-smoke-suite` | Validate installed-tree GPU Topology, GDS, NCCL, and HPL-MxP surfaces. |
+| `make install-gpu-smoke-suite` | Validate installed-tree GPU Topology, GDS, NCCL, HPL-MxP, DataLoader, DDP, and optional Elbencho surfaces. |
 
 ### Runtime Containers
 
@@ -46,6 +46,7 @@ submit Slurm jobs.
 | `make install-containers CONTAINER_NODELIST=<node>` | Install containers on a specific CPU node. |
 | `make install-containers CONTAINER_REFRESH=1` | Rebuild or replace default images through the same Slurm path. |
 | `make install-containers CONTAINER_WAIT=0` | Submit and return immediately. |
+| `make install-containers INSTALL_ONLY_ELBENCHO_CONTAINER=1` | Add/check only the optional Elbencho image through Slurm. |
 | `make install-containers-local` | Pull verified containers from the current host. |
 
 ### GDS
@@ -86,8 +87,10 @@ opt-in through `INSTALL_SMOKE_HPL_MXP_APPLY_RTX=1`.
 Elbencho install-smoke coverage is optional because the Elbencho container is
 not built by default and the smoke job writes a scratch target. Build the image
 first with `make install-elbencho APPLY=1` or
-`make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1`, then enable the
-coverage with `INSTALL_SMOKE_INCLUDE_ELBENCHO=1`.
+`make install-containers INSTALL_ELBENCHO_CONTAINER=1 APPLY=1`. To add only
+the optional Elbencho image through Slurm, use
+`make install-containers INSTALL_ONLY_ELBENCHO_CONTAINER=1 APPLY=1`, then
+enable the coverage with `INSTALL_SMOKE_INCLUDE_ELBENCHO=1`.
 
 Useful variables:
 
@@ -95,6 +98,11 @@ Useful variables:
   jobs; first two nodes are used for RDMA.
 - `INSTALL_SMOKE_B200_NODES`: B200 node list. Same selection policy as RTX.
 - `INSTALL_SMOKE_AUDIT_ROOT`: fixed evidence directory.
+- `INSTALL_SMOKE_RESUME_FROM_AUDIT_ROOT`: resume an interrupted applied run
+  from an existing audit root.
+- `INSTALL_SMOKE_SKIP_TOPOLOGY=1`: skip GPU Topology coverage.
+- `INSTALL_SMOKE_SKIP_GDS=1`: skip GDS coverage.
+- `INSTALL_SMOKE_SKIP_NCCL=1`: skip NCCL local/RDMA coverage.
 - `INSTALL_SMOKE_SKIP_RDMA=1`: skip NCCL RDMA.
 - `INSTALL_SMOKE_SKIP_HPL_MXP=1`: skip HPL-MxP coverage.
 - `INSTALL_SMOKE_SKIP_DATALOADER=1`: skip DataLoader coverage.
@@ -110,8 +118,11 @@ Useful variables:
 - `INSTALL_SMOKE_ELBENCHO_RTX_NODE`: override the RTX Elbencho node.
 - `INSTALL_SMOKE_ELBENCHO_TARGET_ROOT`: set the scratch target root.
 - `INSTALL_SMOKE_ELBENCHO_TIME=00:10:00`: set the Elbencho time limit.
+- `INSTALL_SMOKE_ONLY_ELBENCHO=1`: enable only Elbencho and required node
+  preflight.
 - `INSTALL_SMOKE_SKIP_RTX=1` or `INSTALL_SMOKE_SKIP_B200=1`: limit cluster coverage.
 - `INSTALL_SMOKE_SKIP_LOCAL_CHECKS=1`: skip docs/help/syntax checks.
+- `INSTALL_SMOKE_SKIP_DRY_RUNS=1`: skip Make/script dry-runs.
 - `INSTALL_SMOKE_SKIP_EXPLICIT_SBATCH=1`: skip explicit `sbatch --test-only`.
 - `INSTALL_SMOKE_NO_RENDER=1`: skip final report rendering.
 - `INSTALL_SMOKE_RENDER_ONLY=1`: render reports from existing evidence without
@@ -248,15 +259,18 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 | `MODE` | `single`, `replicated`, or `distributed-sharded`. |
 | `DATALOADER_NODES` | Node-count list for DataLoader sweeps. Default: `1`. |
 | `DATALOADER_PROFILE` | Optional workload-intensity profile. Non-default `PROFILE=medium|large` also selects a DataLoader profile. |
-| `DATALOADER_INPUT_BACKENDS` | Comma-separated backend list: `pytorch-cpu-dataloader`, `dali-gpu-decode`, `numpy-uint8-shards`, `numpy-fp16-shards`, `dali-numpy-fp16-cpu`, or `dali-numpy-fp16-gds`. |
+| `DATALOADER_INPUT_BACKENDS` | Comma-separated backend list: `pytorch-cpu-dataloader`, `dali-gpu-decode`, `numpy-uint8-shards`, `numpy-fp16-shards`, `numpy-fp16-blocks-pytorch`, `dali-numpy-fp16-cpu`, `dali-numpy-fp16-gds`, `dali-numpy-fp16-blocks-cpu`, or `dali-numpy-fp16-blocks-gds`. |
 | `DATALOADER_BATCH_SIZES` | Comma-separated batch-size list. |
 | `DATALOADER_NUM_WORKERS` | Comma-separated worker-count list. |
 | `DATALOADER_PREFETCH_FACTORS` | Comma-separated prefetch-factor list. |
 | `DATALOADER_DALI_NUM_THREADS` | Comma-separated DALI thread counts. |
 | `DATALOADER_DALI_PREFETCH_QUEUE_DEPTHS` | Comma-separated DALI prefetch queue depths. |
+| `DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTHS` | Comma-separated DALI NumPy reader prefetch queue depths. |
 | `DATALOADER_DALI_DECODE_MODES` | Comma-separated DALI decode modes. |
 | `DATALOADER_DALI_HW_DECODER_LOADS` | Comma-separated DALI hardware decoder load values. |
 | `DATALOADER_DALI_GDS_CHUNK_SIZE` | Optional `--dali-gds-chunk-size` forwarded to DataLoader runs. |
+| `DATALOADER_CUFILE_LOG_PATH` | Optional `--cufile-log-path` forwarded to DataLoader runs. |
+| `DATALOADER_CUFILE_LOG_LEVEL` | Optional `--cufile-log-level` forwarded to DataLoader runs. |
 | `DATALOADER_PIN_MEMORY` | `1` or `0`. |
 | `DATALOADER_PERSISTENT_WORKERS` | `1` or `0`. |
 | `DATALOADER_CPUS_PER_TASK` | CPU cores requested per task. Default: `16`. |
@@ -275,7 +289,8 @@ Applied examples should use explicit `NODELIST` plus `APPLY=1`.
 | `DATALOADER_PREP_SAMPLES_PER_CLASS` | Bounded samples per class. Default: `16`. |
 | `DATALOADER_PREP_SEED` | Deterministic sample seed. Default: `1234`. |
 | `DATALOADER_PREP_IMAGE_SIZE_LIST` | Derived image sizes. Default: `224,384,512`. |
-| `DATALOADER_PREP_FORMATS` | Derived formats. Default: `jpeg,numpy-uint8,numpy-fp16`; add `numpy-fp16-files` for DALI NumPy GDS experiments. |
+| `DATALOADER_PREP_FORMATS` | Derived formats. Default: `jpeg,numpy-uint8,numpy-fp16`; add `numpy-fp16-files` or `numpy-fp16-blocks` for DALI NumPy GDS experiments. |
+| `DATALOADER_PREP_NUMPY_BLOCK_SIZE` | Images per block file for `numpy-fp16-blocks`. Default: `128`. |
 | `DATALOADER_PREP_JPEG_QUALITY` | JPEG quality for derived JPEG formats. Default: `95`. |
 | `DATALOADER_PREP_WRITE` | `1` writes outputs inside the CPU Slurm job. Default: `0`. |
 | `DATALOADER_PREP_OVERWRITE` | `1` replaces existing derived dataset directories. Default: `0`. |
