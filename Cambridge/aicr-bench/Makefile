@@ -7,11 +7,11 @@
 	doctor-python-slurm \
 	rebuild-runtime \
 	install-containers \
-	install-gpu-smoke-suite \
 	refresh-python-locks \
 	setup \
 	setup-python-local \
 	verify \
+	install-gpu-smoke-suite \
 	verify-topology \
 	verify-gds \
 	render-gds-ascii \
@@ -47,6 +47,7 @@
 	daily-verify \
 	benchmark-readiness-nccl \
 	benchmark-elbencho \
+	prep-dataloader-derived-dataset \
 	benchmark-dataloader \
 	benchmark-ddp-resnet50 \
 	benchmark-ddp-launcher-comparison \
@@ -55,6 +56,7 @@
 	install-elbencho \
 	benchmark-dry-run-suite \
 	render-dataloader \
+	render-dataloader-input-lab \
 	render-dataloader-b200 \
 	render-ddp-resnet50 \
 	render-ddp-resnet50-ascii \
@@ -124,21 +126,44 @@ NODE_REPORT_DATE ?= $(DATE)
 FROM_NODE_REPORT ?= 0
 NODELIST ?=
 DATALOADER_NODES ?= $(NODES)
+DATALOADER_PROFILE ?= $(if $(filter-out small,$(PROFILE)),$(PROFILE),)
 DATALOADER_BATCH_SIZES ?= 256
 DATALOADER_INPUT_BACKENDS ?= pytorch-cpu-dataloader
 DATALOADER_NUM_WORKERS ?= 4,8,16,24,32
 DATALOADER_PREFETCH_FACTORS ?= 4
 DATALOADER_DALI_NUM_THREADS ?= 0
 DATALOADER_DALI_PREFETCH_QUEUE_DEPTHS ?= 2
+DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTHS ?= 1
 DATALOADER_DALI_DECODE_MODES ?= random-crop
 DATALOADER_DALI_HW_DECODER_LOADS ?= 0.65
+DATALOADER_DALI_GDS_CHUNK_SIZE ?=
+DATALOADER_CUFILE_LOG_PATH ?=
+DATALOADER_CUFILE_LOG_LEVEL ?=
 DATALOADER_PIN_MEMORY ?= 1
 DATALOADER_PERSISTENT_WORKERS ?= 1
 DATALOADER_REPEAT_COUNT ?= 1
 DATALOADER_REPEAT_AGGREGATION ?= $(REPEAT_AGGREGATION)
 DATALOADER_CPUS_PER_TASK ?= 16
+DATALOADER_MEM ?= 0
+DATALOADER_TIME ?= 01:00:00
 DATALOADER_DEPENDENCY ?=
 DATALOADER_RUN_ARGS ?=
+DATALOADER_PREP_PARTITION ?= cpu
+DATALOADER_PREP_TIME ?= 04:00:00
+DATALOADER_PREP_CPUS_PER_TASK ?= 16
+DATALOADER_PREP_MEM ?= 0
+DATALOADER_PREP_NODELIST ?=
+DATALOADER_PREP_DATASET_ROOT ?=
+DATALOADER_PREP_DERIVED_ROOT ?=
+DATALOADER_PREP_SPLIT ?= train
+DATALOADER_PREP_SAMPLES_PER_CLASS ?= 16
+DATALOADER_PREP_SEED ?= 1234
+DATALOADER_PREP_IMAGE_SIZE_LIST ?= 224,384,512
+DATALOADER_PREP_FORMATS ?= jpeg,numpy-uint8,numpy-fp16
+DATALOADER_PREP_NUMPY_BLOCK_SIZE ?= 128
+DATALOADER_PREP_JPEG_QUALITY ?= 95
+DATALOADER_PREP_WRITE ?= 0
+DATALOADER_PREP_OVERWRITE ?= 0
 DDP_RUN_ARGS ?=
 DDP_TIME ?= 02:00:00
 DDP_MEM ?= 0
@@ -195,9 +220,9 @@ ELBENCHO_TAG ?= master-ubuntu-cuda-multiarch
 ELBENCHO_IMAGE ?=
 ELBENCHO_CPUS_PER_TASK ?= 64
 ELBENCHO_MEM ?= 0
-ELBENCHO_GRES ?=
 ELBENCHO_PROFILE ?= $(PROFILE)
 ELBENCHO_TIME ?= 01:00:00
+ELBENCHO_GRES ?=
 ELBENCHO_REPEAT_COUNT ?= 1
 ELBENCHO_REPEAT_STAGGER_SECONDS ?= 30
 ELBENCHO_TARGET_ROOT ?=
@@ -272,6 +297,15 @@ MODE_FLAG := $(if $(strip $(MODE)),--mode $(MODE),)
 DDP_REPEAT_COUNT_FLAG := $(if $(strip $(DDP_REPEAT_COUNT)),--repeat-count $(DDP_REPEAT_COUNT),)
 DDP_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(DDP_REPEAT_STAGGER_SECONDS)),--repeat-stagger-seconds $(DDP_REPEAT_STAGGER_SECONDS),)
 DATALOADER_DEPENDENCY_FLAG := $(if $(strip $(DATALOADER_DEPENDENCY)),--dependency $(DATALOADER_DEPENDENCY),)
+DATALOADER_PROFILE_FLAG := $(if $(strip $(DATALOADER_PROFILE)),--profile $(DATALOADER_PROFILE),)
+DATALOADER_DALI_GDS_CHUNK_SIZE_FLAG := $(if $(strip $(DATALOADER_DALI_GDS_CHUNK_SIZE)),--dali-gds-chunk-size $(DATALOADER_DALI_GDS_CHUNK_SIZE),)
+DATALOADER_CUFILE_LOG_PATH_FLAG := $(if $(strip $(DATALOADER_CUFILE_LOG_PATH)),--cufile-log-path $(DATALOADER_CUFILE_LOG_PATH),)
+DATALOADER_CUFILE_LOG_LEVEL_FLAG := $(if $(strip $(DATALOADER_CUFILE_LOG_LEVEL)),--cufile-log-level $(DATALOADER_CUFILE_LOG_LEVEL),)
+DATALOADER_PREP_NODELIST_FLAG := $(if $(strip $(DATALOADER_PREP_NODELIST)),--nodelist $(DATALOADER_PREP_NODELIST),)
+DATALOADER_PREP_DATASET_ROOT_FLAG := $(if $(strip $(DATALOADER_PREP_DATASET_ROOT)),--dataset-root $(DATALOADER_PREP_DATASET_ROOT),)
+DATALOADER_PREP_DERIVED_ROOT_FLAG := $(if $(strip $(DATALOADER_PREP_DERIVED_ROOT)),--derived-root $(DATALOADER_PREP_DERIVED_ROOT),)
+DATALOADER_PREP_WRITE_FLAG := $(if $(filter 1,$(DATALOADER_PREP_WRITE)),--write,)
+DATALOADER_PREP_OVERWRITE_FLAG := $(if $(filter 1,$(DATALOADER_PREP_OVERWRITE)),--overwrite,)
 HPL_MXP_IMAGE_FLAG := $(if $(strip $(HPL_MXP_IMAGE)),--image $(HPL_MXP_IMAGE),)
 HPL_MXP_MEM_FLAG := $(if $(strip $(HPL_MXP_MEM)),--mem $(HPL_MXP_MEM),)
 HPL_MXP_CPUS_PER_TASK_FLAG := $(if $(strip $(HPL_MXP_CPUS_PER_TASK)),--cpus-per-task $(HPL_MXP_CPUS_PER_TASK),)
@@ -310,6 +344,13 @@ ELBENCHO_REPEAT_STAGGER_SECONDS_FLAG := $(if $(strip $(ELBENCHO_REPEAT_STAGGER_S
 ELBENCHO_DEPENDENCY_FLAG := $(if $(strip $(ELBENCHO_DEPENDENCY)),--dependency $(ELBENCHO_DEPENDENCY),)
 ELBENCHO_GRES_FLAG := $(if $(strip $(ELBENCHO_GRES)),--gres $(ELBENCHO_GRES),)
 BENCHMARK_DRY_RUN_ELBENCHO_FLAG := $(if $(filter 1,$(BENCHMARK_DRY_RUN_INCLUDE_ELBENCHO)),--include-elbencho,)
+DDP_COMPARISON_DEFAULT_SRUN_FLAG := $(if $(filter 1,$(DDP_COMPARISON_INCLUDE_DEFAULT_SRUN)),--include-default-srun,)
+REPEAT_AGGREGATION_FLAG := --repeat-aggregation $(REPEAT_AGGREGATION)
+HPL_MXP_RENDER_JOB_ID_MIN_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MIN)),--job-id-min $(HPL_MXP_RENDER_JOB_ID_MIN),)
+HPL_MXP_RENDER_JOB_ID_MAX_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MAX)),--job-id-max $(HPL_MXP_RENDER_JOB_ID_MAX),)
+HPL_MXP_RENDER_JOB_ID_LIST_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_LIST)),--job-id-list $(HPL_MXP_RENDER_JOB_ID_LIST),)
+GPU_PREFLIGHT_FILTER_FLAG := $(if $(filter 1,$(GPU_PREFLIGHT_FILTER)),--gpu-preflight-filter,)
+GDS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 INSTALL_SMOKE_RTX_NODES_FLAG := $(if $(strip $(INSTALL_SMOKE_RTX_NODES)),--rtx-nodes $(INSTALL_SMOKE_RTX_NODES),)
 INSTALL_SMOKE_B200_NODES_FLAG := $(if $(strip $(INSTALL_SMOKE_B200_NODES)),--b200-nodes $(INSTALL_SMOKE_B200_NODES),)
 INSTALL_SMOKE_AUDIT_ROOT_FLAG := $(if $(strip $(INSTALL_SMOKE_AUDIT_ROOT)),--audit-root $(INSTALL_SMOKE_AUDIT_ROOT),)
@@ -342,13 +383,6 @@ INSTALL_SMOKE_SKIP_DRY_RUNS_FLAG := $(if $(filter 1,$(INSTALL_SMOKE_SKIP_DRY_RUN
 INSTALL_SMOKE_SKIP_EXPLICIT_SBATCH_FLAG := $(if $(filter 1,$(INSTALL_SMOKE_SKIP_EXPLICIT_SBATCH)),--skip-explicit-sbatch,)
 INSTALL_SMOKE_NO_RENDER_FLAG := $(if $(filter 1,$(INSTALL_SMOKE_NO_RENDER)),--no-render,)
 INSTALL_SMOKE_RENDER_ONLY_FLAG := $(if $(filter 1,$(INSTALL_SMOKE_RENDER_ONLY)),--render-only,)
-DDP_COMPARISON_DEFAULT_SRUN_FLAG := $(if $(filter 1,$(DDP_COMPARISON_INCLUDE_DEFAULT_SRUN)),--include-default-srun,)
-REPEAT_AGGREGATION_FLAG := --repeat-aggregation $(REPEAT_AGGREGATION)
-HPL_MXP_RENDER_JOB_ID_MIN_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MIN)),--job-id-min $(HPL_MXP_RENDER_JOB_ID_MIN),)
-HPL_MXP_RENDER_JOB_ID_MAX_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_MAX)),--job-id-max $(HPL_MXP_RENDER_JOB_ID_MAX),)
-HPL_MXP_RENDER_JOB_ID_LIST_FLAG := $(if $(strip $(HPL_MXP_RENDER_JOB_ID_LIST)),--job-id-list $(HPL_MXP_RENDER_JOB_ID_LIST),)
-GPU_PREFLIGHT_FILTER_FLAG := $(if $(filter 1,$(GPU_PREFLIGHT_FILTER)),--gpu-preflight-filter,)
-GDS_NODELIST_FLAG := $(if $(strip $(NODELIST)),--nodes $(NODELIST),)
 REPORT_DATE := $(shell if [ "$(DATE)" = "today" ]; then date -u +%F; else printf '%s' "$(DATE)"; fi)
 
 help:
@@ -373,16 +407,18 @@ help:
 		"  make docs-link-check" \
 		"      Check public documentation hygiene and man-page links." \
 		"  make check-artifact-policy" \
-		"      Fail if raw or unpromoted generated artifacts are present in Git." \
+		"      Fail if raw or unreviewed generated artifacts are present in Git." \
 		"  make validate-benchmark-campaign-registry" \
-		"      Validate the benchmark campaign requirements registry and policy gates." \
+		"      Validate benchmark campaign requirements and publication policy." \
 		"" \
 		"Primary benchmark targets:" \
 		"  make benchmark-dry-run-suite CLUSTER=<b200|rtxpro6000> NODE_REPORT_DATE=<date>" \
 		"      Run the benchmark submission preflight; prints sbatch shapes and submits no Slurm jobs." \
-		"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> ..." \
-		"      Preview or submit DataLoader benchmark sweeps." \
-		"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
+	"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> ..." \
+	"      Preview or submit DataLoader benchmark sweeps." \
+	"  make prep-dataloader-derived-dataset DATALOADER_PREP_DERIVED_ROOT=<path> ..." \
+	"      Preview or submit CPU-queue derived dataset prep; writes only with DATALOADER_PREP_WRITE=1." \
+	"  make benchmark-ddp-resnet50 CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
 		"      Preview or submit ResNet-50 DDP runs." \
 		"  make benchmark-hpl-mxp CLUSTER=<b200|rtxpro6000> NODES=<n> ..." \
 		"      Guarded HPL entrypoint; HPL_MXP_PRESET selects smoke, staged, campaign-candidate, or weak-study rows." \
@@ -417,7 +453,7 @@ help-benchmarks:
 		"  Add APPLY=1 to submit jobs." \
 		"  benchmark-dry-run-suite is a benchmark submission preflight and submits no Slurm jobs." \
 		"  Render targets write generated review artifacts under results/reports/<date>/." \
-		"  Generated runtime trees remain uncommitted unless explicitly promoted." \
+		"  Generated runtime trees remain uncommitted unless explicitly reviewed for publication." \
 		"" \
 		"Benchmark-day verification variables:" \
 		"  REPEAT_COUNT=5 repeats GDS and NCCL suite readiness samples for final review." \
@@ -430,11 +466,14 @@ help-benchmarks:
 		"  NODE_REPORT_DATE selects the strict-passed node report for benchmark submissions." \
 		"  NODE_REPORT_DATE defaults to DATE." \
 		"" \
-		"DataLoader:" \
-		"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> FROM_NODE_REPORT=1 NODE_REPORT_DATE=<date> ..." \
-		"  Key vars: DATALOADER_NODES, GPU_COUNT, MODE, DATALOADER_BATCH_SIZES," \
-		"            DATALOADER_INPUT_BACKENDS, DATALOADER_NUM_WORKERS, DATALOADER_PREFETCH_FACTORS," \
-		"            DATALOADER_REPEAT_COUNT, DATALOADER_RUN_ARGS." \
+	"DataLoader:" \
+	"  make benchmark-dataloader CLUSTER=<b200|rtxpro6000> FROM_NODE_REPORT=1 NODE_REPORT_DATE=<date> ..." \
+	"  make prep-dataloader-derived-dataset DATALOADER_PREP_DERIVED_ROOT=<path> ..." \
+	"  Prep defaults to partition=cpu and planner mode; add APPLY=1 to submit and DATALOADER_PREP_WRITE=1 to write." \
+	"  Key vars: DATALOADER_NODES, GPU_COUNT, MODE, DATALOADER_BATCH_SIZES," \
+		"            DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTHS," \
+		"            DATALOADER_DALI_GDS_CHUNK_SIZE, DATALOADER_CUFILE_LOG_PATH, DATALOADER_CUFILE_LOG_LEVEL," \
+		"            DATALOADER_TIME, DATALOADER_REPEAT_COUNT, DATALOADER_RUN_ARGS." \
 		"  DataLoader node sweeps support DATALOADER_NODES=1,2,4,8,16 for B200 and RTX." \
 		"" \
 		"DDP ResNet-50:" \
@@ -463,7 +502,7 @@ help-benchmarks:
 		"  HPL_MXP_PRESET=weak-study uses the reviewed weak-scaling ladder and derived NPS4 affinity profile." \
 		"  weak-study rows use reviewed N targets, weak scaling metadata, and derived NPS4 affinity." \
 		"  weak-study supports the node counts accepted by submit-hpl-mxp." \
-		"  campaign-candidate rows remain available for older reviewed target-size studies." \
+		"  campaign-candidate rows remain available for older reviewed target-size comparisons." \
 		"  Compatibility alias: benchmark-hpl-mxp-smoke forwards to benchmark-hpl-mxp with HPL_MXP_PRESET=smoke." \
 		"" \
 		"Elbencho:" \
@@ -476,6 +515,7 @@ help-benchmarks:
 		"" \
 		"Rendering:" \
 		"  make render-dataloader CLUSTER=<b200|rtxpro6000> DATE=<date>" \
+		"  make render-dataloader-input-lab CLUSTER=<b200|rtxpro6000> DATE=<date>" \
 		"  make render-ddp-resnet50 CLUSTER=<b200|rtxpro6000> DATE=<date>" \
 		"  make render-hpl-mxp CLUSTER=<b200|rtxpro6000> DATE=<date>" \
 		"  make render-benchmark-campaign DATE=<date>" \
@@ -756,9 +796,30 @@ benchmark-readiness-nccl:
 benchmark-elbencho: require-settings
 	ELBENCHO_TARGET_ROOT="$(ELBENCHO_TARGET_ROOT)" ELBENCHO_SIZE="$(ELBENCHO_SIZE)" ELBENCHO_BLOCK="$(ELBENCHO_BLOCK)" ELBENCHO_THREADS="$(ELBENCHO_THREADS)" ELBENCHO_IODEPTH="$(ELBENCHO_IODEPTH)" ELBENCHO_FILE_PATTERN="$(ELBENCHO_FILE_PATTERN)" ELBENCHO_FILES="$(ELBENCHO_FILES)" ELBENCHO_DIRS="$(ELBENCHO_DIRS)" bash scripts/benchmark/submit-elbencho.sh --cluster $(CLUSTER) --workload $(WORKLOAD) --profile $(ELBENCHO_PROFILE) --nodes $(NODES) --date $(NODE_REPORT_DATE) --cpus-per-task $(ELBENCHO_CPUS_PER_TASK) --mem $(ELBENCHO_MEM) $(ELBENCHO_GRES_FLAG) --time $(ELBENCHO_TIME) $(ELBENCHO_REPEAT_COUNT_FLAG) $(ELBENCHO_REPEAT_STAGGER_SECONDS_FLAG) $(ELBENCHO_DEPENDENCY_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG)
 
+prep-dataloader-derived-dataset: require-settings
+	bash scripts/benchmark/submit-dataloader-derived-dataset.sh \
+		--partition $(DATALOADER_PREP_PARTITION) \
+		--time $(DATALOADER_PREP_TIME) \
+		--cpus-per-task $(DATALOADER_PREP_CPUS_PER_TASK) \
+		--mem $(DATALOADER_PREP_MEM) \
+		$(DATALOADER_PREP_NODELIST_FLAG) \
+		$(DATALOADER_PREP_DATASET_ROOT_FLAG) \
+		$(DATALOADER_PREP_DERIVED_ROOT_FLAG) \
+		--split $(DATALOADER_PREP_SPLIT) \
+		--samples-per-class $(DATALOADER_PREP_SAMPLES_PER_CLASS) \
+		--seed $(DATALOADER_PREP_SEED) \
+		--image-size-list $(DATALOADER_PREP_IMAGE_SIZE_LIST) \
+		--formats $(DATALOADER_PREP_FORMATS) \
+		--numpy-block-size $(DATALOADER_PREP_NUMPY_BLOCK_SIZE) \
+		--jpeg-quality $(DATALOADER_PREP_JPEG_QUALITY) \
+		$(DATALOADER_PREP_WRITE_FLAG) \
+		$(DATALOADER_PREP_OVERWRITE_FLAG) \
+		$(APPLY_FLAG)
+
 benchmark-dataloader: require-settings
 	bash scripts/benchmark/sweep-dataloader.sh \
 		--cluster $(CLUSTER) \
+		$(DATALOADER_PROFILE_FLAG) \
 		--nodes-list $(DATALOADER_NODES) \
 		--gpu-count $(GPU_COUNT) \
 		$(MODE_FLAG) \
@@ -771,15 +832,18 @@ benchmark-dataloader: require-settings
 		--prefetch-factor-list $(DATALOADER_PREFETCH_FACTORS) \
 		--dali-num-threads-list $(DATALOADER_DALI_NUM_THREADS) \
 		--dali-prefetch-queue-depth-list $(DATALOADER_DALI_PREFETCH_QUEUE_DEPTHS) \
+		--dali-numpy-reader-prefetch-queue-depth-list $(DATALOADER_DALI_NUMPY_READER_PREFETCH_QUEUE_DEPTHS) \
 		--dali-decode-mode-list $(DATALOADER_DALI_DECODE_MODES) \
 		--dali-hw-decoder-load-list $(DATALOADER_DALI_HW_DECODER_LOADS) \
 		--pin-memory-list $(DATALOADER_PIN_MEMORY) \
 		--persistent-workers-list $(DATALOADER_PERSISTENT_WORKERS) \
 		--cpus-per-task $(DATALOADER_CPUS_PER_TASK) \
+		--time $(DATALOADER_TIME) \
+		--mem $(DATALOADER_MEM) \
 		--repeat-count $(DATALOADER_REPEAT_COUNT) \
 		$(DATALOADER_DEPENDENCY_FLAG) \
 		$(APPLY_FLAG) \
-		-- $(DATALOADER_RUN_ARGS)
+		-- $(DATALOADER_DALI_GDS_CHUNK_SIZE_FLAG) $(DATALOADER_CUFILE_LOG_PATH_FLAG) $(DATALOADER_CUFILE_LOG_LEVEL_FLAG) $(DATALOADER_RUN_ARGS)
 
 benchmark-ddp-resnet50: require-settings
 	DDP_SRUN_MPI="$(DDP_SRUN_MPI)" DDP_SRUN_CPU_BIND="$(DDP_SRUN_CPU_BIND)" DDP_SRUN_MEM_BIND="$(DDP_SRUN_MEM_BIND)" bash scripts/benchmark/submit-ddp-resnet50.sh --cluster $(CLUSTER) --nodes $(NODES) --launcher $(LAUNCHER) --date $(NODE_REPORT_DATE) --time $(DDP_TIME) --mem $(DDP_MEM) $(DDP_REPEAT_COUNT_FLAG) $(DDP_REPEAT_STAGGER_SECONDS_FLAG) $(FROM_NODE_REPORT_FLAG) $(NODELIST_FLAG) $(APPLY_FLAG) -- $(DDP_RUN_ARGS)
@@ -802,6 +866,9 @@ benchmark-dry-run-suite: require-settings
 
 render-dataloader:
 	$(REPO_PY) scripts/report/render-dataloader-report.py --date $(DATE) --cluster $(CLUSTER) --repeat-aggregation $(DATALOADER_REPEAT_AGGREGATION)
+
+render-dataloader-input-lab:
+	$(REPO_PY) scripts/report/render-dataloader-input-lab-report.py --date $(DATE) --cluster $(CLUSTER)
 
 render-dataloader-b200: render-dataloader
 

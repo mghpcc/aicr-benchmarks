@@ -117,6 +117,7 @@ aicr_export_defaults() {
   : "${AICR_TMP_DIR:=${AICR_DATA_DIR}/tmp}"
   : "${AICR_SCRATCH_DIR:=${AICR_BMARK_DIR}/scratch}"
   : "${AICR_GDS_SCRATCH_DIR:=${AICR_SCRATCH_DIR}/gds}"
+  : "${AICR_DATALOADER_DERIVED_ROOT:=${AICR_SCRATCH_DIR}/derived-datasets/dataloader-lab}"
   : "${AICR_RUNTIME_ROOT:=/work/aicr/commissioning/benchmarks/runtime}"
   : "${AICR_APPTAINER_IMAGE_DIR:=${AICR_RUNTIME_ROOT}/apptainer/images}"
   : "${AICR_ELBENCHO_TAG:=master-ubuntu-cuda-multiarch}"
@@ -151,6 +152,7 @@ aicr_export_defaults() {
     AICR_TMP_DIR \
     AICR_SCRATCH_DIR \
     AICR_GDS_SCRATCH_DIR \
+    AICR_DATALOADER_DERIVED_ROOT \
     AICR_RUNTIME_ROOT \
     AICR_APPTAINER_IMAGE_DIR \
     AICR_ELBENCHO_TAG \
@@ -180,8 +182,14 @@ aicr_export_defaults() {
 }
 
 aicr_init_paths() {
+  local default_elbencho_image_before_settings
   aicr_export_defaults
+  default_elbencho_image_before_settings="${AICR_APPTAINER_IMAGE_DIR}/elbencho-${AICR_ELBENCHO_TAG}.sif"
   aicr_source_settings_if_present
+  if [[ "${AICR_ELBENCHO_IMAGE:-}" == "${default_elbencho_image_before_settings}" ||
+        "${AICR_ELBENCHO_IMAGE:-}" == */"elbencho-${AICR_ELBENCHO_TAG}.sif" ]]; then
+    AICR_ELBENCHO_IMAGE="${AICR_APPTAINER_IMAGE_DIR}/elbencho-${AICR_ELBENCHO_TAG}.sif"
+  fi
   aicr_export_defaults
 }
 

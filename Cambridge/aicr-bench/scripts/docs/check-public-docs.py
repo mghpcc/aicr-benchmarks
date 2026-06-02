@@ -42,6 +42,47 @@ REQUIRED_FIXTURE_METADATA = {
     "fixture_type",
     "purpose",
 }
+VERIFY_STACK_ROLE_FILES = {
+    "docs/modules/gpu-topology/README.md": ("## Verify-stack role", "not a benchmark-result module"),
+    "docs/modules/gds/README.md": ("## Verify-stack role", "not as a standalone benchmark-result module"),
+    "docs/modules/nccl/README.md": ("## Verify-stack role", "not as a standalone benchmark-result module"),
+    "docs/modules/gds/studies.md": ("verification evidence", "standalone storage benchmark results"),
+    "docs/modules/nccl/studies.md": ("communication validation evidence", "standalone application benchmark results"),
+}
+BENCHMARK_ROLE_FILES = {
+    "docs/modules/dataloader/README.md": (
+        "## Benchmark Role",
+        "DataLoader is an input-pipeline benchmark module",
+        "DDP pages report fixed-iteration training throughput",
+        "verify-stack modules cover system checks",
+    ),
+    "docs/modules/dataloader/studies.md": (
+        "DataLoader studies measure input-pipeline throughput before training",
+        "The [DDP Studies](../ddp/studies.md) page covers training-throughput results",
+        "Prepared-input ceiling",
+    ),
+    "docs/modules/ddp/README.md": (
+        "## Benchmark-result role",
+        "training-throughput benchmark-result module",
+        "not a DataLoader-only input-pipeline module",
+        "not a verify-stack diagnostic module",
+    ),
+    "docs/modules/ddp/studies.md": (
+        "fixed-iteration ResNet-50 training",
+        "DataLoader-only rows identify candidates",
+        "DDP rows test training throughput and rank behavior",
+    ),
+    "docs/modules/hpl-mxp/README.md": (
+        "## Benchmark-result role",
+        "not a verify-stack diagnostic module",
+        "public result rows",
+    ),
+    "docs/modules/hpl-mxp/studies.md": (
+        "public-result comparison",
+        "Appendix/supporting context; public bundle pending",
+        "artifact links for public result rows",
+    ),
+}
 NODE_TOKEN_RE = re.compile(r"\b([a-z]+)([0-9]{4})\b")
 
 
@@ -72,7 +113,32 @@ def check_public_docs(root: Path) -> list[str]:
     failures.extend(check_study_statuses(root))
     failures.extend(check_fixture_hygiene(root))
     failures.extend(check_node_name_examples(root))
+    failures.extend(check_verify_stack_roles(root))
+    failures.extend(check_benchmark_roles(root))
     return failures
+
+
+def check_required_phrases(root: Path, role_files: dict[str, tuple[str, ...]], label: str) -> list[str]:
+    failures: list[str] = []
+    for rel_path, required_phrases in role_files.items():
+        path = root / rel_path
+        if not path.exists():
+            failures.append(f"{rel_path}: {label} role file is missing")
+            continue
+        text = path.read_text(encoding="utf-8")
+        normalized_text = " ".join(text.split())
+        for phrase in required_phrases:
+            if " ".join(phrase.split()) not in normalized_text:
+                failures.append(f"{rel_path}: missing {label} role phrase: {phrase!r}")
+    return failures
+
+
+def check_verify_stack_roles(root: Path) -> list[str]:
+    return check_required_phrases(root, VERIFY_STACK_ROLE_FILES, "verify-stack")
+
+
+def check_benchmark_roles(root: Path) -> list[str]:
+    return check_required_phrases(root, BENCHMARK_ROLE_FILES, "benchmark")
 
 
 def check_node_name_examples(root: Path) -> list[str]:
