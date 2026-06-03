@@ -15,8 +15,12 @@ GPT pretraining throughput benchmark across RTX-6000 and B200 GPUs using Slurm +
 ```bash
 bash submit.sh
 ```
+or
+```bash
+bash submit.sh output
+```
 
-This submits the full benchmark matrix: 1–16 GPUs (1–2 nodes) on both RTX-6000 (GPU1 partition) and B200 (GPU2 partition).
+This submits the full benchmark matrix: 1–16 GPUs (1–2 nodes) on both RTX-6000 (rtx-batch partition) and B200 (b200-batch partition).
 
 ## Per-node sweep
 
@@ -48,7 +52,7 @@ The script reads node lists from `/home/shaohao_mit/benchmarks/nodes.rtx6000` an
 ## Submitting a single job
 
 ```bash
-sbatch -p GPU2 -N 1 -n 1 --gpus-per-node=b200:4 job.sh 512
+sbatch -p b200-batch -N 1 -n 1 --gpus-per-node=b200:4 job.sh 512
 ```
 
 The only required argument to `job.sh` is the **global batch size (GBS)**. The recommended formula is:
@@ -63,7 +67,7 @@ With micro-batch-size fixed at 4, gradient accumulation steps = `GBS / (4 × tot
 
 GBS is set to `128 × total_GPUs` in all cases.
 
-### RTX-6000 — 2B-param model (partition: GPU1)
+### RTX-6000 — 2B-param model (partition: rtx-batch)
 
 | Nodes | GPUs/node | Total GPUs | GBS  |
 |-------|-----------|-----------|------|
@@ -76,7 +80,7 @@ GBS is set to `128 × total_GPUs` in all cases.
 | 2     | 4         | 8         | 1024 |
 | 2     | 8         | 16        | 2048 |
 
-### B200 — 7B-param model (partition: GPU2)
+### B200 — 7B-param model (partition: b200-batch)
 
 | Nodes | GPUs/node | Total GPUs | GBS  |
 |-------|-----------|-----------|------|

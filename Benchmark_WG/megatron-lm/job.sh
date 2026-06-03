@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH -p GPU2
+#SBATCH -p b200-batch
 #SBATCH --job-name=megatron
 #SBATCH -N 1
 #SBATCH -n 1

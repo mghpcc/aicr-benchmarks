@@ -84,6 +84,15 @@ reflecting the high-bandwidth NVLink/NVSwitch fabric.
 This run batch explored a dimension absent in the prior summary: how all-reduce
 cost changes as GPUs/node is varied across 2-node jobs.
 
+>>> The two "efficiency" numbers in this summary use different baselines: the intra-node
+>>> weak-scaling efficiency above is relative to the 1-GPU run (so it carries the full
+>>> 1→k scaling penalty), while the multi-node efficiency below is relative to the
+>>> single-node run at the same GPUs/node (so it isolates only the added inter-node cost).
+>>> That is why the 2×8 (16-GPU) run reads ~99 % while the 1×8 run reads 95.6 % — the
+>>> multi-node number only measures the second node's overhead. On a common 1-GPU baseline
+>>> the 16-GPU run is ~94.6 %, essentially the same as (slightly below) the 8-GPU run's
+>>> 95.6 %, so 16 GPUs is not actually more efficient than 8.
+
 | GPUs/node | total GPUs | TFLOP/s/GPU | grads-sync (ms) | grads-sync % | scaling eff. (vs 1×GPUs/node) |
 |----------:|-----------:|------------:|----------------:|-------------:|------------------------------:|
 |     1     |      2     |       932.1 |         1032.60 |       8.55 % |              **90.3 %**        |

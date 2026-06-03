@@ -31,7 +31,7 @@ GBS=${5:?ERROR: global batch size must be passed as fifth argument to run.sh}
 MICRO_BS=4
 
 # Model size by GPU type
-if [ "$GPU_TYPE" = "rtx6000" ]; then
+if [ "$GPU_TYPE" = "rtx_pro_6000" ]; then
     model_par="--num-layers 24 \
    --hidden-size 2048 \
    --ffn-hidden-size 8192 \
