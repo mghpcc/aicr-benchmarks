@@ -1,0 +1,92 @@
+%%%%%%%%% RUN A: SHARP OFF (default algo, Ring) %%%%%%%%%%
+[1780687025.708549] [b0019:878556:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687025.710181] [b0016:1321940:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687026.281824] [b0016:1321940:0]          parser.c:2359 UCX  WARN  unused environment variable: UCX_CUDA_IPC_ENABLE_MNNVL
+[1780687026.281824] [b0016:1321940:0]          parser.c:2359 UCX  WARN  (set UCX_WARN_UNUSED_ENV_VARS=n to suppress this warning)
+[1780687026.542010] [b0019:878556:0]          parser.c:2359 UCX  WARN  unused environment variable: UCX_CUDA_IPC_ENABLE_MNNVL
+[1780687026.542010] [b0019:878556:0]          parser.c:2359 UCX  WARN  (set UCX_WARN_UNUSED_ENV_VARS=n to suppress this warning)
+[1780687026.542799] [b0016:1321940:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687026.542888] [b0019:878556:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[LOG_CAT_SBGP] libnuma.so: cannot open shared object file: No such file or directory
+[LOG_CAT_SBGP] Failed to dlopen libnuma.so. Fallback to GROUP_BY_SOCKET manual.
+[LOG_CAT_SBGP] libnuma.so: cannot open shared object file: No such file or directory
+[LOG_CAT_SBGP] Failed to dlopen libnuma.so. Fallback to GROUP_BY_SOCKET manual.
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 2 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 1321940 on      b0016 device  0 [0000:a3:00] NVIDIA B200
+#  Rank  1 Group  0 Pid 1321940 on      b0016 device  1 [0000:cd:00] NVIDIA B200
+#  Rank  2 Group  0 Pid 878556 on      b0019 device  0 [0000:a3:00] NVIDIA B200
+#  Rank  3 Group  0 Pid 878556 on      b0019 device  1 [0000:cd:00] NVIDIA B200
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1    94.67   11.08   16.61       0   115.31    9.09   13.64       0
+     4194304       1048576     float     sum      -1   175.24   23.93   35.90       0   174.45   24.04   36.06       0
+    16777216       4194304     float     sum      -1   560.52   29.93   44.90       0   559.23   30.00   45.00       0
+    67108864      16777216     float     sum      -1  1892.45   35.46   53.19       0  1892.50   35.46   53.19       0
+   268435456      67108864     float     sum      -1  5116.33   52.47   78.70       0  5114.49   52.49   78.73       0
+  1073741824     268435456     float     sum      -1  19757.4   54.35   81.52       0  19756.6   54.35   81.52       0
+  4294967296    1073741824     float     sum      -1  78566.2   54.67   82.00       0  78564.8   54.67   82.00       0
+ 17179869184    4294967296     float     sum      -1   313907   54.73   82.09       0   313911   54.73   82.09       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 59.1975 
+#
+# Collective test concluded: all_reduce_perf
+#
+
+%%%%%%%%% RUN B: SHARP ON (forced CollNet/SHARP) %%%%%%%%%%
+[1780687055.666699] [b0016:1324185:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687055.667195] [b0019:880652:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687056.208463] [b0016:1324185:0]          parser.c:2359 UCX  WARN  unused environment variable: UCX_CUDA_IPC_ENABLE_MNNVL
+[1780687056.208463] [b0016:1324185:0]          parser.c:2359 UCX  WARN  (set UCX_WARN_UNUSED_ENV_VARS=n to suppress this warning)
+[1780687056.760291] [b0019:880652:0]          parser.c:2359 UCX  WARN  unused environment variable: UCX_CUDA_IPC_ENABLE_MNNVL
+[1780687056.760291] [b0019:880652:0]          parser.c:2359 UCX  WARN  (set UCX_WARN_UNUSED_ENV_VARS=n to suppress this warning)
+[1780687056.761172] [b0016:1324185:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687056.761173] [b0019:880652:0]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[LOG_CAT_SBGP] libnuma.so: cannot open shared object file: No such file or directory
+[LOG_CAT_SBGP] libnuma.so: cannot open shared object file: No such file or directory
+[LOG_CAT_SBGP] Failed to dlopen libnuma.so. Fallback to GROUP_BY_SOCKET manual.
+[LOG_CAT_SBGP] Failed to dlopen libnuma.so. Fallback to GROUP_BY_SOCKET manual.
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: all_reduce_perf
+# nThread 1 nGpus 2 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 1324185 on      b0016 device  0 [0000:a3:00] NVIDIA B200
+#  Rank  1 Group  0 Pid 1324185 on      b0016 device  1 [0000:cd:00] NVIDIA B200
+#  Rank  2 Group  0 Pid 880652 on      b0019 device  0 [0000:a3:00] NVIDIA B200
+#  Rank  3 Group  0 Pid 880652 on      b0019 device  1 [0000:cd:00] NVIDIA B200
+[1780687060.491883] [b0016:1324185:1]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[1780687060.491824] [b0019:880652:1]     ucp_context.c:2339 UCX  WARN  UCP API version is incompatible: required >= 1.20, actual 1.19.0 (loaded from /lib64/libucp.so.0)
+[b0016:0:1324185 - context.c:722][2026-06-05 15:17:40] INFO job (ID: 1561763249739426046) resource request quota: ( osts:0 user_data_per_ost:0 max_groups:0 max_qps:1 max_group_channels:1, num_trees:1)
+[b0016:0:1324185 - context.c:930][2026-06-05 15:17:41] INFO sharp_job_id:1    resv_key: tree_type:LLT tree_idx:0  treeID:0 tree_plane:0 caps:0x66 quota:(osts:23 user_data_per_ost:1024 max_groups:23 max_qps:1 max_group_channels:1)
+[b0016:0:1324185 - context.c:938][2026-06-05 15:17:41] INFO sharp_job_id:1    tree_type:SAT tree_idx:1  treeID:512 tree_plane:0 caps:0x76
+[b0016:0:1324185 - comm.c:441][2026-06-05 15:17:41] INFO [group#:0] job_id:1 group id:0 tree idx:0 tree_type:LLT rail_idx:0 group size:2 quota: (osts:8 user_data_per_ost:1024) mgid: (subnet prefix:0x0 interface id:0x0) mlid:0
+[b0016:0:1324185 - comm.c:441][2026-06-05 15:17:41] INFO [group#:1] job_id:1 group id:0 tree idx:1 tree_type:SAT rail_idx:0 group size:2 quota: (osts:64 user_data_per_ost:0) mgid: (subnet prefix:0x0 interface id:0x0) mlid:0
+[b0016:0:1324185 - context.c:722][2026-06-05 15:17:41] INFO job (ID: 1561763247125876966) resource request quota: ( osts:0 user_data_per_ost:0 max_groups:0 max_qps:1 max_group_channels:1, num_trees:1)
+[b0016:0:1324185 - context.c:930][2026-06-05 15:17:42] INFO sharp_job_id:1    resv_key: tree_type:LLT tree_idx:0  treeID:0 tree_plane:0 caps:0x66 quota:(osts:23 user_data_per_ost:1024 max_groups:23 max_qps:1 max_group_channels:1)
+[b0016:0:1324185 - context.c:938][2026-06-05 15:17:42] INFO sharp_job_id:1    tree_type:SAT tree_idx:1  treeID:512 tree_plane:0 caps:0x76
+[b0016:0:1324185 - comm.c:441][2026-06-05 15:17:42] INFO [group#:0] job_id:1 group id:0 tree idx:0 tree_type:LLT rail_idx:0 group size:2 quota: (osts:8 user_data_per_ost:1024) mgid: (subnet prefix:0x0 interface id:0x0) mlid:0
+[b0016:0:1324185 - comm.c:441][2026-06-05 15:17:42] INFO [group#:1] job_id:1 group id:0 tree idx:1 tree_type:SAT rail_idx:0 group size:2 quota: (osts:64 user_data_per_ost:0) mgid: (subnet prefix:0x0 interface id:0x0) mlid:0
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1   103.07   10.17   15.26       0   289.30    3.62    5.44       0
+     4194304       1048576     float     sum      -1   341.34   12.29   18.43       0   341.11   12.30   18.44       0
+    16777216       4194304     float     sum      -1   582.91   28.78   43.17       0   585.62   28.65   42.97       0
+    67108864      16777216     float     sum      -1  1581.37   42.44   63.66       0  1573.46   42.65   63.98       0
+   268435456      67108864     float     sum      -1  5509.18   48.73   73.09       0  5518.18   48.65   72.97       0
+  1073741824     268435456     float     sum      -1  21590.3   49.73   74.60       0  21669.3   49.55   74.33       0
+  4294967296    1073741824     float     sum      -1  86056.3   49.91   74.86       0  86111.5   49.88   74.82       0
+ 17179869184    4294967296     float     sum      -1   343286   50.05   75.07       0   344771   49.83   74.74       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 54.114 
+#
+# Collective test concluded: all_reduce_perf
+#
+
