@@ -43,7 +43,7 @@ Aggregate ceiling for collectives: 8 GPU-NIC pairs × 26.7 GB/s = **~214 GB/s pe
 | scatter | 312 | 293 | 214 | **137%*** | Unidir traffic; bidir ceiling N/A |
 | reduce_scatter | 232 | 218 | 214 | **~100%** | HW-saturated (GDRDMA bidir aggregate) |
 | all_gather | 232 | 218 | 214 | **~100%** | HW-saturated (GDRDMA bidir aggregate) |
-| all_reduce | 90.6 | 170 | 214 | 79% | SHARP off; RS+AG two-pass overhead |
+| all_reduce | 90.6 | 170 | 214 | 79% | SHARP off (RS+AG two-pass); **with SHARP → 357 GB/s, see below** |
 | alltoall | 42.5 | 39.8 | 214 | **19%** | NCCL N² P2P chunks not pipelined |
 | hypercube | **FAILED** | **FAILED** | — | — | nccl-tests 2.18.3 validation bug |
 
@@ -67,7 +67,17 @@ All collectives reach **74–93% of NVLink max**, which is healthy. The busbw ga
 
 **AllGather + ReduceScatter at ~100% of GDRDMA bidir aggregate (218 vs. 214 GB/s):** These saturate the *real* hardware ceiling. Ring algorithms have every GPU simultaneously sending to one neighbor and receiving from another on its NIC, so each GPU-NIC pair is GDRDMA-bidir-limited at ~26.7 GB/s per direction; aggregating across 8 pairs gives ~214 GB/s. The 50 GB/s NIC unidir spec is unreachable here because the GPU's DMA engine cannot supply both directions at full rate simultaneously. There is essentially no headroom left at the hardware level.
 
-**AllReduce at 79% (170 GB/s) — SHARP is NOT active:** The clearest indicator is that allreduce busbw (170 GB/s) is *less than* all_gather busbw (218 GB/s). Without SHARP, allreduce is implemented as ReduceScatter + AllGather — two sequential bidir passes — so it does not reach the 214 GB/s ceiling that AllGather alone hits. With SHARP, reduction is offloaded to the InfiniBand switches in-flight, allreduce becomes a single-pass operation, and the per-byte PCIe load drops; busbw should ~2× to ~340 GB/s, exceeding the GDRDMA bidir aggregate. SHARP infrastructure is confirmed ready on the fabric (`sharp_hello` passed, 153 OSTs available); this needs to be activated at the NCCL/job level.
+**AllReduce — SHARP measured at 2.2× (357 GB/s vs 163 GB/s Ring):** Without SHARP, allreduce is ReduceScatter + AllGather — two sequential bidir passes — so it stalls below the 214 GB/s ceiling that AllGather alone hits (measured 170 GB/s, less than all_gather's 218). With SHARP, reduction is offloaded to the InfiniBand switches in-flight; allreduce becomes single-pass, the per-byte PCIe load drops, and busbw nearly doubles — **exceeding the GDRDMA bidir aggregate, exactly as predicted.** Measured on a clean A/B run (8 GPU/node × 2 nodes, 16 GPUs):
+
+| AllReduce message size | Ring (SHARP off) | **SHARP on** | Speedup |
+|---|---|---|---|
+| 256 MB | 113.1 | 197.9 | 1.75× |
+| 1 GB | 116.5 | 258.4 | 2.22× |
+| 4 GB | 160.7 | 344.1 | 2.14× |
+| **16 GB (peak)** | **162.7** | **357.2** | **2.20×** |
+| **Avg (1 MB–16 GB)** | **81.1** | **160.6** | **1.98×** |
+
+busbw in GB/s, out-of-place; validation clean (0 wrong). SHARP wins above ~4 MB; the gain grows with message size. Enabling SHARP requires forcing the CollNet algorithm (`NCCL_COLLNET_ENABLE=1`, `NCCL_ALGO=CollNetChain,CollNetDirect`, `NCCL_PROTO=Simple`) and selecting the 8 SHARP-connected NICs (`NCCL_IB_HCA="^mlx5_7,mlx5_8,mlx5_9,mlx5_10,mlx5_12"`) — see `results_sharp.md`. The benefit needs the full 8 NICs/node; at 2 GPU/node SHARP is ~9% slower than Ring (too few NICs to saturate the aggregate).
 
 **Scatter at 137% (293 GB/s) vs. Gather at 42% (90.5 GB/s) — Fan-out vs. Fan-in asymmetry:** Scatter exceeds the GDRDMA bidir aggregate because traffic is purely unidirectional (root pushes; receivers only receive); the GPU's DMA engine is not splitting its budget between TX and RX, so per-pair throughput approaches the unidir ceiling (~50 GB/s). Against the unidir aggregate (~400 GB/s), scatter reaches 73%. Gather (all ranks fan in to one root) suffers because NCCL's gather algorithm cannot parallelize multi-GPU intra-node fan-in at the root side as effectively — the data funnel to a single root rank is algorithmically harder to pipeline across all NICs.
 
@@ -93,14 +103,14 @@ These issues were diagnosed and resolved for this cluster. Performance above ref
 
 | Parallelism Type | Primary NCCL Op | 1-Node busbw | 2-Node busbw | Assessment |
 |---|---|---|---|---|
-| **Data Parallel (DDP)** | AllReduce | 841 GB/s | 170 GB/s | Intra-node excellent; inter-node limited — **SHARP would ~2× to ~340 GB/s** |
+| **Data Parallel (DDP)** | AllReduce | 841 GB/s | 170 GB/s → **357 with SHARP** | Intra-node excellent; inter-node **2.2× faster with SHARP (measured)** |
 | **Pipeline Parallel** | SendRecv (P2P) | 666 GB/s | 26.6 GB/s | Inter-node capped at **hard hardware limit** (GDRDMA bidir, PCIe DMA engine) |
 | **Tensor Parallel** | AllReduce, AllGather, ReduceScatter | 684–841 GB/s | 170–218 GB/s | Keep within one node; cross-node TP viable via AllGather+ReduceScatter at 218 GB/s |
 | **MoE Parallel (expert dispatch)** | AllToAll | 675 GB/s | 39.8 GB/s | Inter-node alltoall **severely bottlenecked** (19% of GDRDMA bidir aggregate); minimize cross-node expert routing |
 
 **Key implications:**
 
-- **Data Parallel:** Scale-out DDP will be gated on AllReduce across nodes. At 170 GB/s (SHARP off), inter-node gradient sync is the primary bottleneck for large models. **Activating SHARP is the highest-priority action for DDP scaling (~2× to ~340 GB/s).**
+- **Data Parallel:** Scale-out DDP is gated on AllReduce across nodes. At 170 GB/s (SHARP off) inter-node gradient sync is the bottleneck for large models; **SHARP raises this to a measured 357 GB/s (2.2×)** and is the highest-impact change for DDP scaling. Enable it at 8 GPU/node (see the AllReduce table above).
 
 - **Pipeline Parallel:** The 26.6 GB/s sendrecv ceiling means inter-node activation tensors are slow. A single GPU-NIC pair transfers ~26.6 GB/s bidirectionally — for a 1 GB activation tensor, that takes ~37 ms. Pipeline bubble scheduling must account for this hard constraint.
 
@@ -108,12 +118,12 @@ These issues were diagnosed and resolved for this cluster. Performance above ref
 
 - **MoE Parallel:** At 39.8 GB/s inter-node, AllToAll is ~17× slower than intra-node (675 GB/s). Large-scale MoE with cross-node expert dispatch will be severely bandwidth-limited. Strategies: (a) constrain expert placement to single-node where possible, (b) use NVSHMEM-based or custom AllToAll that better pipelines NIC traffic, (c) increase MoE token batch size to amortize latency.
 
->>> Where the 214 GB/s GDRDMA aggregate comes from, and why SHARP (~340 GB/s) can exceed it:
+>>> Where the 214 GB/s GDRDMA aggregate comes from, and why SHARP (measured 357 GB/s) exceeds it:
 >>>
 >>> The aggregate is not independently measured — it is `8 NICs/node × 26.7 GB/s/dir per NIC = 213.6 ≈ 214 GB/s/node/dir`. The 26.7 itself is below the NDR raw spec (400 Gb/s = 50 GB/s/dir unidir): in SendRecv each GPU transmits and receives on the same NIC at once, so its PCIe/GDRDMA DMA budget is shared between TX and RX and each direction collapses to ~26.7 GB/s. So 214 is the ceiling for any pattern that bidirectionally contends every NIC — which ring-style AllReduce does (measured 170 ≈ 79% of 214).
 >>>
->>> SHARP can report ~340 (≈ 2 × measured 170) for two stacked reasons:
+>>> SHARP exceeds 214 (measured 357 ≈ 2.2 × Ring) for two stacked reasons:
 >>> 1. The 214 ceiling is regime-specific, not the wire limit. The true unidirectional wire limit is `8 × 50 = 400 GB/s/node/dir`. The 214 only applies under bidirectional NIC contention (TX+RX sharing DMA); SHARP changes the traffic pattern so NICs are not fighting themselves and can run closer to the 50 GB/s unidir spec.
->>> 2. `busbw` is a logical metric that credits offloaded work: `busbw = algbw × 2(n-1)/n` (factor ≈ 2 for large n). Ring AllReduce moves each byte across the wire ~2×, so its busbw ≈ wire speed. SHARP reduces in-network — each GPU sends its data up once and receives the reduced result down once, ~half the wire traffic for the same logical AllReduce — so for the same wire speed the reported busbw roughly doubles (170 → ~340). It is not more bytes on the wire than physically possible; the switch performs reduction the GPUs would otherwise have done across the fabric.
+>>> 2. `busbw` is a logical metric that credits offloaded work: `busbw = algbw × 2(n-1)/n` (factor ≈ 2 for large n). Ring AllReduce moves each byte across the wire ~2×, so its busbw ≈ wire speed. SHARP reduces in-network — each GPU sends its data up once and receives the reduced result down once, ~half the wire traffic for the same logical AllReduce — so for the same wire speed the reported busbw roughly doubles. The switch performs the reduction the GPUs would otherwise have done across the fabric.
 >>>
->>> Caveat: 340 is an estimate. Real SHARP gains depend on message size and tree depth — treat it as "roughly double," not an exact figure.
+>>> Confirmed: the earlier ~340 GB/s estimate held up — measured peak is 357 GB/s (16 GB), 2.2× over Ring. Gains depend on message size (negligible below ~4 MB, ~2.2× at multi-GB).
