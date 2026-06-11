@@ -41,10 +41,11 @@ value is set for both types of GPU:
 export UCX_TLS=rc_mlx5,cuda_copy,cuda_ipc,sm,self
 ```
 
-For the B200 the `UCX_NET_DEVICES` variable is set to:
+For the B200 the `UCX_NET_DEVICES` variable is set as shown. Note that the `mlx5_12:1` device needs
+to be excluded because that connects to the file server:
 
 ```bash
-export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_11:1,mlx5_12:1
+export UCX_NET_DEVICES=mlx5_0:1,mlx5_1:1,mlx5_2:1,mlx5_3:1,mlx5_4:1,mlx5_5:1,mlx5_6:1,mlx5_11:1
 ```
 
 For the RTX this is set to:
