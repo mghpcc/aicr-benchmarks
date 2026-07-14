@@ -166,3 +166,24 @@ tail -f output/out.<node>-<jobid>
 ```
 
 Look for `throughput` lines in the log to get tokens/sec per GPU.
+
+## Result directories: `output` vs `output-2`
+
+Two batches of collected results are kept side by side. Each contains the raw
+`out.<host>-<jobid>` logs plus a generated `summary.md` (tables + analysis).
+Same scripts, same models, same settings — they differ only in which
+node/GPU-count combinations were run.
+
+| Dir | Date | What it covers |
+|-----|------|----------------|
+| `output/`   | 2026-05-07 | Initial sweep. B200: 1 node × {1, 2, 4, 8} GPUs, plus a single 2 node × 8-GPU point (RTX-6000 similarly). `summary.md` focuses on single-GPU RTX-vs-B200 and **intra-node** (1→8 GPU) weak-scaling. |
+| `output-2/` | 2026-05-12 | Follow-up ("output-more") that adds the full **multi-node** matrix: 2 nodes × {1, 2, 4, 8} GPUs/node, enabling a proper multi-node scaling and gradient-sync study. Its 1-node B200 numbers reproduce `output/` within run-to-run noise. (A few runs failed and are excluded from its table.) |
+
+Use `output/` as the reference for a **single-node** GPU sweep and `output-2/`
+for a **two-node** sweep.
+
+> **Note on the model in `summary.md`:** the "Model (constant across runs)" line
+> in each `summary.md` header describes the **RTX-6000** model (24 layers, hidden
+> 2048, ~1.32 B). The **B200** runs actually use the larger config from `run.sh`
+> (36 layers, hidden 4096, FFN 14336, seq 2048, ~7 B). Confirm per run from the
+> argument dump in the `out.b*` log, not from the summary header.
