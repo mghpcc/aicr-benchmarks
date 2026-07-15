@@ -1,0 +1,50 @@
+; COLD-FLOOR random read IOPS — virgin-region LFSR single pass (Scheme 1+3+4).
+;
+; The file in ${DATA_DIR} was laid out by coldfloor_layout_fio.sh in a
+; SEPARATE job, hours earlier, and has NEVER been read.
+;
+; random_generator=lfsr + loops=1 + time_based=0 guarantees every 4 KiB
+; block is touched AT MOST ONCE, in pseudo-random order — unlike the
+; time_based+norandommap loop in the spec_validate harness, this can never
+; re-read (and therefore never re-warm) its own blocks mid-run. Combined
+; with the aged virgin region, every op lands on a block that was never
+; read before: cold by construction.
+;
+; runtime caps the window (region is sized to outlast it); the measured
+; rate is still valid if the pass ends early — coverage is uniform.
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;   CPUS_ALLOWED, JOBNAME, RUNTIME, HIST_PREFIX, LOG_HIST_MSEC
+
+[global]
+ioengine=${IOENGINE}
+direct=1
+bs=4k
+rw=randread
+random_generator=lfsr
+size=${SIZE_PER_JOB}
+nrfiles=1
+iodepth=${IODEPTH}
+; batch submit/complete cuts syscall overhead on async engines; no-op on
+; sync engines.
+iodepth_batch_submit=8
+iodepth_batch_complete=8
+numjobs=${NUMJOBS}
+group_reporting=1
+loops=1
+time_based=0
+runtime=${RUNTIME}
+directory=${DATA_DIR}
+filename_format=fio.rand.$jobnum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+randrepeat=0
+thread=1
+cpus_allowed=${CPUS_ALLOWED}
+cpus_allowed_policy=split
+write_hist_log=${HIST_PREFIX}
+log_hist_msec=${LOG_HIST_MSEC}
+
+[${JOBNAME}]
+stonewall

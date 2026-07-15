@@ -1,0 +1,51 @@
+; COLD-FLOOR sequential read — virgin-region single pass (Scheme 1+2+4).
+;
+; The files in ${DATA_DIR} were laid out by coldfloor_layout_fio.sh in a
+; SEPARATE Slurm job, hours earlier (aged), and have NEVER been read.
+; This job reads each block exactly once (loops=1, time_based=0). A read
+; cache can only serve blocks previously read or recently written, so an
+; aged, never-read region is cold by construction — no eviction tricks.
+;
+; Client-side cache bypass (always on):
+;   direct=1, invalidate=1, fadvise_hint=1, loops=1
+;
+; Scheme 4 evidence: write_hist_log emits periodic full latency histograms
+; so warm/cold latency modes can be separated in post-processing
+; (coldfloor_summary.py uses the JSON clat percentiles; the hist logs are
+; kept for deeper analysis).
+;
+; Required env vars: DATA_DIR, SIZE_PER_JOB, NUMJOBS, IODEPTH, IOENGINE,
+;   CPUS_ALLOWED, NRFILES, JOBNAME, RUNTIME, HIST_PREFIX, LOG_HIST_MSEC
+
+[global]
+ioengine=${IOENGINE}
+direct=1
+bs=1M
+rw=read
+size=${SIZE_PER_JOB}
+nrfiles=${NRFILES}
+; one open file per worker at a time; lets nrfiles be large without
+; blowing the per-process FD limit.
+openfiles=1
+iodepth=${IODEPTH}
+numjobs=${NUMJOBS}
+group_reporting=1
+loops=1
+time_based=0
+; cap only — region is sized so the single pass ends before this.
+runtime=${RUNTIME}
+directory=${DATA_DIR}
+filename_format=fio.seq.$jobnum.$filenum
+fallocate=none
+invalidate=1
+fadvise_hint=1
+randrepeat=0
+end_fsync=0
+thread=1
+cpus_allowed=${CPUS_ALLOWED}
+cpus_allowed_policy=split
+write_hist_log=${HIST_PREFIX}
+log_hist_msec=${LOG_HIST_MSEC}
+
+[${JOBNAME}]
+stonewall
