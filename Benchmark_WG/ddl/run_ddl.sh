@@ -102,11 +102,20 @@ if (( TP > 1 )); then par_par="$par_par --sequence-parallel"; fi
 
 # ---- SHARP (CollNet) for the DP gradient AllReduce; see notes-sharp.md ----
 # Only meaningful for N_NODES >= 2 with 8 GPUs (=NICs) per node and DP > 1.
+# 2026-07-20 fix: "allreduce:collnetchain,collnetdirect" with NO fallback
+# crashed phase-4 SHARP jobs (168259/260/263/264) at Megatron's own startup
+# barrier -- a small fp32 AllReduce that CollNet can't serve at that point in
+# init ("no algorithm/protocol available for function AllReduce with
+# datatype ncclFloat32"). Since NCCL_ALGO scopes by collective TYPE
+# (AllReduce), not by caller/purpose, it applied to that barrier too. Add a
+# ring fallback so NCCL still prefers CollNet for the big DP gradient
+# AllReduce (the one that matters) but degrades to ring for anything CollNet
+# can't handle, instead of crashing outright.
 if [ "$SHARP" = "1" ]; then
     export NCCL_COLLNET_ENABLE=1
     export SHARP_COLL_LOCK_ON_COMM_INIT=1
     export NCCL_PROTO=Simple            # LL/LL128 are not CollNet-compatible
-    export NCCL_ALGO="allreduce:collnetchain,collnetdirect"
+    export NCCL_ALGO="allreduce:collnetchain,collnetdirect,ring"
     export LD_PRELOAD=/lib64/libnuma.so.1${LD_PRELOAD:+:$LD_PRELOAD}
 fi
 
@@ -166,5 +175,5 @@ torchrun $rdzv_info \
         --save-interval 1000000 \
         --log-interval 10 \
         --log-throughput \
-        --timing-log-level 2 \
+        --timing-log-level ${DDL_TIMING_LEVEL:-2} \
         --timing-log-option all

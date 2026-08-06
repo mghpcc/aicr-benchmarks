@@ -73,6 +73,7 @@ if [ -n "$EXTRA_BIND" ]; then BIND_FLAGS="$BIND_FLAGS --bind ${EXTRA_BIND}"; fi
 srun bash -c "
     echo \"CUDA_VISIBLE_DEVICES (in container, \$(hostname)) = $CVD_LIST\"
     APPTAINERENV_CUDA_VISIBLE_DEVICES=$CVD_LIST \
+    APPTAINERENV_DDL_TIMING_LEVEL=${DDL_TIMING_LEVEL:-2} \
     apptainer exec \
         --nv --contain --cleanenv \
         $BIND_FLAGS \
