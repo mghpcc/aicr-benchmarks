@@ -1,0 +1,26 @@
+server=b0029 client=b0031 rail=mlx5_3 size=8388608 iters=2000
+perftest: Version: 6.26
+(bidirectional rows are the SUM of both directions; divide by 2)
+
+########## 1. HOST bidir, RO on (default) ##########
+ PCIe relax order: ON		Lock-free      : OFF
+ 8388608    2000             722.83             719.10 		     0.010715
+
+########## 2. HOST bidir, RO DISABLED ##########
+ PCIe relax order: OFF		Lock-free      : OFF
+ 8388608    2000             704.37             704.36 		     0.010496
+
+########## 3. GPU  bidir, RO on (default) ##########
+ PCIe relax order: ON		Lock-free      : OFF
+ 8388608    2000             641.74             512.38 		     0.007635
+
+########## 4. GPU  bidir, RO DISABLED ##########
+ PCIe relax order: OFF		Lock-free      : OFF
+ 8388608    2000             622.80             504.09 		     0.007512
+
+########## 5. GPU  unidir check, RO DISABLED (drop -b manually below) ##########
+ PCIe relax order: ON		Lock-free      : OFF
+ 8388608    2000             730.61             730.53 		     0.010886
+
+########## 6. GPU unidir, RO DISABLED ##########
+ 8388608    2000             379.69             379.52 		     0.005655

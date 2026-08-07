@@ -1,0 +1,115 @@
+server=b0029  client=b0030  size=8388608B iters=2000
+PIX-affinity resolution: b0029 gpu=00000000:72:00.0 -> mlx5_3 ; b0030 gpu=00000000:F2:00.0 -> mlx5_12
+using rail: mlx5_3 on both nodes
+(note: GPU<->NIC affinity is PIX on b0029; on b0030 the allocated GPU is
+ whatever SLURM gave us, so the client side may not be PIX -- reported above.)
+
+########## 1. HOST memory, UNIDIRECTIONAL ##########
+# args: 
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : mlx5_3
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON		Lock-free      : OFF
+ ibv_wr* API     : ON		Using DDP      : OFF
+ TX depth        : 128
+ CQ Moderation   : 1
+ CQE Poll Batch  : 16
+ Mtu             : 4096[B]
+ Link type       : IB
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0x21 QPN 0x00e9 PSN 0xf5b93a RKey 0x1fff03 VAddr 0x007fb89768c000
+ remote address: LID 0x2d QPN 0x01e9 PSN 0x42105e RKey 0x1fff00 VAddr 0x007f7295478000
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 8388608    2000             370.73             370.62 		     0.005523
+---------------------------------------------------------------------------------------
+
+########## 2. HOST memory, BIDIRECTIONAL ##########
+# args: -b
+---------------------------------------------------------------------------------------
+                    RDMA_Write Bidirectional BW Test
+ Dual-port       : OFF		Device         : mlx5_3
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON		Lock-free      : OFF
+ ibv_wr* API     : ON		Using DDP      : OFF
+ TX depth        : 128
+ CQ Moderation   : 1
+ CQE Poll Batch  : 16
+ Mtu             : 4096[B]
+ Link type       : IB
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0x21 QPN 0x00ea PSN 0xa7fb1f RKey 0x1fff03 VAddr 0x007f3c9c184000
+ remote address: LID 0x2d QPN 0x01ea PSN 0xfb65ea RKey 0x1fff00 VAddr 0x007f3716acc000
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 8388608    2000             756.70             756.33 		     0.011270
+---------------------------------------------------------------------------------------
+
+########## 3. GPU memory (GDRDMA), UNIDIRECTIONAL ##########
+# args: --use_cuda=0
+
+Picking device No. 0
+---------------------------------------------------------------------------------------
+                    RDMA_Write BW Test
+ Dual-port       : OFF		Device         : mlx5_3
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON		Lock-free      : OFF
+ ibv_wr* API     : ON		Using DDP      : OFF
+ TX depth        : 128
+ CQ Moderation   : 1
+ CQE Poll Batch  : 16
+ Mtu             : 4096[B]
+ Link type       : IB
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0x21 QPN 0x00eb PSN 0xeaf8b6 RKey 0x200004 VAddr 0x007ff3f7800000
+ remote address: LID 0x2d QPN 0x01eb PSN 0x351fb0 RKey 0x2000df VAddr 0x007f383b800000
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 8388608    2000             379.78             379.77 		     0.005659
+---------------------------------------------------------------------------------------
+deallocating GPU buffer 00007ff3f7000000
+
+########## 4. GPU memory (GDRDMA), BIDIRECTIONAL ##########
+# args: --use_cuda=0 -b
+
+Picking device No. 0
+---------------------------------------------------------------------------------------
+                    RDMA_Write Bidirectional BW Test
+ Dual-port       : OFF		Device         : mlx5_3
+ Number of qps   : 1		Transport type : IB
+ Connection type : RC		Using SRQ      : OFF
+ PCIe relax order: ON		Lock-free      : OFF
+ ibv_wr* API     : ON		Using DDP      : OFF
+ TX depth        : 128
+ CQ Moderation   : 1
+ CQE Poll Batch  : 16
+ Mtu             : 4096[B]
+ Link type       : IB
+ Max inline data : 0[B]
+ rdma_cm QPs	 : OFF
+ Data ex. method : Ethernet
+---------------------------------------------------------------------------------------
+ local address: LID 0x21 QPN 0x00ec PSN 0xc09bca RKey 0x200005 VAddr 0x007efc2f800000
+ remote address: LID 0x2d QPN 0x01ec PSN 0xeb1573 RKey 0x2000e0 VAddr 0x007fc59f800000
+---------------------------------------------------------------------------------------
+ #bytes     #iterations    BW peak[Gb/sec]    BW average[Gb/sec]   MsgRate[Mpps]
+ 8388608    2000             441.77             435.89 		     0.006495
+---------------------------------------------------------------------------------------
+deallocating GPU buffer 00007efc2f000000
+
+########## NOTE ##########
+perftest reports BIDIRECTIONAL rows as the SUM of both directions;
+divide by 2 to compare against the unidirectional rows.

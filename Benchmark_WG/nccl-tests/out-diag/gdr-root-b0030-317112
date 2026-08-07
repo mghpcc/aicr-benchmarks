@@ -1,0 +1,159 @@
+##### b0030  Fri Aug  7 14:13:19 EDT 2026 #####
+
+=========== A. PCIe full-duplex test (cudaMemcpyAsync) ===========
+      int genCur = 0, widCur = 0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+GPU: NVIDIA B200  (asyncEngineCount=4)
+PCI bus id: 0000:A3:00.0
+chunk = 256 MiB, iters = 16, total per direction = 4096 MiB
+
+1. H2D alone            :   57.53 GB/s
+2. D2H alone            :   57.26 GB/s
+3. H2D + D2H concurrent :   43.00 GB/s each way,   86.00 GB/s total
+
+--- verdict ---
+concurrent per-direction / best single-direction = 0.75
+FULL DUPLEX: both directions hold up concurrently.
+   -> the GPU PCIe endpoint is healthy; the defect is specific to the
+      P2P/GDRDMA path (switch, ACS, peermem), not the GPU link itself.
+
+=========== B1. NVIDIA driver params (relaxed ordering etc) ===========
+EnablePCIeGen3: 0
+EnablePCIERelaxedOrderingMode: 0
+EnableResizableBar: 0
+--- (full param list saved below) ---
+ResmanDebugLevel: 4294967295
+RmLogonRC: 1
+ModifyDeviceFiles: 1
+DeviceFileUID: 0
+DeviceFileGID: 0
+DeviceFileMode: 438
+InitializeSystemMemoryAllocations: 1
+UsePageAttributeTable: 4294967295
+EnableMSI: 1
+EnablePCIeGen3: 0
+MemoryPoolSize: 0
+KMallocHeapMaxSize: 0
+VMallocHeapMaxSize: 0
+IgnoreMMIOCheck: 0
+EnableStreamMemOPs: 0
+EnableUserNUMAManagement: 1
+NvLinkDisable: 0
+RmProfilingAdminOnly: 1
+PreserveVideoMemoryAllocations: 1
+UseKernelSuspendNotifiers: 0
+EnableS0ixPowerManagement: 1
+S0ixPowerManagementVideoMemoryThreshold: 256
+DynamicPowerManagement: 3
+DynamicPowerManagementVideoMemoryThreshold: 200
+TegraGpuPgMask: 4294967295
+RegisterPCIDriver: 1
+EnablePCIERelaxedOrderingMode: 0
+EnableResizableBar: 0
+EnableGpuFirmware: 18
+EnableGpuFirmwareLogs: 2
+RmNvlinkBandwidthLinkCount: 0
+EnableDbgBreakpoint: 0
+OpenRmEnableUnsupportedGpus: 1
+DmaRemapPeerMmio: 1
+ImexChannelCount: 2048
+CreateImexChannel0: 0
+GrdmaPciTopoCheckOverride: 0
+EnableSystemMemoryPools: 529
+CoherentGPUMemoryMode: ""
+RegistryDwords: ""
+RegistryDwordsPerDevice: ""
+RmMsg: ""
+GpuBlacklist: ""
+TemporaryFilePath: "/var/tmp"
+ExcludedGpus: ""
+
+=========== B2. nvidia-smi PCIe + BAR1 ===========
+        Relaxed Ordering Mode                          : N/A
+    PCI
+        Bus                                            : 0xA3
+        Device                                         : 0x00
+--
+            PCIe Generation
+                Max                                    : 5
+                Current                                : 5
+--
+            Link Width
+                Max                                    : 16x
+                Current                                : 16x
+--
+        Atomic Caps Outbound                           : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 
+        Atomic Caps Inbound                            : FETCHADD_32 FETCHADD_64 SWAP_32 SWAP_64 CAS_32 CAS_64 
+    Fan Speed                                          : N/A
+    Performance State                                  : P0
+--
+    BAR1 Memory Usage
+        Total                                          : 262144 MiB
+        Used                                           : 0 MiB
+--
+            SRAM PCIE                                  : 0
+            SRAM Other                                 : 0
+        Channel Repair Pending                         : No
+
+=========== B3. sysfs PCIe state, GPU and NICs ===========
+BDF            cur_w    max_w    cur_speed  max_speed  device
+0000:03:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:04:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:2b:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:2d:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:53:00.0                                           VGA compatible controller: Matrox Electronics 
+0000:5b:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:5d:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:6f:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:72:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:83:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:84:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:a3:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:a4:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:cc:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:cd:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+0000:e3:00.0   2        2        8.0        16.0       Infiniband controller: Mellanox Technologies M
+0000:e3:00.1   2        2        8.0        16.0       Infiniband controller: Mellanox Technologies M
+0000:e3:00.2   2        2        8.0        16.0       Infiniband controller: Mellanox Technologies M
+0000:e3:00.3   2        2        8.0        16.0       Infiniband controller: Mellanox Technologies M
+0000:ef:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:f1:00.0   16       16       32.0       32.0       Infiniband controller: Mellanox Technologies M
+0000:f2:00.0   16       16       32.0       32.0       3D controller: NVIDIA Corporation GB100 [B200]
+
+=========== B4. What lspci gives us unprivileged ===========
+(DevCtl carries MaxPayload / MaxReadRequest / RelaxOrd; ACSCtl needs root)
+--- GPU 0000:a3:00.0 ---
+	Region 0: Memory at 108000000000 (64-bit, prefetchable) [size=64M]
+	Region 2: Memory at 104000000000 (64-bit, prefetchable) [size=256G]
+	Region 4: Memory at 108004000000 (64-bit, prefetchable) [size=32M]
+--- first ConnectX-7 ---
+
+=========== B5. PCIe bridges above the GPU (the PIX path) ===========
+GPU full BDF: 0000:a3:00.0
+--- level 1: 0000:a2:00.0  PCI bridge: Broadcom / LSI PEX890xx PCIe Gen 5 Switch (rev b
+--- level 2: 0000:a1:00.0  PCI bridge: Broadcom / LSI PEX890xx PCIe Gen 5 Switch (rev b
+--- level 3: 0000:a0:01.1  PCI bridge: Advanced Micro Devices, Inc. [AMD] Turin GPP Bri
+
+=========== B6. kernel cmdline / IOMMU (re-confirm on THIS node) ===========
+kernel initrd=image initrd=system initrd=runtime wwid=8c:84:74:c8:43:90 crashkernel=high console=ttyS0 115200 net.naming-scheme=v238 processor.max_cstate=0 numa_balancing=disable pci=pcie_bus_perf selinux=0 enforcing=0 audit=1 audit_backlog_limit=8192 rd.driver.blacklist=nouveau modprobe.blacklist=nouveau nokaslr amd_iommu=off iommu=off pci=noacs initcall_blacklist=algif_aead_init systemd.unified_cgroup_hierarchy=1 systemd.legacy_systemd_cgroup_controller=0 cgroup_no_v1=all
+iommu dirs: 
+
+##### END b0030 #####
+
+=========== B7. NIC firmware ordering config + verbs caps ===========
+--- mlxconfig (usually root-only) ---
+--- ibv_devinfo ---
+	fw_ver:				28.41.1000
+	max_mr_size:			0xffffffffffffffff
+	max_mr:				16777216
+	atomic_cap:			ATOMIC_HCA (1)
+					SUPPORT_ATOMIC
+					SUPPORT_ATOMIC
+	hca_core_clock:			1000000kHZ
+
+=========== B8. raw PCIe config space readability ===========
+GPU 0000:a3:00.0 config bytes readable: 64 of 4096
+(64 => unprivileged; 256/4096 => we can decode DevCtl/ACS ourselves)

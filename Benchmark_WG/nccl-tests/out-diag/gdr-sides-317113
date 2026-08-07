@@ -1,0 +1,18 @@
+server=b0030 client=b0031 rail=mlx5_3 size=8388608 iters=2000
+(perftest prints bidirectional rows as the SUM of both directions)
+
+########## A. GPU  <-> GPU   (known bad) ##########
+# server flags: '--use_cuda=0'   client flags: '--use_cuda=0'
+ 8388608    2000             443.66             440.12 		     0.006558
+
+########## B. GPU  <-> HOST  (server GPU only) ##########
+# server flags: '--use_cuda=0'   client flags: ''
+ 8388608    2000             624.55             490.40 		     0.007307
+
+########## C. HOST <-> GPU   (client GPU only) ##########
+# server flags: ''   client flags: '--use_cuda=0'
+ 8388608    2000             583.86             435.79 		     0.006494
+
+########## D. HOST <-> HOST  (known good) ##########
+# server flags: ''   client flags: ''
+ 8388608    2000             725.62             725.61 		     0.010812

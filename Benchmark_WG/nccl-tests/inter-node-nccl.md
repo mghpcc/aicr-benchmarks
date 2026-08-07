@@ -8,6 +8,138 @@ Table 2 of `results_b200.md` and the right half of Table III in the paper.
 
 ---
 
+## Short answers
+
+**Bottom line: the measurements in the paper are fine; the interpretation is wrong, and it
+masked a real, fixable problem by "predicting" the degraded number.**
+
+### 1. Are the claims in the Engaging results correct?
+
+**Yes, in substance** — with two errors that happen to run *against* their own case:
+
+- They credit part of the gap to NCCL version. Wrong: AICR runs NCCL **2.29.3**, *newer* than
+  their 2.29.2. (The "2.18.3" in the AICR header is the nccl-tests harness, not the library.)
+- `summary-engaging-b200.md` blanks the SendRecv ratio, claiming AICR's 26.6 GB/s is a 2-GPU
+  per-pair figure. It isn't — it's the same 16-GPU 2-node ring. The **1.87× is real**.
+
+Minor overreach: their "99% of line rate, never exceeded" sits above their own perftest number
+(49.7 vs 47.4 GB/s), and they rank the x8-link hypothesis first when ACS/IOMMU fits better.
+
+### 2. Is there a problem in the paper?
+
+**Yes.** Section IV B's ceiling model is not physically sound — PCIe is full-duplex, so there is
+no shared TX/RX budget to halve, and the 53.5 GB/s constant is just 2 × the measurement, used to
+explain the measurement. Section IV D contradicts it outright (37.4 GB/s per direction
+bidirectionally, on a *weaker* CPU-relayed path).
+
+Consequences: the inter-node `%max` column is computed against a ceiling roughly half its true
+value (94–100% becomes ~50–55%), the "silicon-level wall" sentence must go, the ~37 ms
+pipeline-parallel budget becomes ~20 ms, and the SHARP framing needs rewording.
+
+**What survives:** all intra-node results, the Gather and AllToAll algorithmic analyses, the
+two-phase Ring AllReduce explanation, and the SHARP measurement itself.
+
+### 3. Is there a problem with the AICR system configuration?
+
+**Yes — now measured directly on AICR, on the same two nodes the paper used (b0029+b0030).**
+See §0 for the full run. On one rail (`mlx5_3`), 8 MiB RDMA writes:
+
+| Path | Reported | Per direction |
+|---|---:|---:|
+| Host memory, unidirectional | 370.6 Gb/s | 46.3 GB/s |
+| **Host memory, bidirectional** | 756.3 Gb/s (sum) | **47.3 GB/s each way** |
+| **GPU memory, unidirectional** | 379.8 Gb/s | **47.5 GB/s** |
+| **GPU memory, bidirectional** | 435.9 Gb/s (sum) | **27.2 GB/s each way** |
+
+The same link carries **94.5 GB/s total** with host memory but only **54.5 GB/s total** with GPU
+memory. The fabric, the switch, the NIC and the PCIe link are all demonstrably capable of full
+line rate in both directions at once — only the GPU path collapses. And 27.2 GB/s per rail is
+exactly AICR's NCCL figure (SendRecv 26.6; AllGather 218/8 = 27.2).
+
+**The usual suspects are ruled out**, which makes this narrower than the Engaging notes guessed:
+`amd_iommu=off iommu=off pci=noacs` on the kernel cmdline, no IOMMU groups present, GPU link
+negotiated at **Gen5 x16 of x16**, `nvidia_peermem` loaded. A narrowed link or an IOMMU/ACS
+redirect cannot explain a defect that appears *only* when both directions run at once.
+
+**The proof that this is not B200 silicon** is Engaging's ring AllGather: 383 GB/s aggregate =
+**47.9 GB/s per rail per direction**, and ring AllGather drives every rail in *both* directions
+simultaneously. Engaging's B200s therefore sustain bidirectional GDRDMA at line rate. AICR's do
+not. Same GPU, same NIC class, same NCCL — so the 26.6 GB/s is a property of this cluster, not
+of Blackwell.
+
+**Remaining caveat:** `lspci` could not read `ACSCtl` without root, so ACS is ruled out only from
+the boot cmdline, not from the live registers. The mechanism is not yet identified — see §5 for
+what to check next.
+
+---
+
+## 0. The measurement that settles it (run 2026-08-06 on b0029+b0030)
+
+Everything below §1 was written from published numbers. This section is new: the diagnostic was
+actually run, on **the same two nodes the paper's data came from**.
+
+**Scripts:** `diag-node.sh` (config dump), `diag-gdrdma-ab.sh` (SLURM job 300708).
+**Raw output:** `out-diag/gdr-ab-300708`.
+
+### 0.1 Config: the usual suspects are all clean
+
+| Check | Result | Verdict |
+|---|---|---|
+| Kernel cmdline | `amd_iommu=off iommu=off pci=noacs` | IOMMU and ACS disabled at boot |
+| `/sys/class/iommu` | empty | IOMMU genuinely off |
+| GPU PCIe link | Gen **5** of 5, width **x16** of x16 | not a narrowed link |
+| `nvidia_peermem` | loaded | GPUDirect RDMA available |
+| Rail rates (`ibstat`) | 9 rails at 400 Gb/s; `mlx5_7/8/9/10` at 100 Gb/s | 400G rails present as expected |
+| `ACSCtl` registers | **not readable as non-root** | ACS ruled out only from cmdline |
+
+So the four hypotheses the Engaging notes ranked highest — x8 link, ACS redirect, IOMMU
+translation, missing peermem — are all **eliminated**. Whatever is wrong is subtler.
+
+### 0.2 The A/B test: host memory vs GPU memory on the identical rail
+
+`ib_write_bw`, rail `mlx5_3` on both nodes, 8 MiB messages, 2000 iterations. The earlier
+`test-gdrdma.sh` hardcoded `mlx5_0`, which is `NODE` (cross-host-bridge) from the GPU at
+`72:00` — this run uses the `PIX` rail instead, so it measures the path NCCL would actually pick.
+
+| # | Path | BW avg (Gb/s) | Per direction (GB/s) | Total on link (GB/s) |
+|---|---|---:|---:|---:|
+| 1 | Host memory, unidirectional | 370.62 | 46.3 | 46.3 |
+| 2 | Host memory, **bidirectional** | 756.33 *(sum)* | **47.3** | **94.5** |
+| 3 | GPU memory (GDRDMA), unidirectional | 379.77 | **47.5** | 47.5 |
+| 4 | GPU memory (GDRDMA), **bidirectional** | 435.89 *(sum)* | **27.2** | **54.5** |
+
+*(perftest reports bidirectional rows as the sum of both directions.)*
+
+### 0.3 What this proves
+
+**(a) It is not the fabric, the switch, the NIC, or the PCIe link.** Row 2 shows that exact rail
+carrying 47.3 GB/s in *each* direction simultaneously — 94.5 GB/s of traffic across the same
+PCIe link that row 4 claims can only carry 54.5. Anything shared by rows 2 and 4 is exonerated.
+
+**(b) It is not link width or a slow path.** Row 3 shows GPU memory hitting 47.5 GB/s — full NDR
+line rate — one direction at a time. The GDRDMA path is healthy until both directions run at
+once.
+
+**(c) The defect is specific to GPU memory under simultaneous bidirectional traffic**, and it
+lands at exactly the number in the paper: 27.2 GB/s per direction, versus SendRecv 26.6 and
+AllGather 218 ÷ 8 rails = 27.2.
+
+**(d) It is not B200 silicon.** This is the step the earlier draft could not make. Engaging's
+ring AllGather reaches 383 GB/s aggregate = **47.9 GB/s per rail per direction** — and ring
+AllGather has every rank sending to its successor while receiving from its predecessor, so every
+rail runs in *both* directions at once. Engaging's B200s sustain bidirectional GDRDMA at line
+rate; AICR's do not. Same GPU, same NIC class, and (per §2a) the same NCCL library.
+
+**Conclusion: AICR's inter-node path has a real defect that costs ~1.75× on every bidirectional
+collective. The paper measured it correctly and then attributed it to physics.**
+
+Note the irony: on AICR the paper's *phenomenological* description is accurate — the GPU path
+really does behave as if it had a fixed ~54 GB/s budget shared between TX and RX (row 3 = 47.5
+one-way, row 4 = 54.5 split two ways). That is why the model looked convincing. It is simply not
+a property of the GPU, and it does not reproduce on healthy B200 nodes.
+
+---
+
 ## Verdict
 
 **The critique is substantially correct, and it should be acted on before the paper is
@@ -194,31 +326,43 @@ confirming with `NCCL_DEBUG=INFO` channel/NIC mapping, but it is not a live expl
 
 ---
 
-## 5. Ranked hypotheses for AICR, with the check for each
+## 5. Hypotheses: what has been eliminated, and what is left
+
+### Eliminated by the §0 diagnostic
+
+| # | Hypothesis | Measured | Status |
+|---|---|---|---|
+| 1 | ACS redirect forcing P2P TLPs through the root complex | `pci=noacs` on cmdline | **eliminated**¹ |
+| 2 | IOMMU translating the P2P path | `amd_iommu=off iommu=off`, `/sys/class/iommu` empty | **eliminated** |
+| 3 | GPU↔NIC PCIe link negotiated below x16 | Gen5 x16 of x16; GPU unidir hits 47.5 GB/s | **eliminated** |
+| 4 | `nvidia_peermem` missing or degraded | loaded; GDR unidir at full line rate | **eliminated** |
+| 5 | Fabric / switch / NIC limit | host bidir sustains 47.3 GB/s *each way* on the same rail | **eliminated** |
+
+¹ From the boot cmdline only — `ACSCtl` was not readable as non-root. Worth re-checking with
+privileges, since BIOS or switch firmware can re-assert ACS on downstream ports independently of
+the kernel flag.
+
+### What is left
+
+The defect appears **only** when GPU memory is the RDMA target **and** both directions are active
+— a narrow signature. Candidates, in the order I would test them:
 
 | # | Hypothesis | Check |
 |---|---|---|
-| 1 | **ACS redirect enabled** on PCIe switch ports, forcing P2P TLPs through the root complex | `lspci -vvv \| grep -i acsctl` — look for `SrcValid+`/`RequestRedirect+` |
-| 2 | **IOMMU translating the P2P path.** `results_b200.md` claims `iommu=off` was applied; confirm it was actually in effect on b0029/b0030 | `cat /proc/cmdline`; `dmesg \| grep -i -e DMAR -e IOMMU` |
-| 3 | **GPU↔NIC PCIe link negotiated below x16** | `lspci -vv -s <nic> \| grep -E 'LnkCap\|LnkSta'` — compare width and speed |
-| 4 | **GPU–NIC rail affinity** — NCCL pairing a GPU with an off-socket NIC | `nvidia-smi topo -m` should show `PIX`/`PXB` for each GPU's chosen NIC, never `SYS`; cross-check with `NCCL_DEBUG=INFO` |
-| 5 | **`nvidia_peermem` / DMA-BUF path degraded** rather than absent (absence would give ~10–15 GB/s, not 26.6) | `lsmod \| grep peermem`; NCCL log should show `[GDRDMA]` / `via GPU Direct RDMA` |
+| 1 | **PCIe relaxed ordering not enabled on the GPU BAR path.** Without RO, read completions and posted writes serialize against each other; the effect shows up only under bidirectional load, which matches exactly. | `nvidia-smi -q \| grep -i "relaxed"`; check `NVreg_` module params in `/proc/driver/nvidia/params`; compare against a healthy node |
+| 2 | **ACS re-asserted below the kernel flag**, on the PCIe switch downstream ports between GPU and NIC | `sudo lspci -vvv \| grep -A1 ACSCtl` on b0029 — needs root |
+| 3 | **PCIe switch / BIOS setting** (`MaxPayload`, `MaxReadRequest`, or upstream-port config on the bridge that gives GPU↔NIC their `PIX` relationship) | `sudo lspci -vvv -s <bridge>` — compare `DevCtl` against a healthy node |
+| 4 | **GPU BAR1 / MMIO window sizing** limiting outstanding P2P transactions | `nvidia-smi -q \| grep -i bar1` |
 
-**Decisive test, independent of NCCL entirely:**
-
-```bash
-# on AICR b-nodes, per rail
-ib_write_bw -d mlx5_X -s 67108864 -F            # host  -> host
-ib_write_bw -d mlx5_X -s 67108864 -F --use_cuda=<gpu>   # GPU   -> GPU, both directions
-```
-
-If host↔host reaches ~47 GB/s while GPU↔GPU sits at ~26 GB/s, the defect is in the P2P path —
-not the fabric, and definitively not silicon. That single result settles the whole question.
+The strongest next step is a **direct config diff against a healthy node** — running `diag-node.sh`
+on an Engaging B200 node and diffing the two outputs would very likely isolate the setting in one
+pass, since the two clusters now have a known, reproducible 1.75× behavioural difference.
 
 **Also relevant:** there is already a known NIC anomaly on AICR — the SHARP recipe in
-`2nodes-8gpus-sharp.sh` has to exclude `mlx5_12`, and there is an open rank-7 NIC issue logged
-in the project notes. That is independent evidence that AICR's NIC/rail configuration is not
-clean, and it should be run down at the same time.
+`2nodes-8gpus-sharp.sh` has to exclude `mlx5_12`, and there is an open rank-7 NIC issue logged in
+the project notes. The §0 dump adds a related oddity: `mlx5_7/8/9/10` report **100 Gb/s**, not
+400. Those are excluded from the SHARP NIC list already, but it confirms the rail map is not
+uniform and should be run down at the same time.
 
 ---
 
@@ -266,15 +410,23 @@ the SHARP measurement itself (357 vs 163 GB/s at 16 GB is a real, cleanly-valida
 
 ## 7. Caveats, and what would settle it
 
-- **AICR was not inspected directly.** This diagnosis rests on the published AICR numbers, the
-  raw file behind them, and contrasting measurements from a different cluster. The internal
-  contradiction between IV B and IV D and the inverted improvement pattern hold regardless, but
-  the specific mechanism needs the §5 checks.
+*(§0 supersedes the first caveat as originally written: AICR **has** now been inspected directly,
+on b0029+b0030. What remains open is the mechanism, not the existence of the defect.)*
 
-- **The comparison is across clusters, not a controlled experiment.** Same GPU (B200), same NIC
-  class (8× NDR400 per node), same benchmark, and — per §2a — effectively the same NCCL library.
-  That is a tight match, but switch topology, firmware, and OFED version were not controlled.
-  Running the *identical* nccl-tests binary and NCCL build on both would close the last gap.
+- **The mechanism is not yet identified.** §0 proves the GPU bidirectional path is degraded and
+  eliminates the fabric, link width, IOMMU and peermem. It does not say *why*. `ACSCtl` needs a
+  root read, and the §5 shortlist needs testing.
+
+- **The "not silicon" step still leans on a cross-cluster comparison.** It rests on Engaging's
+  ring AllGather implying 47.9 GB/s per rail per direction bidirectionally. That inference is
+  solid — ring AllGather unambiguously drives every rail both ways — but the airtight version is
+  a direct `ib_write_bw --use_cuda -b` on an Engaging B200 node, which would produce a number
+  comparable line-for-line with row 4 of §0.2. **That single run is the highest-value next
+  measurement**, and it takes about a minute.
+
+- **Firmware and OFED were not controlled** across the two clusters. Same GPU, same NIC class,
+  same NCCL library (§2a), but a `diag-node.sh` diff between an AICR and an Engaging node would
+  close this.
 
 - **Useful in-flight data.** Ten 2-node runs are queued on AICR right now (jobs 299459–299468,
   20 distinct nodes b0001–b0020). They will show whether 26.6 GB/s is uniform across the
