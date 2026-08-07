@@ -344,6 +344,57 @@ unaffected) is worth more here than it would be on a healthy cluster.
 
 ---
 
+---
+
+## 9. Review outcome and recommendations
+
+This document was re-checked on 2026-08-07 after its first version named
+`EnablePCIERelaxedOrderingMode=0` as the root cause. The check falsified that claim (§3). Recording
+how, because it changes what should be done next.
+
+### Why the first claim failed
+
+It rested on two things that felt strong but were not tests:
+
+- **A mechanism that matched the signature.** Strict PCIe ordering does predict "each direction
+  fine alone, halved together." Matching a signature is necessary, not sufficient — several of the
+  four remaining candidates predict the same shape.
+- **One config value read in isolation.** `EnablePCIERelaxedOrderingMode: 0` looks damning until
+  you notice it is the NVIDIA driver's **default**. A value equal to the vendor default
+  discriminates nothing without a healthy-system comparison, and that comparison was never made.
+
+The refutation came from asking what measurement would show the claim to be wrong, and running it:
+perftest already requests RO by default, so toggling it must change the number if RO is the lever.
+It did not (32.0 vs 31.5 GB/s/dir).
+
+### Recommendations
+
+1. **Do not apply the modprobe change as a fix.** Earlier drafts, and
+   `diag-aicr-gdrdma.md`, list `NVreg_EnablePCIeRelaxedOrderingMode=1` as step 1. It may do
+   nothing, and applying it before diagnosing muddies the evidence. Follow §5 order: read
+   registers first, write settings last.
+2. **The Engaging comparison is the highest-value next step and needs no privileges** (§5,
+   Track A). Two outcomes are each decisive: if Engaging is healthy with the same NVreg default,
+   the driver parameter is exonerated outright; if `--disable_pcie_relaxed` degrades Engaging to
+   AICR levels, the defect is precisely "RO never reaches the wire on AICR" and the search
+   collapses to whichever layer differs.
+3. **`DevCtl.RlxdOrd` on the NIC is the single most informative root-only read.** If that enable
+   bit is cleared, every software RO request — perftest's and NCCL's alike — is a silent no-op,
+   which would explain the toggle result completely and make it the answer.
+4. **The conclusions that matter for the paper do not depend on any of this.** Test 1 (98.3 GB/s
+   full duplex, no IB involved) refutes the "shared TX/RX budget" model on AICR's own hardware
+   regardless of which knob is eventually found, and the per-rail arithmetic in §1 stands on
+   measurement alone. §8 can be acted on now.
+
+### Two traps worth remembering
+
+- **perftest requests MR-level relaxed ordering by default** (v6.26). A perftest number is not an
+  "RO off" number; the flag `--disable_pcie_relaxed` turns it off.
+- **Unprivileged `lspci -vv` silently omits the PCIe Express capability.** Grepping for `ACSCtl`
+  or `RlxdOrd` returns nothing, which reads as "clean" but means "not visible."
+
+---
+
 *Note: `diag-aicr-gdrdma.md` (2026-08-07, earlier the same day) names `EnablePCIERelaxedOrderingMode=0`
 as the root cause; §3 of this document supersedes that on the strength of the RO-toggle test
 (job 317188). This file is the current version of record.*
