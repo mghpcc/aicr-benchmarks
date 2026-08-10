@@ -39,8 +39,31 @@ That is an **885× difference**, and the workaround's results validate clean (`#
 The fault triggers whenever a group has **≥ 3 GPUs total and ≥ 2 GPUs on socket 1**. Socket 0
 scales cleanly to 4 GPUs at defaults (13.0 GB/s); socket 1 collapses at 3 (0.06 GB/s). All 28
 GPU pairs are individually healthy at ~39.5 GB/s, so no single GPU, link, or switch port is
-degraded. `NCCL_P2P_LEVEL=SYS` is the *only* knob that recovers it — `P2P_DISABLE`,
-`SHM_DISABLE`, `ALGO=Ring`, `MAX_NCHANNELS=1` and `P2P_LEVEL=0` all stay at 0.04–0.09.
+degraded.
+
+### What fixes it, and what does not
+
+Seven NCCL settings tested at 8 GPUs. **`NCCL_P2P_LEVEL=SYS` is the only one that recovers
+anything** — every other knob leaves the node within a factor of ~2 of the 0.04 GB/s floor:
+
+| 8-GPU knob | busbw (GB/s) | verdict |
+|---|---:|---|
+| **`NCCL_P2P_LEVEL=SYS`** | **32.66** | **fixes it — 800×** |
+| `NCCL_SHM_DISABLE=1` | 0.09 | no fix |
+| `NCCL_ALGO=Ring` | 0.04 | no fix |
+| `NCCL_MAX_NCHANNELS=1` | 0.04 | no fix |
+| `NCCL_PROTO=Simple` | 0.04 | no fix |
+| `NCCL_P2P_DISABLE=1` | 0.04 | no fix |
+| `NCCL_P2P_LEVEL=0` | 0.04 | no fix |
+| *(defaults, for reference)* | 0.04 | — |
+
+`sendrecv` busbw at 16 MiB, 5 iters; default environment apart from the single knob named. The
+16 MiB size is why `SYS` reads 32.66 here and 35.43 in the converged 16 GB table above.
+
+Note the two most informative negatives: `NCCL_P2P_DISABLE=1` and `NCCL_P2P_LEVEL=0` — both
+*restrict* P2P, and both land exactly on the 0.04 floor, matching the default. That is the clue
+that the default is already behaving as if P2P were unavailable, which the next section
+confirms.
 
 ### Why `NCCL_P2P_LEVEL=SYS` fixes it
 
@@ -69,9 +92,11 @@ transport, staging all traffic through host shared memory**, which on this node 
 0.04 GB/s. Setting `NCCL_P2P_LEVEL=SYS` raises the permitted distance to the maximum, so all
 pairs qualify, direct P2P is used throughout, and the SHM fallback is never selected.
 
-This also explains the knob sweep: `NCCL_P2P_DISABLE=1` (0.04) forces that same SHM path, and
-`NCCL_SHM_DISABLE=1` (0.09) merely pushes it onto another slow fallback. Only raising the P2P
-level avoids the fallback altogether.
+This closes the loop on the knob table above. `NCCL_P2P_DISABLE=1` and `NCCL_P2P_LEVEL=0` sit
+exactly on the default's 0.04 because they force the very same SHM path the default was already
+taking. `NCCL_SHM_DISABLE=1` (0.09) only pushes it onto another slow fallback. `ALGO`, `PROTO`
+and `MAX_NCHANNELS` change *how* NCCL schedules traffic, not *which transport* carries it, so
+they cannot help. Only raising the P2P level avoids the fallback altogether.
 
 Two things remain **unexplained** and are not claimed here: why NCCL's default gating yields
 `isAllDirectP2p 0` for groups with ≥ 2 socket-1 GPUs but `1` for 2-GPU groups at the same `SYS`
@@ -131,16 +156,75 @@ this node.
 
 ---
 
-## Table 2: socket cases, `NCCL_P2P_LEVEL=SYS` (job 335386 — PENDING)
+## Table 2: socket cases, `NCCL_P2P_LEVEL=SYS` (job 335386 — cancelled part-way)
 
-2 GPU socket 0 / 4 GPU socket 0 / 4 GPU socket 1 / 2 GPU cross-socket, all 10 collectives.
-This table settles two open questions: whether 4-GPU sendrecv exceeds 13.0 GB/s with the
-workaround, and whether 4-GPU `scatter` reproduces the 0.94 GB/s anomaly against its 50.6
-pre-firmware baseline.
+Job 335386 was cancelled at 18:18 by request, after completing `2gpu-socket0` and
+`4gpu-socket0` in full and two collectives of `4gpu-socket1`. `2gpu-crosssocket` was never run.
+The completed cases are valid (`#wrong = 0`) and are reported here; `hypercube` fails validation
+as usual (nccl-tests 2.18.3 bug).
 
-## Table 3: 28-pair matrix, `NCCL_P2P_LEVEL=SYS` (job 335387 — PENDING)
+busbw (GB/s), converged 16 GB, `NCCL_P2P_LEVEL=SYS`. Pre-firmware column is `a0008`, 4 GPU
+socket 0, at NCCL defaults (`results_rtx6000.md` Table 2) — the like-for-like configuration.
 
-## Table 4: GPU-count sweep 2→8, `NCCL_P2P_LEVEL=SYS` (job 335388 — PENDING)
+| Benchmark | 2 GPU sock0 | 4 GPU sock0 | 4 GPU sock1 | pre-fw 4 GPU sock0 | 4-GPU change |
+|---|---:|---:|---:|---:|---|
+| sendrecv | 36.95 | **37.07** | 36.77 | 13.0 | **+185%** |
+| reduce | 44.22 | 42.60 | 42.52 | 13.2 | **+223%** |
+| broadcast | 44.93 | 43.20 | *cancelled* | 17.6 | **+145%** |
+| gather | 48.74 | 44.66 | — | 39.2 | +14% |
+| scatter | 48.64 | **1.85** | — | 50.6 | **−96%** |
+| reduce_scatter | 24.98 | 33.93 | — | 13.0 | **+161%** |
+| all_gather | 33.24 | 39.07 | — | 13.3 | **+194%** |
+| all_reduce | 35.76 | 39.82 | — | 13.1 | **+204%** |
+| alltoall | 37.71 | **2.38** | — | 13.4 | **−82%** |
+| hypercube | 36.09 | FAILED | — | FAILED | — |
+
+### The 13 GB/s "Infinity Fabric ceiling" was an artifact — confirmed
+
+**4-GPU socket-0 sendrecv reaches 37.07 GB/s with the workaround, against 13.0 GB/s at
+defaults on the identical configuration.** `results_rtx6000.md` attributes that 13.0 to
+"~13 GB/s — IF 4-die bidir saturation", i.e. a hardware limit of Infinity Fabric between NUMA
+dies. It is not: the same four GPUs on the same socket run 2.85× faster once NCCL is allowed to
+use P2P. Every collective that sat pinned near 13 GB/s in that table — reduce, reduce_scatter,
+all_gather, all_reduce — now runs at 34–43 GB/s.
+
+**`results_rtx6000.md` needs revising.** The "IF 4-die bidir saturation" ceiling in its Table 2
+is a NCCL default-P2P-level artifact, not hardware. That baseline was taken at defaults, so it
+measured the SHM fallback path rather than the fabric.
+
+Note this does *not* extend to the 8-GPU numbers in Table 1, where the ring collectives sit at
+13.5–13.7 GB/s **with** the workaround. Four GPUs reach 34–43 and eight fall back to ~13.6, a 3×
+drop from doubling the GPU count. That is a separate scaling question and is **not explained**.
+
+### `scatter` and `alltoall` are a real regression — confirmed like-for-like
+
+The Table 1 anomaly reproduces at 4 GPUs on socket 0, the exact configuration of the
+pre-firmware baseline:
+
+| | pre-firmware (a0008) | post-firmware (a0007), workaround |
+|---|---:|---:|
+| scatter | 50.6 | **1.85** (−96%) |
+| alltoall | 13.4 | **2.38** (−82%) |
+
+Both are healthy at 2 GPUs (48.64 / 37.71) and collapse at 4. `gather` — scatter's mirror — is
+fine at 44.66. This is **not** fixed by `NCCL_P2P_LEVEL=SYS` and is a second, independent fault.
+Unlike the socket-1 collapse, this one *does* have a valid pre-firmware comparison at matching
+GPU count, socket, and message size, so it is the strongest candidate for an actual firmware
+regression. Caveat: different physical nodes (a0008 vs a0007), so a same-node before/after is
+still absent.
+
+### Socket 1 is healthy with the workaround
+
+`4gpu-socket1` sendrecv 36.77 and reduce 42.52 match `4gpu-socket0` (37.07, 42.60) to within
+1%. With `NCCL_P2P_LEVEL=SYS` the socket-1 deficit disappears entirely — further confirmation
+that nothing is physically wrong with socket 1.
+
+## Table 3: 28-pair matrix (job 335387 — CANCELLED, never ran)
+
+## Table 4: GPU-count sweep 2→8 (job 335388 — CANCELLED, never ran)
+
+Both were cancelled before starting. Table 4 in particular would have addressed the unexplained
+4→8 GPU drop noted above; re-running `a0007-sweep.sh` is the way to get it.
 
 ---
 
@@ -173,11 +257,17 @@ running the same tests on an a-node that has *not* been updated.
 
 ## Open
 
-- [ ] Tables 2–4 (jobs 335386, 335387, 335388).
-- [ ] **Diagnose `scatter` 0.94 and `alltoall` 1.01 GB/s** — undiagnosed second fault, not
-      fixed by the workaround, against 50.6 / 13.4 pre-firmware baselines.
-- [ ] Confirm whether 4-GPU sendrecv exceeds 13.0 GB/s with the workaround; if so, revise the
-      IF-saturation reading of the sendrecv rows in `results_rtx6000.md`.
+- [x] Confirm whether 4-GPU sendrecv exceeds 13.0 GB/s with the workaround — **yes, 37.07**.
+- [x] Confirm whether the `scatter` anomaly reproduces at 4 GPUs — **yes, 1.85 vs 50.6**.
+- [ ] **Revise `results_rtx6000.md`**: its Table 2 "IF 4-die bidir saturation ~13 GB/s" ceiling
+      is a NCCL default-P2P-level artifact, not hardware. Affects every ~13 GB/s row there.
+- [ ] **Diagnose `scatter` and `alltoall`** — 4-GPU socket-0: 1.85 vs 50.6 and 2.38 vs 13.4
+      pre-firmware. Healthy at 2 GPUs. Not fixed by the workaround. Strongest firmware-regression
+      candidate; needs a same-node before/after to be conclusive.
+- [ ] **Explain the 4→8 GPU drop with the workaround**: ring collectives 34–43 GB/s at 4 GPUs,
+      13.5–13.7 at 8. Re-run `a0007-sweep.sh` (was job 335388, cancelled).
+- [ ] Re-run the cancelled work: `a0007-socket.sh` (`4gpu-socket1` tail, `2gpu-crosssocket`),
+      `a0007-pair-matrix.sh`, `a0007-sweep.sh`.
 - [ ] Run the socket-composition test on a **non-updated a-node** to settle attribution.
 - [ ] `NCCL_DEBUG=INFO` P2P graph at 8 GPUs — test the PCIe-domain hypothesis in
       `diag_a0007_socket1.md`.
