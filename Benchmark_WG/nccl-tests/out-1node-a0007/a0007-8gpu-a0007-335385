@@ -292,3 +292,55 @@ a0007
    268435456       8388608     float    none      -1   230492    1.16    1.02       0   228998    1.17    1.03    N/A
   1073741824      33554432     float    none      -1   921036    1.17    1.02       0   915997    1.17    1.03    N/A
   4294967296     134217728     float    none      -1  3695314    1.16    1.02       0  3667623    1.17    1.02    N/A
+ 17179869184     536870912     float    none      -1  1.5e+07    1.15    1.01       0  1.5e+07    1.15    1.01    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 0.96533 
+#
+# Collective test concluded: alltoall_perf
+#
+
+%%%%%%%%% hypercube_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: hypercube_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 886695 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 886695 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 886695 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 886695 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  4 Group  0 Pid 886695 on      a0007 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  5 Group  0 Pid 886695 on      a0007 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  6 Group  0 Pid 886695 on      a0007 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  7 Group  0 Pid 886695 on      a0007 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         32768     float              -1   274.40    3.34    3.34  816256   282.48    3.25    3.25  816512
+     4194304        131072     float              -1  1180.97    3.11    3.11  1.94675e+06  1200.31    3.06    3.06  2.00198e+06
+    16777216        524288     float              -1  9068.36    1.62    1.62  6.50272e+06  9167.93    1.60    1.60  6.43718e+06
+    67108864       2097152     float              -1  21781.9    2.70    2.70  1.46592e+07  21596.1    2.72    2.72  1.6363e+07
+   268435456       8388608     float              -1  85293.0    2.75    2.75  4.06873e+07  84087.1    2.79    2.79  4.31327e+07
+  1073741824      33554432     float              -1   329552    2.85    2.85  1.43359e+08   329937    2.85    2.85  1.30424e+08
+  4294967296     134217728     float              -1  1321184    2.84    2.84  7.83075e+08  1322146    2.84    2.84  6.13265e+08
+ 17179869184     536870912     float              -1  5347553    2.81    2.81  3.23148e+09  5346725    2.81    2.81  3.03594e+09
+# Out of bounds values : 16 FAILED
+# Avg bus bandwidth    : 2.74668 
+#
+# Collective test concluded: hypercube_perf
+#
+
+ .. a0007 pid 886695: Test failure common.cu:1218
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun detected that one or more processes exited with non-zero status, thus causing
+the job to be terminated. The first process to do so was:
+
+  Process name: [[50913,1],0]
+  Exit code:    7
+--------------------------------------------------------------------------
+%%%%%%%%% DONE 335385 %%%%%%%%%%
