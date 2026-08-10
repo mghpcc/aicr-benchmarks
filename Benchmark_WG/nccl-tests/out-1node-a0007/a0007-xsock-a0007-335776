@@ -1,0 +1,141 @@
+==============================================================
+JOBID    = 335776
+JOBNAME  = a0007-xsock
+NODE     = a0007
+DATE     = 2026-08-10T18:24:23-04:00
+BUILD    = ../build-nvhpc-26.3
+==============================================================
+a0007
+################ CASE=4gpu-2plus2 DEVICES=0,1,4,5 NGPUS=4 ################
+%%%%%%%%% CASE=4gpu-2plus2 sendrecv_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: sendrecv_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 888732 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 888732 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 888732 on      a0007 device  2 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 888732 on      a0007 device  3 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1    66.86   15.68   15.68       0    58.71   17.86   17.86    N/A
+     4194304       1048576     float     sum      -1   228.59   18.35   18.35       0   217.49   19.29   19.29    N/A
+    16777216       4194304     float     sum      -1   496.39   33.80   33.80       0   480.03   34.95   34.95    N/A
+    67108864      16777216     float     sum      -1  1894.62   35.42   35.42       0  1867.39   35.94   35.94    N/A
+   268435456      67108864     float     sum      -1  7599.89   35.32   35.32       0  7434.21   36.11   36.11    N/A
+  1073741824     268435456     float     sum      -1  30262.4   35.48   35.48       0  29813.6   36.02   36.02    N/A
+  4294967296    1073741824     float     sum      -1   122177   35.15   35.15       0   121509   35.35   35.35    N/A
+ 17179869184    4294967296     float     sum      -1   523712   32.80   32.80       0   525320   32.70   32.70    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 30.6385 
+#
+# Collective test concluded: sendrecv_perf
+#
+
+%%%%%%%%% CASE=4gpu-2plus2 reduce_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: reduce_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 888793 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 888793 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 888793 on      a0007 device  2 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 888793 on      a0007 device  3 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum       0    55.19   19.00   19.00       0    55.62   18.85   18.85       0
+     4194304       1048576     float     sum       0   219.58   19.10   19.10       0   218.36   19.21   19.21       0
+    16777216       4194304     float     sum       0   871.64   19.25   19.25       0   870.77   19.27   19.27       0
+    67108864      16777216     float     sum       0  3383.05   19.84   19.84       0  3401.28   19.73   19.73       0
+   268435456      67108864     float     sum       0  13301.2   20.18   20.18       0  13261.4   20.24   20.24       0
+  1073741824     268435456     float     sum       0  53059.5   20.24   20.24       0  53044.4   20.24   20.24       0
+  4294967296    1073741824     float     sum       0   212273   20.23   20.23       0   212219   20.24   20.24       0
+ 17179869184    4294967296     float     sum       0   854109   20.11   20.11       0   853357   20.13   20.13       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 19.7415 
+#
+# Collective test concluded: reduce_perf
+#
+
+%%%%%%%%% CASE=4gpu-2plus2 broadcast_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: broadcast_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 888855 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 888855 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 888855 on      a0007 device  2 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 888855 on      a0007 device  3 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float    none       0    56.39   18.59   18.59       0    57.13   18.36   18.36       0
+     4194304       1048576     float    none       0   219.20   19.13   19.13       0   219.75   19.09   19.09       0
+    16777216       4194304     float    none       0   878.67   19.09   19.09       0   867.59   19.34   19.34       0
+    67108864      16777216     float    none       0  3466.27   19.36   19.36       0  3453.87   19.43   19.43       0
+   268435456      67108864     float    none       0  13710.0   19.58   19.58       0  13753.5   19.52   19.52       0
+  1073741824     268435456     float    none       0  54556.0   19.68   19.68       0  54653.9   19.65   19.65       0
+  4294967296    1073741824     float    none       0   217493   19.75   19.75       0   218079   19.69   19.69       0
+ 17179869184    4294967296     float    none       0   871610   19.71   19.71       0   874466   19.65   19.65       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 19.351 
+#
+# Collective test concluded: broadcast_perf
+#
+
+%%%%%%%%% CASE=4gpu-2plus2 gather_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 888920 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 888920 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 888920 on      a0007 device  2 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 888920 on      a0007 device  3 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         65536     float    none       0    24.89   42.12   31.59       0    19.50   53.77   40.33       0
+     4194304        262144     float    none       0    63.00   66.57   49.93       0    63.10   66.47   49.85       0
+    16777216       1048576     float    none       0   244.96   68.49   51.37       0   247.39   67.82   50.86       0
+    67108864       4194304     float    none       0  1181.54   56.80   42.60       0  1180.31   56.86   42.64       0
+   268435456      16777216     float    none       0  4706.12   57.04   42.78       0  4708.96   57.01   42.75       0
+  1073741824      67108864     float    none       0  18742.8   57.29   42.97       0  18735.5   57.31   42.98       0
+  4294967296     268435456     float    none       0  74312.4   57.80   43.35       0  74252.4   57.84   43.38       0
+ 17179869184    1073741824     float    none       0   293130   58.61   43.96       0   293277   58.58   43.93       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 44.0801 
+#
+# Collective test concluded: gather_perf
+#
+
+%%%%%%%%% CASE=4gpu-2plus2 scatter_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 888988 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 888988 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 888988 on      a0007 device  2 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 888988 on      a0007 device  3 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         65536     float    none       0   679.71    1.54    1.16       0   652.61    1.61    1.21       0
+     4194304        262144     float    none       0  2609.91    1.61    1.21       0  2575.84    1.63    1.22       0
+    16777216       1048576     float    none       0  10421.8    1.61    1.21       0  10334.5    1.62    1.22       0
+    67108864       4194304     float    none       0  41692.5    1.61    1.21       0  43059.4    1.56    1.17       0
+   268435456      16777216     float    none       0   173865    1.54    1.16       0   174715    1.54    1.15       0
+  1073741824      67108864     float    none       0   686585    1.56    1.17       0   689423    1.56    1.17       0
