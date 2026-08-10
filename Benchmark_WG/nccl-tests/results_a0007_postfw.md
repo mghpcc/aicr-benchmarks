@@ -1,8 +1,14 @@
 # a0007 NCCL Results — after the PCIe firmware update (2026-08-10)
 
-**Status:** Tables 1–3 are complete. Job 335776 (`a0007-crosssocket.sh`) is running to explain
-the 4→8 GPU drop analysed under Table 3; its results will be appended here automatically when it
-finishes. The pair-matrix and full sweep jobs were cancelled by request and never ran.
+**Status:** Tables 1–3 are complete. Two jobs are running and will be folded in automatically:
+335776 (`a0007-crosssocket.sh`, explains the 4→8 GPU drop under Table 3) and 335844
+(`a0007-defaults-control.sh`, the missing NCCL-defaults control needed before anything can be
+attributed to the firmware). The pair-matrix and full sweep jobs were cancelled by request.
+
+> **Attribution warning.** Comparisons against the `a0008` pre-firmware baseline change three
+> variables at once — node, firmware, and NCCL setting. Where the confound has been resolved
+> (`sendrecv`) the answer is that **the NCCL setting, not the firmware, accounts for the
+> change**. Elsewhere no firmware attribution in this file is yet supported.
 
 **Every benchmark result in this file is measured with `NCCL_P2P_LEVEL=SYS`.** That setting is
 mandatory on this node — see the headline below. Default-settings numbers appear only in the
@@ -30,7 +36,7 @@ Converged values taken at 16 GB, best of out-of-place / in-place — the same co
 **`export NCCL_P2P_LEVEL=SYS` is required for any multi-GPU NCCL work on this node.**
 Without it, throughput collapses by nearly three orders of magnitude.
 
-| 8-GPU sendrecv, converged 16 GB | busbw (GB/s) |
+| 8-GPU sendrecv | busbw @ 16 GB converged, 20 iters (GB/s) |
 |---|---:|
 | NCCL defaults | **0.04** |
 | **`NCCL_P2P_LEVEL=SYS`** | **35.43** |
@@ -47,9 +53,9 @@ degraded.
 Seven NCCL settings tested at 8 GPUs. **`NCCL_P2P_LEVEL=SYS` is the only one that recovers
 anything** — every other knob leaves the node within a factor of ~2 of the 0.04 GB/s floor:
 
-| 8-GPU knob | busbw (GB/s) | verdict |
+| 8-GPU knob | busbw @ 16 MiB, 5 iters (GB/s) | verdict |
 |---|---:|---|
-| **`NCCL_P2P_LEVEL=SYS`** | **32.66** | **fixes it — 800×** |
+| **`NCCL_P2P_LEVEL=SYS`** | **32.66** *(35.43 converged — see note)* | **fixes it — 800×** |
 | `NCCL_SHM_DISABLE=1` | 0.09 | no fix |
 | `NCCL_ALGO=Ring` | 0.04 | no fix |
 | `NCCL_MAX_NCHANNELS=1` | 0.04 | no fix |
@@ -58,8 +64,35 @@ anything** — every other knob leaves the node within a factor of ~2 of the 0.0
 | `NCCL_P2P_LEVEL=0` | 0.04 | no fix |
 | *(defaults, for reference)* | 0.04 | — |
 
-`sendrecv` busbw at 16 MiB, 5 iters; default environment apart from the single knob named. The
-16 MiB size is why `SYS` reads 32.66 here and 35.43 in the converged 16 GB table above.
+All eight rows are measured identically at 16 MiB / 5 iters, so they are directly comparable to
+each other. They are **not** comparable to the converged 16 GB figures elsewhere in this file —
+that is why this column carries its measurement conditions in the header. The broken cases
+cannot be run at 16 GB at all: at 0.04 GB/s a single 16 GB iteration takes ~7 minutes.
+Environment is NCCL default apart from the single knob named in each row.
+
+**Why `SYS` reads 32.66 here but 35.43 in the converged table above.** Both are 8-GPU `sendrecv`
+with the same workaround; they differ only in measurement conditions, and the gap is measurement
+noise plus a small size effect — not different behaviour:
+
+| | knob sweep (job 335364) | converged run (job 335385) |
+|---|---|---|
+| message size | 16 MiB | 16 GiB (1024× larger) |
+| iterations | 5 | 20 |
+| purpose | fast triage, many cases | the actual benchmark |
+| result | 32.66 | 35.43 |
+
+The converged job swept sizes, so it measured its own 16 MiB point — **34.41 GB/s**, against
+35.43 at 16 GB. Message size therefore explains only ~3% of the difference; `sendrecv` has
+already reached the knee of its bandwidth curve by 16 MiB:
+
+| message | 1 MiB | 4 MiB | 16 MiB | 64 MiB | 1 GiB | 16 GiB |
+|---|---:|---:|---:|---:|---:|---:|
+| busbw | 15.63 | 18.16 | 34.41 | 35.13 | 35.58 | 35.43 |
+
+The remaining ~5% (32.66 vs 34.41 at the same size) is run-to-run variance from the diagnostic's
+5 iterations versus the benchmark's 20, and its shorter warm-up ramp. **Treat 35.43 as the
+node's figure**; the 32.66 exists only to be compared against the other knobs in the table above,
+all measured identically.
 
 Note the two most informative negatives: `NCCL_P2P_DISABLE=1` and `NCCL_P2P_LEVEL=0` — both
 *restrict* P2P, and both land exactly on the 0.04 floor, matching the default. That is the clue
@@ -120,7 +153,9 @@ Converged 16 GB, `NCCL_P2P_LEVEL=SYS`. `sendrecv` has a busbw multiplier of 1, s
 | 4 GPU, one socket | 4 | 0,1,2,3 | 1 | 37.07 | **37.07** | 59% | GPU PCIe DMA bidir budget |
 | 8 GPU, two sockets | 8 | 0–7 | 2 | 35.43 | **35.43** | 56% | same, −4% for socket crossing |
 
-Pre-firmware reference (defaults, i.e. the SHM fallback path): 2 GPU 37.4, 4 GPU 13.0.
+For reference, at NCCL **defaults**: a0007 itself gives 12.98 at 4 GPUs (job 335360) and a0008
+gave 13.0 before the firmware update. Both are the SHM fallback path, and they agree — so the
+step to 37.07 is the NCCL setting, not the firmware. See the attribution section.
 
 ### Why `sendrecv` is flat across GPU count
 
@@ -143,10 +178,16 @@ measures 36.6 GB/s in isolation, so one or two such hops cost little.
 
 ## Table 2: all collectives — 4 GPUs, one socket (`0,1,2,3`)
 
-Converged 16 GB, `NCCL_P2P_LEVEL=SYS`, job 335386. Pre-firmware column is `a0008`, same
-configuration, at NCCL defaults (`results_rtx6000.md` Table 2).
+Converged 16 GB, `NCCL_P2P_LEVEL=SYS`, job 335386. Pre-firmware column is `a0008`, same GPU
+count and socket, at NCCL defaults (`results_rtx6000.md` Table 2).
 
-| Benchmark | algbw | busbw (GB/s) | % of 63 | pre-fw busbw | change | Traffic pattern / ceiling |
+> **Read the `pre-fw` and `change` columns with care.** They compare a different node, a
+> different firmware *and* a different NCCL setting simultaneously. For `sendrecv` the confound
+> is resolved — a0007 at defaults gives 12.98, i.e. the whole gain is the NCCL setting, not the
+> firmware (see the firmware section below). For the other rows it is **not** resolved; job
+> 335844 supplies the missing a0007-at-defaults control.
+
+| Benchmark | algbw | busbw (GB/s) | % of 63 | a0008 old-fw, defaults | difference (confounded) | Traffic pattern / ceiling |
 |---|---:|---:|---:|---:|---|---|
 | sendrecv | 37.07 | 37.07 | 59% | 13.0 | +185% | bidirectional — DMA bidir budget |
 | reduce | 42.60 | 42.60 | 68% | 13.2 | +223% | tree, mostly one-way per link |
@@ -235,74 +276,146 @@ count/scaling one. Results will be added to this file when the job completes.
 
 ## The 13 GB/s "Infinity Fabric ceiling" in `results_rtx6000.md` is an artifact
 
-Table 2's pre-firmware column is the direct evidence. `results_rtx6000.md` Table 2 explains its
-~13 GB/s rows as "IF 4-die bidir saturation" — a hardware limit of Infinity Fabric between NUMA
-dies. On the identical configuration (4 GPUs, one socket, converged 16 GB) with P2P enabled:
+`results_rtx6000.md` Table 2 explains its ~13 GB/s rows as "IF 4-die bidir saturation" — a
+hardware limit of Infinity Fabric between NUMA dies. It is not a hardware limit.
 
-| | pre-fw, defaults | post-fw, `P2P_LEVEL=SYS` |
+**The clean, single-variable evidence is `sendrecv`.** Same node, same day, same 4 GPUs on
+socket 0, converged 16 GB — only `NCCL_P2P_LEVEL` differs:
+
+| a0007, 4 GPU socket 0 | defaults | `NCCL_P2P_LEVEL=SYS` |
 |---|---:|---:|
-| sendrecv | 13.0 | 37.07 |
-| reduce | 13.2 | 42.60 |
-| reduce_scatter | 13.0 | 33.93 |
-| all_gather | 13.3 | 39.07 |
-| all_reduce | 13.1 | 39.82 |
+| sendrecv | **12.98** | **37.07** |
 
-Every row that sat at ~13 now runs 2.6–3.2× faster. A hardware fabric ceiling does not lift
-because an environment variable changed. **That baseline was measuring NCCL's SHM fallback, not
-Infinity Fabric** — the same fallback documented in the headline section. `results_rtx6000.md`
-needs revising for every ~13 GB/s row in its RTX6000 tables.
+A hardware fabric ceiling does not lift 2.9× because an environment variable changed. That 13
+GB/s was NCCL's SHM fallback being measured, not Infinity Fabric.
 
-Note the number 13 appears again in Table 3 at 8 GPUs *with* P2P enabled. That is a genuine
-measurement of something real, and the coincidence with the old artifact value is exactly that —
-a coincidence. The two must not be conflated.
+**The other collectives point the same way but are not yet controlled.** These compare a0008 at
+defaults against a0007 with the workaround, so node and firmware vary too:
 
-## `scatter` and `alltoall`: a real regression, confirmed like-for-like
+| | a0008 old-fw, defaults | a0007, `P2P_LEVEL=SYS` | controlled? |
+|---|---:|---:|---|
+| sendrecv | 13.0 | 37.07 | **yes** — a0007 defaults = 12.98 |
+| reduce | 13.2 | 42.60 | no — job 335844 pending |
+| reduce_scatter | 13.0 | 33.93 | no — job 335844 pending |
+| all_gather | 13.3 | 39.07 | no — job 335844 pending |
+| all_reduce | 13.1 | 39.82 | no — job 335844 pending |
 
-| | pre-firmware (a0008) | post-firmware (a0007), workaround |
+Given that all five sat at the same ~13 GB/s and that `sendrecv` is proven to be the SHM
+fallback, the same explanation very likely covers the rest — but job 335844 is what will
+establish it. **The conclusion is safe for `sendrecv` today and provisional for the others.**
+
+A caution on the number itself: 13 appears again in Table 3 at 8 GPUs *with* P2P enabled, where
+it is a genuine measurement of something real. The coincidence with this artifact value is
+exactly that — a coincidence. The two must not be conflated.
+
+## `scatter` and `alltoall`: anomalous, cause NOT established
+
+| 4 GPU, socket 0 | a0008 pre-fw, **defaults** | a0007 post-fw, **`P2P_LEVEL=SYS`** |
 |---|---:|---:|
-| scatter | 50.6 | **1.85** (−96%) |
-| alltoall | 13.4 | **2.38** (−82%) |
+| scatter | 50.6 | **1.85** |
+| alltoall | 13.4 | **2.38** |
 
-Both are healthy at 2 GPUs (48.64 and 37.71) and collapse from 4 GPUs upward. `NCCL_P2P_LEVEL=SYS`
-does not help, so this is independent of the socket-1 collapse. Unlike that collapse, this one has
-a valid pre-firmware comparison at matching GPU count, socket, and message size, making it the
-strongest candidate for an actual firmware regression.
+Earlier revisions of this file called this a firmware regression "confirmed like-for-like".
+**That was wrong and is withdrawn.** The two columns differ in node, firmware *and* NCCL
+setting — the same confound described in the next section. Since `NCCL_P2P_LEVEL=SYS` is known
+to change `sendrecv` by 2.9×, it could equally be depressing `scatter` and `alltoall` by forcing
+P2P onto patterns better served by another transport.
 
-**It is not diagnosed.** The `gather`/`scatter` asymmetry — 44.66 versus 1.85 on the same links
-with the same root — rules out a bandwidth explanation, but nothing yet identifies the cause.
-Caveat: a0008 and a0007 are different physical nodes, so a same-node before/after is still absent.
+What is solid, independent of the confound:
 
-## What the firmware update did change
+- The numbers are real and reproducible: `scatter` 1.85 at 4 GPUs and 0.94 at 8 GPUs.
+- They are **not** a bandwidth ceiling. `gather` is `scatter`'s exact mirror — same root, same
+  message sizes, opposite direction — and runs 44.66 on the same links. A **24× asymmetry**
+  between two mirrored collectives has no topology explanation.
+- Both are healthy at 2 GPUs (`scatter` 48.64, `alltoall` 37.71) and collapse from 4 upward.
 
-| Config | post-firmware | pre-firmware baseline |
+What is **not** established: whether the cause is the firmware, the node, or
+`NCCL_P2P_LEVEL=SYS` itself. Job 335844 measures a0007 `scatter`/`alltoall` at defaults and
+discriminates:
+
+| job 335844 result | conclusion |
+|---|---|
+| `scatter` ≈ 50 at defaults | `NCCL_P2P_LEVEL=SYS` causes the collapse — the workaround has a cost |
+| `scatter` ≈ 1.85 at defaults | the setting is innocent; firmware or node is implicated |
+
+That single number decides it. Until then, no cause should be quoted.
+
+## Attribution: is the change from `NCCL_P2P_LEVEL=SYS`, the firmware, or something else?
+
+> ### Verdict
+> **`NCCL_P2P_LEVEL=SYS`.** Everywhere the question has been settled with a controlled
+> measurement, the NCCL setting accounts for the change and the firmware accounts for none of it.
+> The firmware update has **no demonstrated effect on NCCL performance on this node**.
+> Rows where the control is still missing (everything except `sendrecv`) are marked as such and
+> should not be attributed to anything yet.
+
+**This section previously attributed large gains to the firmware update. That was wrong, and
+the claim is withdrawn.**
+
+The comparison being drawn was:
+
+| | node | firmware | NCCL setting |
+|---|---|---|---|
+| "pre-firmware" (`a0008`, `results_rtx6000.md`) | a0008 | old | **defaults** |
+| "post-firmware" (`a0007`, Tables 1–3) | a0007 | new | **`NCCL_P2P_LEVEL=SYS`** |
+
+**Three variables change at once** — node, firmware, and the NCCL P2P setting. No difference
+between those two columns can be attributed to the firmware, because the NCCL setting alone is
+known to move `sendrecv` by 2.9× on a single node. Calling `a0008` "the pre-firmware result" is
+accurate as a date label but misleading as a baseline, since it is also the *defaults* result
+and a *different physical node*.
+
+### The one place the confound is already resolved: `sendrecv`
+
+Measuring a0007 itself at NCCL defaults removes the setting and the node from the comparison:
+
+| 4 GPU, socket 0, sendrecv | NCCL defaults | `NCCL_P2P_LEVEL=SYS` |
 |---|---:|---:|
-| 2 GPU, socket 0 | 39.4 | 37.4 (a0001, converged 16 GB) |
-| 2 GPU, cross-socket (0,4) | 36.6 | — |
-| 4 GPU, socket 0 | 13.0 | 13.0 (a0008, converged 16 GB) |
+| **a0008** (pre-firmware) | 13.0 | not measurable — node since updated |
+| **a0007** (post-firmware) | **12.98** | **37.07** |
 
-The post-firmware values in this table are at 16 MiB / 5 iters and at NCCL defaults; the
-baselines are converged 16 GB. They are indicative, not strictly comparable — Tables 2–4 will
-replace them with converged, workaround-enabled numbers.
+Reading across the bottom row and down the first column:
 
-1. **Cross-socket 2-GPU (36.6) is essentially equal to same-socket (39.4–40.4), and all 12
-   pairs measured are uniform at ~39.5.** The prior RTX6000 record has cross-NUMA traffic
-   collapsing; that penalty is absent at the pair level here. This is the most promising
-   candidate for a genuine firmware improvement, pending the converged pair matrix.
-2. **4-GPU is unchanged at 13.0 GB/s at defaults.** The firmware did not lift that ceiling —
-   though as discussed above, with the workaround the sendrecv ceiling is no longer 13.0 at all.
+- **a0007 defaults (12.98) ≈ a0008 defaults (13.0).** At matched settings, the post-firmware
+  node performs the same as the pre-firmware one. **The firmware changed nothing measurable here.**
+- **a0007 defaults (12.98) → a0007 SYS (37.07) on the same node, same day.** The entire 2.9×
+  improvement comes from `NCCL_P2P_LEVEL=SYS`.
 
-**No pre-firmware 8-GPU reference exists.** The old 8-GPU run
-(`out-2socket/nvhpc-26.3-a0001-27180`) crashed at `common.cu:915` with the driver-580/IMEX error
-and produced no numbers. So neither the socket-1 collapse nor the scatter/alltoall anomaly can
-currently be attributed to the firmware update — both may predate it. Establishing that requires
-running the same tests on an a-node that has *not* been updated.
+**Answer: the change is from the NCCL setting, not the firmware.**
 
----
+### What is still unresolved
+
+The same confound applies to the `scatter` / `alltoall` regression claimed earlier, and there it
+is **not** yet resolved. Those comparisons were a0008-at-defaults versus a0007-with-`SYS`, and
+**no non-`sendrecv` collective has ever been measured on a0007 at defaults**. It is therefore
+entirely possible that `NCCL_P2P_LEVEL=SYS` *itself* degrades `scatter` and `alltoall` — forcing
+P2P where NCCL would otherwise have chosen a better transport for those patterns — and that the
+firmware is innocent. Until the control lands, the "firmware regression" reading of
+`scatter` 1.85 vs 50.6 and `alltoall` 2.38 vs 13.4 is **unsupported**.
+
+**Job 335844 (`a0007-defaults-control.sh`) is queued** and supplies exactly this: a0007, NCCL
+defaults, all 10 collectives, at 2 and 4 GPUs on socket 0 (configurations that do not trigger
+the socket-1 collapse, so they run at usable speed even at defaults). It completes the 2×2:
+
+| | NCCL defaults | `NCCL_P2P_LEVEL=SYS` |
+|---|---|---|
+| a0008, pre-firmware | have | impossible |
+| a0007, post-firmware | **job 335844** | have (job 335386) |
+
+Then `a0007 defaults vs a0007 SYS` isolates the setting, and `a0007 defaults vs a0008 defaults`
+isolates firmware + node. Results will be added here when the job finishes.
+
+### The residual confound that cannot be removed on this node
+
+Even with job 335844, `a0008` and `a0007` are **different physical machines**. Separating
+"firmware" from "node-to-node variation" needs either a same-node before/after (not available —
+a0007 was already updated) or a currently non-updated a-node measured at defaults. Any firmware
+attribution in this file should be read with that caveat.
 
 ## Open
 
 - [x] 4-GPU sendrecv with the workaround — **37.07**, vs 13.0 at defaults.
-- [x] `scatter` anomaly reproduces at 4 GPUs — **1.85** vs 50.6 pre-firmware.
+- [x] `scatter` anomaly reproduces at 4 GPUs — **1.85**; cause not yet attributable (job 335844).
 - [ ] **Job 335776 running**: `4gpu-2plus2` decides whether the Table 3 collapse to ~13.6 is
       caused by socket crossing or by GPU count. Also completes `4gpu-socket1` and
       `2gpu-crosssocket`.
