@@ -1,0 +1,37 @@
+==============================================================
+JOBID    = 335184
+JOBNAME  = a0007-8gpu
+NODE     = a0007
+DATE     = 2026-08-10T16:25:04-04:00
+BUILD    = ../build-nvhpc-26.3
+==============================================================
+num_mpi_tasks     = 1
+num_gpu_per_task  = 8
+CUDA_VISIBLE_DEVICES = 0,1,2,3,4,5,6,7
+a0007
+/apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/mpi/bin/mpirun
+/apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/compilers/bin/nvcc
+%%%%%%%%% sendrecv_perf %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: sendrecv_perf
+# nThread 1 nGpus 8 minBytes 1048576 maxBytes 17179869184 step: 4(factor) warmup iters: 1 iters: 20 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 880809 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 880809 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 880809 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 880809 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  4 Group  0 Pid 880809 on      a0007 device  4 [0001:04:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  5 Group  0 Pid 880809 on      a0007 device  5 [0001:44:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  6 Group  0 Pid 880809 on      a0007 device  6 [0001:8e:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  7 Group  0 Pid 880809 on      a0007 device  7 [0001:c8:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576        262144     float     sum      -1  24737.5    0.04    0.04       0  27640.5    0.04    0.04    N/A
+     4194304       1048576     float     sum      -1  98656.1    0.04    0.04       0   100252    0.04    0.04    N/A
+    16777216       4194304     float     sum      -1   416170    0.04    0.04       0   411482    0.04    0.04    N/A
+    67108864      16777216     float     sum      -1  1761277    0.04    0.04       0  1784189    0.04    0.04    N/A
+   268435456      67108864     float     sum      -1  7187472    0.04    0.04       0  7223708    0.04    0.04    N/A
+[2026-08-10T16:58:22.743] error: *** JOB 335184 ON a0007 CANCELLED AT 2026-08-10T16:58:22 DUE to SIGNAL Terminated ***
