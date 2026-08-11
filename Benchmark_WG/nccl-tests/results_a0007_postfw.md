@@ -1,19 +1,19 @@
 # a0007 NCCL Results — after the PCIe firmware update (2026-08-10)
 
-**Status:** Tables 1–3 are complete. Two jobs are running and will be folded in automatically:
-335776 (`a0007-crosssocket.sh`, explains the 4→8 GPU drop under Table 3) and 335844
-(`a0007-defaults-control.sh`, the missing NCCL-defaults control needed before anything can be
-attributed to the firmware). The pair-matrix and full sweep jobs were cancelled by request.
+**Status:** Tables 1–3 complete. Job **338765** (`a0007-missing-counts.sh`) is queued to fill
+GPU counts **1, 3, 5, 6, 7** with `NCCL_P2P_LEVEL=SYS`; counts 2, 4 and 8 are already measured
+and are not repeated. Job **338766** then regenerates the auto-generated section below. Both
+were submitted **without** the reservation, which expired 2026-08-11T11:00, so they queue on
+`rtx-batch` for a0007 normally.
 
-> **Attribution warning.** Comparisons against the `a0008` pre-firmware baseline change three
-> variables at once — node, firmware, and NCCL setting. Where the confound has been resolved
-> (`sendrecv`) the answer is that **the NCCL setting, not the firmware, accounts for the
-> change**. Elsewhere no firmware attribution in this file is yet supported.
+> **Attribution resolved (2026-08-11).** a0007 measured at NCCL defaults reproduces the a0008
+> "pre-firmware" baseline across every collective (scatter 50.76 vs 50.6, alltoall 13.30 vs 13.4,
+> gather 39.37 vs 39.2, sendrecv 13.09 vs 13.0). **The firmware update changed nothing
+> measurable.** Every difference previously attributed to it is the `NCCL_P2P_LEVEL` setting.
 
-**Every benchmark result in this file is measured with `NCCL_P2P_LEVEL=SYS`.** That setting is
-mandatory on this node — see the headline below. Default-settings numbers appear only in the
-headline section, where they document the fault; the full default-settings diagnostic record is
-in **`diag_a0007_socket1.md`**.
+**Unless a table says otherwise, results are measured with `NCCL_P2P_LEVEL=SYS`.** That setting
+is a trade-off, not a blanket recommendation — see the revised guidance in the headline. The
+default-settings diagnostic record is in **`diag_a0007_socket1.md`**.
 
 **Node:** a0007, reservation `shaohao_a0007` (2026-08-10T11:00 → 2026-08-11T11:00).
 **Hardware:** 8× NVIDIA RTX PRO 6000 Blackwell Server Edition, no NVLink, PCIe Gen5 x16 per GPU
@@ -33,20 +33,53 @@ Converged values taken at 16 GB, best of out-of-place / in-place — the same co
 
 ## Headline: the socket-1 multi-GPU collapse and its workaround
 
-**`export NCCL_P2P_LEVEL=SYS` is required for any multi-GPU NCCL work on this node.**
-Without it, throughput collapses by nearly three orders of magnitude.
+> ### ⚠ Recommendation revised 2026-08-11 — `NCCL_P2P_LEVEL=SYS` is a TRADE-OFF, not a free fix
+>
+> The NCCL-defaults control (job 335844) showed `scatter` runs at **50.76 GB/s at defaults** and
+> **1.85 with `SYS`**. The workaround does not just rescue collectives — it destroys two of them.
+> Earlier revisions of this file recommended setting it unconditionally. **That was wrong.**
 
-| 8-GPU sendrecv | busbw @ 16 GB converged, 20 iters (GB/s) |
-|---|---:|
-| NCCL defaults | **0.04** |
-| **`NCCL_P2P_LEVEL=SYS`** | **35.43** |
+**Without `NCCL_P2P_LEVEL=SYS`, any group with ≥ 3 GPUs and ≥ 2 on socket 1 collapses to
+0.04 GB/s.** With it, seven collectives get ~3× faster and two collapse. Same node, 4 GPUs on
+socket 0, converged 16 GB — only the setting differs:
 
-That is an **885× difference**, and the workaround's results validate clean (`#wrong = 0`).
+| Collective | NCCL defaults | `NCCL_P2P_LEVEL=SYS` | effect |
+|---|---:|---:|---|
+| sendrecv | 13.09 | **37.07** | +183% |
+| reduce | 13.19 | **42.60** | +223% |
+| broadcast | 17.29 | **43.20** | +150% |
+| reduce_scatter | 12.91 | **33.93** | +163% |
+| all_gather | 13.29 | **39.07** | +194% |
+| all_reduce | 13.17 | **39.82** | +202% |
+| gather | 39.37 | **44.66** | +13% |
+| **scatter** | **50.76** | **1.85** | **−96%** |
+| **alltoall** | **13.30** | **2.38** | **−82%** |
 
-The fault triggers whenever a group has **≥ 3 GPUs total and ≥ 2 GPUs on socket 1**. Socket 0
-scales cleanly to 4 GPUs at defaults (13.0 GB/s); socket 1 collapses at 3 (0.06 GB/s). All 28
-GPU pairs are individually healthy at ~39.5 GB/s, so no single GPU, link, or switch port is
-degraded.
+### Which setting to use
+
+| Workload | Setting | Why |
+|---|---|---|
+| Data-parallel / tensor-parallel (all_reduce, all_gather, reduce_scatter, sendrecv) | **`NCCL_P2P_LEVEL=SYS`** | 2.6–3.2× faster; scatter/alltoall not on the critical path |
+| MoE / expert routing (alltoall-heavy), or scatter-heavy | **NCCL defaults** — but only up to 4 GPUs *within one socket* | `SYS` costs 82–96% on exactly the collectives that matter |
+| Anything using ≥ 3 GPUs with ≥ 2 on socket 1, including all 8-GPU jobs | **`NCCL_P2P_LEVEL=SYS` — mandatory** | defaults collapse to 0.04 GB/s, which is unusable |
+
+**The unavoidable conclusion for 8-GPU jobs: there is no good setting.** Defaults give
+0.04 GB/s across the board; `SYS` gives healthy ring collectives but `alltoall` at 1.01 and
+`scatter` at 0.94. An 8-GPU MoE workload has no usable configuration on this node today. That is
+the single most important thing for the admin in this file.
+
+### Why the trade-off is binary
+
+Every GPU pair here is `SYS` distance, so the P2P level is effectively an on/off switch: `SYS`
+enables direct P2P for all pairs, and anything stricter enables it for none. The knob sweep
+confirms this — `NCCL_P2P_LEVEL=PHB` (49.90) and `NCCL_P2P_DISABLE=1` (50.32) both restore
+`scatter`, because both simply turn P2P off. There is no intermediate setting that keeps the
+ring-collective gain while avoiding the scatter loss.
+
+So the two faults have opposite fixes:
+
+- **Socket-1 collapse** (0.04 GB/s) — needs P2P **on**.
+- **scatter / alltoall collapse** — needs P2P **off**.
 
 ### What fixes it, and what does not
 
@@ -266,11 +299,32 @@ differently, or the inter-socket limit is not the whole story. **This is a hypot
 conclusion.** `gather` surviving is easier: it is root-anchored, so its bottleneck is the single
 root's inbound link, not any ring.
 
-**The discriminating experiment is running now** (job 335776, `a0007-crosssocket.sh`): case
-`4gpu-2plus2` uses GPUs `0,1,4,5` — only **four** GPUs, but the same **two** socket crossings as
-the 8-GPU ring. If its ring collectives land near 13.6, socket crossing is confirmed as the cause
-and GPU count is exonerated. If they stay at 34–43, the hypothesis is dead and the effect is a
-count/scaling one. Results will be added to this file when the job completes.
+**Discriminating experiment — RESULT (job 335776, case `4gpu-2plus2` = GPUs `0,1,4,5`).**
+Four GPUs, but two socket crossings, the same as the 8-GPU ring:
+
+| Collective | 4 GPU, one socket | **4 GPU, 2+2 across sockets** | 8 GPU, two sockets |
+|---|---:|---:|---:|
+| reduce | 42.60 | **20.13** | 13.54 |
+| broadcast | 43.20 | **19.71** | 13.62 |
+| all_gather | 39.07 | **20.10** | 13.66 |
+| all_reduce | 39.82 | **19.69** | 13.61 |
+| reduce_scatter | 33.93 | **21.04** | 13.53 |
+| sendrecv | 37.07 | 32.80 | 35.43 |
+| gather | 44.66 | 43.96 | 41.79 |
+
+**Socket crossing is confirmed as the dominant cause.** Holding GPU count fixed at 4 and merely
+moving two of them to the other socket halves every ring/tree collective — 42.60 → 20.13 for
+`reduce`, and the same ~2× for the other four. GPU count is *not* the trigger.
+
+But it is not the whole story either: 8 GPUs fall further, from ~20 to ~13.6, at the same two
+crossings. So there are two separate penalties — a ~2× cost for crossing the inter-socket fabric
+at all, and a further ~1.5× for scaling the ring across it. A pure "fixed aggregate inter-socket
+budget shared by two links" model predicts the 2+2 and 8-GPU cases should match; they do not, so
+that simple model is **wrong** and the residual scaling term is unexplained.
+
+The two survivors behave exactly as their traffic patterns predict: `gather` is root-anchored and
+barely moves (44.66 → 43.96 → 41.79), and `sendrecv` is a single pairwise exchange bounded by
+each GPU's own DMA engine rather than by any ring, so it stays in the low-to-mid 30s throughout.
 
 ---
 
@@ -412,6 +466,65 @@ Even with job 335844, `a0008` and `a0007` are **different physical machines**. S
 a0007 was already updated) or a currently non-updated a-node measured at defaults. Any firmware
 attribution in this file should be read with that caveat.
 
+## For the admin: suggested reconfiguration
+
+Ordered by impact. Items 1–2 are actionable now; 3–5 are checks or open investigations.
+
+### 1. Set `NCCL_P2P_LEVEL=SYS` site-wide on the RTX6000 (a-) nodes — highest impact
+
+Without it, any NCCL job using ≥ 3 GPUs with ≥ 2 on socket 1 silently runs at **0.04 GB/s**
+instead of ~35 — an 885× penalty, with correct results and no error message. A user would
+experience this as "my training job is inexplicably slow", not as a failure. An 8-GPU job that
+should take an hour would take a month.
+
+Suggested: export it from the site NCCL/CUDA module file, or `/etc/profile.d`, for a-nodes.
+Root cause is NCCL's own P2P distance gating (`isAllDirectP2p 0` while CUDA reports
+`isAllCudaP2p 1`), so this is a configuration fix, not a hardware one.
+
+### 2. Install / start `nvidia-imex.service`
+
+Absent on these nodes, which forces every NCCL job to set `NCCL_NVLS_ENABLE=0` or crash at
+`common.cu:915` with "unhandled cuda error". **Worth re-testing:** this node now runs driver
+**595.71.05** (built 2026-07-20), not the 580.105.08 that originally caused it — the requirement
+may already be gone.
+
+### 3. Verify IOMMU / PCIe ACS state
+
+AMD Turin IOMMU devices are present in `lspci`. Site notes record `iommu=off` having been set
+system-wide as an earlier fix; whether that survived the firmware update is unverified, because
+non-root `lspci -vvv` suppresses the `ACSCtl` capability blocks. Root check:
+`cat /proc/cmdline` and `lspci -vvv | grep -i acsctl`.
+Note this is unlikely to be the cause of item 1 — CUDA reports P2P as available between all
+pairs, which ACS blocking would normally prevent.
+
+### 4. `scatter` and `alltoall` run at ~1–2 GB/s — needs investigation
+
+In every multi-GPU configuration, while their structural mirror `gather` is healthy at 42–45:
+
+| | 4 GPU one socket | 4 GPU cross-socket | 8 GPU |
+|---|---:|---:|---:|
+| gather | 44.66 | 43.96 | 41.79 |
+| **scatter** | **1.85** | **1.16** | **0.94** |
+| **alltoall** | **2.38** | **1.47** | **1.01** |
+
+A 24–38× asymmetry between `gather` and `scatter` — same root, same message sizes, opposite
+direction — has no bandwidth or topology explanation. **Cause not yet established**: job 335844
+determines whether `NCCL_P2P_LEVEL=SYS` itself is responsible before this can be raised as a
+platform defect. Do not report it to a vendor until that returns.
+
+### 5. Record what actually changed, and when
+
+Attribution is currently impossible because **the driver changed too** — 580.105.08 (May) →
+595.71.05 (built 2026-07-20) — alongside the PCIe firmware. Neither can be separated from the
+other, nor from node-to-node variation, using a0007 alone. If a **non-updated a-node** still
+exists, measuring it at NCCL defaults would settle all outstanding attribution questions in this
+file. Knowing the exact firmware and driver versions before and after would help equally.
+
+### Not an admin issue
+
+`hypercube` fails validation (`#wrong` ≠ 0) in every configuration. This is a known nccl-tests
+2.18.3 bug, present on B200 nodes too, and unrelated to this hardware.
+
 ## Open
 
 - [x] 4-GPU sendrecv with the workaround — **37.07**, vs 13.0 at defaults.
@@ -439,3 +552,178 @@ attribution in this file should be read with that caveat.
 | `diag_a0007_socket1.md` | default-settings diagnostic record for the collapse |
 
 Extract any of these with `./extract_a0007.py <file>`.
+
+---
+
+<!-- AUTO-BEGIN: regenerated by a0007_autoreport.py -->
+
+## Auto-generated results (updated 2026-08-11 10:38)
+
+Regenerated by `a0007_autoreport.py`, run as a SLURM dependency job. Hand-written
+sections above are not modified by it.
+
+### Is `NCCL_P2P_LEVEL=SYS` responsible for the scatter/alltoall collapse?
+
+Both columns are a0007, 4 GPUs on socket 0, converged 16 GB. Only the setting differs.
+
+| Collective | NCCL defaults (job 335844) | `NCCL_P2P_LEVEL=SYS` (job 335386) |
+|---|---:|---:|
+| sendrecv | 13.09 | 37.07 |
+| gather | 39.37 | 44.66 |
+| scatter | 50.76 | 1.85 |
+| alltoall | 13.30 | 2.38 |
+| all_reduce | 13.17 | 39.82 |
+
+**Verdict: `NCCL_P2P_LEVEL=SYS` CAUSES the collapse.** `scatter` is healthy at
+50.76 GB/s with NCCL defaults and falls to 1.85 with the workaround. The
+workaround therefore has a real cost, and is not a free win: it rescues
+`sendrecv`/ring collectives by ~885x while destroying `scatter` and `alltoall`.
+Users whose workload is scatter- or alltoall-heavy (MoE, tensor-parallel
+all-to-all) should benchmark both settings rather than adopting `SYS` blindly.
+This is NOT a firmware defect and must not be reported as one.
+
+### Repeatability (3 consecutive runs, 4 GPU socket 0, busbw @256 MiB)
+
+| Collective | run 1 | run 2 | run 3 | spread |
+|---|---:|---:|---:|---:|
+| scatter | 1.85 | 1.86 | 1.92 | 3.6% |
+| alltoall | 2.28 | 2.28 | 2.27 | 0.4% |
+| gather | 43.68 | 43.52 | 43.68 | 0.4% |
+
+All within 3.6% — the scatter/alltoall figures are **reproducible**, not a
+transient or a one-off measurement artifact.
+
+### GPU-count threshold from the debug job (socket 0, busbw @256 MiB)
+
+| Collective | 2 GPU | 3 GPU | 4 GPU |
+|---|---:|---:|---:|
+| scatter | 46.49 | — | 1.89 |
+| alltoall | 39.62 | — | 2.27 |
+| gather | — | — | 43.59 |
+
+### Knob sweep on `scatter` / `alltoall` (4 GPU socket 0, busbw @256 MiB)
+
+| setting | collective | busbw (GB/s) |
+|---|---|---:|
+| `NCCL_BUFFSIZE=33554432` | alltoall | 2.01 |
+| `NCCL_MAX_NCHANNELS=1` | alltoall | 4.09 |
+| `NCCL_BUFFSIZE=33554432` | scatter | 1.87 |
+| `NCCL_BUFFSIZE=8388608` | scatter | 2.24 |
+| `NCCL_P2P_NET_CHUNKSIZE=1048576` | scatter | 1.82 |
+| `NCCL_MAX_NCHANNELS=1` | scatter | 4.01 |
+| `NCCL_MAX_NCHANNELS=4` | scatter | 1.84 |
+| `NCCL_MAX_NCHANNELS=8` | scatter | 1.87 |
+| `NCCL_P2P_DISABLE=1` | scatter | 50.32 |
+| `NCCL_P2P_LEVEL=PHB` | scatter | 49.90 |
+| `NCCL_PROTO=LL` | scatter | 1.87 |
+| `NCCL_PROTO=LL128` | scatter | 1.88 |
+| `NCCL_PROTO=Simple` | scatter | 1.84 |
+
+**`NCCL_P2P_DISABLE=1` restores scatter to 50.32 GB/s.**
+
+### GPU-count series 1–8, `NCCL_P2P_LEVEL=SYS` (converged 16 GB)
+
+| Collective | 1 GPU | 2 GPU | 3 GPU | 4 GPU | 5 GPU | 6 GPU | 7 GPU | 8 GPU |
+|---|---:|---:|---:|---:|---:|---:|---:|---:|
+| sendrecv | — | 36.95 | — | 37.07 | — | — | — | 35.43 |
+| reduce | — | 44.22 | — | 42.60 | — | — | — | 13.54 |
+| broadcast | — | 44.93 | — | 43.20 | — | — | — | 13.62 |
+| gather | — | 48.74 | — | 44.66 | — | — | — | 41.79 |
+| scatter | — | 48.64 | — | 1.85 | — | — | — | 0.94 |
+| reduce_scatter | — | 24.98 | — | 33.93 | — | — | — | 13.53 |
+| all_gather | — | 33.24 | — | 39.07 | — | — | — | 13.66 |
+| all_reduce | — | 35.76 | — | 39.82 | — | — | — | 13.61 |
+| alltoall | — | 37.71 | — | 2.38 | — | — | — | 1.01 |
+
+Counts still missing: 1, 3, 5, 6, 7 (job `a0007-counts` supplies 1, 3, 5, 6, 7).
+
+### All extracted measurements
+
+| file | case | collective | algbw | busbw | status |
+|---|---|---|---:|---:|---|
+| `a0007-8gpu-a0007-335184` | all | sendrecv | — | — | FAILED |
+| `a0007-8gpu-a0007-335385` | all | all_gather | 15.62 | 13.66 | ok |
+| `a0007-8gpu-a0007-335385` | all | all_reduce | 7.78 | 13.61 | ok |
+| `a0007-8gpu-a0007-335385` | all | alltoall | 1.15 | 1.01 | ok |
+| `a0007-8gpu-a0007-335385` | all | broadcast | 13.62 | 13.62 | ok |
+| `a0007-8gpu-a0007-335385` | all | gather | 47.76 | 41.79 | ok |
+| `a0007-8gpu-a0007-335385` | all | hypercube | 2.81 | 2.81 | WRONG=3.23148e+09 |
+| `a0007-8gpu-a0007-335385` | all | reduce | 13.54 | 13.54 | ok |
+| `a0007-8gpu-a0007-335385` | all | reduce_scatter | 15.47 | 13.53 | ok |
+| `a0007-8gpu-a0007-335385` | all | scatter | 1.07 | 0.94 | ok |
+| `a0007-8gpu-a0007-335385` | all | sendrecv | 35.43 | 35.43 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | all_gather | 66.60 | 33.30 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | all_reduce | 35.73 | 35.73 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | alltoall | 75.54 | 37.77 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | broadcast | 44.82 | 44.82 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | gather | 97.62 | 48.81 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | hypercube | 36.08 | 36.08 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | reduce | 44.22 | 44.22 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | reduce_scatter | 49.82 | 24.91 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | scatter | 97.19 | 48.59 | ok |
+| `a0007-defaults-a0007-335844` | 2gpu-socket0-DEFAULTS | sendrecv | 37.64 | 37.64 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | all_gather | 17.72 | 13.29 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | all_reduce | 8.78 | 13.17 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | alltoall | 17.73 | 13.30 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | broadcast | 17.29 | 17.29 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | gather | 52.49 | 39.37 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | hypercube | 10.66 | 10.66 | WRONG=1.79482e+06 |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | reduce | 13.19 | 13.19 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | reduce_scatter | 17.21 | 12.91 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | scatter | 67.68 | 50.76 | ok |
+| `a0007-defaults-a0007-335844` | 4gpu-socket0-DEFAULTS | sendrecv | 13.09 | 13.09 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | all_gather | 66.47 | 33.24 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | all_reduce | 35.76 | 35.76 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | alltoall | 75.42 | 37.71 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | broadcast | 44.93 | 44.93 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | gather | 97.47 | 48.74 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | hypercube | 36.09 | 36.09 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | reduce | 44.22 | 44.22 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | reduce_scatter | 49.96 | 24.98 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | scatter | 97.28 | 48.64 | ok |
+| `a0007-socket-a0007-335386` | 2gpu-socket0 | sendrecv | 36.95 | 36.95 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | all_gather | 52.09 | 39.07 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | all_reduce | 26.55 | 39.82 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | alltoall | 3.18 | 2.38 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | broadcast | 43.20 | 43.20 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | gather | 59.55 | 44.66 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | hypercube | 4.33 | 4.33 | WRONG=579712 |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | reduce | 42.60 | 42.60 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | reduce_scatter | 45.24 | 33.93 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | scatter | 2.46 | 1.85 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket0 | sendrecv | 37.07 | 37.07 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket1 | broadcast | — | — | FAILED |
+| `a0007-socket-a0007-335386` | 4gpu-socket1 | reduce | 42.52 | 42.52 | ok |
+| `a0007-socket-a0007-335386` | 4gpu-socket1 | sendrecv | 36.77 | 36.77 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | all_gather | 53.46 | 26.73 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | all_reduce | 29.44 | 29.44 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | alltoall | 73.33 | 36.66 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | broadcast | 32.55 | 32.55 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | gather | 70.62 | 35.31 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | hypercube | 35.77 | 35.77 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | reduce | 32.26 | 32.26 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | reduce_scatter | 45.21 | 22.61 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | scatter | 69.66 | 34.83 | ok |
+| `a0007-xsock-a0007-335776` | 2gpu-crosssocket | sendrecv | 36.38 | 36.38 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | all_gather | 26.80 | 20.10 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | all_reduce | 13.13 | 19.69 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | alltoall | 1.96 | 1.47 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | broadcast | 19.71 | 19.71 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | gather | 58.61 | 43.96 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | hypercube | 3.37 | 3.37 | WRONG=373024 |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | reduce | 20.13 | 20.13 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | reduce_scatter | 28.05 | 21.04 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | scatter | 1.54 | 1.16 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-2plus2 | sendrecv | 32.80 | 32.80 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | all_gather | 52.18 | 39.14 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | all_reduce | 26.71 | 40.06 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | alltoall | 3.21 | 2.41 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | broadcast | 43.34 | 43.34 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | gather | 59.63 | 44.72 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | hypercube | 4.29 | 4.29 | WRONG=701952 |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | reduce | 42.50 | 42.50 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | reduce_scatter | 45.70 | 34.27 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | scatter | 2.53 | 1.90 | ok |
+| `a0007-xsock-a0007-335776` | 4gpu-socket1 | sendrecv | 37.17 | 37.17 | ok |
+
+<!-- AUTO-END -->

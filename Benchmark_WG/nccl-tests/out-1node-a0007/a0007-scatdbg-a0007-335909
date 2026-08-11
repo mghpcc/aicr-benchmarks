@@ -1,0 +1,1662 @@
+==============================================================
+JOBID    = 335909
+JOBNAME  = a0007-scatdbg
+NODE     = a0007
+DATE     = 2026-08-10T19:34:53-04:00
+BUILD    = ../build-nvhpc-26.3
+==============================================================
+################ PART A: repeatability (3x, 4 GPU socket 0) ################
+%%%%%%%%% SCATDBG=rep1-scatter prog=scatter devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892245 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892245 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892245 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892245 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26779.5    2.51    1.88       0  27346.2    2.45    1.84       0
+   268435456      16777216     float    none       0   110239    2.44    1.83       0   108692    2.47    1.85       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.84964 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep1-alltoall prog=alltoall devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892315 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892315 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892315 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892315 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  24574.2    2.73    2.05       0  24833.8    2.70    2.03    N/A
+   268435456      16777216     float    none      -1  88374.6    3.04    2.28       0  88555.9    3.03    2.27    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.15661 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep1-gather prog=gather devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892382 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892382 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892382 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892382 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1149.00   58.41   43.80       0  1150.68   58.32   43.74       0
+   268435456      16777216     float    none       0  4611.56   58.21   43.66       0  4608.85   58.24   43.68       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 43.7212 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep2-scatter prog=scatter devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892449 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892449 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892449 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892449 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  25968.7    2.58    1.94       0  27177.6    2.47    1.85       0
+   268435456      16777216     float    none       0   108190    2.48    1.86       0   108751    2.47    1.85       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.87556 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep2-alltoall prog=alltoall devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892516 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892516 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892516 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892516 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  24655.6    2.72    2.04       0  24860.1    2.70    2.02    N/A
+   268435456      16777216     float    none      -1  88445.7    3.04    2.28       0  89436.3    3.00    2.25    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.14833 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep2-gather prog=gather devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892583 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892583 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892583 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892583 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1146.95   58.51   43.88       0  1150.66   58.32   43.74       0
+   268435456      16777216     float    none       0  4625.74   58.03   43.52       0  4637.09   57.89   43.42       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 43.6411 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep3-scatter prog=scatter devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892650 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892650 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892650 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892650 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26572.8    2.53    1.89       0  26472.3    2.54    1.90       0
+   268435456      16777216     float    none       0   107289    2.50    1.88       0   104988    2.56    1.92       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.89738 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep3-alltoall prog=alltoall devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892717 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892717 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892717 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892717 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  24821.4    2.70    2.03       0  24605.3    2.73    2.05    N/A
+   268435456      16777216     float    none      -1  88865.5    3.02    2.27       0  91043.4    2.95    2.21    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.13754 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=rep3-gather prog=gather devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892784 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892784 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892784 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892784 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1148.89   58.41   43.81       0  1150.54   58.33   43.75       0
+   268435456      16777216     float    none       0  4610.79   58.22   43.66       0  4609.40   58.24   43.68       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 43.7242 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+################ PART B: GPU-count threshold, socket 0 first ################
+%%%%%%%%% SCATDBG=n2-scatter prog=scatter devices=0,1 ngpus=2 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 2 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892851 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892851 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       8388608     float    none       0   969.24   69.24   34.62       0   704.37   95.27   47.64       0
+   268435456      33554432     float    none       0  3946.31   68.02   34.01       0  2886.77   92.99   46.49       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 40.6904 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n3-scatter prog=scatter devices=0,1,2 ngpus=3 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 3 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892898 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892898 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892898 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108848       5592404     float    none       0  19405.2    3.46    2.31       0  18721.5    3.58    2.39       0
+   268435440      22369620     float    none       0  78566.8    3.42    2.28       0  75396.8    3.56    2.37       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.33664 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n4-scatter prog=scatter devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 892957 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 892957 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 892957 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 892957 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26940.4    2.49    1.87       0  26727.5    2.51    1.88       0
+   268435456      16777216     float    none       0   108880    2.47    1.85       0   106285    2.53    1.89       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.87367 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n2-alltoall prog=alltoall devices=0,1 ngpus=2 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 2 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893024 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893024 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       8388608     float    none      -1  1380.60   48.61   24.30       0   892.62   75.18   37.59    N/A
+   268435456      33554432     float    none      -1  5781.58   46.43   23.21       0  3387.42   79.24   39.62    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 31.1831 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n3-alltoall prog=alltoall devices=0,1,2 ngpus=3 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 3 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893071 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893071 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893071 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108848       5592404     float    none      -1  17049.8    3.94    2.62       0  17940.5    3.74    2.49    N/A
+   268435440      22369620     float    none      -1  70679.6    3.80    2.53       0  70553.8    3.80    2.54    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.54655 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n4-alltoall prog=alltoall devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893130 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893130 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893130 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893130 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  24422.7    2.75    2.06       0  24976.1    2.69    2.02    N/A
+   268435456      16777216     float    none      -1  89016.5    3.02    2.26       0  88835.7    3.02    2.27    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.151 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n3-gather prog=gather devices=0,1,2 ngpus=3 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 3 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893197 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893197 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893197 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108848       5592404     float    none       0  1012.98   66.25   44.17       0  1013.50   66.21   44.14       0
+   268435440      22369620     float    none       0  4044.67   66.37   44.25       0  4034.38   66.54   44.36       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 44.2281 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=n4-gather prog=gather devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893256 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893256 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893256 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893256 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1148.88   58.41   43.81       0  1149.96   58.36   43.77       0
+   268435456      16777216     float    none       0  4618.30   58.12   43.59       0  4624.91   58.04   43.53       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 43.6754 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+################ PART C: message-size curve, 4 GPU (is it size-dependent?) ################
+%%%%%%%%% SCATDBG=curve-scatter prog=scatter devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 1073741824 step: 2(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893324 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893324 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893324 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893324 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         65536     float    none       0   462.14    2.27    1.70       0   414.74    2.53    1.90       0
+     2097152        131072     float    none       0   848.92    2.47    1.85       0   880.00    2.38    1.79       0
+     4194304        262144     float    none       0  1627.54    2.58    1.93       0  1737.77    2.41    1.81       0
+     8388608        524288     float    none       0  3416.65    2.46    1.84       0  3314.79    2.53    1.90       0
+    16777216       1048576     float    none       0  6769.36    2.48    1.86       0  6830.02    2.46    1.84       0
+    33554432       2097152     float    none       0  12629.1    2.66    1.99       0  13523.8    2.48    1.86       0
+    67108864       4194304     float    none       0  27088.6    2.48    1.86       0  26073.1    2.57    1.93       0
+   134217728       8388608     float    none       0  51643.7    2.60    1.95       0  53156.3    2.52    1.89       0
+   268435456      16777216     float    none       0   102090    2.63    1.97       0   108638    2.47    1.85       0
+   536870912      33554432     float    none       0   220377    2.44    1.83       0   216866    2.48    1.86       0
+  1073741824      67108864     float    none       0   427002    2.51    1.89       0   432003    2.49    1.86       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.87116 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=curve-gather prog=gather devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 1073741824 step: 2(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893391 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893391 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893391 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893391 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         65536     float    none       0    22.25   47.13   35.34       0    22.01   47.64   35.73       0
+     2097152        131072     float    none       0    36.86   56.90   42.67       0    37.11   56.51   42.38       0
+     4194304        262144     float    none       0    69.00   60.78   45.59       0    68.14   61.56   46.17       0
+     8388608        524288     float    none       0   127.03   66.03   49.53       0   128.29   65.39   49.04       0
+    16777216       1048576     float    none       0   247.46   67.80   50.85       0   247.29   67.84   50.88       0
+    33554432       2097152     float    none       0   572.99   58.56   43.92       0   574.14   58.44   43.83       0
+    67108864       4194304     float    none       0  1144.00   58.66   44.00       0  1144.00   58.66   44.00       0
+   134217728       8388608     float    none       0  2281.81   58.82   44.12       0  2277.80   58.92   44.19       0
+   268435456      16777216     float    none       0  4570.82   58.73   44.05       0  4565.20   58.80   44.10       0
+   536870912      33554432     float    none       0  9099.87   59.00   44.25       0  9107.42   58.95   44.21       0
+  1073741824      67108864     float    none       0  18145.0   59.18   44.38       0  18200.8   58.99   44.25       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 44.4308 
+#
+# Collective test concluded: gather_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=curve-alltoall prog=alltoall devices=0,1,2,3 ngpus=4 extra_env= %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 1048576 maxBytes 1073741824 step: 2(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893461 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893461 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893461 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893461 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+     1048576         65536     float    none      -1   410.81    2.55    1.91       0   407.14    2.58    1.93    N/A
+     2097152        131072     float    none      -1   843.61    2.49    1.86       0   869.96    2.41    1.81    N/A
+     4194304        262144     float    none      -1  1581.46    2.65    1.99       0  1664.23    2.52    1.89    N/A
+     8388608        524288     float    none      -1  3345.12    2.51    1.88       0  3193.12    2.63    1.97    N/A
+    16777216       1048576     float    none      -1  6535.97    2.57    1.93       0  6566.89    2.55    1.92    N/A
+    33554432       2097152     float    none      -1  12180.8    2.75    2.07       0  12200.3    2.75    2.06    N/A
+    67108864       4194304     float    none      -1  24529.5    2.74    2.05       0  24453.5    2.74    2.06    N/A
+   134217728       8388608     float    none      -1  48118.0    2.79    2.09       0  47691.7    2.81    2.11    N/A
+   268435456      16777216     float    none      -1  88773.7    3.02    2.27       0  90645.2    2.96    2.22    N/A
+   536870912      33554432     float    none      -1   176175    3.05    2.29       0   172861    3.11    2.33    N/A
+  1073741824      67108864     float    none      -1   337702    3.18    2.38       0   339396    3.16    2.37    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.06331 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+################ PART D: knob sweep on scatter, 4 GPU socket 0 ################
+%%%%%%%%% SCATDBG=knob-proto-simple prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_PROTO=Simple %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893528 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893528 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893528 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893528 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26570.3    2.53    1.89       0  26318.6    2.55    1.91       0
+   268435456      16777216     float    none       0   109163    2.46    1.84       0   109308    2.46    1.84       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.8732 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-proto-ll prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_PROTO=LL %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893595 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893595 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893595 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893595 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  25627.3    2.62    1.96       0  25707.5    2.61    1.96       0
+   268435456      16777216     float    none       0   107537    2.50    1.87       0   109107    2.46    1.85       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.90981 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-proto-ll128 prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_PROTO=LL128 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893662 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893662 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893662 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893662 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26422.5    2.54    1.90       0  26827.0    2.50    1.88       0
+   268435456      16777216     float    none       0   107002    2.51    1.88       0   107767    2.49    1.87       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.88268 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-nchan-1 prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_MAX_NCHANNELS=1 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893729 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893729 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893729 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893729 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  12247.1    5.48    4.11       0  11904.6    5.64    4.23       0
+   268435456      16777216     float    none       0  51925.5    5.17    3.88       0  50154.9    5.35    4.01       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 4.05723 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-nchan-4 prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_MAX_NCHANNELS=4 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893796 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893796 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893796 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893796 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26983.3    2.49    1.87       0  25643.5    2.62    1.96       0
+   268435456      16777216     float    none       0   111173    2.41    1.81       0   109282    2.46    1.84       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.87031 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-nchan-8 prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_MAX_NCHANNELS=8 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893863 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893863 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893863 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893863 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  26052.9    2.58    1.93       0  26520.1    2.53    1.90       0
+   268435456      16777216     float    none       0   107772    2.49    1.87       0   108724    2.47    1.85       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.88739 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-buffsize-8M prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_BUFFSIZE=8388608 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893930 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893930 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893930 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893930 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  23858.0    2.81    2.11       0  22865.9    2.93    2.20       0
+   268435456      16777216     float    none       0  90004.8    2.98    2.24       0  90971.6    2.95    2.21       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.19018 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-buffsize-32M prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_BUFFSIZE=33554432 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 893997 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 893997 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 893997 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 893997 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  27127.3    2.47    1.86       0  26652.2    2.52    1.89       0
+   268435456      16777216     float    none       0   110620    2.43    1.82       0   107639    2.49    1.87       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.85855 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-chunk-1M prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_P2P_NET_CHUNKSIZE=1048576 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894065 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894065 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894065 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894065 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  27189.5    2.47    1.85       0  25658.0    2.62    1.96       0
+   268435456      16777216     float    none       0   111642    2.40    1.80       0   110632    2.43    1.82       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.85897 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-p2p-disable prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_P2P_DISABLE=1 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894137 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894137 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894137 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894137 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1018.07   65.92   49.44       0  1007.26   66.63   49.97       0
+   268435456      16777216     float    none       0  4000.81   67.10   50.32       0  4035.98   66.51   49.88       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 49.9029 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-p2plevel-phb prog=scatter devices=0,1,2,3 ngpus=4 extra_env=NCCL_P2P_LEVEL=PHB %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894204 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894204 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894204 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894204 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none       0  1015.05   66.11   49.59       0  1021.05   65.73   49.29       0
+   268435456      16777216     float    none       0  4034.46   66.54   49.90       0  4047.35   66.32   49.74       0
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 49.631 
+#
+# Collective test concluded: scatter_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-alltoall-nchan1 prog=alltoall devices=0,1,2,3 ngpus=4 extra_env=NCCL_MAX_NCHANNELS=1 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894271 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894271 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894271 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894271 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  11738.3    5.72    4.29       0  11896.7    5.64    4.23    N/A
+   268435456      16777216     float    none      -1  49609.3    5.41    4.06       0  49235.9    5.45    4.09    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 4.16645 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+%%%%%%%%% SCATDBG=knob-alltoall-buffsize prog=alltoall devices=0,1,2,3 ngpus=4 extra_env=NCCL_BUFFSIZE=33554432 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: alltoall_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 268435456 step: 4(factor) warmup iters: 1 iters: 5 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894339 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894339 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894339 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894339 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+    67108864       4194304     float    none      -1  24389.8    2.75    2.06       0  24623.7    2.73    2.04    N/A
+   268435456      16777216     float    none      -1   100133    2.68    2.01       0   100487    2.67    2.00    N/A
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 2.03044 
+#
+# Collective test concluded: alltoall_perf
+#
+
+exit=0
+################ PART E: NCCL_DEBUG=INFO, scatter vs gather at 4 GPUs ################
+%%%%%%%%% SCATDBG=debuginfo-scatter prog=scatter devices=0,1,2,3 ngpus=4 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: scatter_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 67108864 step: 2(factor) warmup iters: 1 iters: 3 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894406 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894406 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894406 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894406 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0007:894406:894406 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0007:894406:894406 [0] NCCL INFO cudaDriverVersion 13020
+a0007:894406:894406 [0] NCCL INFO NCCL version 2.29.3+cuda13.1
+a0007:894406:894406 [0] NCCL INFO NCCL git version stable dcf2a2fbe
+a0007:894406:894406 [0] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894406:894406 [1] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894406:894406 [2] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894406:894406 [3] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894406:894436 [2] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v11 (v11)
+a0007:894406:894436 [2] NCCL INFO NET/Plugin: Loaded collnet plugin SHARP (v11)
+a0007:894406:894436 [2] NCCL INFO Successfully loaded external network plugin /apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/13.1/hpcx/hpcx-2.25.1/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0007:894406:894436 [2] NCCL INFO Plugin Path : /apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/13.1/hpcx/hpcx-2.25.1/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0007:894406:894436 [2] NCCL INFO P2P plugin v11 IBext_v11
+a0007:894406:894436 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.7<0>
+a0007:894406:894436 [2] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894406:894436 [2] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894406:894436 [2] NCCL INFO Using network IBext_v11
+a0007:894406:894435 [1] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894406:894435 [1] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894406:894435 [1] NCCL INFO Using network IBext_v11
+a0007:894406:894434 [0] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894406:894434 [0] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894406:894434 [0] NCCL INFO Using network IBext_v11
+a0007:894406:894437 [3] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894406:894437 [3] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894406:894437 [3] NCCL INFO Using network IBext_v11
+a0007:894406:894435 [1] NCCL INFO DMA-BUF is available on GPU device 1
+a0007:894406:894435 [1] NCCL INFO [Rank 1] ncclCommInitRankConfig comm 0x746d160 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 42000 commId 0x7efca29faf72ab37 - Init START
+a0007:894406:894434 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0007:894406:894434 [0] NCCL INFO [Rank 0] ncclCommInitRankConfig comm 0x7360950 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 3000 commId 0x7efca29faf72ab37 - Init START
+a0007:894406:894437 [3] NCCL INFO DMA-BUF is available on GPU device 3
+a0007:894406:894437 [3] NCCL INFO [Rank 3] ncclCommInitRankConfig comm 0x7686100 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c7000 commId 0x7efca29faf72ab37 - Init START
+a0007:894406:894434 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0007:894406:894436 [2] NCCL INFO DMA-BUF is available on GPU device 2
+a0007:894406:894436 [2] NCCL INFO [Rank 2] ncclCommInitRankConfig comm 0x75799d0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x7efca29faf72ab37 - Init START
+a0007:894406:894436 [2] NCCL INFO NCCL_P2P_LEVEL set by environment to SYS
+a0007:894406:894436 [2] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894406:894436 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894436 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894436 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894436 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894436 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894406:894435 [1] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894406:894435 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894435 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894435 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894435 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894435 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894406:894437 [3] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894406:894437 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894437 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894437 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894437 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894437 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894406:894434 [0] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894406:894434 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894434 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894434 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894406:894434 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894406:894434 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894406:894435 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894435 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894436 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894436 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894437 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894437 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894434 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894434 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894436 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894436 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894436 [2] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894406:894436 [2] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894406:894436 [2] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894436 [2] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894406:894436 [2] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894406:894436 [2] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894436 [2] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894406:894436 [2] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894406:894436 [2] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894436 [2] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894406:894436 [2] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894406:894436 [2] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894406:894436 [2] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894436 [2] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894406:894436 [2] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894406:894436 [2] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894436 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894436 [2] NCCL INFO ==========================================
+a0007:894406:894436 [2] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894436 [2] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894436 [2] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894406:894436 [2] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894436 [2] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894436 [2] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894436 [2] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894406:894434 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894434 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894434 [0] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894406:894434 [0] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894406:894434 [0] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894434 [0] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894406:894434 [0] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894406:894434 [0] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894434 [0] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894406:894434 [0] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894406:894434 [0] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894434 [0] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894406:894434 [0] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894406:894434 [0] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894406:894434 [0] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894434 [0] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894406:894434 [0] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894406:894434 [0] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894434 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894434 [0] NCCL INFO ==========================================
+a0007:894406:894434 [0] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894434 [0] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894434 [0] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894406:894434 [0] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894434 [0] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894434 [0] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894435 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894435 [1] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894406:894435 [1] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894406:894435 [1] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894435 [1] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894406:894435 [1] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894406:894435 [1] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894435 [1] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894406:894435 [1] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894406:894435 [1] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894435 [1] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894406:894435 [1] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894406:894435 [1] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894406:894435 [1] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894435 [1] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894406:894435 [1] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894406:894435 [1] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894435 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894435 [1] NCCL INFO ==========================================
+a0007:894406:894435 [1] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894406:894435 [1] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894435 [1] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894406:894437 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894437 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894406:894437 [3] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894406:894437 [3] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894406:894437 [3] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894437 [3] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894406:894437 [3] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894406:894437 [3] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894437 [3] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894406:894437 [3] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894406:894437 [3] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894437 [3] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894406:894437 [3] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894406:894437 [3] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894406:894437 [3] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894406:894437 [3] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894406:894437 [3] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894406:894437 [3] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894406:894437 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894406:894437 [3] NCCL INFO ==========================================
+a0007:894406:894437 [3] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894437 [3] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894437 [3] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894406:894437 [3] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894406:894437 [3] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894437 [3] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894406:894437 [3] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894406:894437 [3] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 3 is 0. (GPU affinity = 0-15 ; CPU affinity = 0).
+a0007:894406:894437 [3] NCCL INFO NCCL_NVLS_ENABLE set by environment to 0.
+a0007:894406:894435 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is empty, ignoring. (GPU affinity = 32-47 ; CPU affinity = 0).
+a0007:894406:894436 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is empty, ignoring. (GPU affinity = 48-63 ; CPU affinity = 0).
+a0007:894406:894436 [2] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894406:894436 [2] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894436 [2] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894434 [0] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894406:894434 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is empty, ignoring. (GPU affinity = 16-31 ; CPU affinity = 0).
+a0007:894406:894434 [0] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894406:894434 [0] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894434 [0] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894434 [0] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894406:894434 [0] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894434 [0] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894435 [1] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894406:894435 [1] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894435 [1] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894435 [1] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894406:894435 [1] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894435 [1] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894437 [3] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894406:894437 [3] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894437 [3] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894437 [3] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894406:894437 [3] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894437 [3] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894436 [2] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894406:894436 [2] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894406:894436 [2] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894406:894434 [0] NCCL INFO comm 0x7360950 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+a0007:894406:894434 [0] NCCL INFO Tree 0 : -1 -> 0 -> 2/-1/-1
+a0007:894406:894434 [0] NCCL INFO Tree 1 : -1 -> 0 -> 2/-1/-1
+a0007:894406:894434 [0] NCCL INFO Channel 00/02 : 0 2 3 1
+a0007:894406:894434 [0] NCCL INFO Channel 01/02 : 0 2 3 1
+a0007:894406:894434 [0] NCCL INFO Ring 00 : 1 -> 0 -> 2
+a0007:894406:894434 [0] NCCL INFO Ring 01 : 1 -> 0 -> 2
+a0007:894406:894434 [0] NCCL INFO Trees [0] 2/-1/-1->0->-1 [1] 2/-1/-1->0->-1
+a0007:894406:894434 [0] NCCL INFO P2P Chunksize set to 131072
+a0007:894406:894435 [1] NCCL INFO comm 0x746d160 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+a0007:894406:894435 [1] NCCL INFO Ring 00 : 3 -> 1 -> 0
+a0007:894406:894435 [1] NCCL INFO Ring 01 : 3 -> 1 -> 0
+a0007:894406:894435 [1] NCCL INFO Trees [0] -1/-1/-1->1->3 [1] -1/-1/-1->1->3
+a0007:894406:894435 [1] NCCL INFO P2P Chunksize set to 131072
+a0007:894406:894437 [3] NCCL INFO comm 0x7686100 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+a0007:894406:894437 [3] NCCL INFO Ring 00 : 2 -> 3 -> 1
+a0007:894406:894437 [3] NCCL INFO Ring 01 : 2 -> 3 -> 1
+a0007:894406:894437 [3] NCCL INFO Trees [0] 1/-1/-1->3->2 [1] 1/-1/-1->3->2
+a0007:894406:894437 [3] NCCL INFO P2P Chunksize set to 131072
+a0007:894406:894436 [2] NCCL INFO comm 0x75799d0 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+a0007:894406:894436 [2] NCCL INFO Tree 0 : 0 -> 2 -> 3/-1/-1
+a0007:894406:894436 [2] NCCL INFO Tree 1 : 0 -> 2 -> 3/-1/-1
+a0007:894406:894436 [2] NCCL INFO Ring 00 : 0 -> 2 -> 3
+a0007:894406:894436 [2] NCCL INFO Ring 01 : 0 -> 2 -> 3
+a0007:894406:894436 [2] NCCL INFO Trees [0] 3/-1/-1->2->0 [1] 3/-1/-1->2->0
+a0007:894406:894436 [2] NCCL INFO P2P Chunksize set to 131072
+a0007:894406:894434 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894406:894434 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894406:894435 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894406:894435 [1] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894406:894437 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894406:894437 [3] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894406:894436 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894406:894436 [2] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894406:894435 [1] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894406:894435 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0007:894406:894435 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894406:894435 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894406:894437 [3] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894406:894437 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894406:894437 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894406:894436 [2] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894406:894436 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894406:894436 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894406:894434 [0] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894406:894434 [0] NCCL INFO   Algorithm   |                            Tree                  |                            Ring                  |                   CollNetDirect                  |
+a0007:894406:894434 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894406:894434 [0] NCCL INFO  Max NThreads |            512 |            640 |            512 |            512 |            640 |            256 |              0 |              0 |            640 |
+a0007:894406:894434 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     7.6/   0.1 |    16.5/   0.0 |    14.1/   0.1 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     7.6/   0.1 |    16.5/   0.0 |    14.1/   0.1 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     9.6/   0.1 |    21.5/   0.0 |    25.5/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894406:894434 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     9.6/   0.1 |    21.5/   0.0 |    25.5/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllReduce |    12.8/   0.0 |    25.4/   0.0 |    32.4/   0.0 |    12.6/   0.0 |    29.0/   0.0 |    42.6/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894406:894434 [0] NCCL INFO   Algorithm   |                    CollNetChain                  |                            NVLS                  |                        NVLSTree                  |
+a0007:894406:894434 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894406:894434 [0] NCCL INFO  Max NThreads |              0 |              0 |            640 |              0 |              0 |            640 |              0 |              0 |            640 |
+a0007:894406:894434 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllReduce |     0.0/   0.0 |     0.0/   0.0 |    46.8/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO   Algorithm   |                             PAT                  |
+a0007:894406:894434 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894406:894434 [0] NCCL INFO  Max NThreads |              0 |              0 |              0 |
+a0007:894406:894434 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO     AllReduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894406:894434 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894406:894434 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894406:894434 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0007:894406:894434 [0] NCCL INFO ncclCommInitRankConfig comm 0x7360950 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 3000 commId 0x7efca29faf72ab37 - Init COMPLETE
+a0007:894406:894434 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 0.38 (kernels 0.19, alloc 0.09, bootstrap 0.05, allgathers 0.00, topo 0.03, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894406:894445 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 0
+a0007:894406:894446 [0] NCCL INFO [Proxy Service] Device 3 CPU core 0
+a0007:894406:894447 [0] NCCL INFO [Proxy Service UDS] Device 3 CPU core 0
+a0007:894406:894448 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 0
+a0007:894406:894449 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 0
+a0007:894406:894444 [0] NCCL INFO [Proxy Service] Device 1 CPU core 0
+a0007:894406:894437 [3] NCCL INFO ncclCommInitRankConfig comm 0x7686100 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c7000 commId 0x7efca29faf72ab37 - Init COMPLETE
+a0007:894406:894437 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 4 total 0.38 (kernels 0.21, alloc 0.08, bootstrap 0.05, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894406:894435 [1] NCCL INFO ncclCommInitRankConfig comm 0x746d160 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 42000 commId 0x7efca29faf72ab37 - Init COMPLETE
+a0007:894406:894435 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 4 total 0.38 (kernels 0.19, alloc 0.09, bootstrap 0.06, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894406:894443 [0] NCCL INFO [Proxy Service] Device 2 CPU core 0
+a0007:894406:894436 [2] NCCL INFO ncclCommInitRankConfig comm 0x75799d0 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 8c000 commId 0x7efca29faf72ab37 - Init COMPLETE
+a0007:894406:894436 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 4 total 0.38 (kernels 0.19, alloc 0.13, bootstrap 0.01, allgathers 0.00, topo 0.02, graphs 0.00, connections 0.00, rest 0.01)
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+a0007:894406:894453 [0] NCCL INFO Channel 00/1 : 0[0] -> 1[1] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO [Proxy Service] Device 0 CPU core 0
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d5e00000 size 2097152 ipcDesc 0x7f2090f2cbb0
+a0007:894406:894453 [0] NCCL INFO Channel 01/1 : 0[0] -> 1[1] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d6000000 size 2097152 ipcDesc 0x7f2090bbffb0
+a0007:894406:894446 [3] NCCL INFO Allocated shareable buffer 0x7f20d6200000 size 10485760 ipcDesc 0x7f1fb8004950
+a0007:894406:894444 [1] NCCL INFO Allocated shareable buffer 0x7f20d6c00000 size 10485760 ipcDesc 0x7f1fac004950
+a0007:894406:894446 [3] NCCL INFO Allocated shareable buffer 0x7f20d7600000 size 10485760 ipcDesc 0x7f1fb80063c0
+a0007:894406:894444 [1] NCCL INFO Allocated shareable buffer 0x7f20d8000000 size 10485760 ipcDesc 0x7f1fac0063c0
+a0007:894406:894453 [0] NCCL INFO Channel 00/1 : 0[0] -> 2[2] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d8e00000 size 2097152 ipcDesc 0x7f2019cda670
+a0007:894406:894453 [0] NCCL INFO Channel 01/1 : 0[0] -> 2[2] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d9000000 size 2097152 ipcDesc 0x7f201993bba0
+a0007:894406:894443 [2] NCCL INFO Allocated shareable buffer 0x7f20e6000000 size 10485760 ipcDesc 0x7f207c53f770
+a0007:894406:894443 [2] NCCL INFO Allocated shareable buffer 0x7f20e6a00000 size 10485760 ipcDesc 0x7f207c5cd280
+a0007:894406:894453 [0] NCCL INFO Channel 00/1 : 0[0] -> 3[3] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d9600000 size 2097152 ipcDesc 0x7f201a0e9480
+a0007:894406:894453 [0] NCCL INFO Channel 01/1 : 0[0] -> 3[3] via P2P/direct pointer
+a0007:894406:894442 [0] NCCL INFO Allocated shareable buffer 0x7f20d9800000 size 2097152 ipcDesc 0x7f201a0eae70
+    67108864       4194304     float    none       0  26376.3    2.54    1.91       0  26263.3    2.56    1.92       0
+a0007:894406:894406 [0] NCCL INFO comm 0x7360950 rank 0 nranks 4 cudaDev 0 busId 3000 - Destroy COMPLETE
+a0007:894406:894406 [3] NCCL INFO comm 0x7686100 rank 3 nranks 4 cudaDev 3 busId c7000 - Destroy COMPLETE
+a0007:894406:894406 [2] NCCL INFO comm 0x75799d0 rank 2 nranks 4 cudaDev 2 busId 8c000 - Destroy COMPLETE
+a0007:894406:894406 [1] NCCL INFO comm 0x746d160 rank 1 nranks 4 cudaDev 1 busId 42000 - Destroy COMPLETE
+a0007:894406:894406 [1] NCCL INFO Unloading plugin libnccl-net.so
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 1.91232 
+#
+# Collective test concluded: scatter_perf
+#
+
+a0007:894406:894406 [3] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+exit=0
+%%%%%%%%% SCATDBG=debuginfo-gather prog=gather devices=0,1,2,3 ngpus=4 %%%%%%%%%%
+# nccl-tests version 2.18.3 nccl-headers=22903 nccl-library=22903
+# Collective test starting: gather_perf
+# nThread 1 nGpus 4 minBytes 67108864 maxBytes 67108864 step: 2(factor) warmup iters: 1 iters: 3 agg iters: 1 validation: 1 graph: 0 unalign: 0
+#
+# Using devices
+#  Rank  0 Group  0 Pid 894473 on      a0007 device  0 [0000:03:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  1 Group  0 Pid 894473 on      a0007 device  1 [0000:42:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  2 Group  0 Pid 894473 on      a0007 device  2 [0000:8c:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+#  Rank  3 Group  0 Pid 894473 on      a0007 device  3 [0000:c7:00] NVIDIA RTX PRO 6000 Blackwell Server Edition
+a0007:894473:894473 [0] NCCL INFO ENV/Plugin: Could not find: libnccl-env.so
+a0007:894473:894473 [0] NCCL INFO cudaDriverVersion 13020
+a0007:894473:894473 [0] NCCL INFO NCCL version 2.29.3+cuda13.1
+a0007:894473:894473 [0] NCCL INFO NCCL git version stable dcf2a2fbe
+a0007:894473:894473 [0] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894473:894473 [1] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894473:894473 [2] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894473:894473 [3] NCCL INFO Comm config nvlinkCentricSched set to 1
+a0007:894473:894503 [2] NCCL INFO NET/Plugin: Loaded net plugin NCCL RDMA Plugin v11 (v11)
+a0007:894473:894503 [2] NCCL INFO NET/Plugin: Loaded collnet plugin SHARP (v11)
+a0007:894473:894503 [2] NCCL INFO Successfully loaded external network plugin /apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/13.1/hpcx/hpcx-2.25.1/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0007:894473:894503 [2] NCCL INFO Plugin Path : /apps/aicr/packages/nvhpc/26.3/7jhdyji/Linux_x86_64/26.3/comm_libs/13.1/hpcx/hpcx-2.25.1/nccl_rdma_sharp_plugin/lib/libnccl-net.so
+a0007:894473:894503 [2] NCCL INFO P2P plugin v11 IBext_v11
+a0007:894473:894503 [2] NCCL INFO NET/IB : Using [0]mlx5_0:1/IB/SHARP [1]mlx5_3:1/IB/SHARP [2]mlx5_bond_0:1/RoCE [RO]; OOB bond1:172.23.101.7<0>
+a0007:894473:894503 [2] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894473:894503 [2] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894473:894503 [2] NCCL INFO Using network IBext_v11
+a0007:894473:894502 [1] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894473:894502 [1] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894473:894502 [1] NCCL INFO Using network IBext_v11
+a0007:894473:894501 [0] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894473:894501 [0] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894473:894501 [0] NCCL INFO Using network IBext_v11
+a0007:894473:894504 [3] NCCL INFO Initialized NET plugin IBext_v11
+a0007:894473:894504 [3] NCCL INFO Assigned NET plugin IBext_v11 to comm
+a0007:894473:894504 [3] NCCL INFO Using network IBext_v11
+a0007:894473:894502 [1] NCCL INFO DMA-BUF is available on GPU device 1
+a0007:894473:894502 [1] NCCL INFO [Rank 1] ncclCommInitRankConfig comm 0x655cab0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 42000 commId 0xc34770719fb68ecc - Init START
+a0007:894473:894501 [0] NCCL INFO DMA-BUF is available on GPU device 0
+a0007:894473:894501 [0] NCCL INFO [Rank 0] ncclCommInitRankConfig comm 0x64502a0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 3000 commId 0xc34770719fb68ecc - Init START
+a0007:894473:894504 [3] NCCL INFO DMA-BUF is available on GPU device 3
+a0007:894473:894504 [3] NCCL INFO [Rank 3] ncclCommInitRankConfig comm 0x6775a50 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c7000 commId 0xc34770719fb68ecc - Init START
+a0007:894473:894501 [0] NCCL INFO RAS client listening socket at ::1<28028>
+a0007:894473:894503 [2] NCCL INFO DMA-BUF is available on GPU device 2
+a0007:894473:894503 [2] NCCL INFO [Rank 2] ncclCommInitRankConfig comm 0x6669320 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 8c000 commId 0xc34770719fb68ecc - Init START
+a0007:894473:894501 [0] NCCL INFO NCCL_P2P_LEVEL set by environment to SYS
+a0007:894473:894501 [0] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894473:894501 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894501 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894501 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894501 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894501 [0] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894473:894504 [3] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894473:894504 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894504 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894504 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894504 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894504 [3] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894473:894503 [2] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894473:894503 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894503 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894503 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894503 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894503 [2] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894473:894502 [1] NCCL INFO TOPO/NET : Importing network plugins to topology
+a0007:894473:894502 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894502 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894502 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_0 in topo with pciPath=/sys/devices/pci0000:88/0000:88:01.1/0000:89:00.0/0000:8a:03.0/0000:8e:00.0 keep=1 coll=1
+a0007:894473:894502 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_3 in topo with pciPath=/sys/devices/pci0001:00/0001:00:01.1/0001:01:00.0/0001:02:02.0/0001:05:00.0 keep=1 coll=1
+a0007:894473:894502 [1] NCCL INFO ncclTopoPopulateNics : Filled mlx5_bond_0 in topo with pciPath=/sys/devices/pci0000:c4/0000:c4:01.1/0000:c5:00.0/0000:c6:01.0/0000:c8:00.0 keep=1 coll=(null)
+a0007:894473:894502 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894502 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894504 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894504 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894503 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894503 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894501 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894501 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894502 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894502 [1] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894502 [1] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894473:894502 [1] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894473:894502 [1] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894502 [1] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894473:894502 [1] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894473:894502 [1] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894502 [1] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894473:894502 [1] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894473:894502 [1] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894502 [1] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894473:894502 [1] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894473:894502 [1] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894473:894502 [1] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894502 [1] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894473:894502 [1] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894473:894502 [1] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894502 [1] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894502 [1] NCCL INFO ==========================================
+a0007:894473:894502 [1] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894502 [1] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894502 [1] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894473:894502 [1] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894502 [1] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894502 [1] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894502 [1] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894473:894503 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894503 [2] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894503 [2] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894473:894503 [2] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894473:894503 [2] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894503 [2] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894473:894503 [2] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894473:894503 [2] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894503 [2] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894473:894503 [2] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894473:894503 [2] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894503 [2] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894473:894503 [2] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894473:894503 [2] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894473:894503 [2] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894503 [2] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894473:894503 [2] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894473:894503 [2] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894503 [2] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894503 [2] NCCL INFO ==========================================
+a0007:894473:894503 [2] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894503 [2] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894503 [2] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894473:894503 [2] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894503 [2] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894503 [2] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894503 [2] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894473:894504 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894504 [3] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894504 [3] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894473:894504 [3] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894504 [3] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894473:894504 [3] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894504 [3] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894473:894504 [3] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894504 [3] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894473:894504 [3] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894473:894504 [3] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894504 [3] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894473:894504 [3] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894504 [3] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894504 [3] NCCL INFO ==========================================
+a0007:894473:894504 [3] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894504 [3] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894504 [3] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894473:894504 [3] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894504 [3] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894504 [3] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894504 [3] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894473:894504 [3] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 3 is 0. (GPU affinity = 0-15 ; CPU affinity = 0).
+a0007:894473:894502 [1] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 1 is empty, ignoring. (GPU affinity = 32-47 ; CPU affinity = 0).
+a0007:894473:894502 [1] NCCL INFO NCCL_NVLS_ENABLE set by environment to 0.
+a0007:894473:894502 [1] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894473:894503 [2] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 2 is empty, ignoring. (GPU affinity = 48-63 ; CPU affinity = 0).
+a0007:894473:894502 [1] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894502 [1] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894502 [1] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894473:894502 [1] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894502 [1] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894503 [2] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894473:894503 [2] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894503 [2] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894503 [2] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894473:894503 [2] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894503 [2] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894501 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-573440 (rank 2) - NET/0-0 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894501 [0] NCCL INFO GPU Direct RDMA Enabled for GPU/0-815104 (rank 3) - NET/0-2 (distance 4 <= 6, read 0, mode Default)
+a0007:894473:894501 [0] NCCL INFO === System : maxBw 16.0 totalBw 48.0 ===
+a0007:894473:894501 [0] NCCL INFO CPU/0-1 (1/2/-1)
+a0007:894473:894504 [3] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894473:894504 [3] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894504 [3] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894504 [3] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894473:894504 [3] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894504 [3] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894501 [0] NCCL INFO + PCI[48.0] - PCI/0-1000 (1000c03010282335)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - GPU/0-3000 (0)
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894501 [0] NCCL INFO CPU/0-3 (1/2/-1)
+a0007:894473:894501 [0] NCCL INFO + PCI[48.0] - PCI/0-89000 (1000c03010282335)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - NIC/0-8e000
+a0007:894473:894501 [0] NCCL INFO                             + NET[50.0] - NET/0-0 (1/9273ef000373255c/1/50.000000)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - GPU/0-8c000 (2)
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894501 [0] NCCL INFO CPU/0-5 (1/2/-1)
+a0007:894473:894501 [0] NCCL INFO + PCI[48.0] - PCI/0-101000 (1000c03010282338)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - NIC/0-105000
+a0007:894473:894501 [0] NCCL INFO                             + NET[50.0] - NET/0-1 (1/2ebf04000373255c/1/50.000000)
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894501 [0] NCCL INFO CPU/0-0 (1/2/-1)
+a0007:894473:894501 [0] NCCL INFO + PCI[48.0] - PCI/0-c5000 (1000c03010282336)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - GPU/0-c7000 (3)
+a0007:894473:894501 [0] NCCL INFO               + PCI[12.0] - NIC/0-c8000
+a0007:894473:894501 [0] NCCL INFO                             + NET[3.1] - NET/0-2 (0/3e3bcb00032494d8/1/3.125000)
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-2
+a0007:894473:894501 [0] NCCL INFO CPU/0-2 (1/2/-1)
+a0007:894473:894501 [0] NCCL INFO + PCI[48.0] - PCI/0-3f000 (1000c03010282336)
+a0007:894473:894501 [0] NCCL INFO               + PCI[48.0] - GPU/0-42000 (1)
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-1
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-3
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-5
+a0007:894473:894501 [0] NCCL INFO + SYS[16.0] - CPU/0-0
+a0007:894473:894501 [0] NCCL INFO ==========================================
+a0007:894473:894501 [0] NCCL INFO GPU/0-3000 :GPU/0-3000 (0/5000.0/LOC) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (2/48.0/PHB) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894501 [0] NCCL INFO GPU/0-8c000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (0/5000.0/LOC) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (2/48.0/PHB) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (3/16.0/SYS) NET/0-0 (3/48.0/PIX) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894501 [0] NCCL INFO GPU/0-c7000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (0/5000.0/LOC) GPU/0-42000 (5/16.0/SYS) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (2/48.0/PHB) CPU/0-2 (3/16.0/SYS) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (3/3.1/PIX) 
+a0007:894473:894501 [0] NCCL INFO GPU/0-42000 :GPU/0-3000 (5/16.0/SYS) GPU/0-8c000 (5/16.0/SYS) GPU/0-c7000 (5/16.0/SYS) GPU/0-42000 (0/5000.0/LOC) CPU/0-1 (3/16.0/SYS) CPU/0-3 (3/16.0/SYS) CPU/0-5 (3/16.0/SYS) CPU/0-0 (3/16.0/SYS) CPU/0-2 (2/48.0/PHB) NET/0-0 (6/16.0/SYS) NET/0-1 (6/16.0/SYS) NET/0-2 (6/3.1/SYS) 
+a0007:894473:894501 [0] NCCL INFO NET/0-0 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (3/48.0/PIX) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (3/48.0/PHB) CPU/0-5 (4/16.0/SYS) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (0/5000.0/LOC) NET/0-1 (7/16.0/SYS) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894501 [0] NCCL INFO NET/0-1 :GPU/0-3000 (6/16.0/SYS) GPU/0-8c000 (6/16.0/SYS) GPU/0-c7000 (6/16.0/SYS) GPU/0-42000 (6/16.0/SYS) CPU/0-1 (4/16.0/SYS) CPU/0-3 (4/16.0/SYS) CPU/0-5 (3/48.0/PHB) CPU/0-0 (4/16.0/SYS) CPU/0-2 (4/16.0/SYS) NET/0-0 (7/16.0/SYS) NET/0-1 (0/5000.0/LOC) NET/0-2 (7/3.1/SYS) 
+a0007:894473:894501 [0] NCCL INFO NET/0-2 :GPU/0-3000 (6/3.1/SYS) GPU/0-8c000 (6/3.1/SYS) GPU/0-c7000 (3/3.1/PIX) GPU/0-42000 (6/3.1/SYS) CPU/0-1 (4/3.1/SYS) CPU/0-3 (4/3.1/SYS) CPU/0-5 (4/3.1/SYS) CPU/0-0 (3/3.1/PHB) CPU/0-2 (4/3.1/SYS) NET/0-0 (7/3.1/SYS) NET/0-1 (7/3.1/SYS) NET/0-2 (0/5000.0/LOC) 
+a0007:894473:894501 [0] NCCL INFO ncclTopoGetCpuAffinity: Affinity for GPU 0 is empty, ignoring. (GPU affinity = 16-31 ; CPU affinity = 0).
+a0007:894473:894501 [0] NCCL INFO Could not find a path for pattern 4, falling back to simple order
+a0007:894473:894501 [0] NCCL INFO Pattern 4, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894501 [0] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894501 [0] NCCL INFO Could not find a path for pattern 1, falling back to simple order
+a0007:894473:894501 [0] NCCL INFO Pattern 1, crossNic 0, nChannels 1, bw 0.100000/0.100000, type SYS/SYS, sameChannels 1
+a0007:894473:894501 [0] NCCL INFO  0 : GPU/0-3000 GPU/0-8c000 GPU/0-c7000 GPU/0-42000
+a0007:894473:894503 [2] NCCL INFO comm 0x6669320 rank 2 nRanks 4 nNodes 1 localRanks 4 localRank 2 MNNVL 0
+a0007:894473:894503 [2] NCCL INFO Tree 0 : 0 -> 2 -> 3/-1/-1
+a0007:894473:894503 [2] NCCL INFO Tree 1 : 0 -> 2 -> 3/-1/-1
+a0007:894473:894503 [2] NCCL INFO Ring 00 : 0 -> 2 -> 3
+a0007:894473:894503 [2] NCCL INFO Ring 01 : 0 -> 2 -> 3
+a0007:894473:894503 [2] NCCL INFO Trees [0] 3/-1/-1->2->0 [1] 3/-1/-1->2->0
+a0007:894473:894503 [2] NCCL INFO P2P Chunksize set to 131072
+a0007:894473:894501 [0] NCCL INFO comm 0x64502a0 rank 0 nRanks 4 nNodes 1 localRanks 4 localRank 0 MNNVL 0
+a0007:894473:894501 [0] NCCL INFO Tree 0 : -1 -> 0 -> 2/-1/-1
+a0007:894473:894501 [0] NCCL INFO Tree 1 : -1 -> 0 -> 2/-1/-1
+a0007:894473:894501 [0] NCCL INFO Channel 00/02 : 0 2 3 1
+a0007:894473:894501 [0] NCCL INFO Channel 01/02 : 0 2 3 1
+a0007:894473:894501 [0] NCCL INFO Ring 00 : 1 -> 0 -> 2
+a0007:894473:894501 [0] NCCL INFO Ring 01 : 1 -> 0 -> 2
+a0007:894473:894501 [0] NCCL INFO Trees [0] 2/-1/-1->0->-1 [1] 2/-1/-1->0->-1
+a0007:894473:894501 [0] NCCL INFO P2P Chunksize set to 131072
+a0007:894473:894504 [3] NCCL INFO comm 0x6775a50 rank 3 nRanks 4 nNodes 1 localRanks 4 localRank 3 MNNVL 0
+a0007:894473:894504 [3] NCCL INFO Ring 00 : 2 -> 3 -> 1
+a0007:894473:894504 [3] NCCL INFO Ring 01 : 2 -> 3 -> 1
+a0007:894473:894504 [3] NCCL INFO Trees [0] 1/-1/-1->3->2 [1] 1/-1/-1->3->2
+a0007:894473:894504 [3] NCCL INFO P2P Chunksize set to 131072
+a0007:894473:894502 [1] NCCL INFO comm 0x655cab0 rank 1 nRanks 4 nNodes 1 localRanks 4 localRank 1 MNNVL 0
+a0007:894473:894502 [1] NCCL INFO Ring 00 : 3 -> 1 -> 0
+a0007:894473:894502 [1] NCCL INFO Ring 01 : 3 -> 1 -> 0
+a0007:894473:894502 [1] NCCL INFO Trees [0] -1/-1/-1->1->3 [1] -1/-1/-1->1->3
+a0007:894473:894502 [1] NCCL INFO P2P Chunksize set to 131072
+a0007:894473:894503 [2] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894473:894503 [2] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894473:894501 [0] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894473:894501 [0] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894473:894504 [3] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894473:894504 [3] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894473:894502 [1] NCCL INFO PROFILER/Plugin: Could not find: libnccl-profiler.so
+a0007:894473:894502 [1] NCCL INFO Check P2P Type isAllDirectP2p 1 directMode 1 isAllCudaP2p 1
+a0007:894473:894502 [1] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894473:894502 [1] NCCL INFO TUNER/Plugin: Could not find: libnccl-tuner.so
+a0007:894473:894502 [1] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894473:894502 [1] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894473:894504 [3] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894473:894504 [3] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894473:894504 [3] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894473:894501 [0] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894473:894501 [0] NCCL INFO   Algorithm   |                            Tree                  |                            Ring                  |                   CollNetDirect                  |
+a0007:894473:894501 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894473:894501 [0] NCCL INFO  Max NThreads |            512 |            640 |            512 |            512 |            640 |            256 |              0 |              0 |            640 |
+a0007:894473:894501 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     7.6/   0.1 |    16.5/   0.0 |    14.1/   0.1 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     7.6/   0.1 |    16.5/   0.0 |    14.1/   0.1 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     9.6/   0.1 |    21.5/   0.0 |    25.5/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894473:894501 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     9.6/   0.1 |    21.5/   0.0 |    25.5/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllReduce |    12.8/   0.0 |    25.4/   0.0 |    32.4/   0.0 |    12.6/   0.0 |    29.0/   0.0 |    42.6/   0.1 |     2.4/   0.0 |     2.4/   0.0 |    40.8/   0.0 |
+a0007:894473:894501 [0] NCCL INFO   Algorithm   |                    CollNetChain                  |                            NVLS                  |                        NVLSTree                  |
+a0007:894473:894501 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894473:894501 [0] NCCL INFO  Max NThreads |              0 |              0 |            640 |              0 |              0 |            640 |              0 |              0 |            640 |
+a0007:894473:894501 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllReduce |     0.0/   0.0 |     0.0/   0.0 |    46.8/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO   Algorithm   |                             PAT                  |
+a0007:894473:894501 [0] NCCL INFO   Protocol    |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |             LL |          LL128 |         Simple |
+a0007:894473:894501 [0] NCCL INFO  Max NThreads |              0 |              0 |              0 |
+a0007:894473:894501 [0] NCCL INFO     Broadcast |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO        Reduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllGather |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO ReduceScatter |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO     AllReduce |     0.0/   0.0 |     0.0/   0.0 |     0.0/   0.0 |
+a0007:894473:894501 [0] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894473:894501 [0] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894473:894501 [0] NCCL INFO CC Off, workFifoBytes 1048576
+a0007:894473:894503 [2] NCCL INFO ncclP2pSchedule: group size used is 4
+a0007:894473:894503 [2] NCCL INFO threadThresholds 8/8/64 | 32/8/64 | 512 | 512
+a0007:894473:894503 [2] NCCL INFO 2 coll channels, 2 collnet channels, 0 nvls channels, 2 p2p channels, 2 p2p channels per peer
+a0007:894473:894503 [2] NCCL INFO ncclCommInitRankConfig comm 0x6669320 rank 2 nranks 4 cudaDev 2 nvmlDev 2 busId 8c000 commId 0xc34770719fb68ecc - Init COMPLETE
+a0007:894473:894503 [2] NCCL INFO Init timings - ncclCommInitRankConfig: rank 2 nranks 4 total 0.39 (kernels 0.19, alloc 0.13, bootstrap 0.01, allgathers 0.00, topo 0.03, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894473:894511 [0] NCCL INFO [Proxy Service] Device 3 CPU core 0
+a0007:894473:894512 [0] NCCL INFO [Proxy Service] Device 1 CPU core 0
+a0007:894473:894513 [0] NCCL INFO [Proxy Service UDS] Device 1 CPU core 0
+a0007:894473:894514 [0] NCCL INFO [Proxy Service UDS] Device 3 CPU core 0
+a0007:894473:894515 [0] NCCL INFO [Proxy Service] Device 2 CPU core 0
+a0007:894473:894516 [0] NCCL INFO [Proxy Service UDS] Device 2 CPU core 0
+a0007:894473:894501 [0] NCCL INFO ncclCommInitRankConfig comm 0x64502a0 rank 0 nranks 4 cudaDev 0 nvmlDev 0 busId 3000 commId 0xc34770719fb68ecc - Init COMPLETE
+a0007:894473:894501 [0] NCCL INFO Init timings - ncclCommInitRankConfig: rank 0 nranks 4 total 0.38 (kernels 0.19, alloc 0.09, bootstrap 0.05, allgathers 0.00, topo 0.03, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894473:894504 [3] NCCL INFO ncclCommInitRankConfig comm 0x6775a50 rank 3 nranks 4 cudaDev 3 nvmlDev 3 busId c7000 commId 0xc34770719fb68ecc - Init COMPLETE
+a0007:894473:894504 [3] NCCL INFO Init timings - ncclCommInitRankConfig: rank 3 nranks 4 total 0.39 (kernels 0.21, alloc 0.08, bootstrap 0.05, allgathers 0.00, topo 0.03, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894473:894502 [1] NCCL INFO ncclCommInitRankConfig comm 0x655cab0 rank 1 nranks 4 cudaDev 1 nvmlDev 1 busId 42000 commId 0xc34770719fb68ecc - Init COMPLETE
+a0007:894473:894502 [1] NCCL INFO Init timings - ncclCommInitRankConfig: rank 1 nranks 4 total 0.39 (kernels 0.19, alloc 0.08, bootstrap 0.06, allgathers 0.00, topo 0.03, graphs 0.00, connections 0.00, rest 0.01)
+a0007:894473:894510 [0] NCCL INFO [Proxy Service UDS] Device 0 CPU core 0
+a0007:894473:894509 [0] NCCL INFO [Proxy Service] Device 0 CPU core 0
+#
+#                                                              out-of-place                       in-place          
+#       size         count      type   redop    root     time   algbw   busbw  #wrong     time   algbw   busbw  #wrong 
+#        (B)    (elements)                               (us)  (GB/s)  (GB/s)             (us)  (GB/s)  (GB/s)         
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e03e00000 size 10485760 ipcDesc 0x7f4db8f2cbb0
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e04800000 size 10485760 ipcDesc 0x7f4db8bbffb0
+a0007:894473:894519 [1] NCCL INFO Channel 00/1 : 1[1] -> 0[0] via P2P/direct pointer
+a0007:894473:894512 [1] NCCL INFO Allocated shareable buffer 0x7f4e05200000 size 2097152 ipcDesc 0x7f4ce0004950
+a0007:894473:894519 [1] NCCL INFO Channel 01/1 : 1[1] -> 0[0] via P2P/direct pointer
+a0007:894473:894512 [1] NCCL INFO Allocated shareable buffer 0x7f4e05400000 size 2097152 ipcDesc 0x7f4ce00063c0
+a0007:894473:894518 [2] NCCL INFO Channel 00/1 : 2[2] -> 0[0] via P2P/direct pointer
+a0007:894473:894515 [2] NCCL INFO Allocated shareable buffer 0x7f4e05600000 size 2097152 ipcDesc 0x7f4cd0004950
+a0007:894473:894518 [2] NCCL INFO Channel 01/1 : 2[2] -> 0[0] via P2P/direct pointer
+a0007:894473:894515 [2] NCCL INFO Allocated shareable buffer 0x7f4e05800000 size 2097152 ipcDesc 0x7f4cd00063c0
+a0007:894473:894517 [3] NCCL INFO Channel 00/1 : 3[3] -> 0[0] via P2P/direct pointer
+a0007:894473:894511 [3] NCCL INFO Allocated shareable buffer 0x7f4e1a000000 size 2097152 ipcDesc 0x7f4dac53f770
+a0007:894473:894517 [3] NCCL INFO Channel 01/1 : 3[3] -> 0[0] via P2P/direct pointer
+a0007:894473:894511 [3] NCCL INFO Allocated shareable buffer 0x7f4e1a200000 size 2097152 ipcDesc 0x7f4d91a0d490
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e1b800000 size 10485760 ipcDesc 0x7f4d3dcda720
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e1c200000 size 10485760 ipcDesc 0x7f4d3d93bc50
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e1d600000 size 10485760 ipcDesc 0x7f4d3e0e9490
+a0007:894473:894509 [0] NCCL INFO Allocated shareable buffer 0x7f4e1ea00000 size 10485760 ipcDesc 0x7f4d3e0eae80
+    67108864       4194304     float    none       0  1171.95   57.26   42.95       0  1166.17   57.55   43.16       0
+a0007:894473:894473 [0] NCCL INFO comm 0x64502a0 rank 0 nranks 4 cudaDev 0 busId 3000 - Destroy COMPLETE
+a0007:894473:894473 [3] NCCL INFO comm 0x6775a50 rank 3 nranks 4 cudaDev 3 busId c7000 - Destroy COMPLETE
+a0007:894473:894473 [2] NCCL INFO comm 0x6669320 rank 2 nranks 4 cudaDev 2 busId 8c000 - Destroy COMPLETE
+a0007:894473:894473 [1] NCCL INFO comm 0x655cab0 rank 1 nranks 4 cudaDev 1 busId 42000 - Destroy COMPLETE
+a0007:894473:894473 [1] NCCL INFO Unloading plugin libnccl-net.so
+# Out of bounds values : 0 OK
+# Avg bus bandwidth    : 43.0533 
+#
+# Collective test concluded: gather_perf
+#
+
+a0007:894473:894473 [3] NCCL INFO ENV/Plugin: Closing env plugin ncclEnvDefault
+exit=0
+%%%%%%%%% DONE 335909 %%%%%%%%%%
