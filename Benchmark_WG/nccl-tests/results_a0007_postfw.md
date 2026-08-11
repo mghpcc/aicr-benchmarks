@@ -97,7 +97,7 @@ Both report `isAllCudaP2p 1` — CUDA says P2P works between all pairs. NCCL's o
 it and falls back to staging through host shared memory, which runs at 0.04 GB/s here. `SYS`
 prevents that fallback.
 
-## What fixes it, and what does not
+## What fixes it, and what does not (8 GPUs)
 
 8 GPUs, `sendrecv` busbw at 16 MiB / 5 iters, one knob changed at a time:
 
@@ -115,16 +115,18 @@ prevents that fallback.
 `P2P_DISABLE` and `P2P_LEVEL=0` sit exactly on the default's 0.04 because they force the same SHM
 path. `ALGO`/`PROTO`/`NCHANNELS` change scheduling, not transport, so they cannot help.
 
-## Why it improves other collectives but breaks `scatter` and `alltoall`
+## Why it improves other collectives but breaks `scatter` and `alltoall` (4 and 8 GPUs)
 
 **Why the other collectives improve.** At NCCL defaults, once a group has more than a couple of
 GPUs, NCCL declines direct GPU-to-GPU P2P and falls back to staging every byte through host
-memory instead — the same fallback described above, just less severe here than the 0.04 GB/s
-socket-1 collapse. `NCCL_P2P_LEVEL=SYS` removes that fallback and lets GPUs copy straight to
-each other over PCIe, at close to each GPU's own DMA budget (~37–45 GB/s). For the seven
-collectives below, that direct route is a clear win — hence the 150–223% gains.
+memory instead — the same fallback described above, just less severe at 4 GPUs than the
+0.04 GB/s socket-1 collapse. `NCCL_P2P_LEVEL=SYS` removes that fallback and lets GPUs copy
+straight to each other over PCIe, at close to each GPU's own DMA budget (~37–45 GB/s). For the
+seven collectives below, that direct route is a clear win — hence the 150–223% gains.
 
-The same setting costs 82–96% on the other two. 4 GPUs, socket 0:
+The same setting costs 82–96% on the other two.
+
+### 4 GPUs, socket 0
 
 | Collective | defaults | `SYS` | effect |
 |---|---:|---:|---|
@@ -139,6 +141,50 @@ The same setting costs 82–96% on the other two. 4 GPUs, socket 0:
 | **scatter** | **50.76** | 1.85 | **−96%** |
 
 Reproducible: 3 consecutive runs give scatter 1.85/1.86/1.92, alltoall 2.28/2.28/2.27.
+
+### 8 GPUs, both sockets
+
+| Collective | defaults | `SYS` | effect |
+|---|---:|---:|---|
+| gather | not measured¹ | **41.79** | — |
+| sendrecv | **0.04** | **35.43** | **+885×** |
+| all_gather | not measured¹ | 13.66 | — |
+| broadcast | not measured¹ | 13.62 | — |
+| all_reduce | not measured¹ | 13.61 | — |
+| reduce | not measured¹ | 13.54 | — |
+| reduce_scatter | not measured¹ | 13.53 | — |
+| **alltoall** | not measured¹ | **1.01** | — |
+| **scatter** | not measured¹ | **0.94** | — |
+
+¹ Only `sendrecv` was ever run at 8 GPUs with NCCL defaults (job 335364, 0.04 GB/s). The other
+collectives were not, because at 0.04 GB/s a converged run is impractical — a single 16 GB
+iteration takes ~7 minutes. The ring/tree rows would almost certainly also sit at ~0.04, since
+the socket-1 collapse is transport-level and hits every collective (see
+`diag_a0007_socket1.md`), but `scatter`/`alltoall` at 8-GPU defaults are **genuinely unknown** —
+they might collapse to 0.04 like the rest, or stay near their 4-GPU defaults values. This is the
+one gap that prevents a definitive 8-GPU recommendation.
+
+### Combined discussion
+
+**The cause is the same at both GPU counts.** `scatter` and `alltoall` break for one reason —
+the one→many fan-out described below — and it applies identically at 4 and 8 GPUs. The severity
+simply scales with how many peers one sender must feed at once: fan-out grows from 3 peers at
+4 GPUs to 7 at 8 GPUs, and throughput roughly halves in step (scatter 1.85 → 0.94, alltoall
+2.38 → 1.01). That is what a per-sender contention limit predicts, and it is the same fault, not
+a new one.
+
+**Two differences that matter in practice:**
+
+1. **At 4 GPUs there is a real choice; at 8 GPUs there is not.** With 4 GPUs on socket 0 the
+   socket-1 trigger is not tripped, so defaults stay usable (13–51 GB/s) and are genuinely the
+   better setting for `scatter`/`alltoall`. At 8 GPUs defaults trip the socket-1 collapse, so
+   `sendrecv` — and, on the transport argument, the ring/tree collectives — fall to 0.04 GB/s.
+   Defaults stop being a viable escape hatch, which is why 8-GPU MoE has no good configuration.
+2. **At 8 GPUs the healthy collectives are separately degraded.** Even with `SYS` working as
+   intended, the five ring/tree collectives sit at ~13.6 rather than the ~40 they reach at
+   4 GPUs. That is the socket-crossing fault from Table 3, an **independent** problem with a
+   different cause — it is not the P2P setting and not the fan-out issue. `gather` (41.79) and
+   `sendrecv` (35.43) escape it because neither relies on a ring spanning both sockets.
 
 **The trade-off is binary.** Since all pairs are `SYS` distance, the P2P level is an on/off
 switch. `NCCL_P2P_LEVEL=PHB` (49.90) and `NCCL_P2P_DISABLE=1` (50.32) both restore `scatter`
@@ -162,7 +208,9 @@ sender at once. Turning P2P off routes everything through host memory instead, w
 have this one-GPU pile-up problem.
 
 **So the two faults have opposite fixes:** the socket-1 collapse needs P2P **on**, `scatter` and
-`alltoall` need it **off**.
+`alltoall` need it **off**. At 4 GPUs in one socket you can pick whichever your workload needs.
+At 8 GPUs you cannot — turning P2P off to rescue `scatter`/`alltoall` re-triggers the socket-1
+collapse, so both settings lose.
 
 ---
 
