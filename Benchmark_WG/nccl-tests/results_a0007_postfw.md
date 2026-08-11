@@ -115,9 +115,16 @@ prevents that fallback.
 `P2P_DISABLE` and `P2P_LEVEL=0` sit exactly on the default's 0.04 because they force the same SHM
 path. `ALGO`/`PROTO`/`NCHANNELS` change scheduling, not transport, so they cannot help.
 
-## Why it breaks `scatter` and `alltoall`
+## Why it improves other collectives but breaks `scatter` and `alltoall`
 
-The same setting costs 82–96% on two collectives. 4 GPUs, socket 0:
+**Why the other collectives improve.** At NCCL defaults, once a group has more than a couple of
+GPUs, NCCL declines direct GPU-to-GPU P2P and falls back to staging every byte through host
+memory instead — the same fallback described above, just less severe here than the 0.04 GB/s
+socket-1 collapse. `NCCL_P2P_LEVEL=SYS` removes that fallback and lets GPUs copy straight to
+each other over PCIe, at close to each GPU's own DMA budget (~37–45 GB/s). For the seven
+collectives below, that direct route is a clear win — hence the 150–223% gains.
+
+The same setting costs 82–96% on the other two. 4 GPUs, socket 0:
 
 | Collective | defaults | `SYS` | effect |
 |---|---:|---:|---|
@@ -142,6 +149,17 @@ sends to many peers at once*. `gather` (many→one) and `sendrecv` (1→1) are h
 (one→many) and `alltoall` are not. `gather` at 44.66 versus its mirror `scatter` at 1.85 — same
 root, same sizes, opposite direction — rules out any bandwidth explanation. Concurrent
 multi-peer P2P transmit is the suspect; this has not been proven.
+
+In plain terms: a P2P copy is done by the GPU that's *sending* the data — it reads its own
+memory and pushes it across PCIe to the other GPU. Each GPU only has a few of these "copy paths"
+free to run at once (4 here). In `gather`, each of the other GPUs sends just one copy, using its
+own path — no two GPUs are competing for anything. In `scatter`, one GPU has to send to all the
+others at the same time, so all those sends pile up on that single GPU's few copy paths and jam
+each other. `alltoall` is worse because every GPU is doing this "send to everyone" job at once,
+not just one root. That's also why cutting the number of channels to 1
+(`NCCL_MAX_NCHANNELS=1`) claws back some speed (1.85→4.01) — fewer things piling up on the
+sender at once. Turning P2P off routes everything through host memory instead, which does not
+have this one-GPU pile-up problem.
 
 **So the two faults have opposite fixes:** the socket-1 collapse needs P2P **on**, `scatter` and
 `alltoall` need it **off**.
